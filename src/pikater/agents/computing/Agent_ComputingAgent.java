@@ -205,9 +205,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		args = getArguments();
 
-		OPTIONS_ARGS = new String[args.length];
-
 		if (args != null && args.length > 0) {
+			OPTIONS_ARGS = new String[args.length];
+
 			if (args[0].equals("load")) {
 				loadAgent(getLocalName());
 				args = new String[0];
@@ -225,10 +225,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 			}
 		}
-
-		registerWithDF();
-
+		//some important initializations before registering
 		getParameters();
+		
+		registerWithDF();
 
 		addBehaviour(new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));

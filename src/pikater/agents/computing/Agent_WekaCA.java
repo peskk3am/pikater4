@@ -13,9 +13,7 @@ import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import pikater.agents.computing.Agent_ComputingAgent.states;
 import pikater.gui.java.MyWekaOption;
-import pikater.gui.java.MyWekaOption.dataType;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.Interval;
@@ -24,19 +22,97 @@ import weka.classifiers.Evaluation;
 import weka.core.Instances;
 import weka.core.Option;
 
-public abstract class Agent_WekaCA extends Agent_ComputingAgent {
+public class Agent_WekaCA extends Agent_ComputingAgent {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3594051562022044000L;
+	private Classifier cls = null;//TODO: constructor
+	private String agentType = null;
+	private String wekaClassName = null;
+	
+	protected Classifier getModelObject(){
+		return cls;
+	}
 
-	protected abstract Classifier getModelObject();
+	protected boolean setModelObject(Classifier _cls){
+		cls = _cls;
+		agentType = null;
+		setWekaClassName(cls.getClass().getName());
+		return true;
+		
+	}
+	@Override
+	public String getAgentType() {
+		return agentType;	
+	}
+	
+	public void setWekaClassName(String _className){
+		wekaClassName = _className;
+		String[] namelst = wekaClassName.split("\\.");
+		if(namelst.length>0)
+			agentType = namelst[namelst.length-1];
+	}
+	
+	public void createClassifierClass(){
+		//TODO: Create cls according to agentType!!!
+		if(wekaClassName == null || wekaClassName.length()==0)
+			return;
+			//
+		try {
+			//TODO: May take options as a second parameter:
+			cls = Classifier.forName(wekaClassName,null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 
-	protected abstract boolean setModelObject(Classifier _cls);
+	@Override
+	protected void train() throws Exception {
+		working = true;
+		System.out.println("Agent " + getLocalName() + ": Training...");
 
-	protected abstract String getOptFileName();
+		cls=null;
+		createClassifierClass();//new cls
+		if(cls==null)
+			throw new Exception("Weka classifier class hasn't been created (Wrong type?).");
+		if (OPTIONS.length > 0) {
+			cls.setOptions(OPTIONS);
+		}
+		cls.buildClassifier(train);
+		state = states.TRAINED; // change agent state
+		OPTIONS = cls.getOptions();
 
-	protected abstract Evaluation test();
+		// write out net parameters
+		System.out.println(getLocalName() + " " + getOptions());
+
+		working = false;
+	}
+
+	protected String getOptFileName(){
+		return "/options/"+getAgentType() +".opt";
+	}
+
+	protected Evaluation test(){
+		working = true;
+		System.out.println("Agent " + getLocalName() + ": Testing...");
+
+		// evaluate classifier and print some statistics
+		Evaluation eval = null;
+		try {
+			eval = new Evaluation(train);
+			eval.evaluateModel(cls, test);
+			System.out.println(eval.toSummaryString(getLocalName() + " agent: "
+					+ "\nResults\n=======\n", false));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		working = false;
+		return eval;
+	}
 
 	@Override
 	protected pikater.ontology.messages.Evaluation evaluateCA() {
@@ -138,7 +214,7 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 			trainFileName = (String) v.get(2);
 			testFileName = (String) v.get(3);
 			state = (states) v.get(4);
-
+			
 			// TODO watch "working" variable
 			setModelObject(cls);
 			ois.close();
@@ -200,6 +276,14 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 
 	@Override
 	protected void getParameters() {
+		//set the Agent type according to the arguments
+		if(OPTIONS_ARGS==null || OPTIONS_ARGS.length!=1 ){
+			System.err.println("Wrong arguments of WekaCA");
+			return;//TODO: error
+		}
+		setWekaClassName((String)OPTIONS_ARGS[0]);
+		createClassifierClass();//in order not to have cls==null
+		 
 		// fills the global Options vector
 
 		System.out.println(getLocalName() + ": The options are: ");
@@ -213,6 +297,7 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 		try {
 			/* Sets up a file reader to read the options file */
 			FileReader input = new FileReader(optPath);
+			System.out.println("OK:"+optPath);
 			/*
 			 * Filter FileReader through a Buffered read to read a line at a
 			 * time
@@ -350,5 +435,6 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 		 * System.out.println("------------"); }
 		 */
 	} // end getParameters
+
 
 }
