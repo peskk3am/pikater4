@@ -219,7 +219,10 @@ public abstract class Agent_OptionsManager extends Agent {
 				else {
 					System.out.println("Agent "+failure.getSender().getName()+" failed to perform the requested action");					
 					
-					ACLMessage msgNew = newMessage(failure); 
+					ACLMessage msgNew = newMessage(failure);					
+					
+					evaluation = new ontology.messages.Evaluation();
+					evaluation.setStatus(failure.getContent());
 					
 					Vector v = new Vector(1);
 					v.addElement(msgNew);
@@ -244,8 +247,10 @@ public abstract class Agent_OptionsManager extends Agent {
 	
 			  			Task task = ( (Execute) ((Action)content).getAction() ).getTask();
 			  			task.setResult(evaluation);
+			  						  			
 				  		results.add(task);			  		
-			  		}		
+			  		}
+			  		
 			  		
 				} catch (UngroundedException e) {
 					// TODO Auto-generated catch block

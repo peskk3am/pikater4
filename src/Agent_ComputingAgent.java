@@ -618,7 +618,7 @@ public abstract class Agent_ComputingAgent extends Agent{
 	  	  		  							eval.setData_table(getPredictions(test, onto_test));
 	  	  								}
 	  								}		
-  							}			
+  							}
 	    				}
 	    				catch (Exception e){
 	    					success = false;
@@ -643,7 +643,7 @@ public abstract class Agent_ComputingAgent extends Agent{
 	    					result_msg = incoming_request.createReply();
 	    					result_msg.setPerformative(ACLMessage.INFORM);
 	    					try {
-	    						// Prepare the content - Result with Evaluation instead of MyWekaEvaluation is sended!!!
+	    						// Prepare the content - Result with Evaluation instead of MyWekaEvaluation is sent!!!
 	    						ContentElement content = getContentManager().extractContent(incoming_request); // TODO exception block?
 	    						Result result = new Result((Action)content, eval);
 	    						getContentManager().fillContent(result_msg, result);

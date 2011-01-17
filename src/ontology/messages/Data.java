@@ -7,12 +7,20 @@ public class Data implements Concept{
 	private String _external_train_file_name;
 	private String _test_file_name;
 	private String _external_test_file_name;
+	private String _label_file_name;
+	private String _external_label_file_name;
 	private Metadata _metadata;
 	private String _output = "evaluation_only"; // "predictions"
 	private String _mode = "train_test";  // test_only, train_test
 	
 	private int _gui_id;  // not included in ontology
 	
+	public void setLabel_file_name(String label_file_name) {
+		_label_file_name=label_file_name;
+	}
+	public String getLabel_file_name() {
+		return _label_file_name;
+	}
 	public void setTrain_file_name(String train_file_name) {
 		_train_file_name=train_file_name;
 	}

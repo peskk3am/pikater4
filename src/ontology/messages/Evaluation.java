@@ -1,6 +1,7 @@
 package ontology.messages;
 
 import jade.content.Concept;
+import jade.util.leap.List;
 
 public class Evaluation implements Concept {
 	private float _error_rate = -1;
@@ -9,10 +10,17 @@ public class Evaluation implements Concept {
 	private float _root_mean_squared_error = -1;
 	private float _relative_absolute_error = -1; // percent
 	private float _root_relative_squared_error = -1; // percent
+	private String _status;
 	
-	private DataInstances data_table;
+	// private DataInstances data_table;	
+	private List _labeled_data;  // List of DataInstances
 	
-	
+	public String getStatus() {
+		return _status;
+	}
+	public void setStatus(String status) {
+		_status = status;
+	}
 	public void setError_rate(float error_rate) {
 		_error_rate=error_rate;
 	}
@@ -49,13 +57,11 @@ public class Evaluation implements Concept {
 	public float getRoot_relative_squared_error() {
 		return _root_relative_squared_error;
 	}
-
-	
-	public DataInstances getData_table() {
-		return data_table;
+	public List getLabeled_data() {
+		return _labeled_data;
 	}
-	public void setData_table(DataInstances dataTable) {
-		data_table = dataTable;
+	public void setLabeled_data(List labeled_data) {
+		_labeled_data = labeled_data;
 	}
 
 }

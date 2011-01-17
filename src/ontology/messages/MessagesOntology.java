@@ -28,8 +28,10 @@ public class MessagesOntology extends Ontology {
 	  public static final String DATA = "data";
 	  public static final String DATA_TRAIN_FILE_NAME = "train_file_name";
 	  public static final String DATA_TEST_FILE_NAME = "test_file_name";
+	  public static final String DATA_LABEL_FILE_NAME = "label_file_name";
 	  public static final String DATA_EXTERNAL_TRAIN_FILE_NAME = "external_train_file_name";
 	  public static final String DATA_EXTERNAL_TEST_FILE_NAME = "external_test_file_name";
+	  public static final String DATA_EXTERNAL_LABEL_FILE_NAME = "external_label_file_name";
 	  public static final String DATA_METADATA = "metadata";
 	  public static final String DATA_OUTPUT = "output";
 	  public static final String DATA_MODE = "mode";
@@ -63,7 +65,9 @@ public class MessagesOntology extends Ontology {
 	  public static final String EVALUATION_MEAN_SQUARED_ERROR = "root_mean_squared_error";
 	  public static final String EVALUATION_RELATIVE_ABSOLUTE_ERROR = "relative_absolute_error";
 	  public static final String EVALUATION_RELATIVE_SQUARED_ERROR = "root_relative_squared_error";
-	  public static final String EVALUATION_DATA_TABLE = "data_table";
+	  public static final String EVALUATION_LABELED_DATA = "labeled_data";
+	  public static final String EVALUATION_STATUS = "status";
+	  
 	  
 	  public static final String RESULTS = "RESULTS";
 	  public static final String RESULTS_COMPUTATION_ID = "computation_id";
@@ -268,8 +272,10 @@ public class MessagesOntology extends Ontology {
 			cs = (ConceptSchema)getSchema(DATA);
 			cs.add(DATA_TRAIN_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING));
 			cs.add(DATA_TEST_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+			cs.add(DATA_LABEL_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(DATA_EXTERNAL_TEST_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING));
 			cs.add(DATA_EXTERNAL_TRAIN_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+			cs.add(DATA_EXTERNAL_LABEL_FILE_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(DATA_METADATA, (ConceptSchema)getSchema(METADATA), ObjectSchema.OPTIONAL);
 			cs.add(DATA_OUTPUT, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);			
 			cs.add(DATA_MODE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
@@ -300,8 +306,9 @@ public class MessagesOntology extends Ontology {
 	    	cs.add(EVALUATION_MEAN_SQUARED_ERROR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
 	    	cs.add(EVALUATION_RELATIVE_ABSOLUTE_ERROR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
 	    	cs.add(EVALUATION_RELATIVE_SQUARED_ERROR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);   	
-	    	cs.add(EVALUATION_DATA_TABLE, (ConceptSchema)getSchema(DATA_INSTANCES), ObjectSchema.OPTIONAL);
-    	
+	    	cs.add(EVALUATION_LABELED_DATA, (ConceptSchema)getSchema(DATA_INSTANCES), 0, ObjectSchema.UNLIMITED);
+	    	cs.add(EVALUATION_STATUS, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+	    	
 	    	cs = (ConceptSchema)getSchema(RESULTS);
 	    	cs.add(RESULTS_COMPUTATION_ID, (PrimitiveSchema)getSchema(BasicOntology.STRING));
 	    	cs.add(RESULTS_PROBLEM_ID, (PrimitiveSchema)getSchema(BasicOntology.STRING));
