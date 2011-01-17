@@ -1,0 +1,12 @@
+<experiments>
+    <experiment>
+        
+      <dataset train="iris.arff" test="iris.arff" ></dataset>
+
+		  <agent type="MultilayerPerceptron">
+		    <parameter name="L" value="0.4" />
+		    <parameter name="H" value="5,3" />
+		  </agent>
+
+    </experiment>       
+</experiments>
