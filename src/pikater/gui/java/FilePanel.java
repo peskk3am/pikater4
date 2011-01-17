@@ -19,6 +19,8 @@ public class FilePanel extends JPanel {
 	private JComboBox jComboBox1 = null;
 	private String[] filesList = null;
 	private JButton jButton = null;
+	private JLabel jLabel2 = null;
+	private JComboBox jComboBox2 = null;
 
 	/**
 	 * This is the default constructor
@@ -39,6 +41,8 @@ public class FilePanel extends JPanel {
 		jComboBox1.setSelectedItem(name);
 		jComboBox.addItem(name);
 		jComboBox.setSelectedItem(name);
+		jComboBox2.addItem(name);
+		jComboBox2.setSelectedItem(name);
 	}
 
 	public String getTestFile() {
@@ -48,6 +52,10 @@ public class FilePanel extends JPanel {
 	public String getTrainFile() {
 		return jComboBox.getSelectedItem().toString();
 	}
+	
+	public String getLabelFile() {
+		return jComboBox2.getSelectedItem().toString();
+	}
 
 	/**
 	 * This method initializes this
@@ -55,8 +63,18 @@ public class FilePanel extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
+		GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
+		gridBagConstraints21.fill = GridBagConstraints.VERTICAL;
+		gridBagConstraints21.gridy = 0;
+		gridBagConstraints21.weightx = 1.0;
+		gridBagConstraints21.gridx = 5;
+		GridBagConstraints gridBagConstraints12 = new GridBagConstraints();
+		gridBagConstraints12.gridx = 4;
+		gridBagConstraints12.gridy = 0;
+		jLabel2 = new JLabel();
+		jLabel2.setText("Label File");
 		GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
-		gridBagConstraints11.gridx = 3;
+		gridBagConstraints11.gridx = 4;
 		gridBagConstraints11.gridy = 0;
 		GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
 		gridBagConstraints3.fill = GridBagConstraints.VERTICAL;
@@ -78,12 +96,14 @@ public class FilePanel extends JPanel {
 		gridBagConstraints.gridy = 0;
 		jLabel = new JLabel();
 		jLabel.setText("Train File");
-		this.setSize(311, 24);
+		this.setSize(435, 24);
 		this.setLayout(new GridBagLayout());
 		this.add(jLabel, gridBagConstraints);
 		this.add(getJComboBox(), gridBagConstraints1);
 		this.add(jLabel1, gridBagConstraints2);
 		this.add(getJComboBox1(), gridBagConstraints3);
+		this.add(jLabel2, gridBagConstraints12);
+		this.add(getJComboBox2(), gridBagConstraints21);
 		this.add(getJButton());
 	}
 
@@ -136,4 +156,18 @@ public class FilePanel extends JPanel {
 		return jButton;
 	}
 
-} // @jve:decl-index=0:visual-constraint="0,0"
+	/**
+	 * This method initializes jComboBox2	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getJComboBox2() {
+		if (jComboBox2 == null) {
+			jComboBox2 = new JComboBox(filesList);
+			jComboBox2.setPreferredSize(new Dimension(130, 24));
+			jComboBox2.setEditable(true);
+		}
+		return jComboBox2;
+	}
+
+}  //  @jve:decl-index=0:visual-constraint="35,76"

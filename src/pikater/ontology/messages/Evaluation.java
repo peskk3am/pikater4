@@ -1,6 +1,7 @@
 package pikater.ontology.messages;
 
 import jade.content.Concept;
+import jade.util.leap.LinkedList;
 import jade.util.leap.List;
 
 public class Evaluation implements Concept {
@@ -16,9 +17,13 @@ public class Evaluation implements Concept {
 	private float _root_relative_squared_error = -1; // percent
 	private String _status;
 
-	// private DataInstances data_table;
-	private List _labeled_data; // List of DataInstances
+	//private DataInstances data_table;
+	private List _labeled_data = new LinkedList(); // List of DataInstances
 
+	public void addDataTable(DataInstances di){
+		_labeled_data.add(di);
+	}
+	
 	public String getStatus() {
 	return _status;
 	}

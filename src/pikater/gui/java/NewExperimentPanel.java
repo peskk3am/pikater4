@@ -282,7 +282,8 @@ public class NewExperimentPanel extends JPanel {
 					Vector<String> agentOptions = new Vector<String>();
 					Vector<String> trainFiles = new Vector<String>();
 					Vector<String> testFiles = new Vector<String>();
-
+					Vector<String> labelFiles = new Vector<String>();
+					
 					for (int i = 0; i < agentsPanel.getComponentCount(); i++) {
 						AgentOptionsPanel aop = (AgentOptionsPanel) agentsPanel
 								.getComponent(i);
@@ -296,6 +297,7 @@ public class NewExperimentPanel extends JPanel {
 
 						trainFiles.add(fp.getTrainFile());
 						testFiles.add(fp.getTestFile());
+						labelFiles.add(fp.getLabelFile());
 					}
 
 					Vector<String> optionManager = new Vector<String>();
@@ -327,6 +329,7 @@ public class NewExperimentPanel extends JPanel {
 					ge.addParameter(agentOptions);
 					ge.addParameter(trainFiles);
 					ge.addParameter(testFiles);
+					ge.addParameter(labelFiles);
 					ge.addParameter(optionManager);
 					myAgent.postGuiEvent(ge);
 

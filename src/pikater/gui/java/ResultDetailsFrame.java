@@ -1,5 +1,7 @@
 package pikater.gui.java;
 
+import jade.util.leap.List;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -10,14 +12,17 @@ import javax.swing.table.AbstractTableModel;
 
 import pikater.ontology.messages.Attribute;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Instance;
+import pikater.ontology.messages.Task;
+import javax.swing.JTabbedPane;
 
 public class ResultDetailsFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JScrollPane jScrollPane = null;
-	private JTable jTable = null;
-	private DataInstances instances = null;
+	private List dataInstances = null;
+	private JTabbedPane jTabbedPane = null;
 
 	/**
 	 * This is the default constructor
@@ -27,9 +32,9 @@ public class ResultDetailsFrame extends JFrame {
 		initialize();
 	}
 
-	public ResultDetailsFrame(DataInstances instances) {
+	public ResultDetailsFrame(List inst) {
 		super();
-		this.instances = instances;
+		this.dataInstances = inst;
 		initialize();
 	}
 
@@ -38,27 +43,33 @@ public class ResultDetailsFrame extends JFrame {
 		/**
 		 * 
 		 */
+		
+		DataInstances instance = null;
+		
+		public DataInstancesTableModel(DataInstances instance) {
+			this.instance = instance;
+		}
+		
 		private static final long serialVersionUID = 8207067033399270730L;
 
 		@Override
 		public int getColumnCount() {
-			return instances.getAttributes().size();
+			return instance.getAttributes().size();
 		}
 
 		@Override
 		public int getRowCount() {
-			return instances.getInstances().size();
+			return instance.getInstances().size();
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			return instances.toString(rowIndex, columnIndex);
+			return instance.toString(rowIndex, columnIndex);
 		}
 
 		@Override
 		public String getColumnName(int column) {
-			return ((Attribute) instances.getAttributes().get(column))
-					.getName();
+			return instance.getAttributes().get(column).toString();
 		}
 	}
 
@@ -71,6 +82,11 @@ public class ResultDetailsFrame extends JFrame {
 		this.setSize(300, 200);
 		this.setContentPane(getJContentPane());
 		this.setTitle("Result details");
+		
+		for (int i = 0; i < dataInstances.size(); i++) {
+			DataInstances di = (DataInstances)dataInstances.get(i);
+			this.jTabbedPane.insertTab(di.getName(), null, new JTable(new DataInstancesTableModel(di)), null, jTabbedPane.getComponentCount());
+		}
 	}
 
 	/**
@@ -95,22 +111,21 @@ public class ResultDetailsFrame extends JFrame {
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setViewportView(getJTable());
+			jScrollPane.setViewportView(getJTabbedPane());
 		}
 		return jScrollPane;
 	}
 
 	/**
-	 * This method initializes jTable
-	 * 
-	 * @return javax.swing.JTable
+	 * This method initializes jTabbedPane	
+	 * 	
+	 * @return javax.swing.JTabbedPane	
 	 */
-	private JTable getJTable() {
-		if (jTable == null) {
-			jTable = new JTable();
+	private JTabbedPane getJTabbedPane() {
+		if (jTabbedPane == null) {
+			jTabbedPane = new JTabbedPane();
 		}
-		jTable.setModel(new DataInstancesTableModel());
-		return jTable;
+		return jTabbedPane;
 	}
 
 }
