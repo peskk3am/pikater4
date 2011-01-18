@@ -24,6 +24,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
+import jade.util.leap.ArrayList;
 import jade.util.leap.List;
 
 import java.util.Date;
@@ -54,6 +55,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 	/* common properties for all computing agents */
 	public String trainFileName;
 	public String testFileName;
+	public String labelFileName;
 
 	public states state = states.NEW;
 	public boolean hasGotRightData = false;
@@ -66,6 +68,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 	DataInstances onto_train;
 	Instances test;
 	DataInstances onto_test;
+	
+	Instances label;
+	DataInstances onto_label;
 	int convId = 0;
 
 	protected String[] OPTIONS;
@@ -439,6 +444,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		private static final String INIT_STATE = "Init";
 		private static final String GETTRAINDATA_STATE = "GetTrainingData";
 		private static final String GETTESTDATA_STATE = "GetTestData";
+		private static final String GETLABELDATA_STATE = "GetLabelData";		
 		private static final String TRAINTEST_STATE = "TrainTest";
 		private static final String SENDRESULTS_STATE = "SendResults";
 		private static final int NEXT_JMP = 0;
@@ -450,6 +456,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		pikater.ontology.messages.Evaluation eval;
 		String train_fn;
 		String test_fn;
+		String label_fn;
 		String output;
 		String mode;
 
@@ -490,8 +497,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 				if (content instanceof Result) {
 					Result result = (Result) content;
 					if (result.getValue() instanceof pikater.ontology.messages.DataInstances) {
-						return (pikater.ontology.messages.DataInstances) result
-								.getValue();
+						return (pikater.ontology.messages.DataInstances) result.getValue();
 					}
 				}
 			} catch (UngroundedException e) {
@@ -550,6 +556,18 @@ public abstract class Agent_ComputingAgent extends Agent {
 					} else {
 						// We have already the right data
 						get_test_behaviour.reset(null);
+					}
+					
+					if (data.getLabel_file_name() != null){
+						label_fn = data.getLabel_file_name();
+						AchieveREInitiator get_label_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
+								.getState(GETLABELDATA_STATE);
+						if (!label_fn.equals(labelFileName)) {
+							get_label_behaviour.reset(sendGetDataReq(label_fn));
+						} else {
+							// We have already the right data
+							get_label_behaviour.reset(null);
+						}
 					}
 				}
 
@@ -631,7 +649,44 @@ public abstract class Agent_ComputingAgent extends Agent {
 				}
 			}, GETTESTDATA_STATE);
 
-			// Train&test state
+			
+			// get label data state
+			registerState(new AchieveREInitiator(a, null) {
+				public int next = NEXT_JMP;
+
+				@Override
+				protected void handleInform(ACLMessage inform) {
+					pikater.ontology.messages.DataInstances _label = processGetData(inform);
+					if (_label != null) {
+						labelFileName = label_fn;
+						onto_label = _label;
+						label = onto_label.toWekaInstances();
+						label.setClassIndex(label.numAttributes() - 1);
+						next = NEXT_JMP;
+						return;
+					} else {
+						next = LAST_JMP;
+						failureMsg("No label data received from the reader agent: Wrong content.");
+						return;
+					}
+				}
+
+				@Override
+				protected void handleFailure(ACLMessage failure) {
+					failureMsg("No label data received from the reader agent: Reader Failed.");
+					next = LAST_JMP;
+				}
+
+				@Override
+				public int onEnd() {
+					int next_val = next;
+					next = NEXT_JMP;
+					return next;
+				}
+			}, GETLABELDATA_STATE);
+			
+			
+			// Train&test&label state
 			registerState(new Behaviour(a) {
 
 				@Override
@@ -644,13 +699,17 @@ public abstract class Agent_ComputingAgent extends Agent {
 						 * } }
 						 */
 
+						List labeledData = new ArrayList();
+						
 						if (state != states.TRAINED) {
 							train();
 							if (state == states.TRAINED) {
 								eval = evaluateCA();
 								if (output.equals("predictions")) {
-									eval.setData_table(getPredictions(test,
-											onto_test));
+									labeledData.add(getPredictions(test, onto_test));
+									labeledData.add(getPredictions(label, onto_label));
+																		
+									eval.setLabeled_data(labeledData);
 								}
 							}
 						}
@@ -706,17 +765,21 @@ public abstract class Agent_ComputingAgent extends Agent {
 			registerTransition(GETTRAINDATA_STATE, SENDRESULTS_STATE, LAST_JMP);
 
 			// get test data transitions
-			registerTransition(GETTESTDATA_STATE, TRAINTEST_STATE, NEXT_JMP);
+			registerTransition(GETTESTDATA_STATE, GETLABELDATA_STATE, NEXT_JMP);
 			registerTransition(GETTESTDATA_STATE, SENDRESULTS_STATE, LAST_JMP);
 
+			// get label data transition
+			registerTransition(GETLABELDATA_STATE, TRAINTEST_STATE, NEXT_JMP);
+			registerTransition(GETLABELDATA_STATE, SENDRESULTS_STATE, LAST_JMP);
+			
 			// train&test state transition
 			registerDefaultTransition(TRAINTEST_STATE, SENDRESULTS_STATE);
 
 			// backward transition: reset all states
 			registerDefaultTransition(SENDRESULTS_STATE, INIT_STATE,
 					new String[] { INIT_STATE, GETTRAINDATA_STATE,
-							GETTESTDATA_STATE, TRAINTEST_STATE,
-							SENDRESULTS_STATE });
+							GETTESTDATA_STATE, GETLABELDATA_STATE,
+							TRAINTEST_STATE, SENDRESULTS_STATE });
 		}
 	}
 };
