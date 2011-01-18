@@ -55,7 +55,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 	/* common properties for all computing agents */
 	public String trainFileName;
 	public String testFileName;
-	public String labelFileName;
+	public String labelFileName = "";
 
 	public states state = states.NEW;
 	public boolean hasGotRightData = false;
@@ -707,8 +707,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 								eval = evaluateCA();
 								if (output.equals("predictions")) {
 									labeledData.add(getPredictions(test, onto_test));
-									labeledData.add(getPredictions(label, onto_label));
-																		
+									if (!labelFileName.equals("")){
+										labeledData.add(getPredictions(label, onto_label));
+									}
 									eval.setLabeled_data(labeledData);
 								}
 							}
