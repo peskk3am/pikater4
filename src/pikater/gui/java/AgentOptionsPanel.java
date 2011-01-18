@@ -59,9 +59,9 @@ public class AgentOptionsPanel extends JPanel {
 		gridBagConstraints.gridy = 0;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.gridx = 0;
-		this.setSize(420, 24);
+		this.setSize(660, 24);
 		this.setLayout(new GridBagLayout());
-		this.setPreferredSize(new Dimension(420, 24));
+		this.setPreferredSize(new Dimension(660, 24));
 		this.add(getJComboBox(), gridBagConstraints);
 		this.add(getJTextField(), gridBagConstraints1);
 		this.add(getJButton(), gridBagConstraints2);
@@ -88,7 +88,7 @@ public class AgentOptionsPanel extends JPanel {
 	private JTextField getJTextField() {
 		if (jTextField == null) {
 			jTextField = new JTextField();
-			jTextField.setPreferredSize(new Dimension(200, 24));
+			jTextField.setPreferredSize(new Dimension(420, 24));
 		}
 		return jTextField;
 	}

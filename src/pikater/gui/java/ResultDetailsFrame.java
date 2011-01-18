@@ -20,7 +20,6 @@ public class ResultDetailsFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
-	private JScrollPane jScrollPane = null;
 	private List dataInstances = null;
 	private JTabbedPane jTabbedPane = null;
 
@@ -69,7 +68,7 @@ public class ResultDetailsFrame extends JFrame {
 
 		@Override
 		public String getColumnName(int column) {
-			return instance.getAttributes().get(column).toString();
+			return ((Attribute)instance.getAttributes().get(column)).getName();
 		}
 	}
 
@@ -85,7 +84,7 @@ public class ResultDetailsFrame extends JFrame {
 		
 		for (int i = 0; i < dataInstances.size(); i++) {
 			DataInstances di = (DataInstances)dataInstances.get(i);
-			this.jTabbedPane.insertTab(di.getName(), null, new JTable(new DataInstancesTableModel(di)), null, jTabbedPane.getComponentCount());
+			this.jTabbedPane.insertTab(di.getName(), null, new JScrollPane(new JTable(new DataInstancesTableModel(di))), null, jTabbedPane.getComponentCount());
 		}
 	}
 
@@ -98,22 +97,9 @@ public class ResultDetailsFrame extends JFrame {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
+			jContentPane.add(getJTabbedPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
-	}
-
-	/**
-	 * This method initializes jScrollPane
-	 * 
-	 * @return javax.swing.JScrollPane
-	 */
-	private JScrollPane getJScrollPane() {
-		if (jScrollPane == null) {
-			jScrollPane = new JScrollPane();
-			jScrollPane.setViewportView(getJTabbedPane());
-		}
-		return jScrollPane;
 	}
 
 	/**
