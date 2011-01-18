@@ -723,13 +723,14 @@ public abstract class Agent_GUI extends GuiAgent {
 							+ System.getProperty("file.separator")
 							+ DataManagerService.translateFilename(this, 1,
 									_test, null));
-					d.setLabel_file_name("data"
-							+ System.getProperty("file.separator")
-							+ "files"
-							+ System.getProperty("file.separator")
-							+ DataManagerService.translateFilename(this, 1,
-									_label, null));
-					
+					if (_label != null){  // if there is a file to label
+						d.setLabel_file_name("data"
+								+ System.getProperty("file.separator")
+								+ "files"
+								+ System.getProperty("file.separator")
+								+ DataManagerService.translateFilename(this, 1,
+										_label, null));
+					}
 					if (_output != null) {
 						d.setOutput(_output);
 					}

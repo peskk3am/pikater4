@@ -2,16 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/forms-1.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
-	<classpathentry kind="lib" path="lib/jade.jar"/>
-	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="lib/looks-2.1.4.jar"/>
-	<classpathentry kind="lib" path="lib/remoteExperimentServer.jar"/>
-	<classpathentry kind="lib" path="lib/sqltool.jar"/>
-	<classpathentry kind="lib" path="lib/weka-src.jar"/>
-	<classpathentry kind="lib" path="lib/weka.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/commons-codec.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/forms-1.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/jade.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/remoteExperimentServer.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/weka.jar"/>
+	<classpathentry kind="lib" path="C:/data/pikater/pikater/lib/weka-src.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
