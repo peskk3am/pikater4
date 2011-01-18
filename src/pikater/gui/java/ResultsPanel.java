@@ -1,9 +1,11 @@
 package pikater.gui.java;
 
 import java.awt.GridBagConstraints;
+
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.util.ArrayList;
+import jade.util.leap.List;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -93,13 +95,12 @@ public class ResultsPanel extends JPanel {
 					Point p = e.getPoint();
 					int row = jTable.rowAtPoint(p);
 					Task current = tasks.get(row);
-					DataInstances instances = current.getResult()
-							.getData_table();
-					if (instances == null) {
+					List dataInstances = current.getResult().getLabeled_data();
+					if (dataInstances == null) {
 						return;
 					}
 
-					ResultDetailsFrame rdf = new ResultDetailsFrame(instances);
+					ResultDetailsFrame rdf = new ResultDetailsFrame(dataInstances);
 					rdf.setVisible(true);
 
 				}

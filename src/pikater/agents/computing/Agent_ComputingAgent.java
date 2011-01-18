@@ -706,10 +706,15 @@ public abstract class Agent_ComputingAgent extends Agent {
 							if (state == states.TRAINED) {
 								eval = evaluateCA();
 								if (output.equals("predictions")) {
+<<<<<<< HEAD
 									labeledData.add(getPredictions(test, onto_test));
 									labeledData.add(getPredictions(label, onto_label));
 																		
 									eval.setLabeled_data(labeledData);
+=======
+									eval.addDataTable(getPredictions(test,
+											onto_test));
+>>>>>>> f8e7427a3be5a1e153fe3ad1ce434b10f00f80b9
 								}
 							}
 						}
@@ -737,7 +742,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						result_msg.setPerformative(ACLMessage.INFORM);
 						try {
 							// Prepare the content - Result with Evaluation
-							// instead of MyWekaEvaluation is sended!!!
+							// instead of MyWekaEvaluation is sent!!!
 							ContentElement content = getContentManager()
 									.extractContent(incoming_request); // TODO
 																		// exception
