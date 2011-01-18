@@ -331,8 +331,12 @@ public class NewExperimentPanel extends JPanel {
 					ge.addParameter(testFiles);
 					ge.addParameter(labelFiles);
 					ge.addParameter(optionManager);
+					
+					jButton.setText("Working...");
+					jButton.setEnabled(false);
+					
 					myAgent.postGuiEvent(ge);
-
+					
 				}
 			});
 		}
@@ -571,6 +575,12 @@ public class NewExperimentPanel extends JPanel {
 					BoxLayout.Y_AXIS));
 		}
 		return filesPanel;
+	}
+
+	public void allResultsReceived() {
+		jButton.setText("Run");
+		jButton.setEnabled(true);
+		
 	}
 
 }
