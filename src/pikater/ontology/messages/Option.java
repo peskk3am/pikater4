@@ -127,4 +127,5 @@ public class Option implements Concept {
 	public void setNumber_of_values_to_try(int number_of_values_to_try) {
 		_number_of_values_to_try = number_of_values_to_try;
 	}
+
 }

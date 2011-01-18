@@ -216,7 +216,7 @@ public class NewExperimentPanel extends JPanel {
 			gridBagConstraints4.gridy = 0;
 			jPanel1 = new JPanel();
 			jPanel1.setLayout(new GridBagLayout());
-			jPanel1.setPreferredSize(new Dimension(480, 400));
+			jPanel1.setPreferredSize(new Dimension(700, 400));
 			jPanel1.add(getJPanel2(), gridBagConstraints4);
 			jPanel1.add(getJPanel3(), gridBagConstraints5);
 		}
@@ -238,7 +238,7 @@ public class NewExperimentPanel extends JPanel {
 			gridBagConstraints7.gridx = 0;
 			jPanel2 = new JPanel();
 			jPanel2.setLayout(new GridBagLayout());
-			jPanel2.setPreferredSize(new Dimension(500, 280));
+			jPanel2.setPreferredSize(new Dimension(680, 280));
 			jPanel2.setBorder(BorderFactory.createTitledBorder(null,
 					"Agent and Files", TitledBorder.DEFAULT_JUSTIFICATION,
 					TitledBorder.DEFAULT_POSITION, null, null));
@@ -282,7 +282,8 @@ public class NewExperimentPanel extends JPanel {
 					Vector<String> agentOptions = new Vector<String>();
 					Vector<String> trainFiles = new Vector<String>();
 					Vector<String> testFiles = new Vector<String>();
-
+					Vector<String> labelFiles = new Vector<String>();
+					
 					for (int i = 0; i < agentsPanel.getComponentCount(); i++) {
 						AgentOptionsPanel aop = (AgentOptionsPanel) agentsPanel
 								.getComponent(i);
@@ -296,6 +297,7 @@ public class NewExperimentPanel extends JPanel {
 
 						trainFiles.add(fp.getTrainFile());
 						testFiles.add(fp.getTestFile());
+						labelFiles.add(fp.getLabelFile());
 					}
 
 					Vector<String> optionManager = new Vector<String>();
@@ -327,6 +329,7 @@ public class NewExperimentPanel extends JPanel {
 					ge.addParameter(agentOptions);
 					ge.addParameter(trainFiles);
 					ge.addParameter(testFiles);
+					ge.addParameter(labelFiles);
 					ge.addParameter(optionManager);
 					myAgent.postGuiEvent(ge);
 
@@ -344,6 +347,7 @@ public class NewExperimentPanel extends JPanel {
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
+			jTabbedPane.setPreferredSize(new Dimension(660, 247));
 			jTabbedPane.addTab("Agents", null, getJPanel4(), null);
 			jTabbedPane.addTab("Files", null, getJPanel5(), null);
 		}
@@ -407,7 +411,7 @@ public class NewExperimentPanel extends JPanel {
 			gridBagConstraints15.gridx = 0;
 			jPanel6 = new JPanel();
 			jPanel6.setLayout(new GridBagLayout());
-			jPanel6.setPreferredSize(new Dimension(480, 180));
+			jPanel6.setPreferredSize(new Dimension(660, 180));
 			jPanel6.add(getAgentsScrollPane(), gridBagConstraints15);
 		}
 		return jPanel6;
@@ -425,7 +429,7 @@ public class NewExperimentPanel extends JPanel {
 			gridBagConstraints10.gridy = 0;
 			jPanel7 = new JPanel();
 			jPanel7.setLayout(new GridBagLayout());
-			jPanel7.setPreferredSize(new Dimension(480, 40));
+			jPanel7.setPreferredSize(new Dimension(660, 40));
 			jPanel7.add(getAddAgentButton(), gridBagConstraints10);
 		}
 		return jPanel7;
@@ -467,7 +471,7 @@ public class NewExperimentPanel extends JPanel {
 			gridBagConstraints14.gridx = 0;
 			jPanel8 = new JPanel();
 			jPanel8.setLayout(new GridBagLayout());
-			jPanel8.setPreferredSize(new Dimension(480, 180));
+			jPanel8.setPreferredSize(new Dimension(660, 180));
 			jPanel8.add(getFilesScrollPane(), gridBagConstraints14);
 		}
 		return jPanel8;

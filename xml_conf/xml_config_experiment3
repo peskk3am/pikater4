@@ -1,0 +1,19 @@
+<experiments>
+    <experiment>
+        <method name="ChooseXValues" />
+        
+        <dataset train="contact-lenses.arff" test="contact-lenses.arff" >
+        	<metadata
+	        	missing_values="False"
+	        	number_of_attributes="5"
+	        	number_of_instances="24"
+	        	attribute_type="Categorical"
+	        	default_task="Classification"
+	        />
+        </dataset>		
+               
+        <agent type="?">
+        </agent>
+        
+    </experiment>      
+</experiments>

@@ -1,4 +1,4 @@
-package pikater.agents.computing;
+package pikater;
 
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
@@ -231,8 +231,11 @@ public abstract class Agent_OptionsManager extends Agent {
 						+ " failed to perform the requested action");
 
 				ACLMessage msgNew = newMessage(failure);
-
-				Vector v = new Vector(1);
+				          
+				evaluation = new pikater.ontology.messages.Evaluation();
+			  	evaluation.setStatus(failure.getContent()); 
+				
+			  	Vector v = new Vector(1);
 				v.addElement(msgNew);
 
 				String requestsKey = (this).ALL_NEXT_REQUESTS_KEY;

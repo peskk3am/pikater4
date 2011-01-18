@@ -75,12 +75,12 @@ public class Agent_GUI_Java extends Agent_GUI {
 				String testInternalFilename = t.getData().getTest_file_name();
 				String trainInternalFilename = t.getData().getTrain_file_name();
 
-				String[] path = testInternalFilename.split(Pattern.quote(System
-						.getProperty("file.separator")));
-				testInternalFilename = path[path.length - 1];
+				String[] path = testInternalFilename.split(
+						Pattern.quote(System.getProperty("file.separator")));
+				testInternalFilename = path[path.length -1];
 
-				path = trainInternalFilename.split(Pattern.quote(System
-						.getProperty("file.separator")));
+				path = trainInternalFilename.split(
+						Pattern.quote(System.getProperty("file.separator")));
 				trainInternalFilename = path[path.length - 1];
 
 				t.getData().setTest_file_name(
@@ -165,13 +165,14 @@ public class Agent_GUI_Java extends Agent_GUI {
 			Vector<String> agentOptions = (Vector<String>) ev.getParameter(1);
 			Vector<String> trainFiles = (Vector<String>) ev.getParameter(2);
 			Vector<String> testFiles = (Vector<String>) ev.getParameter(3);
-			Vector<String> optionsManager = (Vector<String>) ev.getParameter(4);
+			Vector<String> labelFiles = (Vector<String>) ev.getParameter(4);
+			Vector<String> optionsManager = (Vector<String>) ev.getParameter(5);
 
 			int problemID = createNewProblem("10000");
 
 			for (int i = 0; i < trainFiles.size(); i++) {
 				addDatasetToProblem(problemID, trainFiles.get(i), testFiles
-						.get(i), "predictions", null);
+						.get(i), labelFiles.get(i), "predictions", null);
 			}
 
 			try {

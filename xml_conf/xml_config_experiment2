@@ -1,0 +1,14 @@
+<experiments>
+    <experiment>
+    <method name="ChooseXValues" number_of_values_to_try="3" />    
+    <dataset train="iris.arff" test="iris.arff" ></dataset>
+
+	  <agent type="MultilayerPerceptron">
+	    <parameter name="L" value="?" />
+	    <parameter name="M" value="?" />
+	    <parameter name="D" value="?" />
+	    <parameter name="H" value="?,3" set="3,4,i"/>
+  	</agent>
+
+    </experiment>    
+</experiments>
