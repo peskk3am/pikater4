@@ -172,4 +172,9 @@ public class MainWindow extends JFrame {
 		return jTree;
 	}
 
+	public void allResultsReceived() {
+		experimentPanel.allResultsReceived();
+		
+	}
+
 } // @jve:decl-index=0:visual-constraint="220,5"

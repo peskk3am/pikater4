@@ -108,6 +108,7 @@ public class Agent_GUI_Java extends Agent_GUI {
 	@Override
 	protected void displayResult(ACLMessage inform) {
 		displayPartialResult(inform);
+		myGUI.allResultsReceived();
 	}
 
 	@Override

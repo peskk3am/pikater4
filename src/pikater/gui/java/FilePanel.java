@@ -18,6 +18,7 @@ public class FilePanel extends JPanel {
 	private JLabel jLabel1 = null;
 	private JComboBox jComboBox1 = null;
 	private String[] filesList = null;
+	private String[] labelFiles = null;
 	private JButton jButton = null;
 	private JLabel jLabel2 = null;
 	private JComboBox jComboBox2 = null;
@@ -33,6 +34,13 @@ public class FilePanel extends JPanel {
 	public FilePanel(String[] filesList) {
 		super();
 		this.filesList = filesList;
+		this.labelFiles = new String[filesList.length + 1];
+		labelFiles[0] = null;
+		
+		for (int i = 0; i < filesList.length ;i++) {
+			labelFiles[i+1] = filesList[i];
+		}
+		
 		initialize();
 	}
 
@@ -54,6 +62,8 @@ public class FilePanel extends JPanel {
 	}
 	
 	public String getLabelFile() {
+		if (jComboBox2.getSelectedItem() == null)
+			return null;
 		return jComboBox2.getSelectedItem().toString();
 	}
 
@@ -163,10 +173,11 @@ public class FilePanel extends JPanel {
 	 */
 	private JComboBox getJComboBox2() {
 		if (jComboBox2 == null) {
-			jComboBox2 = new JComboBox(filesList);
+			jComboBox2 = new JComboBox(labelFiles);
 			jComboBox2.setPreferredSize(new Dimension(130, 24));
 			jComboBox2.setEditable(true);
 		}
+		jComboBox2.addItem("");
 		return jComboBox2;
 	}
 
