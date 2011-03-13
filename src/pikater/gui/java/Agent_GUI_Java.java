@@ -61,10 +61,10 @@ public class Agent_GUI_Java extends Agent_GUI {
         sendProblem(problemId);
     }
 
-    @Override
+    /*@Override
     protected void displayOptions(Problem problem, int performative) {
         // TODO Auto-generated method stub
-    }
+    }*/
 
     @Override
     protected void displayPartialResult(ACLMessage inform) {

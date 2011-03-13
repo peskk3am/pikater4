@@ -163,7 +163,15 @@ public class Agent_DataManager extends Agent {
 						"CREATE TABLE results ("
 								+ "userID INTEGER NOT NULL, "
 								+ "agentName VARCHAR (256), "
-								
+								+ "agentType VARCHAR (256), "
+                                                                + "options VARCHAR (256), "
+                                                                + "dataFile VARCHAR (50), "
+                                                                + "testFile VARCHAR (50), "
+                                                                + "errorRate DOUBLE, "
+                                                                + "kappaStatistic DOUBLE, "
+                                                                + "meanAbsoluteError DOUBLE, "
+                                                                + "rootMeanSquaredError DOUBLE, "
+                                                                + "relativeAbsoluteError DOUBLE," 
 								+ "rootRelativeSquaredError DOUBLE, "
 								
 								+ "objectFilename VARCHAR(256), "
@@ -367,43 +375,32 @@ public class Agent_DataManager extends Agent {
 
                         Statement stmt = db.createStatement();
 
-						String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
-								+ "rootRelativeSquaredError, start, finish, duration, objectFilename) VALUES ( 1, ";
-
+			String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
+                                + "errorRate, kappaStatistic, meanAbsoluteError, rootMeanSquaredError, relativeAbsoluteError,"
+				+ "rootRelativeSquaredError, start, finish, duration, objectFilename) VALUES ( 1, ";
                         query += "\'" + res.getAgent().getName() + "\',";
                         query += "\'" + res.getAgent().getType() + "\',";
                         query += "\'" + res.getAgent().optionsToString() + "\',";
                         query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
                         query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-
                         query += res.getResult().getError_rate() + ",";
-                        query += res.getResult().getKappa_statistic() + ",";
-                        query += res.getResult().getMean_absolute_error() + ",";
-                        query += res.getResult().getRoot_mean_squared_error() + ",";
-                        query += res.getResult().getRelative_absolute_error() + ",";
-                        query += res.getResult().getRoot_relative_squared_error() + ")";
-						query += res.getResult().getError_rate() + ",";
-						query += res.getResult().getKappa_statistic() + ",";
-						query += res.getResult().getMean_absolute_error() + ",";
-						query += res.getResult().getRoot_mean_squared_error()
-								+ ",";
-						query += res.getResult().getRelative_absolute_error()
-								+ ",";
-						query += res.getResult()
-								.getRoot_relative_squared_error();
+			query += res.getResult().getKappa_statistic() + ",";
+			query += res.getResult().getMean_absolute_error() + ",";
+			query += res.getResult().getRoot_mean_squared_error() + ",";
+			query += res.getResult().getRelative_absolute_error() + ",";
+			query += res.getResult().getRoot_relative_squared_error();
 
 						
-						if (res.getResult().getObject_filename() != null){
-							Timestamp currentTimestamp = 
-								new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());							
+			if (res.getResult().getObject_filename() != null){
+				Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());							
 							
-							query += ",";
-							query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
-							query += "\'" + currentTimestamp + "\',";
-							query += "\'" + res.getResult().getDuration() + "\',";						
-							query += "\'" + res.getResult().getObject_filename() + "\'";
-						}
-						query += ")";
+                                query += ",";
+                                query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
+                                query += "\'" + currentTimestamp + "\',";
+                                query += "\'" + res.getResult().getDuration() + "\',";
+                                query += "\'" + res.getResult().getObject_filename() + "\'";
+			}
+			query += ")";
 						
                         log.info("Executing query: " + query);
 

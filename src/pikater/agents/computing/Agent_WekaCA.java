@@ -94,8 +94,8 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 		return onto_test;
 	}
 
-	@Override
-	public boolean saveAgent() {
+	/*@Override
+	public String save() {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
 					new FileOutputStream("saved/" + getLocalName() + ".model"));
@@ -118,10 +118,10 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 			System.out.println(e);
 			return false;
 		}
-	} // end saveAgent
+	} // end saveAgent*/
 
-	@Override
-	public boolean loadAgent(String agentName) {
+	/*@Override
+	public boolean load(String agentName) {
 		try {
 			// deserialize model + header
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
@@ -160,7 +160,7 @@ public abstract class Agent_WekaCA extends Agent_ComputingAgent {
 			System.out.println(e);
 			return false;
 		}
-	} // end loadAgent
+	} // end loadAgent*/
 
 	private pikater.ontology.messages.Option convertOption(
 			MyWekaOption _weka_opt) {

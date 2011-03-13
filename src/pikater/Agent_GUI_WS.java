@@ -335,11 +335,11 @@ public class Agent_GUI_WS extends Agent_GUI {
 
 	}
 
-	@Override
+	/*@Override
 	protected void displayOptions(Problem problem, int performative) {
 		// TODO Auto-generated method stub
 
-	}
+	}*/
 
 	private String optionsToWekaString(List options) {
 

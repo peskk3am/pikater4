@@ -36,7 +36,7 @@ public class Agent_Regression extends Agent_ComputingAgent {
 		agent_options.setOptions(_options);
 	}
 
-	@Override
+	/*@Override
 	public boolean loadAgent(String agentName) {
 		try {
 			// deserialize model + header
@@ -71,9 +71,9 @@ public class Agent_Regression extends Agent_ComputingAgent {
 			System.out.println(e);
 			return false;
 		}
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public boolean saveAgent() {
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
@@ -97,7 +97,7 @@ public class Agent_Regression extends Agent_ComputingAgent {
 			System.out.println(e);
 			return false;
 		}
-	}
+	}*/
 
 	/*
 	 * Create linear model of data insts (least squares)
