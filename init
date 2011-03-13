@@ -1,5 +1,5 @@
 $a pikater.Agent_ARFFReader Reader
-$a pikater.agents.computing.Agent_RBFNetwork rbf1
+# $a pikater.agents.computing.Agent_RBFNetwork rbf3
 # $a Agent_RBFNetwork rbf2 -B 1
 
 # load rbf3 from file (rbf3.model) 
@@ -10,6 +10,7 @@ $a pikater.agents.computing.Agent_RBFNetwork rbf1
 
 $a pikater.Agent_Manager manager
 $a pikater.Agent_DataManager dataManager
+$a pikater.Agent_AgentManager agentManager
 
 # get a Problem from "config" file
 # $a Agent_GUI_WS very_simple_GUI

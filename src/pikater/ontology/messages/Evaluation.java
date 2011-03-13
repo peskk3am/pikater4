@@ -17,6 +17,9 @@ public class Evaluation implements Concept {
 	private float _root_relative_squared_error = -1; // percent
 	private String _status;
 
+	private int duration;  // integer miliseconds
+	private String object_filename;
+	
 	//private DataInstances data_table;
 	private List _labeled_data = new LinkedList(); // List of DataInstances
 
@@ -86,5 +89,20 @@ public class Evaluation implements Concept {
 	public void setLabeled_data(List labeled_data) {
 		_labeled_data = labeled_data;
 	}
+	
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
 
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setObject_filename(String object_filename) {
+		this.object_filename = object_filename;
+	}
+
+	public String getObject_filename() {
+		return object_filename;
+	}
 }
