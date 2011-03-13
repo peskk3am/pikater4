@@ -236,10 +236,7 @@ public class DataManagerService extends FIPAService {
 		return null;
 	}
 
-	public static ArrayList getFilesInfo(Agent agent, int userID) {
-
-		GetFileInfo gfi = new GetFileInfo();
-		gfi.setUserID(userID);
+	public static ArrayList getFilesInfo(Agent agent, GetFileInfo gfi) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("dataManager", false));
@@ -257,7 +254,7 @@ public class DataManagerService extends FIPAService {
 			ACLMessage inform = FIPAService.doFipaRequestClient(agent, request);
 
 			if (inform == null) {
-				return null;
+				return new ArrayList();
 			}
 
 			Result r = (Result) agent.getContentManager()

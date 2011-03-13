@@ -180,12 +180,55 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_FILE_INFO = "GET-FILE-INFO";
 	public static final String GET_FILE_INFO_USERID = "userID";
+        public static final String GET_FILE_INFO_ATTR_LO = "attrLower";
+        public static final String GET_FILE_INFO_ATTR_HI = "attrUpper";
+        public static final String GET_FILE_INFO_INST_LO = "instLower";
+        public static final String GET_FILE_INFO_INST_HI = "instUpper";
+        public static final String GET_FILE_INFO_FILENAME = "filename";
+        public static final String GET_FILE_INFO_MISSING_VALUES = "missingValues";
+        public static final String GET_FILE_INFO_DEFAULT_TASK = "defaultTask";
+        public static final String GET_FILE_INFO_ATTRIBUTE_TYPE = "attributeType";
 
 	public static final String UPDATE_METADATA = "UPDATE-METADATA";
 	public static final String UPDATE_METADATA_METADATA = "metadata";
 
 	public static final String GET_FILES = "GET-FILES";
 	public static final String GET_FILES_USERID = "userID";
+
+        public static final String SAVED_RESULT = "SAVED-RESULT";
+        public static final String SAVED_RESULT_ERR = "errorRate";
+        public static final String SAVED_RESULT_KAPPA = "kappaStatistic";
+        public static final String SAVED_RESULT_RMSE = "RMSE";
+        public static final String SAVED_RESULT_RAE = "relativeAbsoluteError";
+        public static final String SAVED_RESULT_MAE = "meanAbsError";
+        public static final String SAVED_RESULT_RRSE = "rootRelativeSquaredError";
+        public static final String SAVED_RESULT_TRAIN = "trainFile";
+        public static final String SAVED_RESULT_TEST = "testFile";
+        public static final String SAVED_RESULT_AGENT_TYPE = "agentType";
+        public static final String SAVED_RESULT_DATE = "date";
+        public static final String SAVED_RESULT_USER_ID = "userID";
+        public static final String SAVED_RESULT_OPTIONS = "agentOptions";
+
+        public static final String LOAD_RESULTS = "LOAD-RESULTS";
+        public static final String LOAD_RESULTS_ERR_LOW = "errorLower";
+        public static final String LOAD_RESULTS_ERR_HI = "errorUpper";
+        public static final String LOAD_RESULTS_KAPPA_HI = "kappaUpper";
+        public static final String LOAD_RESULTS_KAPPA_LOW = "kappaLower";
+        public static final String LOAD_RESULTS_RMSE_HI = "mseUpper";
+        public static final String LOAD_RESULTS_RMSE_LOW = "mseLower";
+        public static final String LOAD_RESULTS_RAE_HI = "raeUpper";
+        public static final String LOAD_RESULTS_RAE_LOW = "raeLower";
+        public static final String LOAD_RESULTS_MAE_HI = "maeUpper";
+        public static final String LOAD_RESULTS_MAE_LOW = "maeLower";
+        public static final String LOAD_RESULTS_RRSE_HI = "rrseUpper";
+        public static final String LOAD_RESULTS_RRSE_LOW = "rrseLower";
+        public static final String LOAD_RESULTS_TRAIN = "dataFile";
+        public static final String LOAD_RESULTS_TEST = "testFile";
+        public static final String LOAD_RESULTS_AGENT_TYPE = "agentType";
+        public static final String LOAD_RESULTS_AFTER_DATE = "startDate";
+        public static final String LOAD_RESULTS_BEFORE_DATE = "endDate";
+        public static final String LOAD_RESULTS_USER_ID = "userID";
+        
 
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
@@ -224,6 +267,7 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(ATTRIBUTE), Attribute.class);
 			add(new ConceptSchema(INSTANCE), Instance.class);
 			add(new ConceptSchema(METADATA), Metadata.class);
+                        add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
 			add(new PredicateSchema(PARTIALRESULTS), PartialResults.class);
 			add(new AgentActionSchema(COMPUTE), Compute.class);
 			add(new AgentActionSchema(GET_OPTIONS), GetOptions.class);
@@ -240,6 +284,7 @@ public class MessagesOntology extends Ontology {
 			add(new AgentActionSchema(GET_FILE_INFO), GetFileInfo.class);
 			add(new AgentActionSchema(UPDATE_METADATA), UpdateMetadata.class);
 			add(new AgentActionSchema(GET_FILES), GetFiles.class);
+                        add(new AgentActionSchema(LOAD_RESULTS), LoadResults.class);
 			// add(new AgentActionSchema(SEND_OPTIONS), SendOptions.class);
 
 			ConceptSchema cs = (ConceptSchema) getSchema(COMPUTATION);
@@ -477,6 +522,20 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER),
 					ObjectSchema.OPTIONAL);
 
+                        cs = (ConceptSchema)getSchema(SAVED_RESULT);
+                        cs.add(SAVED_RESULT_ERR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_KAPPA, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_RMSE, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_RRSE, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_MAE, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_RAE, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
+                        cs.add(SAVED_RESULT_USER_ID, (PrimitiveSchema)getSchema(BasicOntology.INTEGER));
+                        cs.add(SAVED_RESULT_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+                        cs.add(SAVED_RESULT_TRAIN, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+                        cs.add(SAVED_RESULT_TEST, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+                        cs.add(SAVED_RESULT_OPTIONS, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+                        cs.add(SAVED_RESULT_DATE, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+
 			PredicateSchema ps = (PredicateSchema) getSchema(PARTIALRESULTS);
 			ps.add(PARTIALRESULTS_TASK, (ConceptSchema) getSchema(TASK),
 					ObjectSchema.OPTIONAL);
@@ -509,7 +568,6 @@ public class MessagesOntology extends Ontology {
 			as.setResult((PrimitiveSchema) getSchema(BasicOntology.STRING)); // the
 																				// internal
 																				// filename
-
 			as = (AgentActionSchema) getSchema(TRANSLATE);
 			as.add(TRANSLATE_USER,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
@@ -544,6 +602,14 @@ public class MessagesOntology extends Ontology {
 			as = (AgentActionSchema) getSchema(GET_FILE_INFO);
 			as.add(GET_FILE_INFO_USERID,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
+                        as.add(GET_FILE_INFO_ATTR_HI, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_ATTR_LO, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_INST_HI, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_INST_LO, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_ATTRIBUTE_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_MISSING_VALUES, (PrimitiveSchema)getSchema(BasicOntology.BOOLEAN), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_DEFAULT_TASK, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(GET_FILE_INFO_FILENAME, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			as.setResult((ConceptSchema) getSchema(METADATA), 0,
 					ObjectSchema.UNLIMITED);
 
@@ -557,6 +623,24 @@ public class MessagesOntology extends Ontology {
 			as.setResult((PrimitiveSchema) getSchema(BasicOntology.STRING), 0,
 					ObjectSchema.UNLIMITED);
 
+                        as = (AgentActionSchema) getSchema(LOAD_RESULTS);
+                        as.add(LOAD_RESULTS_ERR_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_ERR_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_KAPPA_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_KAPPA_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RMSE_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RMSE_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_MAE_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_MAE_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RAE_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RAE_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RRSE_HI, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_RRSE_LOW, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_AFTER_DATE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_BEFORE_DATE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_USER_ID, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        as.setResult((ConceptSchema)getSchema(SAVED_RESULT), 0, ObjectSchema.UNLIMITED);
 			// as = (AgentActionSchema)getSchema(SEND_OPTIONS);
 			// as.add(SEND_OPTIONS_OPTIONS, (ConceptSchema)getSchema(OPTION), 1,
 			// ObjectSchema.UNLIMITED);

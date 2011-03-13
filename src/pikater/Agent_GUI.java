@@ -67,8 +67,8 @@ public abstract class Agent_GUI extends GuiAgent {
 	private String path = System.getProperty("user.dir")
 			+ System.getProperty("file.separator");
 
-	private Codec codec = new SLCodec();
-	private Ontology ontology = MessagesOntology.getInstance();
+	protected Codec codec = new SLCodec();
+	protected Ontology ontology = MessagesOntology.getInstance();
 
 	private int default_timeout = 30000; // 30s
 
