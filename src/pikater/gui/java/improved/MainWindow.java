@@ -92,6 +92,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Pikater 1.0");
 
         jToolBar1.setRollover(true);
 

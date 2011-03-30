@@ -73,6 +73,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         jScrollPane3 = new javax.swing.JScrollPane();
         currentResultsTable = new javax.swing.JTable();
 
+        setTitle("Pikater 1.0 - Results Browser");
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results Filter"));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
@@ -127,6 +129,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Results"));
 
         savedResultsTable.setModel(new pikater.gui.java.improved.SavedResultsTableModel(new LinkedList()));
+        savedResultsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(savedResultsTable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -192,6 +195,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         });
 
         currentResultsTable.setModel(currentResults);
+        currentResultsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane3.setViewportView(currentResultsTable);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -239,12 +243,15 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     public void showResults(List results) {
         savedResultsTable.setModel(new SavedResultsTableModel(results));
+        TableColumnAdjuster tca = new TableColumnAdjuster(savedResultsTable);
+        tca.adjustColumns();
     }
 
     public void addResult(Task t) {
         currentResults.add(t);
         currentResultsTable.setModel(currentResults);
-
+        TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
+        tca.adjustColumns();
     }
 
     private void loadResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultsButtonActionPerformed

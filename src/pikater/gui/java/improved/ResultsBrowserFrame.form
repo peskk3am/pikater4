@@ -1,6 +1,9 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="title" type="java.lang.String" value="Pikater 1.0 - Results Browser"/>
+  </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
@@ -209,6 +212,7 @@
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new pikater.gui.java.improved.SavedResultsTableModel(new LinkedList())" type="code"/>
                         </Property>
+                        <Property name="autoResizeMode" type="int" value="0"/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -280,6 +284,7 @@
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection code="currentResults" type="code"/>
                     </Property>
+                    <Property name="autoResizeMode" type="int" value="0"/>
                   </Properties>
                 </Component>
               </SubComponents>

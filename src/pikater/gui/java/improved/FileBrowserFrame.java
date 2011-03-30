@@ -194,6 +194,8 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
         fileListModel.setFiles(data);
         jTable1.setModel(fileListModel);
         jTable1.createDefaultColumnsFromModel();
+        TableColumnAdjuster tca = new TableColumnAdjuster(jTable1);
+        tca.adjustColumns();
     }
 
 
@@ -398,6 +400,7 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
                 .addContainerGap())
         );
 
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
