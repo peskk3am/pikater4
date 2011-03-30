@@ -199,7 +199,7 @@ public class LoadResults extends Action {
         if (agentType != null)
             txt = appendAnd(txt, "Agent type = " + agentType);
         if (dataFile != null)
-            txt = appendAnd(txt, "trainig file = " + dataFile);
+            txt = appendAnd(txt, "training file = " + dataFile);
         if (testFile != null)
             txt = appendAnd(txt, "testing file = " + testFile);
         if (startDate != null && endDate != null)
@@ -237,9 +237,9 @@ public class LoadResults extends Action {
         if (agentType != null)
             txt = appendAnd(txt, "agentType LIKE \'%" + agentType + "%\'");
         if (dataFile != null)
-            txt = appendAnd(txt, "dataFile LIKE \'%" + dataFile + "%\'");
+            txt = appendAnd(txt, "trainFileExt LIKE \'%" + dataFile + "%\'");
         if (testFile != null)
-            txt = appendAnd(txt, "testFile LIKE \'%" + testFile + "\'%");
+            txt = appendAnd(txt, "testFileExt LIKE \'%" + testFile + "\'%");
         //if (startDate != null && endDate != null)
         //    txt = appendAnd(txt, "created between " + startDate + " and " + endDate);
         if (errorLower != null && errorUpper != null)

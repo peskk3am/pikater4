@@ -691,7 +691,10 @@ public class MessagesOntology extends Ontology {
                         as.add(LOAD_RESULTS_AFTER_DATE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_BEFORE_DATE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_TRAIN, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+                        as.add(LOAD_RESULTS_TEST, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_USER_ID, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+                        
                         as.setResult((ConceptSchema)getSchema(SAVED_RESULT), 0, ObjectSchema.UNLIMITED);
 			// as = (AgentActionSchema)getSchema(SEND_OPTIONS);
 			// as.add(SEND_OPTIONS_OPTIONS, (ConceptSchema)getSchema(OPTION), 1,

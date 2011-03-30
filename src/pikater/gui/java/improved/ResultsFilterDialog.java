@@ -114,7 +114,7 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
 
         jLabel11.setText(bundle.getString("RMSE")); // NOI18N
 
-        jLabel3.setText(bundle.getString("<=")); // NOI18N
+        jLabel3.setText("<=");
 
         raeLower.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.0d, 0.01d));
         raeLower.setEnabled(false);
@@ -125,27 +125,27 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
         raeUpper.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0d, 1.0d, 0.01d));
         raeUpper.setEnabled(false);
 
-        jLabel1.setText(bundle.getString("<=")); // NOI18N
+        jLabel1.setText("<="); // NOI18N
 
-        jLabel10.setText(bundle.getString("<=")); // NOI18N
+        jLabel10.setText("<=");
 
         jLabel2.setText(bundle.getString("ERROR")); // NOI18N
 
-        jLabel15.setText(bundle.getString("<=")); // NOI18N
+        jLabel15.setText("<=");
 
         rrseUpper.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0d, 1.0d, 0.01d));
         rrseUpper.setEnabled(false);
 
-        jLabel7.setText(bundle.getString("<=")); // NOI18N
+        jLabel7.setText("<=");
 
         rmseLower.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.0d, 0.01d));
         rmseLower.setEnabled(false);
 
-        jLabel12.setText(bundle.getString("<=")); // NOI18N
+        jLabel12.setText("<=");
 
-        jLabel9.setText(bundle.getString("<=")); // NOI18N
+        jLabel9.setText("<=");
 
-        jLabel6.setText(bundle.getString("<=")); // NOI18N
+        jLabel6.setText("<=");
 
         jLabel8.setText(bundle.getString("RRSE")); // NOI18N
 
@@ -165,11 +165,11 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
         kappaLower.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.0d, 0.01d));
         kappaLower.setEnabled(false);
 
-        jLabel17.setText(bundle.getString("<=")); // NOI18N
+        jLabel17.setText("<=");
 
-        jLabel4.setText(bundle.getString("<=")); // NOI18N
+        jLabel4.setText("<=");
 
-        jLabel13.setText(bundle.getString("<=")); // NOI18N
+        jLabel13.setText("<=");
 
         rrseLower.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 1.0d, 0.01d));
         rrseLower.setEnabled(false);
@@ -177,7 +177,7 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
         errorUpper.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0d, 1.0d, 0.01d));
         errorUpper.setEnabled(false);
 
-        jLabel16.setText(bundle.getString("<=")); // NOI18N
+        jLabel16.setText("<=");
 
         errorChecbox.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -279,7 +279,7 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
                     .addComponent(errorChecbox)
                     .addComponent(kappaCheckbox)
                     .addComponent(rrseCheckbox))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -396,8 +396,8 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dateBefore, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                    .addComponent(dateAfter, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
+                    .addComponent(dateBefore, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                    .addComponent(dateAfter, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE))
                 .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(afterCheckbox)
@@ -477,7 +477,7 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
                     .addComponent(trainCheckbox)
                     .addComponent(agentCheckbox)
                     .addComponent(testCheckbox))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -526,7 +526,7 @@ public class ResultsFilterDialog extends javax.swing.JDialog {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
                         .addComponent(jButton1)))
                 .addContainerGap())
         );

@@ -8,6 +8,7 @@ import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -15,22 +16,30 @@ import jade.domain.FIPAService;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.Iterator;
+import jade.util.leap.LinkedList;
 import jade.util.leap.List;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import java.util.regex.Pattern;
 import java.util.regex.Pattern;
 
 import pikater.Agent_GUI;
 import pikater.DataManagerService;
+import pikater.gui.java.improved.AgentOptionsDialog;
 import pikater.gui.java.improved.FileBrowserFrame;
 import pikater.gui.java.improved.FileDetailsFrame;
+import pikater.gui.java.improved.FileGroup;
 import pikater.gui.java.improved.GuiConstants;
+import pikater.gui.java.improved.NewExperimentFrame;
 import pikater.gui.java.improved.ResultsBrowserFrame;
+import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.LoadResults;
 import pikater.ontology.messages.Metadata;
+import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Task;
@@ -53,12 +62,13 @@ public class Agent_GUI_Java extends Agent_GUI {
     @Override
     protected void DisplayWrongOption(int problemGuiId, String agentName,
             String optionName, String errorMessage) {
-        // TODO Auto-generated method stub
+        myGUI.showError("Agent " + agentName + ": " + errorMessage);
     }
 
     @Override
     protected void allOptionsReceived(int problemId) {
         sendProblem(problemId);
+        myGUI.showInfo("Starting experiment");
     }
 
     /*@Override
@@ -70,7 +80,7 @@ public class Agent_GUI_Java extends Agent_GUI {
     protected void displayPartialResult(ACLMessage inform) {
         if (inform.getPerformative() != ACLMessage.INFORM) {
             System.err.println("Received FAILURE");
-            //myGUI.displayError(inform.getContent());
+            myGUI.showError(inform.getContent());
             return;
         }
 
@@ -78,6 +88,8 @@ public class Agent_GUI_Java extends Agent_GUI {
             Result r = (Result) getContentManager().extractContent(inform);
             Results res = (Results) r.getValue();
             List tasks = res.getResults();
+
+            myGUI.showInfo("Got results from: " + ((Task)tasks.get(0)).getAgent().getName());
 
             Iterator it = tasks.iterator();
 
@@ -102,19 +114,40 @@ public class Agent_GUI_Java extends Agent_GUI {
                         DataManagerService.translateFilename(this, 1, null,
                         trainInternalFilename));
 
-                //myGUI.addResult(t);
+                if (t.getResult().getStatus() == null)
+                    myGUI.addResult(t);
+                else {
+                    myGUI.showError("Error: " + t.getResult().getStatus());
+                }
             }
         } catch (UngroundedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            myGUI.showError("Ungrounded exception: " + e.getLocalizedMessage());
         } catch (CodecException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            myGUI.showError("Codec exception: " + e.getLocalizedMessage());
         } catch (OntologyException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            myGUI.showError("Ontology exception: " + e.getLocalizedMessage());
         }
 
+    }
+
+    public List getAgentOptionsSynchronous(String agentType) {
+        
+        List options = null;
+        try {
+            options = getOptions(agentType);
+        }
+        catch (Exception e) {
+            myGUI.showError("Problem while loading options: " + e.getLocalizedMessage());
+        }
+
+        if (options == null)
+              options = new LinkedList();
+        return options;
     }
 
     @Override
@@ -138,9 +171,16 @@ public class Agent_GUI_Java extends Agent_GUI {
         switch (ev.getType()) {
             case GuiConstants.GET_FILES_INFO:
 
-                FileBrowserFrame fm = (FileBrowserFrame) ev.getSource();
-                GetFileInfo gfi = (GetFileInfo)ev.getParameter(0);
-                fm.setFiles(DataManagerService.getFilesInfo(this, gfi));
+                if (ev.getSource() instanceof FileBrowserFrame) {
+                    FileBrowserFrame fm = (FileBrowserFrame) ev.getSource();
+                    GetFileInfo gfi = (GetFileInfo)ev.getParameter(0);
+                    fm.setFiles(DataManagerService.getFilesInfo(this, gfi));
+                }
+                if (ev.getSource() instanceof NewExperimentFrame) {
+                    NewExperimentFrame nef = (NewExperimentFrame)ev.getSource();
+                    GetFileInfo gfi = (GetFileInfo)ev.getParameter(0);
+                    nef.setFiles(DataManagerService.getFilesInfo(this, gfi));
+                }
                 break;
 
             case GuiConstants.UPDATE_METADATA:
@@ -200,6 +240,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                     }
                 }
                 catch (Exception e) {
+                    myGUI.showError("Error: " + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
                 break;
@@ -207,6 +248,9 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 LoadResults lr = (LoadResults)ev.getParameter(0);
                 Action a = new Action(this.getAID(), lr);
+
+                System.err.println(lr.asText());
+                System.err.println(lr.asSQLCondition());
 
                 ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
                 req.addReceiver(new AID("dataManager", false));
@@ -232,78 +276,125 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 }
                 catch (CodecException e) {
+                    myGUI.showError("COdec error: " + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
                 catch (OntologyException e) {
+                    myGUI.showError("Ontlogy error: " + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
                 catch (FIPAException e) {
+                    myGUI.showError("FIPA error: " + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
+                break;
 
+            case GuiConstants.GET_AGENT_TYPES:
 
-            /*case MainWindow.ON_LOAD:
-
-                NewExperimentPanel nep = (NewExperimentPanel) ev.getSource();
+                NewExperimentFrame nef = (NewExperimentFrame) ev.getSource();
 
                 Vector<String> types = offerAgentTypes();
                 types.add(0, "?");
                 String[] agentTypes = new String[types.size()];
 
-                for (int i = 0; i < types.size(); i++) {
+                for (int i = 0; i < agentTypes.length; i++) {
                     agentTypes[i] = types.get(i);
                 }
 
-                ArrayList files = DataManagerService.getFiles(this, 1);
-                String[] filesList = new String[files.size()];
+                nef.setAgentTypes(agentTypes);
+                break;
+            case GuiConstants.GET_AGENT_OPTIONS:
 
-                for (int i = 0; i < files.size(); i++) {
-                    filesList[i] = (String) files.get(i);
+                AgentOptionsDialog aop = (AgentOptionsDialog)ev.getSource();
+
+                String agentType = (String)ev.getParameter(0);
+
+                try {
+                    List options = getOptions(agentType);
+                    if (options == null)
+                        options = new LinkedList();
+
+                    aop.setAgentOptions(options);
+
+                    for (int i = 0; i < options.size(); i++) {
+                        Option o = (Option)options.get(i);
+                        System.err.println("-" + o.getName() + " : " + o.getSynopsis());
+                    }
+                }
+                catch (CodecException ce) {
+                    ce.printStackTrace();
+                    myGUI.showError("Codec Error: " + ce.getLocalizedMessage());
+                }
+                catch (OntologyException oe) {
+                    oe.printStackTrace();
+                    myGUI.showError("Ontology Error: " + oe.getLocalizedMessage());
+                }
+                catch (FIPAException fe) {
+                    fe.printStackTrace();
+                    myGUI.showError("FIPA error: " + fe.getLocalizedMessage());
                 }
 
-                nep.setFilesList(filesList);
-                nep.setAgentTypes(agentTypes);
-                break;*/
+                break;
 
-//            case MainWindow.START_EXPERIMENT:
-//
-//                Vector<String> agents = (Vector<String>) ev.getParameter(0);
-//                Vector<String> agentOptions = (Vector<String>) ev.getParameter(1);
-//                Vector<String> trainFiles = (Vector<String>) ev.getParameter(2);
-//                Vector<String> testFiles = (Vector<String>) ev.getParameter(3);
-//                Vector<String> labelFiles = (Vector<String>) ev.getParameter(4);
-//                Vector<String> optionsManager = (Vector<String>) ev.getParameter(5);
-//
-//                int problemID = createNewProblem("10000");
-//
-//                for (int i = 0; i < trainFiles.size(); i++) {
-//                    addDatasetToProblem(problemID, trainFiles.get(i), testFiles.get(i), labelFiles.get(i), "predictions", null);
-//                }
-//
-//                try {
-//                    for (int i = 0; i < agents.size(); i++) {
-//
-//                        if (agents.get(i).contains("?")) {
-//                            System.err.println("? agent");
-//                            addAgentToProblem(problemID, null, agents.get(i), null);
-//                        } else {
-//                            addAgentToProblem(problemID, null, agents.get(i),
-//                                    agentOptions.get(i));
-//                        }
-//                    }
-//                } catch (FailureException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                if (optionsManager.get(0).equals("Random")) {
-//                    addMethodToProblem(problemID, optionsManager.get(0),
-//                            optionsManager.get(1), optionsManager.get(2));
-//                } else {
-//                    setDefault_number_of_values_to_try(Integer.parseInt(optionsManager.get(1)));
-//                    addMethodToProblem(problemID, "ChooseXValues", null, null);
-//                }
-//
-//                break;
+            case GuiConstants.START_EXPERIMENT:
+
+                LinkedList optionManager = (LinkedList) ev.getParameter(0);
+                ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(1);
+                ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(2);
+            
+                int problemID = createNewProblem("10000");
+
+                if (optionManager.get(0).equals("Random")) {
+                    addMethodToProblem(problemID, optionManager.get(0).toString(),
+                            optionManager.get(1).toString(), optionManager.get(2).toString());
+                }
+
+                if (optionManager.get(0).equals("ChooseXValues")) {
+                    addMethodToProblem(problemID, optionManager.get(0).toString(), null, null);
+                    setDefault_number_of_values_to_try((Integer)optionManager.get(1));
+                }
+
+                for (int i = 0; i < files.size(); i++) {
+                    addDatasetToProblem(problemID, files.get(i).getTrainFile(), files.get(i).getTestFile(), null, "predictions", null);
+                }
+
+                try {
+                    for (int i = 0; i < agents.size(); i++) {
+
+                        if (agents.get(i).getType().equals("?")) {
+                            System.err.println("? agent");
+                            addAgentToProblem(problemID, null, agents.get(i).getType(), null);
+                        } else {
+                            int aid = addAgentToProblem(problemID, null, agents.get(i).getType(), null);
+
+                            for (int j = 0; j < agents.get(i).getOptions().size(); j++) {
+                                Option o = (Option)agents.get(i).getOptions().get(j);
+
+                                String tries = o.getNumber_of_values_to_try() != 0 ? String.valueOf(o.getNumber_of_values_to_try()) : null;
+
+                                if (o.getIs_a_set()) {
+                                    String set = "";
+                                    for (int k = 0; k < o.getSet().size(); k++) {
+                                        set += o.getSet().get(k);
+                                        if (k < o.getSet().size() - 1) {
+                                            set += ",";
+                                        }
+                                    }
+                                    System.err.println("SET PARAM: " + set);
+                                    addOptionToAgent(problemID, aid, o.getName(), o.getValue(), null, null, String.valueOf(o.getSet().size()), set);
+                                }
+                                else
+                                    addOptionToAgent(problemID, aid, o.getName(), o.getValue(), o.getRange().getMin().toString(), o.getRange().getMax().toString(), tries, null);
+                            }
+
+                        }
+                    }
+                } catch (FailureException e) {
+                    e.printStackTrace();
+                }
+
+                
+                break;
 
 /*            case MainWindow.IMPORT_FILE:
 

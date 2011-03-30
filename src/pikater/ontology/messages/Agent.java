@@ -113,4 +113,55 @@ public class Agent implements Concept {
 		return str;
 	}
 
+        public Option getOptionByName(String name) {
+
+            for (int i = 0; i < getOptions().size(); i++) {
+                Option o = (Option)_options.get(i);
+                if (o.getName().equals(name)) {
+                    return o;
+                }
+            }
+
+            return null;
+        }
+
+        public String toGuiString() {
+		if (_options == null) {
+			return "";
+		}
+                String str = "";
+		Iterator itr = _options.iterator();
+		while (itr.hasNext()) {
+			pikater.ontology.messages.Option next_opt = (pikater.ontology.messages.Option) itr.next();
+                        if (next_opt.getData_type().equals("BOOLEAN")) {
+                            if (next_opt.getValue().equals("True")) {
+                                str += "-" + next_opt.getName() + " ";
+                            }
+                            if (next_opt.getMutable()) {
+                                str += "-" + next_opt.getName() + " ? ";
+                            }
+                        } else
+ 
+                        if (!next_opt.getMutable())
+                            str += "-" + next_opt.getName() + " " + next_opt.getValue() + " ";
+                        else {
+                            str += "-" + next_opt.getName() + " " + next_opt.getValue() + "/";
+                            if (!next_opt.getIs_a_set())
+                                str += "<" + next_opt.getRange().getMin() + "," + next_opt.getRange().getMax() + ">";
+                            else {
+                                String set = "";
+                                for (int i = 0; i < next_opt.getSet().size(); i++) {
+                                    set += next_opt.getSet().get(i);
+                                    if (i != next_opt.getSet().size()-1) {
+                                        set += " ";
+                                    }
+                                }
+                                str += "{" + set + "}";
+                            }
+                            str += "/" + next_opt.getNumber_of_values_to_try() + " ";
+                        }
+		}
+		return str;
+        }
+
 }

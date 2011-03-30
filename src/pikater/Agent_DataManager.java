@@ -195,6 +195,16 @@ public class Agent_DataManager extends Agent {
         }
 
         try {
+            if (!tableNames.contains("RESULTSEXTERNAL")) {
+                log.info("Creating view RESULTSEXTERNAL");
+                db.createStatement().executeQuery("CREATE VIEW RESULTSEXTERNAL AS SELECT results.*,filemapping.externalFilename AS trainFileExt, filemapping2.externalFilename AS testFileExt FROM results JOIN filemapping ON results.userID = filemapping.userID AND results.dataFile = filemapping.internalFilename JOIN filemapping AS filemapping2 ON results.userID = filemapping2.userID AND results.testFile = filemapping2.internalFilename");
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
             if (!triggerNames.contains("PREPAREMETADATA")) {
                 db.createStatement().execute(
                         "CREATE TRIGGER prepareMetadata AFTER INSERT ON filemapping " + "REFERENCING NEW ROW AS newrow FOR EACH ROW " + "INSERT INTO metadata (internalfilename, externalfilename) " + "VALUES (newrow.internalfilename, newrow.externalfilename)");
@@ -609,7 +619,9 @@ public class Agent_DataManager extends Agent {
 
                         LoadResults lr = (LoadResults) a.getAction();
 
-                        String query = "SELECT * FROM results " + lr.asSQLCondition();
+                        System.err.println(lr.asText());
+
+                        String query = "SELECT * FROM resultsExternal " + lr.asSQLCondition();
 
                         System.err.println(query);
                         log.info(query);
@@ -629,8 +641,8 @@ public class Agent_DataManager extends Agent {
 
                             sr.setAgentType(rs.getString("agentType"));
                             sr.setAgentOptions(rs.getString("options"));
-                            sr.setTrainFile(rs.getString("dataFile"));
-                            sr.setTestFile(rs.getString("testFile"));
+                            sr.setTrainFile(rs.getString("trainFileExt"));
+                            sr.setTestFile(rs.getString("testFileExt"));
                             sr.setErrorRate(rs.getDouble("errorRate"));
                             sr.setKappaStatistic(rs.getDouble("kappaStatistic"));
                             sr.setMeanAbsError(rs.getDouble("meanAbsoluteError"));

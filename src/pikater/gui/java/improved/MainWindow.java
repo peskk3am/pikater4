@@ -13,6 +13,7 @@ package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
 import javax.swing.JFrame;
+import pikater.ontology.messages.Task;
 
 /**
  *
@@ -22,6 +23,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     GuiAgent myAgent;
 
+    ResultsBrowserFrame rbf;
+    String infoText = "";
+
     /** Creates new form MainWindow */
     public MainWindow() {
         initComponents();
@@ -29,11 +33,22 @@ public class MainWindow extends javax.swing.JFrame {
 
 
     public MainWindow(GuiAgent myAgent) {
-        this();
         this.myAgent = myAgent;
-        System.err.println(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("MAINWIN ") + myAgent);
+        rbf = new ResultsBrowserFrame(myAgent);
+        initComponents();
     }
 
+    public void showInfo(String info) {
+        infoText += "<font color = green>" + info + "<br></font>\n";
+        infoTextPane.setText("<html><body>" + infoText + "</body></html>");
+        infoTextPane.setCaretPosition(infoTextPane.getDocument().getLength());
+    }
+
+    public void showError(String error) {
+        infoText += "<font color = red>" + error + "<br></font>\n";
+        infoTextPane.setText("<html><body>" + infoText + "</body></html>");
+        infoTextPane.setCaretPosition(infoTextPane.getDocument().getLength());
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -47,6 +62,9 @@ public class MainWindow extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         resultsBrowserButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        infoTextPane = new javax.swing.JTextPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -99,6 +117,22 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton2);
+
+        jButton1.setText(bundle.getString("NEW_EXPERIMENT")); // NOI18N
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton1);
+
+        infoTextPane.setContentType("text/html");
+        infoTextPane.setEditable(false);
+        infoTextPane.setText("<html>\n<body>");
+        jScrollPane1.setViewportView(infoTextPane);
 
         fileMenu.setText(bundle.getString("FILE")); // NOI18N
 
@@ -154,14 +188,20 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(389, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(347, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -177,9 +217,17 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void resultsBrowserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resultsBrowserButtonActionPerformed
-        ResultsBrowserFrame rbf = new ResultsBrowserFrame(myAgent);
         rbf.setVisible(true);
     }//GEN-LAST:event_resultsBrowserButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        NewExperimentFrame nef = new NewExperimentFrame(this, true, myAgent);
+        nef.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void addResult(Task t) {
+        rbf.addResult(t);
+    }
 
     /**
     * @param args the command line arguments
@@ -202,8 +250,11 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JTextPane infoTextPane;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JDialog jDialog1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;

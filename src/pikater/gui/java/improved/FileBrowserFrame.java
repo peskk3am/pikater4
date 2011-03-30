@@ -187,7 +187,6 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
         GetFileInfo gfi = new GetFileInfo();
         gfi.setUserID(1);
         ge.addParameter(gfi);
-        //System.err.println(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("MAINWINDOW:") + myAgent);
         myAgent.postGuiEvent(ge);
     }
 
