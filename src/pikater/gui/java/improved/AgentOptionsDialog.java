@@ -86,7 +86,8 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("Agent type");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("AGENT TYPE")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -112,7 +113,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         optionsPanel.setLayout(new javax.swing.BoxLayout(optionsPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(optionsPanel);
 
-        jButton1.setText("OK");
+        jButton1.setText(bundle.getString("OK")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);

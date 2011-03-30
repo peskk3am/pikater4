@@ -73,19 +73,20 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         jScrollPane3 = new javax.swing.JScrollPane();
         currentResultsTable = new javax.swing.JTable();
 
-        setTitle("Pikater 1.0 - Results Browser");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        setTitle(bundle.getString("PIKATER 1.0 - RESULTS BROWSER")); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results Filter"));
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
-        loadResultsButton.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        loadResultsButton.setText(bundle1.getString("LOAD_RESULTS")); // NOI18N
         loadResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadResultsButtonActionPerformed(evt);
             }
         });
 
-        editFilterButton.setText(bundle.getString("EDIT_FILTER")); // NOI18N
+        editFilterButton.setText(bundle1.getString("EDIT_FILTER")); // NOI18N
         editFilterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editFilterButtonActionPerformed(evt);
@@ -149,7 +150,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap())
         );
 
-        savedResultsExportButton.setText("Export CSV");
+        savedResultsExportButton.setText(bundle.getString("EXPORT CSV")); // NOI18N
         savedResultsExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 savedResultsExportButtonActionPerformed(evt);
@@ -187,7 +188,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
         jTabbedPane1.addTab("Saved Results", jPanel3);
 
-        currentResultsExportButton.setText("Export CSV");
+        currentResultsExportButton.setText(bundle.getString("EXPORT CSV")); // NOI18N
         currentResultsExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentResultsExportButtonActionPerformed(evt);

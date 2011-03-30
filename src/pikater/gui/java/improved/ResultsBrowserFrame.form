@@ -2,7 +2,9 @@
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
-    <Property name="title" type="java.lang.String" value="Pikater 1.0 - Results Browser"/>
+    <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+      <ResourceString bundle="pikater/gui/java/improved/Bundle.properties" key="PIKATER 1.0 - RESULTS BROWSER" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -221,7 +223,9 @@
             </Container>
             <Component class="javax.swing.JButton" name="savedResultsExportButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Export CSV"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="pikater/gui/java/improved/Bundle.properties" key="EXPORT CSV" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="savedResultsExportButtonActionPerformed"/>
@@ -266,7 +270,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="currentResultsExportButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Export CSV"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="pikater/gui/java/improved/Bundle.properties" key="EXPORT CSV" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="currentResultsExportButtonActionPerformed"/>

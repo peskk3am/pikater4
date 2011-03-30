@@ -69,20 +69,21 @@ public class BooleanOptionPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(keepDefaultRadio);
         keepDefaultRadio.setSelected(true);
-        keepDefaultRadio.setText("Keep default value");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        keepDefaultRadio.setText(bundle.getString("KEEP DEFAULT VALUE")); // NOI18N
 
         buttonGroup1.add(setByOptManRadio);
-        setByOptManRadio.setText("Option is set by option manager");
+        setByOptManRadio.setText(bundle.getString("OPTION IS SET BY OPTION MANAGER")); // NOI18N
 
         buttonGroup1.add(manualValueRadio);
-        manualValueRadio.setText("Specify manual value");
+        manualValueRadio.setText(bundle.getString("SPECIFY MANUAL VALUE")); // NOI18N
         manualValueRadio.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 manualValueRadioStateChanged(evt);
             }
         });
 
-        userSpecifiedValue.setText("Option is set");
+        userSpecifiedValue.setText(bundle.getString("OPTION IS SET")); // NOI18N
         userSpecifiedValue.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

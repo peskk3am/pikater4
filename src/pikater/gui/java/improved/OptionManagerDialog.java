@@ -93,7 +93,8 @@ public class OptionManagerDialog extends javax.swing.JDialog {
         goalError = new javax.swing.JSpinner();
         jButton2 = new javax.swing.JButton();
 
-        jButton1.setText("jButton1");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jButton1.setText(bundle.getString("JBUTTON1")); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -105,13 +106,13 @@ public class OptionManagerDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setText("Option Manager type");
+        jLabel1.setText(bundle.getString("OPTION MANAGER TYPE")); // NOI18N
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
         numTries.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jLabel4.setText("Number of tries");
+        jLabel4.setText(bundle.getString("NUMBER OF TRIES")); // NOI18N
 
         javax.swing.GroupLayout chooseXValuesPanelLayout = new javax.swing.GroupLayout(chooseXValuesPanel);
         chooseXValuesPanel.setLayout(chooseXValuesPanelLayout);
@@ -136,9 +137,9 @@ public class OptionManagerDialog extends javax.swing.JDialog {
 
         mainPanel.add(chooseXValuesPanel, "card5");
 
-        jLabel3.setText("Maximum number of tries:");
+        jLabel3.setText(bundle.getString("MAXIMUM NUMBER OF TRIES:")); // NOI18N
 
-        jLabel2.setText("Goal error:");
+        jLabel2.setText(bundle.getString("GOAL ERROR:")); // NOI18N
 
         maxTries.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(0), null, Integer.valueOf(1)));
 
@@ -175,7 +176,7 @@ public class OptionManagerDialog extends javax.swing.JDialog {
 
         mainPanel.add(randomPanel, "card4");
 
-        jButton2.setText("OK");
+        jButton2.setText(bundle.getString("OK")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

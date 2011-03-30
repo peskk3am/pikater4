@@ -132,10 +132,11 @@ public class MixedOptionPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(defaultRadio);
         defaultRadio.setSelected(true);
-        defaultRadio.setText("Keep default value");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        defaultRadio.setText(bundle.getString("KEEP DEFAULT VALUE")); // NOI18N
 
         buttonGroup1.add(autoRadio);
-        autoRadio.setText("This option is set automatically");
+        autoRadio.setText(bundle.getString("THIS OPTION IS SET AUTOMATICALLY")); // NOI18N
         autoRadio.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 autoRadioStateChanged(evt);
@@ -143,7 +144,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         });
 
         buttonGroup1.add(manualRadio);
-        manualRadio.setText("Use manual value");
+        manualRadio.setText(bundle.getString("USE MANUAL VALUE")); // NOI18N
         manualRadio.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 manualRadioStateChanged(evt);
@@ -156,29 +157,29 @@ public class MixedOptionPanel extends javax.swing.JPanel {
 
         setText.setEnabled(false);
 
-        jLabel1.setText("Option pattern");
+        jLabel1.setText(bundle.getString("OPTION PATTERN")); // NOI18N
         jLabel1.setEnabled(false);
 
         upperSpinner.setEnabled(false);
 
-        jLabel3.setText("to");
+        jLabel3.setText(bundle.getString("TO")); // NOI18N
         jLabel3.setEnabled(false);
 
         buttonGroup2.add(setRadio);
-        setRadio.setText("Set");
+        setRadio.setText(bundle.getString("SET")); // NOI18N
         setRadio.setEnabled(false);
 
-        jLabel2.setText("Choose values from");
+        jLabel2.setText(bundle.getString("CHOOSE VALUES FROM")); // NOI18N
         jLabel2.setEnabled(false);
 
         buttonGroup2.add(intervalRadio);
         intervalRadio.setSelected(true);
-        intervalRadio.setText("Interval");
+        intervalRadio.setText(bundle.getString("INTERVAL")); // NOI18N
         intervalRadio.setEnabled(false);
 
         patternText.setEnabled(false);
 
-        jLabel5.setText("Maximum tries");
+        jLabel5.setText(bundle.getString("MAXIMUM TRIES")); // NOI18N
         jLabel5.setEnabled(false);
 
         triesSpinner.setEnabled(false);
@@ -249,7 +250,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("Value");
+        jLabel4.setText(bundle.getString("VALUE")); // NOI18N
         jLabel4.setEnabled(false);
 
         javax.swing.GroupLayout manualPanelLayout = new javax.swing.GroupLayout(manualPanel);

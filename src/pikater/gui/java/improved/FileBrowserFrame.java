@@ -253,21 +253,22 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
 
-        jLabel1.setText("Missing values");
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jLabel1.setText(bundle1.getString("MISSING VALUES")); // NOI18N
 
         missAttr.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Yes", "No" }));
 
-        jLabel8.setText("Attriutes type");
+        jLabel8.setText(bundle1.getString("ATTRIUTES TYPE")); // NOI18N
 
         attType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Numeric", "Categorical", "Multivariate" }));
 
-        jLabel9.setText("Default task");
+        jLabel9.setText(bundle1.getString("DEFAULT TASK")); // NOI18N
 
         defaultTask.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Classification", "Regression" }));
 
-        jLabel10.setText("Filename");
+        jLabel10.setText(bundle1.getString("FILENAME")); // NOI18N
 
-        jLabel2.setText("Number of instances");
+        jLabel2.setText(bundle1.getString("NUMBER OF INSTANCES")); // NOI18N
 
         jLabel5.setText("<=");
 
@@ -279,7 +280,7 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
 
         nInstUpper.setEnabled(false);
 
-        jLabel6.setText("Number of attributes");
+        jLabel6.setText(bundle1.getString("NUMBER OF ATTRIBUTES")); // NOI18N
 
         nInstLower.setEnabled(false);
 
@@ -299,7 +300,7 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
 
         jLabel4.setText("<=");
 
-        okButton.setText("OK");
+        okButton.setText(bundle1.getString("OK")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);

@@ -77,7 +77,8 @@ public class FileGroupsPanel extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Training file");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("TRAINING FILE")); // NOI18N
 
         trainingFileName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +93,7 @@ public class FileGroupsPanel extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText("Testing file");
+        jLabel2.setText(bundle.getString("TESTING FILE")); // NOI18N
 
         jButton2.setText("...");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -103,9 +104,9 @@ public class FileGroupsPanel extends javax.swing.JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Label files"));
 
-        jButton4.setText("Remove");
+        jButton4.setText(bundle.getString("REMOVE")); // NOI18N
 
-        jButton3.setText("Add");
+        jButton3.setText(bundle.getString("ADD")); // NOI18N
 
         jScrollPane1.setViewportView(jList1);
 
@@ -138,7 +139,7 @@ public class FileGroupsPanel extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton5.setText("OK");
+        jButton5.setText(bundle.getString("OK")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);

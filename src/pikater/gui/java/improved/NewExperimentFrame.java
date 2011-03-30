@@ -196,15 +196,16 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
-        fileDialog.setDialogTitle("Load XML");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        fileDialog.setDialogTitle(bundle.getString("LOAD XML")); // NOI18N
         fileDialog.setFileFilter(null);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("OPTION_MANAGER"))); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("OPTION_MANAGER"))); // NOI18N
 
         optManagerLabel.setText("Random -E 0.1 -M 5");
 
-        editOptionManagerButton.setText("Edit");
+        editOptionManagerButton.setText(bundle.getString("EDIT")); // NOI18N
         editOptionManagerButton.setMaximumSize(new java.awt.Dimension(59, 25));
         editOptionManagerButton.setMinimumSize(new java.awt.Dimension(59, 25));
         editOptionManagerButton.setPreferredSize(new java.awt.Dimension(59, 25));
@@ -235,16 +236,16 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AGENTS"))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("AGENTS"))); // NOI18N
 
-        addAgentButton.setText("Add");
+        addAgentButton.setText(bundle.getString("ADD")); // NOI18N
         addAgentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAgentButtonActionPerformed(evt);
             }
         });
 
-        removeAgentButton.setText("Remove");
+        removeAgentButton.setText(bundle.getString("REMOVE")); // NOI18N
         removeAgentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeAgentButtonActionPerformed(evt);
@@ -255,7 +256,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         agentJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(agentJList);
 
-        editAgentButton.setText("Edit");
+        editAgentButton.setText(bundle.getString("EDIT")); // NOI18N
         editAgentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editAgentButtonActionPerformed(evt);
@@ -294,21 +295,21 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("FILE_GROUPS"))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("FILE_GROUPS"))); // NOI18N
 
         filesJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(filesJList);
 
-        addFilesButton.setText("Add");
+        addFilesButton.setText(bundle.getString("ADD")); // NOI18N
         addFilesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addFilesButtonActionPerformed(evt);
             }
         });
 
-        editFilesButton.setText("Edit");
+        editFilesButton.setText(bundle.getString("EDIT")); // NOI18N
 
-        removeFilesButton.setText("Remove");
+        removeFilesButton.setText(bundle.getString("REMOVE")); // NOI18N
         removeFilesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeFilesButtonActionPerformed(evt);
@@ -347,17 +348,17 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        startExperimentButton.setText("Start Experiment");
+        startExperimentButton.setText(bundle.getString("START EXPERIMENT")); // NOI18N
         startExperimentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startExperimentButtonActionPerformed(evt);
             }
         });
 
-        jMenu1.setText("File");
+        jMenu1.setText(bundle.getString("FILE")); // NOI18N
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Load XML");
+        jMenuItem1.setText(bundle.getString("LOAD XML")); // NOI18N
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);

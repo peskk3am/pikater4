@@ -161,15 +161,16 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Automatic settings"));
         jPanel1.setEnabled(false);
 
-        jLabel3.setText("to");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jLabel3.setText(bundle.getString("TO")); // NOI18N
         jLabel3.setEnabled(false);
 
-        jLabel4.setText("Maximum tries");
+        jLabel4.setText(bundle.getString("MAXIMUM TRIES")); // NOI18N
         jLabel4.setEnabled(false);
 
         toSpinner.setEnabled(false);
 
-        jLabel2.setText("Try values from");
+        jLabel2.setText(bundle.getString("TRY VALUES FROM")); // NOI18N
         jLabel2.setEnabled(false);
 
         fromSpinner.setEnabled(false);
@@ -178,11 +179,11 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
 
         buttonGroup2.add(intervalRadio);
         intervalRadio.setSelected(true);
-        intervalRadio.setText("interval");
+        intervalRadio.setText(bundle.getString("INTERVAL")); // NOI18N
         intervalRadio.setEnabled(false);
 
         buttonGroup2.add(setRadio);
-        setRadio.setText("set");
+        setRadio.setText(bundle.getString("SET")); // NOI18N
         setRadio.setEnabled(false);
 
         setTextField.setEnabled(false);
@@ -245,7 +246,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         manualSpinner.setEnabled(false);
 
         jLabel1.setLabelFor(manualSpinner);
-        jLabel1.setText("Value");
+        jLabel1.setText(bundle.getString("VALUE")); // NOI18N
         jLabel1.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -271,7 +272,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(defaultValueRadio);
         defaultValueRadio.setSelected(true);
-        defaultValueRadio.setText("Keep default value");
+        defaultValueRadio.setText(bundle.getString("KEEP DEFAULT VALUE")); // NOI18N
         defaultValueRadio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 defaultValueRadioActionPerformed(evt);
@@ -279,7 +280,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         });
 
         buttonGroup1.add(valueSetByOptMan);
-        valueSetByOptMan.setText("Value is set by option manager");
+        valueSetByOptMan.setText(bundle.getString("VALUE IS SET BY OPTION MANAGER")); // NOI18N
         valueSetByOptMan.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 valueSetByOptManStateChanged(evt);
@@ -287,7 +288,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         });
 
         buttonGroup1.add(manualValue);
-        manualValue.setText("Specify manual value");
+        manualValue.setText(bundle.getString("SPECIFY MANUAL VALUE")); // NOI18N
         manualValue.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 manualValueStateChanged(evt);
