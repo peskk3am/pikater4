@@ -207,7 +207,7 @@ public class OptionPanel extends javax.swing.JPanel {
         }
 
         if (o.getData_type().equals("MIXED")) {
-            optionPanel = new MixedOptionPanel();
+            optionPanel = new MixedOptionPanel(o);
             optionsPanel.add(optionPanel);
         }
     }

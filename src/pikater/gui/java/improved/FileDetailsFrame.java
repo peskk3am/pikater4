@@ -13,8 +13,18 @@ package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
+import jade.util.leap.List;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.FastScatterPlot;
+import org.jfree.chart.plot.Plot;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.GetData;
+import pikater.ontology.messages.Instance;
+import weka.gui.beans.ScatterPlotMatrix;
 
 /**
  *
@@ -25,6 +35,8 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
     GuiAgent myAgent;
 
     /** Creates new form FileDetailsFrame */
+
+    DataInstances di;
     public FileDetailsFrame() {
         initComponents();
     }
@@ -41,6 +53,7 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
 
     public void setInstances(DataInstances di) {
         jTable1.setModel(new DataInstancesTableModel(di));
+        this.di = di;
     }
 
     /** This method is called from within the constructor to
@@ -57,7 +70,19 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        visualizationScrollPane = new javax.swing.JScrollPane();
+        scatterPlotMatrix1 = new weka.gui.beans.ScatterPlotMatrix();
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
+        jTabbedPane1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                jTabbedPane1ComponentShown(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(jTable1);
 
@@ -65,25 +90,39 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
         jTabbedPane1.addTab(bundle.getString("DATA"), jPanel1); // NOI18N
 
+        visualizationScrollPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                visualizationScrollPaneComponentShown(evt);
+            }
+        });
+        visualizationScrollPane.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                visualizationScrollPaneFocusGained(evt);
+            }
+        });
+        visualizationScrollPane.setViewportView(scatterPlotMatrix1);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+            .addComponent(visualizationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(visualizationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(bundle.getString("VISALISATION"), jPanel2); // NOI18N
@@ -94,19 +133,51 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1ComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTabbedPane1ComponentShown
+
+
+    }//GEN-LAST:event_jTabbedPane1ComponentShown
+
+    private void visualizationScrollPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_visualizationScrollPaneComponentShown
+
+        System.err.println("handler");
+
+        if (di == null)
+            return;
+
+        try {
+            scatterPlotMatrix1.setInstances(di.toWekaInstances());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+
+
+    }//GEN-LAST:event_visualizationScrollPaneComponentShown
+
+    private void visualizationScrollPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_visualizationScrollPaneFocusGained
+        visualizationScrollPaneComponentShown(evt);
+    }//GEN-LAST:event_visualizationScrollPaneFocusGained
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+       visualizationScrollPaneComponentShown(null);
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     /**
     * @param args the command line arguments
@@ -123,9 +194,10 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private weka.gui.beans.ScatterPlotMatrix scatterPlotMatrix1;
+    private javax.swing.JScrollPane visualizationScrollPane;
     // End of variables declaration//GEN-END:variables
 
 }
