@@ -12,3 +12,4 @@ PART:pikater.agents.computing.Agent_WekaCA:weka.classifiers.rules.PART
 OneR:pikater.agents.computing.Agent_WekaCA:weka.classifiers.rules.OneR
 RandomTree:pikater.agents.computing.Agent_WekaCA:weka.classifiers.trees.RandomTree
 NBTree:pikater.agents.computing.Agent_WekaCA:weka.classifiers.trees.NBTree
+Perceptron:pikater.agents.computing.Agent_Perceptron
