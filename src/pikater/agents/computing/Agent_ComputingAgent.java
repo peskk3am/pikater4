@@ -214,9 +214,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		args = getArguments();
 
-		OPTIONS_ARGS = new String[args.length];
-
 		if (args != null && args.length > 0) {
+			OPTIONS_ARGS = new String[args.length];
+
 			if (args[0].equals("load")) {
 				// loadAgent(getLocalName());
 				args = new String[0];
@@ -234,10 +234,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 			}
 		}
-
-		registerWithDF();
-
+		//some important initializations before registering
 		getParameters();
+		
+		registerWithDF();
 
 		addBehaviour(new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));
@@ -710,9 +710,13 @@ public abstract class Agent_ComputingAgent extends Agent {
 							if (state == states.TRAINED) {
 								eval = evaluateCA();
 								if (output.equals("predictions")) {
-									labeledData.add(getPredictions(test, onto_test));
+									DataInstances di = new DataInstances();
+									di.fillWekaInstances(test);
+									labeledData.add(getPredictions(test, di));
 									if (!labelFileName.equals("")){
-										labeledData.add(getPredictions(label, onto_label));
+										di = new DataInstances();
+										di.fillWekaInstances(label);
+										labeledData.add(getPredictions(label, di));
 									}
 									eval.setLabeled_data(labeledData);
 								}

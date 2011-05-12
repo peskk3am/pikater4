@@ -87,6 +87,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	
 	private HashMap<String, String> agentTypes;
+	private HashMap<String, Object[]> agentOptions;
 	private int default_number_of_values_to_try = 10;
 	private float default_error_rate = (float) 0.3;
 	protected String default_method = "Random";
@@ -583,7 +584,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (aid == null) {
 					// agent of given type doesn't exist
 					newName = generateName(type);
-					aid = createAgent(agentTypes.get(type), newName);
+					aid = createAgent(agentTypes.get(type), newName, agentOptions.get(type));
 					doWait(100);
 				}
 			}
@@ -1075,6 +1076,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		// Sets up a file reader to read the agent_types file
 		
 		agentTypes = new HashMap<String, String>();
+			agentOptions = new HashMap<String, Object[]>();
 		FileReader input;
 		try {
 			input = new FileReader(path + "agent_types");
@@ -1085,7 +1087,14 @@ public abstract class Agent_GUI extends GuiAgent {
 
 			// Read through file one line at time
 			while (line != null) {
-				agentTypes.put(line.split(":")[0], line.split(":")[1]);
+					String[] agentClass = line.split(":");
+					agentTypes.put(agentClass[0], agentClass[1]);
+					if(agentClass.length>2){
+						Object[] opts = new Object[agentClass.length-2];
+						for(int i = 0; i < opts.length; i++)
+							opts[i] = agentClass[i+2];
+						this.agentOptions.put(agentClass[0], opts);
+					}
 				line = bufRead.readLine();
 			}
 
@@ -1108,13 +1117,13 @@ public abstract class Agent_GUI extends GuiAgent {
 		return agents;
 	}
 
-	protected AID createAgent(String type, String name) {
+	protected AID createAgent(String type, String name, Object[] options) {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 
 		try {
 			AgentController agent = container.createNewAgent(name, type,
-					new Object[0]);
+					options);
 			agent.start();
 			return new AID((String) name, AID.ISLOCALNAME);
 		} catch (ControllerException e) {

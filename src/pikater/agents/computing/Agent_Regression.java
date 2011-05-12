@@ -30,6 +30,7 @@ public class Agent_Regression extends Agent_ComputingAgent {
 		// empty set of parameters
 		agent_options = new pikater.ontology.messages.Agent();
 		agent_options.setName(getLocalName());
+		agent_options.setType(getAgentType());
 		List _options = new ArrayList();
 		// parameters...
 

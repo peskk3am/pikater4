@@ -84,6 +84,12 @@ public class Agent_Manager extends Agent {
 			while (line != null) {
 				String[] agentClass = line.split(":");
 				agentTypes.put(agentClass[0], agentClass[1]);
+				if(agentClass.length>2){
+					Object[] opts = new Object[agentClass.length-2];
+					for(int i = 0; i < opts.length; i++)
+						opts[i] = agentClass[i+2];
+					this.agentOptions.put(agentClass[0], opts);
+				}
 				line = bufRead.readLine();
 			}
 
@@ -101,6 +107,7 @@ public class Agent_Manager extends Agent {
 	}
 	
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
+	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();
 	
 	private static final long serialVersionUID = -5140758757320827589L;
 
@@ -694,7 +701,7 @@ public class Agent_Manager extends Agent {
 			if (Agents.length == 0) {
 				// create agent
 				String agentName = generateName(agentType);
-				AID a = createAgent(agentTypes.get(agentType), agentName);
+				AID a = createAgent(agentTypes.get(agentType), agentName, agentOptions.get(agentType));
 				busyAgents.add(a);
 				return a;
 			} else {
@@ -712,7 +719,7 @@ public class Agent_Manager extends Agent {
 					return Agents[i];
 				} else {
 					String agentName = generateName(agentType);
-					AID a = createAgent(agentTypes.get(agentType), agentName);
+					AID a = createAgent(agentTypes.get(agentType), agentName, agentOptions.get(agentType));
 					busyAgents.add(a);
 					return a;
 				}
@@ -812,13 +819,13 @@ public class Agent_Manager extends Agent {
 		return false;
 	}
 
-	public AID createAgent(String type, String name) {
+	public AID createAgent(String type, String name, Object[] options) {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 
 		try {
 			AgentController agent = container.createNewAgent(name, type,
-					new Object[0]);
+					options);
 			agent.start();
 			return new AID((String) name, AID.ISLOCALNAME);
 		} catch (ControllerException e) {
