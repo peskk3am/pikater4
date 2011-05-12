@@ -4,17 +4,15 @@
         <method name="ChooseXValues" />  
         
         <dataset train="iris.arff" test="iris.arff" output="predictions"/>
-        <!-- <dataset train="weather.arff" test="weather.arff" /> -->
+        <!--<dataset train="weather.arff" test="weather.arff" />-->
         
-        <!--
         <agent type="RBFNetwork">
-            <parameter name="B" value="3" />
+            <parameter name="B" value="?" set="3 4 5"/>
         </agent>
-	-->
 	
         <agent type="RBFNetwork">
             <parameter name="B" value="3" lower="3" upper="5" number_of_values_to_try="5" />
-            <parameter name="W" value="?" /> 
+            <parameter name="W" value="?" set="0.01,0.3"/> 
         </agent>
         
         <agent type="MultilayerPerceptron">
@@ -22,16 +20,11 @@
             <parameter name="L" value="?" />
         </agent>
         
-        
-        <!--
         <agent type="?">
         </agent>
-		-->
 		
-        <!--
         <agent type="NaiveBayes">
         </agent>
-        -->
     </experiment>
        
 </experiments>

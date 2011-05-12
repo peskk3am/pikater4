@@ -204,6 +204,7 @@ public class MessagesOntology extends Ontology {
 	
 	public static final String LOAD_AGENT = "LOAD-AGENT";
 	public static final String LOAD_AGENT_FILENAME = "filename";
+	public static final String LOAD_AGENT_FIRST_ACTION = "first_action";	
 	
 	public static final String SAVE_AGENT = "SAVE-AGENT";
 	public static final String SAVE_AGENT_USERID = "userID";
@@ -492,7 +493,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
 			cs.add(AGENT_TYPE,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+					(PrimitiveSchema) getSchema(BasicOntology.STRING),
+					ObjectSchema.OPTIONAL);
 			cs.add(AGENT_GUI_ID,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
@@ -662,7 +664,9 @@ public class MessagesOntology extends Ontology {
 			as = (AgentActionSchema) getSchema(LOAD_AGENT);
 			as.add(LOAD_AGENT_FILENAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
-						
+			as.add(LOAD_AGENT_FIRST_ACTION,
+					(ConceptSchema) getSchema(EXECUTE), ObjectSchema.OPTIONAL);
+			
 			as = (AgentActionSchema) getSchema(SAVE_AGENT);
 			as.add(SAVE_AGENT_USERID,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));

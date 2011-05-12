@@ -11,7 +11,6 @@
 
 package pikater.gui.java.improved;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.IntArrayData;
 import java.awt.Component;
 import pikater.ontology.messages.Option;
 

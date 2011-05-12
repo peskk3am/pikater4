@@ -13,18 +13,9 @@ package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
-import jade.util.leap.List;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.FastScatterPlot;
-import org.jfree.chart.plot.Plot;
 import pikater.ontology.messages.DataInstances;
-import pikater.ontology.messages.GetData;
-import pikater.ontology.messages.Instance;
-import weka.gui.beans.ScatterPlotMatrix;
+
 
 /**
  *
@@ -33,6 +24,7 @@ import weka.gui.beans.ScatterPlotMatrix;
 public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants{
 
     GuiAgent myAgent;
+    DataInstancesTableModel dataModel;
 
     /** Creates new form FileDetailsFrame */
 
@@ -52,8 +44,17 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
     }
 
     public void setInstances(DataInstances di) {
-        jTable1.setModel(new DataInstancesTableModel(di));
+        dataModel = new DataInstancesTableModel(di);
+        jTable1.setModel(dataModel);
         this.di = di;
+        for (int i = 0; i < dataModel.getColumnCount(); i++) {
+            xComboBox.addItem(dataModel.getColumnName(i));
+            yComboBox.addItem(dataModel.getColumnName(i));
+        }
+
+        xComboBox.setSelectedIndex(0);
+        yComboBox.setSelectedIndex(1);
+
     }
 
     /** This method is called from within the constructor to
@@ -71,7 +72,15 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         visualizationScrollPane = new javax.swing.JScrollPane();
-        scatterPlotMatrix1 = new weka.gui.beans.ScatterPlotMatrix();
+        visualisationPanel = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        xComboBox = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        yComboBox = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jSlider1 = new javax.swing.JSlider();
 
         jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -94,7 +103,7 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
         );
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
@@ -110,19 +119,93 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
                 visualizationScrollPaneFocusGained(evt);
             }
         });
-        visualizationScrollPane.setViewportView(scatterPlotMatrix1);
+
+        visualisationPanel.setLayout(new java.awt.GridBagLayout());
+        visualizationScrollPane.setViewportView(visualisationPanel);
+
+        jLabel1.setText("X");
+
+        jLabel2.setText("Y");
+
+        yComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yComboBoxActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Update plot");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Point size");
+
+        jSlider1.setMaximum(20);
+        jSlider1.setMinimum(1);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setSnapToTicks(true);
+        jSlider1.setValue(5);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(xComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(yComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addGap(1, 1, 1)
+                        .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(xComboBox)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(yComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(visualizationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(visualizationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(visualizationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(bundle.getString("VISALISATION"), jPanel2); // NOI18N
@@ -140,7 +223,7 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -154,21 +237,8 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
 
     private void visualizationScrollPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_visualizationScrollPaneComponentShown
 
-        System.err.println("handler");
-
-        if (di == null)
-            return;
-
-        try {
-            scatterPlotMatrix1.setInstances(di.toWekaInstances());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        jButton1ActionPerformed(null);
         
-
-
     }//GEN-LAST:event_visualizationScrollPaneComponentShown
 
     private void visualizationScrollPaneFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_visualizationScrollPaneFocusGained
@@ -178,6 +248,24 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
        visualizationScrollPaneComponentShown(null);
     }//GEN-LAST:event_jTabbedPane1StateChanged
+
+    private void yComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_yComboBoxActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        if (di == null)
+            return;
+
+        LinkedList<DataInstancesTableModel> data = new LinkedList<DataInstancesTableModel>();
+        data.add(dataModel);
+
+        visualisationPanel.removeAll();
+        visualisationPanel.add(VisualisationFactory.getChartPanel(data, xComboBox.getSelectedIndex(), yComboBox.getSelectedIndex(), (float)jSlider1.getValue()));
+        visualisationPanel.revalidate();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -191,13 +279,21 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private weka.gui.beans.ScatterPlotMatrix scatterPlotMatrix1;
+    private javax.swing.JPanel visualisationPanel;
     private javax.swing.JScrollPane visualizationScrollPane;
+    private javax.swing.JComboBox xComboBox;
+    private javax.swing.JComboBox yComboBox;
     // End of variables declaration//GEN-END:variables
 
 }

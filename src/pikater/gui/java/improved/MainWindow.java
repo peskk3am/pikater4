@@ -12,6 +12,7 @@
 package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
+import java.io.File;
 import javax.swing.JFrame;
 import pikater.ontology.messages.Task;
 
@@ -24,6 +25,7 @@ public class MainWindow extends javax.swing.JFrame {
     GuiAgent myAgent;
 
     ResultsBrowserFrame rbf;
+    NewExperimentFrame nef;
     String infoText = "";
 
     /** Creates new form MainWindow */
@@ -35,6 +37,7 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow(GuiAgent myAgent) {
         this.myAgent = myAgent;
         rbf = new ResultsBrowserFrame(myAgent);
+        nef = new NewExperimentFrame(this, true, myAgent);
         initComponents();
     }
 
@@ -65,6 +68,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoTextPane = new javax.swing.JTextPane();
+        jButton3 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -135,6 +139,13 @@ public class MainWindow extends javax.swing.JFrame {
         infoTextPane.setText("<html>\n<body>");
         jScrollPane1.setViewportView(infoTextPane);
 
+        jButton3.setText("Iris");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         fileMenu.setText(bundle.getString("FILE")); // NOI18N
 
         openMenuItem.setText(bundle.getString("OPEN")); // NOI18N
@@ -192,16 +203,21 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -222,9 +238,18 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_resultsBrowserButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        NewExperimentFrame nef = new NewExperimentFrame(this, true, myAgent);
+
+        nef = new NewExperimentFrame(this, true, myAgent);
         nef.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        nef = new NewExperimentFrame(this, true, myAgent);
+        nef.loadXML(new File("iris.xml"));
+        nef.setVisible(true);
+
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     public void addResult(Task t) {
         rbf.addResult(t);
@@ -254,6 +279,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextPane infoTextPane;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar jToolBar1;

@@ -43,6 +43,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         optionPanels = new LinkedList<OptionPanel>();
         initComponents();
         options = new jade.util.leap.LinkedList();
+        jComboBox1.setSelectedIndex(1);
     }
 
     public void setOption(Option o) {
@@ -74,7 +75,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        optionsPanel = new javax.swing.JPanel();
+        optionsPanel = new javax.swing.JTabbedPane();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -97,8 +98,8 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +111,6 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        optionsPanel.setLayout(new javax.swing.BoxLayout(optionsPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(optionsPanel);
 
         jButton1.setText(bundle.getString("OK")); // NOI18N
@@ -149,9 +149,9 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
 
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
 
-        if (this.isVisible() == false) {
-            return;
-        }
+        //if (this.isVisible() == false) {
+        //    return;
+        //}
 
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             String agentType = jComboBox1.getSelectedItem().toString();
@@ -173,9 +173,9 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         optionsPanel.removeAll();
 
         for (int i = 0; i < options.size(); i++) {
-            OptionPanel op = new OptionPanel((Option)options.get(i));
+            OptionPanel op = new OptionPanel((Option)options.get(i), getAgentType());
             optionPanels.add(op);
-            optionsPanel.add(op);
+            optionsPanel.add(((Option)options.get(i)).getName(), op);
         }
 
         optionsPanel.revalidate();
@@ -218,7 +218,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel optionsPanel;
+    private javax.swing.JTabbedPane optionsPanel;
     // End of variables declaration//GEN-END:variables
 
 }

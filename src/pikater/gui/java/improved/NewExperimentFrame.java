@@ -152,6 +152,12 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         GetFileInfo gfi = new GetFileInfo();
         gfi.setUserID(1);
 
+        if (new File("studentMode").exists()) {
+            this.remove(jPanel1);
+            this.pack();
+        }
+
+
         ge = new GuiEvent((this), GuiConstants.GET_FILES_INFO);
         ge.addParameter(gfi);
         myAgent.postGuiEvent(ge);
@@ -164,6 +170,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         for (String s : agentTypes) {
             System.err.println("agent: " + s);
         }
+
     }
 
     /** This method is called from within the constructor to
@@ -221,7 +228,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(optManagerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                .addComponent(optManagerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                 .addGap(3, 3, 3)
                 .addComponent(editOptionManagerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -269,10 +276,10 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                    .addComponent(addAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(editAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(removeAgentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -283,15 +290,15 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(addAgentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeAgentButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editAgentButton))
-                    .addComponent(jScrollPane1, 0, 0, Short.MAX_VALUE))
+                        .addComponent(editAgentButton)))
                 .addContainerGap())
         );
 
@@ -322,18 +329,14 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(addFilesButton)
-                        .addComponent(removeFilesButton))
-                    .addComponent(editFilesButton))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(addFilesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeFilesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
                 .addContainerGap())
         );
-
-        jPanel3Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {addFilesButton, editFilesButton, removeFilesButton});
-
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -380,11 +383,11 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, 0, 381, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
-                        .addComponent(startExperimentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(109, 109, 109)
+                        .addComponent(startExperimentButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -474,22 +477,13 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_removeAgentButtonActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-
-        fileDialog.showOpenDialog(this);
-
-        if (fileDialog.getSelectedFile() == null) {
-            return;
-        }
-
-        File xml = fileDialog.getSelectedFile();
-
+    public void loadXML(File xml) {
 
         try {
 
 
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build(xml.getAbsolutePath());
+            Document doc = builder.build("file://" + xml.getAbsolutePath());
             Element root_element = doc.getRootElement();
 
             java.util.List _problems = root_element.getChildren("experiment"); // return
@@ -529,7 +523,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                             omd.setNumTries(Integer.parseInt(numTries));
                     }
                 }
-                
+
                 optManagerLabel.setText(omd.getGuiString());
 
                 java.util.List dataset = next_problem.getChildren("dataset");
@@ -569,8 +563,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                     String agent_type = next_agent.getAttributeValue("type");
 
                     AgentOptionsDialog aod = new AgentOptionsDialog((Frame)this.getParent(), true, agentTypes, myAgent);
-                    
-                    aod.setAgentOptions(((Agent_GUI_Java)myAgent).getAgentOptionsSynchronous(agent_type));
+
+                    if (!agent_type.equals("?"))
+                        aod.setAgentOptions(((Agent_GUI_Java)myAgent).getAgentOptionsSynchronous(agent_type));
                     aod.setAgentType(agent_type);
 
                     System.err.println("Here");
@@ -589,7 +584,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                         String set = next_option.getAttributeValue("set");
                         if (set != null) {
                             LinkedList l = new LinkedList();
-                            for (String s : set.split(",[ ]+"))
+                            for (String s : set.split(",[ ]*"))
                                 l.add(s);
 
                             o.setSet(l);
@@ -617,6 +612,17 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+
+        fileDialog.showOpenDialog(this);
+
+        if (fileDialog.getSelectedFile() == null) {
+            return;
+        }
+
+        loadXML(fileDialog.getSelectedFile());
 
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed

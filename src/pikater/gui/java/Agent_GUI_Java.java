@@ -1,3 +1,4 @@
+
 package pikater.gui.java;
 
 import jade.content.lang.Codec.CodecException;
@@ -18,7 +19,16 @@ import jade.lang.acl.ACLMessage;
 import jade.util.leap.Iterator;
 import jade.util.leap.LinkedList;
 import jade.util.leap.List;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Vector;
 
 import java.util.regex.Pattern;
@@ -238,6 +248,11 @@ public class Agent_GUI_Java extends Agent_GUI {
                         FileDetailsFrame source = (FileDetailsFrame)ev.getSource();
                         source.setInstances(di);
                     }
+
+                    if (ev.getSource() instanceof pikater.gui.java.improved.ResultDetailsFrame) {
+                        pikater.gui.java.improved.ResultDetailsFrame source = (pikater.gui.java.improved.ResultDetailsFrame)ev.getSource();
+                        source.setTrainData(di);
+                    }
                 }
                 catch (Exception e) {
                     myGUI.showError("Error: " + e.getLocalizedMessage());
@@ -291,19 +306,91 @@ public class Agent_GUI_Java extends Agent_GUI {
 
             case GuiConstants.GET_AGENT_TYPES:
 
+                java.util.LinkedList<String> filterAgents = new java.util.LinkedList<String>();
+
+                try {
+                    FileReader in = new FileReader("guiDisplayAgents");
+                    Scanner s = new Scanner(in);
+
+                    while (s.hasNextLine()) {
+                        filterAgents.add(s.nextLine());
+                    }
+
+                }
+                catch (FileNotFoundException e ) {
+                    e.printStackTrace();
+                }
+
                 NewExperimentFrame nef = (NewExperimentFrame) ev.getSource();
 
-                Vector<String> types = offerAgentTypes();
-                types.add(0, "?");
+                Vector<String> typesBF = offerAgentTypes();
+                typesBF.add(0, "?");
+                Vector<String> types = new Vector<String>();
+                if (filterAgents.size() > 0){
+                    
+                    for (String s : typesBF) {
+                        if (filterAgents.contains(s))
+                            types.add(s);
+                    }
+                }
                 String[] agentTypes = new String[types.size()];
 
                 for (int i = 0; i < agentTypes.length; i++) {
                     agentTypes[i] = types.get(i);
                 }
 
+                /*try {
+                    FileOutputStream outF = new FileOutputStream("agent_strings.properties");
+                    PrintStream out = new PrintStream(outF);
+
+
+
+                    for (String s : agentTypes) {
+
+                       out.println(s + "=" + s);
+
+                       Iterator it = getAgentOptionsSynchronous(s).iterator();
+                       while (it.hasNext()) {
+
+                           Option o = (Option)it.next();
+                           String synopsis = o.getSynopsis();
+                           String description = o.getDescription();
+
+                           description = description.trim();
+                           description = description.replace("\n", " ");
+                           out.println(s + "-" + o.getName() + "-S=" + synopsis);
+                           out.println(s + "-" + o.getName() + "-D=" + description);
+
+                        }
+
+                       }
+
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+
+
+
                 nef.setAgentTypes(agentTypes);
                 break;
             case GuiConstants.GET_AGENT_OPTIONS:
+
+                java.util.LinkedList<String> filterOptions = new java.util.LinkedList<String>();
+
+                try {
+                    FileReader in = new FileReader("guiDisplayOptions");
+                    Scanner s = new Scanner(in);
+
+                    while (s.hasNextLine()) {
+                        filterOptions.add(s.nextLine());
+                    }
+
+                }
+                catch (FileNotFoundException e ) {
+                    e.printStackTrace();
+                }
 
                 AgentOptionsDialog aop = (AgentOptionsDialog)ev.getSource();
 
@@ -311,6 +398,16 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 try {
                     List options = getOptions(agentType);
+
+                    for (int i = options.size() - 1; i >= 0; i--) {
+                        Option o = (Option)options.get(i);
+                        System.err.println(agentType + "-" + o.getName());
+                        if (!filterOptions.contains(agentType + "-" + o.getName())) {
+                            options.remove(o);
+                        }
+                        System.err.println("-" + o.getName() + " : " + o.getSynopsis());
+                    }
+
                     if (options == null)
                         options = new LinkedList();
 

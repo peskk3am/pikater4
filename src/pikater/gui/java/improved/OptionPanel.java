@@ -25,6 +25,7 @@ public class OptionPanel extends javax.swing.JPanel {
 
     Option o;
     JPanel optionPanel;
+    String agentType;
 
     public Option getOption() {
 
@@ -129,9 +130,6 @@ public class OptionPanel extends javax.swing.JPanel {
             MixedOptionPanel mop = (MixedOptionPanel)optionPanel;
             mop.setOption(o);
         }
-
-
-
     }
 
     public String getOptionName(){
@@ -143,15 +141,19 @@ public class OptionPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public OptionPanel(Option o) {
+    public OptionPanel(Option o, String agentName) {
         initComponents();
-
+        agentType = agentName;
         this.o = o;
-        String synopsis = o.getSynopsis();
+
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/AgentStrings");
+        String synopsis = bundle.getString(agentType + "-" + o.getName() + "-S");
         synopsis = synopsis.replaceAll("<", "&lt;");
         synopsis = synopsis.replaceAll(">", "&gt;");
 
-        optionDescription.setText("<html><b>"+synopsis+"</b><br>"+o.getDescription()+"</html>");
+        String description = bundle.getString(agentType + "-" + o.getName() + "-D");
+
+        optionDescription.setText("<html><b>"+synopsis+"</b><br>"+description+"</html>");
 
         System.err.println(o.getData_type());
 

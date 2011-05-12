@@ -3,8 +3,6 @@ package pikater.gui.java;
 import jade.util.leap.List;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -15,10 +13,7 @@ import javax.swing.table.AbstractTableModel;
 
 import pikater.ontology.messages.Attribute;
 import pikater.ontology.messages.DataInstances;
-import pikater.ontology.messages.Instance;
-import pikater.ontology.messages.Task;
 import javax.swing.JTabbedPane;
-import javax.swing.JPopupMenu;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;

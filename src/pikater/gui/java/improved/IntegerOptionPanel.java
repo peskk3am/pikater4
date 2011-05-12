@@ -71,8 +71,20 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
             if (o.getValue().contains("?")) {
                 valueSetByOptMan.setSelected(true);
                 if (o.getRange().getMin() != null && o.getRange().getMax() != null) {
+                    intervalRadio.setSelected(true);
                     fromSpinner.setValue(o.getRange().getMin().intValue());
                     toSpinner.setValue(o.getRange().getMax().intValue());
+                }
+                if (o.getIs_a_set()) {
+                    setRadio.setSelected(true);
+
+                    String set = "";
+                    for (int i = 0; i < o.getSet().size(); i++) {
+                        set += o.getSet().get(i).toString();
+                        if (i != o.getSet().size() - 1)
+                            set += " ";
+                    }
+                    setTextField.setText(set);
                 }
                 triesSpinner.setValue(o.getNumber_of_values_to_try());
             } else {
@@ -88,6 +100,17 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
                 if (o.getRange().getMin() != null && o.getRange().getMax() != null) {
                     fromSpinner.setValue(o.getRange().getMin());
                     toSpinner.setValue(o.getRange().getMax());
+                }
+                if (o.getIs_a_set()) {
+                    setRadio.setSelected(true);
+
+                    String set = "";
+                    for (int i = 0; i < o.getSet().size(); i++) {
+                        set += o.getSet().get(i).toString();
+                        if (i != o.getSet().size() - 1)
+                            set += " ";
+                    }
+                    setTextField.setText(set);
                 }
                 triesSpinner.setValue(o.getNumber_of_values_to_try());
             } else {
@@ -114,7 +137,8 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         toSpinner.setModel(new SpinnerNumberModel(upper, lower, upper, 1));
         manualSpinner.setModel(new SpinnerNumberModel(defaultValue, lower, upper, 1));
         triesSpinner.setModel(new SpinnerNumberModel(tries, 0, 100, 1));
-
+        jPanel1.setVisible(false);
+        jPanel2.setVisible(false);
     }
 
     public IntegerOptionPanel(double lower, double upper, int tries, double defaultValue) {
@@ -127,7 +151,8 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         toSpinner.setModel(new SpinnerNumberModel(upper, lower, upper, 0.01));
         manualSpinner.setModel(new SpinnerNumberModel(defaultValue, lower, upper, 0.01));
         triesSpinner.setModel(new SpinnerNumberModel(tries, 0, 100, 1));
-
+        jPanel1.setVisible(false);
+        jPanel2.setVisible(false);
     }
 
     /** This method is called from within the constructor to
@@ -326,12 +351,14 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_defaultValueRadioActionPerformed
 
     private void valueSetByOptManStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_valueSetByOptManStateChanged
+        jPanel1.setVisible(valueSetByOptMan.isSelected());
         for (Component c : jPanel1.getComponents()) {
             c.setEnabled(valueSetByOptMan.isSelected());
         }
     }//GEN-LAST:event_valueSetByOptManStateChanged
 
     private void manualValueStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_manualValueStateChanged
+        jPanel2.setVisible(manualValue.isSelected());
         for (Component c : jPanel2.getComponents()) {
             c.setEnabled(manualValue.isSelected());
         }
