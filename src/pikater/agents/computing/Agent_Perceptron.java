@@ -136,14 +136,11 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		return ontoTest;
 	}
 
-	
-	@Override
 	public boolean loadAgent(String agentName) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public boolean saveAgent() {
 		// TODO Auto-generated method stub
 		return false;

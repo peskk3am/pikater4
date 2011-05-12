@@ -92,7 +92,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 		doWait(1000);
 
-		try {
+		/*try {
 			System.out.println("J48 options: "+getOptions("J48"));
 		} catch (CodecException e1) {
 			// TODO Auto-generated catch block
@@ -103,7 +103,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		} catch (FIPAException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
+		}*/
 		
 		/*
 		 * // test: int newId = createNewProblem("1000"); try {

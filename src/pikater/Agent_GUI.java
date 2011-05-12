@@ -200,7 +200,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end getComputingAgents
 
-	protected List getOptions(String agentType) throws 
+	protected List getOptions(String agentType) throws
 			CodecException, OntologyException, FIPAException {
 		
 		long _timeout = System.currentTimeMillis() + 2000; 
@@ -222,7 +222,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				
 				System.out.println("Creating agent " + newName + ", type: "+ agentType);
 
-				aid = createAgent(agentTypes.get(agentType), newName);
+				aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
 				doWait(100);
 			}
 		}
@@ -263,8 +263,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 		
 		return options;
-		
-	} // end getAgentOptions
+	
+	} // end getAgentOptions 
 			
 	protected void getAgentOptions(String receiver) {
 		// returns the ontology class Agent (containing agent options) for an
