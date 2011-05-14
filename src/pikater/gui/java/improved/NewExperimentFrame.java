@@ -431,7 +431,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_addAgentButtonActionPerformed
 
     private void addFilesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFilesButtonActionPerformed
-        FileGroupsPanel fgp = new FileGroupsPanel((Frame) this.getParent(), true, files);
+        FileGroupsPanel fgp = new FileGroupsPanel((Frame) this.getParent(), true, files, myAgent);
         fgp.setVisible(true);
 
         FileGroup fg = fgp.getFileGroup();

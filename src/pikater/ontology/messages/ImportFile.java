@@ -9,6 +9,19 @@ public class ImportFile implements AgentAction {
 	private int userID;
 	private String externalFilename;
 	private String fileContent;
+        private boolean tempFile = false;
+
+        public boolean getTempFile() {
+            return tempFile;
+        }
+
+    public boolean isTempFile() {
+        return tempFile;
+    }
+
+    public void setTempFile(boolean tempFile) {
+        this.tempFile = tempFile;
+    }
 
 	public String getFileContent() {
 		return fileContent;

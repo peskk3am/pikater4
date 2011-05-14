@@ -464,7 +464,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             System.err.println("No data");
         }
 
-        ResultDetailsFrame rdf = new ResultDetailsFrame(data, t.getData().getTrain_file_name(), myAgent);
+        ResultDetailsFrame rdf = new ResultDetailsFrame(data, t.getData().getExternal_train_file_name(), myAgent);
         rdf.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed

@@ -232,6 +232,25 @@ public class Agent_DataManager extends Agent {
                     if (a.getAction() instanceof ImportFile) {
                         ImportFile im = (ImportFile) a.getAction();
 
+                        String pathPrefix = System.getProperty("user.dir") + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp" + System.getProperty("file.separator");
+
+                        if (im.isTempFile()) {
+
+                            FileWriter fw = new FileWriter(pathPrefix + im.getExternalFilename());
+                            fw.write(im.getFileContent());
+                            fw.close();
+                            
+                            ACLMessage reply = request.createReply();
+                            reply.setPerformative(ACLMessage.INFORM);
+
+                            Result r = new Result(im, pathPrefix + im.getExternalFilename());
+                            getContentManager().fillContent(reply, r);
+
+                            return reply;
+
+                        }
+
+
                         if (im.getFileContent() == null) {
                             String path = System.getProperty("user.dir") + System.getProperty("file.separator");
                             path += "incoming" + System.getProperty("file.separator") + im.getExternalFilename();
@@ -364,18 +383,29 @@ public class Agent_DataManager extends Agent {
 
                         ResultSet rs = stmt.executeQuery(query);
 
+                        String internalFilename = "error";
+
                         if (rs.next()) { // should return single line (or none,
                             // if file does not exist)
-                            String internalFilename = rs.getString("filename");
+                            internalFilename = rs.getString("filename");
 
-                            ACLMessage reply = request.createReply();
-                            reply.setPerformative(ACLMessage.INFORM);
-
-                            Result r = new Result(tf, internalFilename);
-                            getContentManager().fillContent(reply, r);
-
-                            return reply;
                         }
+                        else
+                        {
+                            String pathPrefix = System.getProperty("user.dir") + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp" + System.getProperty("file.separator");
+                            
+                            String tempFileName = pathPrefix + tf.getExternalFilename();
+                            if (new File(tempFileName).exists())
+                                internalFilename = "temp" + System.getProperty("file.separator") + tf.getExternalFilename();
+                        }
+
+                        ACLMessage reply = request.createReply();
+                        reply.setPerformative(ACLMessage.INFORM);
+
+                        Result r = new Result(tf, internalFilename);
+                        getContentManager().fillContent(reply, r);
+
+                        return reply;
 
                     }
                     if (a.getAction() instanceof SaveResults) {

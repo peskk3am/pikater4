@@ -31,13 +31,14 @@ public class DataManagerService extends FIPAService {
 
 	static final Codec codec = new SLCodec();
 
-	public static String importFile(Agent agent, int userID, String path,
-			String content) {
+       
+        public static String importFile(Agent agent, int userID, String path, String content, boolean temp) {            
 
 		ImportFile im = new ImportFile();
 		im.setUserID(userID);
 		im.setExternalFilename(path);
 		im.setFileContent(content);
+                im.setTempFile(temp);
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("dataManager", false));
@@ -64,6 +65,11 @@ public class DataManagerService extends FIPAService {
 		}
 
 		return null;
+        }
+
+
+	public static String importFile(Agent agent, int userID, String path, String content) {
+             return importFile(agent, userID, path, content, false);
 	}
 
 	public static String translateFilename(Agent agent, int user,

@@ -18,5 +18,6 @@ public interface GuiConstants {
     public static final int GET_AGENT_TYPES = 5;
     public static final int GET_AGENT_OPTIONS = 6;
     public static final int START_EXPERIMENT = 7;
-
+    public static final int IMPORT_TEMP_FILE = 8;
+    
 }

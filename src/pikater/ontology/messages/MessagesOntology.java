@@ -160,6 +160,7 @@ public class MessagesOntology extends Ontology {
 	public static final String IMPORT_USER = "userID";
 	public static final String IMPORT_FILENAME = "externalFilename";
 	public static final String IMPORT_FILECONTENT = "fileContent";
+        public static final String IMPORT_FILE_TEMP = "tempFile";
 
 	public static final String TRANSLATE = "TRANSLATE";
 	public static final String TRANSLATE_USER = "userID";
@@ -602,7 +603,8 @@ public class MessagesOntology extends Ontology {
 			as.add(IMPORT_FILECONTENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-			as.setResult((PrimitiveSchema) getSchema(BasicOntology.STRING)); // the
+                        as.add(IMPORT_FILE_TEMP, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
+			as.setResult((PrimitiveSchema) getSchema(BasicOntology.STRING));
 																				// internal
 																				// filename
 			as = (AgentActionSchema) getSchema(TRANSLATE);

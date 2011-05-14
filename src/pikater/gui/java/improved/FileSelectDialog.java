@@ -11,8 +11,15 @@
 
 package pikater.gui.java.improved;
 
+import jade.gui.GuiAgent;
+import jade.gui.GuiEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.AbstractListModel;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -22,6 +29,8 @@ public class FileSelectDialog extends javax.swing.JDialog {
 
     ArrayList<String> files;
     boolean multipleSelect;
+    GuiAgent myAgent;
+    String fileName = null;
 
     /** Creates new form FileSelectDialog */
     public FileSelectDialog(java.awt.Frame parent, boolean modal) {
@@ -30,6 +39,9 @@ public class FileSelectDialog extends javax.swing.JDialog {
     }
 
     public Object getSelectedFile() {
+        if (jList1.isSelectionEmpty()) {
+            return fileName;
+        }
         return jList1.getSelectedValue();
     }
 
@@ -37,9 +49,9 @@ public class FileSelectDialog extends javax.swing.JDialog {
         return jList1.getSelectedValues();
     }
 
-    public FileSelectDialog(java.awt.Frame parent, boolean modal, ArrayList<String> _files) {
+    public FileSelectDialog(java.awt.Frame parent, boolean modal, ArrayList<String> _files, GuiAgent myAgent) {
         super(parent, modal);
-        
+        this.myAgent = myAgent;
 
         this.files = _files;
 
@@ -69,12 +81,16 @@ public class FileSelectDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Internal File"));
 
         jList1.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -83,7 +99,9 @@ public class FileSelectDialog extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(jList1);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jButton2.setText(bundle.getString("CANCEL")); // NOI18N
+
         jButton1.setText(bundle.getString("OK")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,7 +109,41 @@ public class FileSelectDialog extends javax.swing.JDialog {
             }
         });
 
-        jButton2.setText(bundle.getString("CANCEL")); // NOI18N
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap())
+        );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2});
+
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
+                .addContainerGap())
+        );
+
+        jButton3.setText("Select external file");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,27 +151,19 @@ public class FileSelectDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton1, jButton2});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pack();
@@ -128,6 +172,80 @@ public class FileSelectDialog extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        
+        jList1.clearSelection();
+
+        JFileChooser open = new JFileChooser();
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("CSV", "csv");
+        open.setFileFilter(fnf);
+
+        int result = open.showOpenDialog(this.getParent());
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            File input = open.getSelectedFile();
+
+            try {
+                Scanner s = new Scanner(input);
+
+                String line = s.nextLine();
+                while (line.isEmpty()) {
+                    line = s.nextLine();
+                }
+                
+                
+                String[] columns =  line.split(",");
+
+                String arffHeader = "";
+                arffHeader += "@RELATION " + input.getName() + "\n";
+
+                for (int i = 0; i < columns.length - 1; i++)
+                    arffHeader += "@ATTRIBUTE " + columns[i].trim() + " NUMERIC\n";
+
+                String arffContent = "@DATA\n";
+                ArrayList<String> classes = new ArrayList<String>();
+                while (s.hasNextLine()) {
+
+                    line = s.nextLine();
+                    if (line.isEmpty())
+                        continue;
+
+                    arffContent += line + "\n";
+
+                    String className = line.split(",")[columns.length - 1];
+
+                    if (!classes.contains(className))
+                        classes.add(className);
+                }
+
+
+                String classList = "{";
+                for (int i = 0; i < classes.size() - 1; i++) {
+                    classList += classes.get(i) + ",";
+                }
+
+                classList += classes.get(classes.size() - 1) + "}";
+
+                arffHeader += "@ATTRIBUTE " + columns[columns.length - 1].trim() + " " + classList;
+
+                fileName = input.getName();
+
+                GuiEvent ge = new GuiEvent(this, GuiConstants.IMPORT_TEMP_FILE);
+                ge.addParameter(arffHeader + "\n" + arffContent);
+                ge.addParameter(input.getName());
+
+                myAgent.postGuiEvent(ge);
+
+                this.setVisible(false);
+            }
+            catch (FileNotFoundException fne) {
+                fne.printStackTrace();
+            }
+
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -149,7 +267,9 @@ public class FileSelectDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JList jList1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 

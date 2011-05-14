@@ -201,8 +201,10 @@ public class Agent_GUI_Java extends Agent_GUI {
 
             case GuiConstants.GET_DATA:
 
+                System.err.println(ev.getParameter(0).toString());
+                
                 String internalFilename = DataManagerService.translateFilename(this, 1, (String)ev.getParameter(0), null);
-                internalFilename = "data/files/" + internalFilename;
+                internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
 
                 ServiceDescription sd = new ServiceDescription();
                 sd.setType("ARFFReader");
@@ -492,6 +494,13 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 
                 break;
+
+            case GuiConstants.IMPORT_TEMP_FILE:
+
+                String fileContent = (String)ev.getParameter(0);
+                String fileName = (String)ev.getParameter(1);
+
+                DataManagerService.importFile(this, 1, fileName, fileContent, true);
 
 /*            case MainWindow.IMPORT_FILE:
 
