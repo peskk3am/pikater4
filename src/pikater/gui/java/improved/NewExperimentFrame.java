@@ -121,6 +121,10 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         }
     }
 
+    public void openFileDialog() {
+        addFilesButtonActionPerformed(null);
+    }
+
     public void setFiles(ArrayList files) {
 
         this.files.clear();

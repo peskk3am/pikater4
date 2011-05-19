@@ -251,7 +251,7 @@ public class FileBrowserFrame extends javax.swing.JFrame implements GuiConstants
 
         setTitle(bundle.getString("PIKATER_FILE_BROWSER")); // NOI18N
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filter"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("FILTER"))); // NOI18N
 
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
         jLabel1.setText(bundle1.getString("MISSING VALUES")); // NOI18N

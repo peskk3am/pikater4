@@ -127,7 +127,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(editFilterButton)
@@ -191,7 +191,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 681, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 709, Short.MAX_VALUE)
                                 .addComponent(savedResultsExportButton)))
                         .addGap(2, 2, 2)))
                 .addContainerGap())
@@ -208,7 +208,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Saved Results", jPanel3);
+        jTabbedPane1.addTab(bundle1.getString("SAVED_RESULTS"), jPanel3); // NOI18N
 
         currentResultsExportButton.setText(bundle.getString("EXPORT CSV")); // NOI18N
         currentResultsExportButton.addActionListener(new java.awt.event.ActionListener() {
@@ -222,14 +222,14 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsTable.setComponentPopupMenu(jPopupMenu1);
         jScrollPane3.setViewportView(currentResultsTable);
 
-        jButton1.setText("Save results");
+        jButton1.setText(bundle1.getString("SAVE_RESULTS")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Load results");
+        jButton2.setText(bundle1.getString("LOAD_RESULTS")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -283,6 +283,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(14, 14, 14))
         );
+
+        jTabbedPane1.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
