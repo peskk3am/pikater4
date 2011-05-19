@@ -5,6 +5,7 @@
 
 package pikater.gui.java.improved;
 
+import jade.gui.GuiEvent;
 import jade.util.leap.LinkedList;
 import jade.util.leap.List;
 import java.beans.XMLEncoder;
@@ -16,8 +17,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.SavedResult;
 import pikater.ontology.messages.Task;
 
@@ -28,6 +31,9 @@ import pikater.ontology.messages.Task;
 public class CurrentResultsTableModel extends AbstractTableModel{
 
     List results;
+
+    HashMap<String, DataInstances> trainingFiles = new HashMap<String, DataInstances>();
+
     String [] columns = {java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("DATE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("AGENT TYPE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("OPTIONS"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("ERROR"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RMSE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("KAPPA"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("MAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RRSE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST")};
 
     public Task getResult(int index) {
@@ -36,6 +42,14 @@ public class CurrentResultsTableModel extends AbstractTableModel{
 
     public CurrentResultsTableModel() {
         this.results = new LinkedList();
+    }
+
+    public void addTrainingFile(String name, DataInstances data) {
+        trainingFiles.put(name, data);
+    }
+
+    public DataInstances getTrainingFile(String name) {
+        return trainingFiles.get(name);
     }
 
     public void add(Task t) {

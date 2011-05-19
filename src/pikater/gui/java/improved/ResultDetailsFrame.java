@@ -30,7 +30,7 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
     GuiAgent myAgent;
 
     /** Creates new form ResultDetailsFrame */
-    public ResultDetailsFrame(List dataInstances, String trainFileName, GuiAgent myAgent) {
+    public ResultDetailsFrame(List dataInstances, String trainFileName, GuiAgent myAgent, CurrentResultsTableModel currentResults) {
         initComponents();
         tables = new LinkedList<JTable>();
         this.myAgent = myAgent;
@@ -42,10 +42,7 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
 		tables.add(table);
 	}
 
-        GuiEvent ge = new GuiEvent(this, GuiConstants.GET_DATA);
-        ge.addParameter(trainFileName);
-        myAgent.postGuiEvent(ge);
-
+        setTrainData(currentResults.getTrainingFile(trainFileName));
         
     }
 

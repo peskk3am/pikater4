@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
+import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.LoadResults;
 import pikater.ontology.messages.Task;
 
@@ -69,6 +70,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -87,7 +89,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        jMenuItem1.setText("Details");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jMenuItem1.setText(bundle.getString("DETAILS")); // NOI18N
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -95,20 +98,27 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         });
         jPopupMenu1.add(jMenuItem1);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
-        setTitle(bundle.getString("PIKATER 1.0 - RESULTS BROWSER")); // NOI18N
+        jMenuItem2.setText(bundle.getString("LABEL_DATA")); // NOI18N
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem2);
+
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        setTitle(bundle1.getString("PIKATER 1.0 - RESULTS BROWSER")); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results Filter"));
 
-        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
-        loadResultsButton.setText(bundle1.getString("LOAD_RESULTS")); // NOI18N
+        loadResultsButton.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
         loadResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadResultsButtonActionPerformed(evt);
             }
         });
 
-        editFilterButton.setText(bundle1.getString("EDIT_FILTER")); // NOI18N
+        editFilterButton.setText(bundle.getString("EDIT_FILTER")); // NOI18N
         editFilterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editFilterButtonActionPerformed(evt);
@@ -172,7 +182,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap())
         );
 
-        savedResultsExportButton.setText(bundle.getString("EXPORT CSV")); // NOI18N
+        savedResultsExportButton.setText(bundle1.getString("EXPORT CSV")); // NOI18N
         savedResultsExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 savedResultsExportButtonActionPerformed(evt);
@@ -208,9 +218,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab(bundle1.getString("SAVED_RESULTS"), jPanel3); // NOI18N
+        jTabbedPane1.addTab(bundle.getString("SAVED_RESULTS"), jPanel3); // NOI18N
 
-        currentResultsExportButton.setText(bundle.getString("EXPORT CSV")); // NOI18N
+        currentResultsExportButton.setText(bundle1.getString("EXPORT CSV")); // NOI18N
         currentResultsExportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 currentResultsExportButtonActionPerformed(evt);
@@ -222,14 +232,14 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsTable.setComponentPopupMenu(jPopupMenu1);
         jScrollPane3.setViewportView(currentResultsTable);
 
-        jButton1.setText(bundle1.getString("SAVE_RESULTS")); // NOI18N
+        jButton1.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText(bundle1.getString("LOAD_RESULTS")); // NOI18N
+        jButton2.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -301,8 +311,16 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
         tca.adjustColumns();
 
+        GuiEvent ge = new GuiEvent(this, GuiConstants.GET_DATA);
+        ge.addParameter(t.getData().getExternal_train_file_name());
+        myAgent.postGuiEvent(ge);
+
         jTabbedPane1.setSelectedComponent(jPanel4);
         this.setVisible(true);
+    }
+
+    public void addTrainingFile(String name, DataInstances data) {
+        currentResults.addTrainingFile(name, data);
     }
 
     private void loadResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadResultsButtonActionPerformed
@@ -462,14 +480,18 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         Task t = currentResults.getResult(row);
 
         List data = t.getResult().getLabeled_data();
-        if (data == null) {
+        if (data == null || data.size() == 0) {
             System.err.println("No data");
         }
 
-        ResultDetailsFrame rdf = new ResultDetailsFrame(data, t.getData().getExternal_train_file_name(), myAgent);
+        ResultDetailsFrame rdf = new ResultDetailsFrame(data, t.getData().getExternal_train_file_name(), myAgent, currentResults);
         rdf.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -490,6 +512,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

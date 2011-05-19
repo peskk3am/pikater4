@@ -1239,7 +1239,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build(fileName);
+		Document doc = builder.build("file://" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
 		java.util.List _problems = root_element.getChildren("experiment"); // return

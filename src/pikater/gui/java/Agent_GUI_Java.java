@@ -251,9 +251,9 @@ public class Agent_GUI_Java extends Agent_GUI {
                         source.setInstances(di);
                     }
 
-                    if (ev.getSource() instanceof pikater.gui.java.improved.ResultDetailsFrame) {
-                        pikater.gui.java.improved.ResultDetailsFrame source = (pikater.gui.java.improved.ResultDetailsFrame)ev.getSource();
-                        source.setTrainData(di);
+                    if (ev.getSource() instanceof pikater.gui.java.improved.ResultsBrowserFrame) {
+                        pikater.gui.java.improved.ResultsBrowserFrame source = (pikater.gui.java.improved.ResultsBrowserFrame)ev.getSource();
+                        source.addTrainingFile((String)ev.getParameter(0), di);
                     }
                 }
                 catch (Exception e) {

@@ -138,7 +138,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		}
 		// */
 
-		String agentName = "1_RBFNetwork0_2011-05-19_03-49-16.21";
+		String agentName = "1_RBFNetwork1_2011-05-19_14-08-20.632";
 	// test of loading an agent
 	 
 		Agent a = new Agent();

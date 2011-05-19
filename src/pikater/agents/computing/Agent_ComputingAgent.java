@@ -221,6 +221,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 			System.out.println(getLocalName() + " resurrected.");
 			taskFIFO = new LinkedList<ACLMessage>();
 			execution_behaviour.reset();
+                        state = states.TRAINED;
 			return;  
 		}
 		newAgent = false;
@@ -555,7 +556,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					state = states.NEW;
 					// Set options
 					setOptions(execute_action.getTask());
-					eval = new Evaluation();
+					eval = null;
 					success = true;
 					Data data = execute_action.getTask().getData();
 					output = data.getOutput();
@@ -718,26 +719,27 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 						List labeledData = new ArrayList();
 						
-						if (state != states.TRAINED) {
+						if (state != states.TRAINED ) {
 							train();
-									DataInstances di = new DataInstances();
-									di.fillWekaInstances(test);
-									labeledData.add(getPredictions(test, di));
-									if (!labelFileName.equals("")){
-										di = new DataInstances();
-										di.fillWekaInstances(label);
-										labeledData.add(getPredictions(label, di));
-									}
-									eval.setLabeled_data(labeledData);
 						}
-						else{
+						else if (!resurrected)
+                                                {
 							if (! mode.equals("test_only")){ train(); }
-						}	
-												
-						eval = evaluateCA();
-						
-						if (output.equals("predictions")){
-							eval.setData_table(getPredictions(test, onto_test));
+						}
+
+                                                if (state == states.TRAINED) {
+							eval = evaluateCA();
+							if (output.equals("predictions")) {
+								DataInstances di = new DataInstances();
+								di.fillWekaInstances(test);
+								labeledData.add(getPredictions(test, di));
+								if (!labelFileName.equals("")){
+									di = new DataInstances();
+									di.fillWekaInstances(label);
+									labeledData.add(getPredictions(label, di));
+								}
+								eval.setLabeled_data(labeledData);
+							}
 						}
 																	
 					} catch (Exception e) {
