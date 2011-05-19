@@ -4,8 +4,11 @@ import jade.content.ContentElement;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
+import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
+import jade.core.AID;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.Iterator;
@@ -15,6 +18,9 @@ import java.io.IOException;
 
 import org.jdom.JDOMException;
 
+import pikater.ontology.messages.Agent;
+import pikater.ontology.messages.Data;
+import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Task;
@@ -91,7 +97,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		setDefault_error_rate(0.01);
 
 		doWait(1000);
-
+		/* test of getOptions method
 		/*try {
 			System.out.println("J48 options: "+getOptions("J48"));
 		} catch (CodecException e1) {
@@ -132,6 +138,58 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		}
 		// */
 
+		String agentName = "1_RBFNetwork0_2011-05-19_03-49-16.21";
+	// test of loading an agent
+	 
+		Agent a = new Agent();
+		a.setName(agentName);
+		a.setGui_id("pokusny oziveny agent");
+		
+		Data d = new Data();
+		d.setMode("test_only");
+		d.setTest_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef");
+		d.setTrain_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef");
+		d.setExternal_test_file_name("iris.arff");
+		d.setExternal_train_file_name("iris.arff");
+		d.setOutput("predictions");
+		
+		Task t = new Task();		
+		t.setAgent(a);
+		t.setData(d);
+ 
+		t.setId("pokusny task pro pokusneho oziveneho agenta");
+		t.setComputation_id("neni soucasti zadne computation");
+		t.setProblem_id("neni soucasti zadneho problemu");
+		
+		Execute ex = new Execute();
+		ex.setTask(t);
+		
+		try {
+			loadAgent(agentName, ex, null);
+		} catch (FIPAException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		/* */
+	// end test of loading
+
+	// test of loading Karlik
+	/*
+		Agent a = new Agent();
+		a.setName("1_RBFNetwork0_2011-05-17_09-01-32.263");
+		a.setGui_id("pokusny oziveny agent");
+				
+		try {
+			loadAgent("1_RBFNetwork0_2011-05-17_09-01-32.263", null);
+		} catch (FIPAException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		/* */
+	// end test of loading
+		
+		
+		
 	} // end mySetup
 
 	@Override

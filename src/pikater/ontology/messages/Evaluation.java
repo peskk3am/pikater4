@@ -23,15 +23,24 @@ public class Evaluation implements Concept {
 	//private DataInstances data_table;
 	private List _labeled_data = new LinkedList(); // List of DataInstances
 
-	public void addDataTable(DataInstances di){
-		_labeled_data.add(di);
+        private DataInstances data_table;
+
+	private byte [] object;  // saved agent
+
+        public void setStatus(String status) {
+            _status = status;
+        }
+
+        public String getStatus() {
+            return _status;
+        }
+
+        public DataInstances getData_table() {
+		return data_table;
 	}
-	
-	public String getStatus() {
-	return _status;
-	}
-	public void setStatus(String status) {
-	_status = status;
+
+	public void setData_table(DataInstances dataTable) {
+		data_table = dataTable;
 	}
 
 	public void setError_rate(float error_rate) {
@@ -104,5 +113,12 @@ public class Evaluation implements Concept {
 
 	public String getObject_filename() {
 		return object_filename;
+	}
+	
+	public void setObject(byte [] object) {
+		this.object = object;
+	}
+	public byte [] getObject() {
+		return object;
 	}
 }

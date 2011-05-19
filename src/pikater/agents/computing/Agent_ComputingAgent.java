@@ -37,6 +37,7 @@ import java.util.LinkedList;
 
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
@@ -50,7 +51,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 	 * 
 	 */
 	private static final long serialVersionUID = -7927583436579620995L;
-	private Codec codec = new SLCodec();
+	protected Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 	
 	public enum states {
@@ -90,7 +91,11 @@ public abstract class Agent_ComputingAgent extends Agent {
 	LinkedList<ACLMessage> taskFIFO = new LinkedList<ACLMessage>();
 
 	private Behaviour execution_behaviour = null;
+	private Behaviour send_options_behaviour = null;
 
+	private boolean newAgent = true;
+	private boolean resurrected = false;
+	
 	protected abstract void train() throws Exception;
 
 	protected abstract pikater.ontology.messages.Evaluation evaluateCA();
@@ -149,6 +154,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		// register synchronously registers us with the DF, we may
 		// prefer to do this asynchronously using a behaviour.
+		// System.out.println("DF: "+DFService.);
+		
 		try {
 			DFService.register(this, description);
 			System.out.println(getLocalName()
@@ -205,10 +212,19 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 	@Override
 	protected void setup() {
-
+		
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
+		if (!newAgent){
+			resurrected = true;
+			System.out.println(getLocalName() + " resurrected.");
+			taskFIFO = new LinkedList<ACLMessage>();
+			execution_behaviour.reset();
+			return;  
+		}
+		newAgent = false;
+		
 		System.out.println(getAgentType() + " " + getLocalName()
 				+ " is alive...");
 
@@ -233,16 +249,17 @@ public abstract class Agent_ComputingAgent extends Agent {
 				}
 
 			}
-		}
+		}		
 		//some important initializations before registering
 		getParameters();
 		
 		registerWithDF();
 
-		addBehaviour(new RequestServer(this));
+		addBehaviour(send_options_behaviour = new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));
 
 	} // end setup
+	
 
 	public boolean setOptions(pikater.ontology.messages.Task task) {
 		/*
@@ -383,7 +400,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 										MessageTemplate.MatchOntology(ontology
 												.getName()))));
 
-		public RequestServer(Agent agent) {
+		public RequestServer(Agent agent) {			
 			super(agent);
 		}
 
@@ -410,6 +427,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		@Override
 		public void action() {
+			
 			ACLMessage req = receive(resMsgTemplate);
 			if (req != null) {
 				try {
@@ -457,7 +475,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		ACLMessage result_msg;
 		Execute execute_action;
 		boolean success;
-		pikater.ontology.messages.Evaluation eval;
+		pikater.ontology.messages.Evaluation eval = new Evaluation();
 		String train_fn;
 		String test_fn;
 		String label_fn;
@@ -518,6 +536,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 			super(a);
 			/* FSM: register states */
 			// init state
+			
 			registerFirstState(new Behaviour(a) {
 				int next;
 				boolean cont;
@@ -536,7 +555,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					state = states.NEW;
 					// Set options
 					setOptions(execute_action.getTask());
-					eval = null;
+					eval = new Evaluation();
 					success = true;
 					Data data = execute_action.getTask().getData();
 					output = data.getOutput();
@@ -617,7 +636,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 			}, GETTRAINDATA_STATE);
 
 			// get test data state
-			registerState(new AchieveREInitiator(a, null) {
+			registerState(new AchieveREInitiator(a, null) {				
 				public int next = NEXT_JMP;
 
 				@Override
@@ -696,20 +715,11 @@ public abstract class Agent_ComputingAgent extends Agent {
 				@Override
 				public void action() {
 					try {
-						/*
-						 * if (mode.equals("test_only")){ eval = evaluateCA();
-						 * if (output.equals("predictions")){
-						 * eval.setData_table(getPredictions(test, onto_test));
-						 * } }
-						 */
 
 						List labeledData = new ArrayList();
 						
 						if (state != states.TRAINED) {
 							train();
-							if (state == states.TRAINED) {
-								eval = evaluateCA();
-								if (output.equals("predictions")) {
 									DataInstances di = new DataInstances();
 									di.fillWekaInstances(test);
 									labeledData.add(getPredictions(test, di));
@@ -719,10 +729,17 @@ public abstract class Agent_ComputingAgent extends Agent {
 										labeledData.add(getPredictions(label, di));
 									}
 									eval.setLabeled_data(labeledData);
-								}
-							}
 						}
+						else{
+							if (! mode.equals("test_only")){ train(); }
+						}	
 												
+						eval = evaluateCA();
+						
+						if (output.equals("predictions")){
+							eval.setData_table(getPredictions(test, onto_test));
+						}
+																	
 					} catch (Exception e) {
 						success = false;
 						working = false;
@@ -745,8 +762,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 															
 					if (success && (result_msg == null)) {
 						// save agent every time it executes a task
-						String objectFilename = null;
+						/*String objectFilename = null;
 						try {
+							// resurrected = false;
 							objectFilename = save();
 						} catch (CodecException e) {
 							// TODO Auto-generated catch block
@@ -761,8 +779,41 @@ public abstract class Agent_ComputingAgent extends Agent {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						*/
+																	
+						if (( current_task.getSave_mode() != null &&
+							  current_task.getSave_mode().equals("file"))
+							&& !resurrected){
+							try {
+								String objectFilename = saveAgentToFile();
+								eval.setObject_filename(objectFilename);
+								
+							} catch (CodecException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (OntologyException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (FIPAException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}							
+						}
+						
 						// eval.setDuration(duration);
-						eval.setObject_filename(objectFilename);
+
+						if (( current_task.getSave_mode() != null &&
+								  current_task.getSave_mode().equals("message"))){
+							try {
+								eval.setObject(getAgentObject());
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 						
 						result_msg = incoming_request.createReply();
 						result_msg.setPerformative(ACLMessage.INFORM);
@@ -771,8 +822,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 							// instead of MyWekaEvaluation is sent!!!
 							ContentElement content = getContentManager()
 									.extractContent(incoming_request);
+														
 							Result result = new Result((Action) content, eval);
 							getContentManager().fillContent(result_msg, result);
+							
 						} catch (UngroundedException e) {
 							e.printStackTrace();
 						} catch (CodecException e) {
@@ -781,7 +834,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 							e.printStackTrace();
 						}
 					}
-					send(result_msg);										
+					send(result_msg);	
 					
 				}
 			}, SENDRESULTS_STATE);
@@ -813,28 +866,32 @@ public abstract class Agent_ComputingAgent extends Agent {
 		}
 	}
 	
-	public String save() throws IOException, CodecException, OntologyException, FIPAException {
-		
-		pikater.ontology.messages.SaveAgent saveAgent = new pikater.ontology.messages.SaveAgent();
-		
-		saveAgent.setAgent(current_task.getAgent());
-		
+	
+	private byte [] getAgentObject() throws IOException{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(bos);
-
-		// empty taskFIFO just for a moment
-		LinkedList<ACLMessage> _taskFIFO = taskFIFO;
-		taskFIFO = new LinkedList<ACLMessage>();
-		
 		oos.writeObject(this);
 		oos.flush();
-		oos.close();
+		oos.close();		
+				
+		byte [] data = bos.toByteArray();
+		return data;
+	}
+	
+	private pikater.ontology.messages.Agent getAgentWithFilledObject() throws IOException{
 		
-		taskFIFO = _taskFIFO;
+		pikater.ontology.messages.Agent savedAgent = current_task.getAgent();
+		savedAgent.setObject(getAgentObject());		
 		
-		byte [] data = bos.toByteArray();		
-		saveAgent.setObject(data);
+		return savedAgent;
+	}
+	
+	private String saveAgentToFile() throws IOException, CodecException, OntologyException, FIPAException {
+		
+		pikater.ontology.messages.SaveAgent saveAgent = new pikater.ontology.messages.SaveAgent();
 						
+		saveAgent.setAgent(getAgentWithFilledObject());				
+		
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("agentManager", false));
 		request.setOntology(MessagesOntology.getInstance().getName());
@@ -843,14 +900,14 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		Action a = new Action();
 		a.setActor(this.getAID());
-		a.setAction(saveAgent);
+		a.setAction(saveAgent);				
 		
 		getContentManager().fillContent(request, a);
 		ACLMessage reply = FIPAService.doFipaRequestClient(this, request);
 		
 		String objectFilename = reply.getContent();
-		
+				
 		return objectFilename;
-	}
-	
+	}	
+
 };

@@ -12,8 +12,8 @@ public class Data implements Concept {
 	private String _test_file_name;
 	private String _external_test_file_name;
 	private String _label_file_name;
+	private Metadata _metadata;  // for training data file
 	private String _external_label_file_name;
-	private Metadata _metadata;
 	private String _output = "evaluation_only"; // "predictions"
 	private String _mode = "train_test"; // test_only, train_test
 

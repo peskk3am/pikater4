@@ -431,15 +431,16 @@ public class Agent_DataManager extends Agent {
 			query += res.getResult().getRoot_relative_squared_error();
 
 						
-			if (res.getResult().getObject_filename() != null){
-				Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());							
-							
-                                query += ",";
-                                query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
-                                query += "\'" + currentTimestamp + "\',";
-                                query += "\'" + res.getResult().getDuration() + "\',";
-                                query += "\'" + res.getResult().getObject_filename() + "\'";
-			}
+						Timestamp currentTimestamp = 
+							new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());							
+						
+							query += ",";
+							query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
+							query += "\'" + currentTimestamp + "\',";
+							query += "\'" + res.getResult().getDuration() + "\',";						
+											
+							query += "\'" + res.getResult().getObject_filename() + "\'";
+					
 			query += ")";
 						
                         log.info("Executing query: " + query);

@@ -14,6 +14,10 @@ public class Task implements Concept {
 	private Agent _agent;
 	private Data _data;
 	
+	private String _save_mode = "message";  // if not null -> save the agent
+								//    message (agent is sent in the message with the results)
+								//    file (agent is stored in the file by agentManager) --> TODO database
+
 	private int userID;
 	private String start;
 	private String finish;
@@ -78,6 +82,14 @@ public class Task implements Concept {
 
 	public String getFinish() {
 		return finish;
+	}
+
+	public void setSave_mode(String _save_mode) {
+		this._save_mode = _save_mode;
+	}
+
+	public String getSave_mode() {
+		return _save_mode;
 	}
 
 }

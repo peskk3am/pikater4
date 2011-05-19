@@ -35,7 +35,9 @@ import java.text.SimpleDateFormat;
 
 import com.sun.org.apache.bcel.internal.classfile.InnerClass;
 
+import pikater.agents.computing.Agent_ComputingAgent;
 import pikater.agents.computing.Agent_ComputingAgent.states;
+import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
@@ -62,7 +64,12 @@ import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.AgentContainer;
+import jade.core.LifeCycle;
 import jade.domain.AMSService;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.persistence.*;
@@ -113,42 +120,7 @@ public class Agent_AgentManager extends Agent {
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
-/*
-		LinkedList<String> tableNames = new LinkedList<String>();
 
-		try {
-			String[] types = { "TABLE", "VIEW" };
-			ResultSet tables = db.getMetaData().getTables(null, null, "%",
-					types);
-			while (tables.next()) {
-				tableNames.add(tables.getString(3));
-			}
-
-
-		} catch (SQLException e) {
-			log.error("Error getting tables list: " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		try {
-			if (!tableNames.contains("AGENTS")) {
-				log.info("Creating table AGENTS");
-				db.createStatement().executeUpdate(
-					"CREATE TABLE agents (" +
-					"userID INTEGER NOT NULL," +
-					"name VARCHAR(256) NOT NULL," +
-					"timestamp TIMESTAMP NOT NULL," +
-					"type VARCHAR(256) NOT NULL," +
-					"trainFilename VARCHAR(256) NOT NULL," +  // internal filename
-					// "object OTHER NOT NULL," + // serialized object
-					"objectFilename VARCHAR(256) NOT NULL," +
-					"PRIMARY KEY (userID, name, timestamp))");
-			}
-		} catch (SQLException e) {
-			log.fatal("Error creating table AGENTS: " + e.getMessage());
-			e.printStackTrace();
-		}
-	 */
 		
 		MessageTemplate mt = MessageTemplate.and(MessageTemplate
 				.MatchOntology(ontology.getName()), MessageTemplate
@@ -171,58 +143,72 @@ public class Agent_AgentManager extends Agent {
 
 					if (a.getAction() instanceof LoadAgent) {
 						LoadAgent la = (LoadAgent) a.getAction();
-
-							/* int userID = la.getUserID();
-							String name = la.getName();
-							String timestamp = la.getTimestamp();
-														
-							String query = "SELECT objectFileName FROM agents WHERE name = \'"
-									+ name + "\' AND userID = " + userID
-									+ " AND timestamp = \'" + timestamp + "\'";							
-							log.info("Executing query " + query);
-
-							Statement stmt = db.createStatement();
-							ResultSet rs = stmt.executeQuery(query);
-
-							rs.next();
-							String _objectFileName = rs.getString("objectFileName");
-							
-							stmt.close();																		
-							*/												
+							Action fa = la.getFirst_action();
 							
 							Agent newAgent = null;
 							
-							// read agent from file 
-						    String filename = "saved" + System.getProperty("file.separator") 
-						    	+  la.getFilename() + ".model";
-						    System.out.println(filename);						  
-						        
-						    //Construct the ObjectInputStream object
-						    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
-						            
-							newAgent = (Agent) inputStream.readObject();
-						    						    						    
-						    //Close the ObjectInputStream
-						    if (inputStream != null) {
-						         inputStream.close();
-						    }
+							if (la.getObject() != null){
+								newAgent = (Agent) toObject(la.getObject());
+							}
+							else {
+														
+								// read agent from file 
+							    String filename = "saved" + System.getProperty("file.separator") 
+							    	+  la.getFilename() + ".model";
+							    System.out.println(filename);						  
+							        
+							    //Construct the ObjectInputStream object
+							    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
+							            
+							    newAgent = (Agent) inputStream.readObject();
+							} 
 						    
+						    System.out.print("Ozivenej: "+newAgent);
 						    // TODO kdyz se ozivuje 2x ten samej -> chyba
 						    
+						    
 						    if (newAgent != null){
-								// get a container controller for creating new agents
+								// get a container controller for creating new agents						    	
+						    	
 						    	ContainerController container = getContainerController();
-							    container.acceptNewAgent(la.getFilename(), newAgent);
+						    	AgentController controller = container.acceptNewAgent(la.getFilename(), newAgent);
+						    	controller.start();						    	
+						    							    	
 							}
 						    else {
 						    	throw new ControllerException("Agent not created.");
 						    }
-													
-							log.info("Loaded agent: " + la.getFilename());
+																					
+							log.info("Loaded agent:   " + la.getFilename());
+														
+							ACLMessage reply = null;								
+														
+							if (fa != null){
+								// send message with fa action to the loaded agent
+								
+								Action ac = new Action();
+								ac.setAction(fa);
+								ac.setActor(request.getSender());								
+								
+								ACLMessage first_message = new ACLMessage(ACLMessage.REQUEST);								
+								first_message.setLanguage(codec.getName());
+								first_message.setOntology(ontology.getName());
+								first_message.addReceiver(new AID(la.getFilename(), AID.ISLOCALNAME));
+								first_message.clearAllReplyTo();
+								first_message.addReplyTo(request.getSender());
+								first_message.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);								
+								first_message.setConversationId(request.getConversationId());
+								
+								getContentManager().fillContent(first_message, ac);
 
-							ACLMessage reply = request.createReply();
-							reply.setPerformative(ACLMessage.INFORM);
-
+								send(first_message);
+							}
+							else{							
+								reply = request.createReply();
+								reply.setContent("Agent "+newAgent.getLocalName()+" resurected.");
+								reply.setPerformative(ACLMessage.INFORM);
+							}
+														
 							return reply;
 					}
 					
@@ -245,7 +231,7 @@ public class Agent_AgentManager extends Agent {
 							
 							
 							// save serialized object to file
-							byte [] object = sa.getObject();
+							byte [] object = sa.getAgent().getObject();
 							ObjectOutputStream oos = new ObjectOutputStream(
 									new FileOutputStream("saved" + System.getProperty("file.separator") + filename + ".model"));												
 							
@@ -257,7 +243,7 @@ public class Agent_AgentManager extends Agent {
 							log.info("Agent "+ name +" saved to file" + filename + ".model");
 																					
 							/*
-							String query = "INSERT into results (finish, objectFilename) " +
+							String query = "UPDATE results SET (finish, objectFilename) " +
 									"VALUES ("								
 								+ "\'" + currentTimestamp + "\',"								
 								+ "\'" + filename
@@ -336,6 +322,9 @@ public class Agent_AgentManager extends Agent {
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				// } catch (FIPAException e) {
+					// TODO Auto-generated catch block
+				//	e.printStackTrace();
 				}
 
 				ACLMessage failure = request.createReply();

@@ -1,5 +1,6 @@
+# $a pikater.pokusnej_kralik Karlik
 $a pikater.Agent_ARFFReader Reader
-# $a pikater.agents.computing.Agent_RBFNetwork rbf3
+#$a pikater.agents.computing.Agent_RBFNetwork rbf3
 # $a Agent_RBFNetwork rbf2 -B 1
 
 # load rbf3 from file (rbf3.model) 
