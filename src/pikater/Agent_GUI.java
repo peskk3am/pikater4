@@ -120,6 +120,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	 * after receiving the message from a manager
 	 */
 
+	protected abstract void displayResurrectedResult(ACLMessage inform);
+
+	
 	protected abstract void mySetup();
 
 	/*
@@ -1211,15 +1214,20 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end setup
 
-	/* This behavior captures partial results from computating agents */
+	/* This behavior captures partial results from computating agents and results from ressurected agents */
 	protected class CompAgentResultsServer extends CyclicBehaviour {
 		/**
 		 * 
 		 */
+		
 		private static final long serialVersionUID = -8456018173216610239L;
-		private MessageTemplate resMsgTemplate = MessageTemplate.and(
+		private MessageTemplate partialMsgTemplate = MessageTemplate.and(
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 				MessageTemplate.MatchConversationId("partial-results"));
+
+		private MessageTemplate resurrectedMsgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+				MessageTemplate.MatchConversationId("resurrected-results"));
 
 		public CompAgentResultsServer(Agent agent) {
 			super(agent);
@@ -1227,19 +1235,31 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		@Override
 		public void action() {
-			ACLMessage msg = receive(resMsgTemplate);
-			if (msg != null) {
-				displayPartialResult(msg);
-			} else {
-				block();
+			
+			ACLMessage res = receive(resurrectedMsgTemplate);					
+			ACLMessage par = receive(partialMsgTemplate);					
+
+			if (res != null) {
+				displayResurrectedResult(res);
+				return;
 			}
+			else {
+				if (par != null) {
+					displayPartialResult(par);
+					return;
+				}
+				else{
+					block();
+				}
+			}				
 		}
 	}
 
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build("file://" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		Document doc = builder.build("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
 		java.util.List _problems = root_element.getChildren("experiment"); // return
@@ -1340,7 +1360,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 		
-	protected ACLMessage loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
+	protected void loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
 		// protected void loadAgent(String _name, int _userID, String _timestamp) {
 		pikater.ontology.messages.LoadAgent _loadAgent = new pikater.ontology.messages.LoadAgent();
 		
@@ -1355,6 +1375,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		request.addReceiver(new AID("agentManager", false));
 		request.setOntology(MessagesOntology.getInstance().getName());
 		request.setLanguage(codec.getName());
+		request.setConversationId("resurrected-results");
 		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
 		Action a = new Action();
@@ -1371,7 +1392,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			e.printStackTrace();
 		}
 
-		return FIPAService.doFipaRequestClient(this, request);
+		FIPAService.doFipaRequestClient(this, request);
 	}
 	
 /*

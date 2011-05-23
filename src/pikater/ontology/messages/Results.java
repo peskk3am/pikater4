@@ -8,6 +8,8 @@ public class Results implements Concept {
 	/**
 	 * 
 	 */
+	private float maxValue = (float)Integer.MAX_VALUE;
+	
 	private static final long serialVersionUID = -3411423409276645995L;
 	private String _problem_id;
 	private String _computation_id;
@@ -46,7 +48,12 @@ public class Results implements Concept {
 	}
 
 	public void setAvg_error_rate(float avg_error_rate) {
-		_avg_error_rate = avg_error_rate;
+		if (Float.isInfinite(avg_error_rate)){
+			_avg_error_rate = maxValue;
+		}
+		else{
+			_avg_error_rate = avg_error_rate;
+		}
 	}
 
 	public float getAvg_error_rate() {
@@ -54,7 +61,12 @@ public class Results implements Concept {
 	}
 
 	public void setAvg_kappa_statistic(float avg_kappa_statistic) {
-		_avg_kappa_statistic = avg_kappa_statistic;
+		if (Float.isInfinite(avg_kappa_statistic)){
+			_avg_kappa_statistic = maxValue;
+		}
+		else{
+			_avg_kappa_statistic = avg_kappa_statistic;
+		}
 	}
 
 	public float getAvg_kappa_statistic() {
@@ -62,7 +74,12 @@ public class Results implements Concept {
 	}
 
 	public void setAvg_mean_absolute_error(float avg_mean_absolute_error) {
-		_avg_mean_absolute_error = avg_mean_absolute_error;
+		if (Float.isInfinite(avg_mean_absolute_error)){
+			_avg_mean_absolute_error = maxValue;
+		}
+		else{		
+			_avg_mean_absolute_error = avg_mean_absolute_error;
+		}
 	}
 
 	public float getAvg_mean_absolute_error() {
@@ -70,7 +87,12 @@ public class Results implements Concept {
 	}
 
 	public void setAvg_root_mean_squared_error(float avg_root_mean_squared_error) {
-		_avg_root_mean_squared_error = avg_root_mean_squared_error;
+		if (Float.isInfinite(avg_root_mean_squared_error)){
+			_avg_root_mean_squared_error = maxValue;
+		}
+		else{
+			_avg_root_mean_squared_error = avg_root_mean_squared_error;
+		}
 	}
 
 	public float getAvg_root_mean_squared_error() {
@@ -78,7 +100,12 @@ public class Results implements Concept {
 	}
 
 	public void setAvg_relative_absolute_error(float avg_relative_absolute_error) {
-		_avg_relative_absolute_error = avg_relative_absolute_error;
+		if (Float.isInfinite(avg_relative_absolute_error)){
+			_avg_relative_absolute_error = maxValue;
+		}
+		else{
+			_avg_relative_absolute_error = avg_relative_absolute_error;
+		}
 	}
 
 	public float getAvg_relative_absolute_error() {
@@ -87,7 +114,12 @@ public class Results implements Concept {
 
 	public void setAvg_root_relative_squared_error(
 			float avg_root_relative_squared_error) {
-		_avg_root_relative_squared_error = avg_root_relative_squared_error;
+		if (Float.isInfinite(avg_root_relative_squared_error)){
+			_avg_root_relative_squared_error = maxValue;
+		}
+		else{		
+			_avg_root_relative_squared_error = avg_root_relative_squared_error;
+		}
 	}
 
 	public float getAvg_root_relative_squared_error() {
