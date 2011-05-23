@@ -116,6 +116,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	@Override
 	protected pikater.ontology.messages.Evaluation evaluateCA() {
+		float defaultValue = (float) Integer.MAX_VALUE;
 		Evaluation eval = test();
 
 		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();
@@ -124,7 +125,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		try {
 			result.setKappa_statistic((float) eval.kappa());
 		} catch (Exception e) {
-			result.setKappa_statistic(-1);
+			result.setKappa_statistic(defaultValue);
 		}
 
 		result.setMean_absolute_error((float) eval.meanAbsoluteError());
@@ -133,7 +134,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			result.setRelative_absolute_error((float) eval
 					.relativeAbsoluteError());
 		} catch (Exception e) {
-			result.setRelative_absolute_error(-1);
+			result.setRelative_absolute_error(defaultValue);
 		}
 
 		result.setRoot_mean_squared_error((float) eval.rootMeanSquaredError());
@@ -147,10 +148,12 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	protected DataInstances getPredictions(Instances test,
 			DataInstances onto_test) {
 
+		Evaluation eval = test();
 		double pre[] = new double[test.numInstances()];
 		for (int i = 0; i < test.numInstances(); i++) {
 			try {
-				pre[i] = getModelObject().classifyInstance(test.instance(i));
+				pre[i] = eval.evaluateModelOnce((Classifier)getModelObject(), test
+						.instance(i));
 			} catch (Exception e) {
 				pre[i] = Integer.MAX_VALUE;
 			}
