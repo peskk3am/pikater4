@@ -1340,7 +1340,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 		
-	protected void loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
+	protected ACLMessage loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
 		// protected void loadAgent(String _name, int _userID, String _timestamp) {
 		pikater.ontology.messages.LoadAgent _loadAgent = new pikater.ontology.messages.LoadAgent();
 		
@@ -1371,7 +1371,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			e.printStackTrace();
 		}
 
-		FIPAService.doFipaRequestClient(this, request);
+		return FIPAService.doFipaRequestClient(this, request);
 	}
 	
 /*

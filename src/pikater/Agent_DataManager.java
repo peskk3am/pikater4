@@ -91,8 +91,6 @@ public class Agent_DataManager extends Agent {
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
 
-        updateMetadata();
-
         LinkedList<String> tableNames = new LinkedList<String>();
         LinkedList<String> triggerNames = new LinkedList<String>();
         try {
@@ -197,7 +195,7 @@ public class Agent_DataManager extends Agent {
         try {
             if (!tableNames.contains("RESULTSEXTERNAL")) {
                 log.info("Creating view RESULTSEXTERNAL");
-                db.createStatement().executeQuery("CREATE VIEW RESULTSEXTERNAL AS SELECT results.*,filemapping.externalFilename AS trainFileExt, filemapping2.externalFilename AS testFileExt FROM results JOIN filemapping ON results.userID = filemapping.userID AND results.dataFile = filemapping.internalFilename JOIN filemapping AS filemapping2 ON results.userID = filemapping2.userID AND results.testFile = filemapping2.internalFilename");
+                db.createStatement().executeUpdate("CREATE VIEW RESULTSEXTERNAL AS SELECT results.*,filemapping.externalFilename AS trainFileExt, filemapping2.externalFilename AS testFileExt FROM results JOIN filemapping ON results.userID = filemapping.userID AND results.dataFile = filemapping.internalFilename JOIN filemapping AS filemapping2 ON results.userID = filemapping2.userID AND results.testFile = filemapping2.internalFilename");
             }
         }
         catch (SQLException e) {
@@ -410,42 +408,45 @@ public class Agent_DataManager extends Agent {
                     }
                     if (a.getAction() instanceof SaveResults) {
 
-                        SaveResults sr = (SaveResults) a.getAction();
-                        Task res = sr.getTask();
+                        if (!(new File("studentMode").exists())) {
 
-                        Statement stmt = db.createStatement();
+                            SaveResults sr = (SaveResults) a.getAction();
+                            Task res = sr.getTask();
 
-			String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
-                                + "errorRate, kappaStatistic, meanAbsoluteError, rootMeanSquaredError, relativeAbsoluteError,"
-				+ "rootRelativeSquaredError, start, finish, duration, objectFilename) VALUES ( 1, ";
-                        query += "\'" + res.getAgent().getName() + "\',";
-                        query += "\'" + res.getAgent().getType() + "\',";
-                        query += "\'" + res.getAgent().optionsToString() + "\',";
-                        query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-                        query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-                        query += res.getResult().getError_rate() + ",";
-			query += res.getResult().getKappa_statistic() + ",";
-			query += res.getResult().getMean_absolute_error() + ",";
-			query += res.getResult().getRoot_mean_squared_error() + ",";
-			query += res.getResult().getRelative_absolute_error() + ",";
-			query += res.getResult().getRoot_relative_squared_error();
+                            Statement stmt = db.createStatement();
 
-						
-						Timestamp currentTimestamp = 
-							new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());							
-						
-							query += ",";
-							query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
-							query += "\'" + currentTimestamp + "\',";
-							query += "\'" + res.getResult().getDuration() + "\',";						
-											
-							query += "\'" + res.getResult().getObject_filename() + "\'";
-					
-			query += ")";
-						
-                        log.info("Executing query: " + query);
+                            String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
+                                    + "errorRate, kappaStatistic, meanAbsoluteError, rootMeanSquaredError, relativeAbsoluteError,"
+                                    + "rootRelativeSquaredError, start, finish, duration, objectFilename) VALUES ( 1, ";
+                            query += "\'" + res.getAgent().getName() + "\',";
+                            query += "\'" + res.getAgent().getType() + "\',";
+                            query += "\'" + res.getAgent().optionsToString() + "\',";
+                            query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
+                            query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
+                            query += res.getResult().getError_rate() + ",";
+                            query += res.getResult().getKappa_statistic() + ",";
+                            query += res.getResult().getMean_absolute_error() + ",";
+                            query += res.getResult().getRoot_mean_squared_error() + ",";
+                            query += res.getResult().getRelative_absolute_error() + ",";
+                            query += res.getResult().getRoot_relative_squared_error();
 
-                        stmt.executeUpdate(query);
+
+                                                    Timestamp currentTimestamp =
+                                                            new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+
+                                                            query += ",";
+                                                            query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
+                                                            query += "\'" + currentTimestamp + "\',";
+                                                            query += "\'" + res.getResult().getDuration() + "\',";
+
+                                                            query += "\'" + res.getResult().getObject_filename() + "\'";
+
+                            query += ")";
+
+                            log.info("Executing query: " + query);
+
+                            stmt.executeUpdate(query);
+                        }
 
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);

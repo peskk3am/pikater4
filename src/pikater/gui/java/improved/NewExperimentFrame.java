@@ -200,7 +200,6 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         filesJList = new javax.swing.JList();
         addFilesButton = new javax.swing.JButton();
-        editFilesButton = new javax.swing.JButton();
         removeFilesButton = new javax.swing.JButton();
         startExperimentButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -318,8 +317,6 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             }
         });
 
-        editFilesButton.setText(bundle.getString("EDIT")); // NOI18N
-
         removeFilesButton.setText(bundle.getString("REMOVE")); // NOI18N
         removeFilesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -335,10 +332,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addFilesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(removeFilesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editFilesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addComponent(removeFilesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -349,9 +345,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addComponent(addFilesButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeFilesButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editFilesButton)))
+                        .addComponent(removeFilesButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -390,7 +384,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, 0, 381, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
+                        .addGap(129, 129, 129)
                         .addComponent(startExperimentButton)))
                 .addContainerGap())
         );
@@ -439,6 +433,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         fgp.setVisible(true);
 
         FileGroup fg = fgp.getFileGroup();
+
+        if (fg == null)
+            return;
 
         fileGroups.add(fg);
 
@@ -660,7 +657,6 @@ public class NewExperimentFrame extends javax.swing.JDialog {
     private javax.swing.JButton addFilesButton;
     private javax.swing.JList agentJList;
     private javax.swing.JButton editAgentButton;
-    private javax.swing.JButton editFilesButton;
     private javax.swing.JButton editOptionManagerButton;
     private javax.swing.JFileChooser fileDialog;
     private javax.swing.JList filesJList;

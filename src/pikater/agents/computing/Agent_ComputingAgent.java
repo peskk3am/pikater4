@@ -553,7 +553,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 						return;
 					}
 					cont = false;
-					state = states.NEW;
+                                        if (!resurrected)
+                                            state = states.NEW;
 					// Set options
 					setOptions(execute_action.getTask());
 					eval = null;
@@ -726,6 +727,10 @@ public abstract class Agent_ComputingAgent extends Agent {
                                                 {
 							if (! mode.equals("test_only")){ train(); }
 						}
+
+                                                System.err.println(output);
+                                                System.err.println(state);
+                                                System.err.println(states.TRAINED);
 
                                                 if (state == states.TRAINED) {
 							eval = evaluateCA();

@@ -5,6 +5,10 @@
 
 package pikater.gui.java.improved;
 
+import jade.util.leap.ArrayList;
+import jade.util.leap.List;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import javax.swing.table.AbstractTableModel;
 import pikater.ontology.messages.Attribute;
@@ -80,4 +84,83 @@ public class DataInstancesTableModel extends AbstractTableModel {
 		public String getColumnName(int column) {
 			return ((Attribute)instance.getAttributes().get(column)).getName();
 		}
+
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    if (column < getColumnCount() )
+                        return true;
+                    return false;
+                }
+
+                @Override
+                public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+                    Instance inst = (Instance)instance.getInstances().get(rowIndex);
+                    List values = inst.getValues();
+                    List missing = inst.getMissing();
+
+                    try {
+                        List newValues = new ArrayList();
+                        List newMissing = new ArrayList();
+                        for (int i = 0; i < values.size(); i++) {
+                            if (i == columnIndex) {
+                                newValues.add(aValue.toString().equals("?") ? -1.0 : NumberFormat.getInstance().parse(aValue.toString()).doubleValue());
+                                newMissing.add((aValue.toString().equals("?")) ? true : false);
+                            }
+                            else {
+                                newValues.add(values.get(i));
+                                newMissing.add(missing.get(i));
+                            }
+                        }
+                        inst.setValues(newValues);
+                        inst.setMissing(newMissing);
+
+                        super.fireTableCellUpdated(rowIndex, columnIndex);
+                    }
+                    catch (ParseException pe) {
+                        pe.printStackTrace();
+                    }
+
+                    
+                }
+
+                public String getCSVString() {
+
+                    String output = "";
+
+                    for (int j = 0; j < getRowCount(); j++) {
+                        for (int i = 0; i < getColumnCount(); i++) {
+                            if (i < getColumnCount() - 1) {
+                                output += getValueAt(j, i).toString() + ",";
+                            }
+                            else {
+                                output += getValueAt(j, i).toString() + "\n";
+                            }
+                        }
+                    }
+
+                    return output;
+
+                }
+
+                public void addNewInstance() {
+
+                    List instances = instance.getInstances();
+
+                    Instance inst = new Instance();
+
+                    List values = new ArrayList();
+                    List missing = new ArrayList();
+                    for (int i = 0; i < getColumnCount(); i++) {
+                        values.add(-1.0);
+                        missing.add(true);
+                    }
+
+                    inst.setMissing(missing);
+                    inst.setValues(values);
+
+                    instance.getInstances().add(inst);
+
+                    fireTableDataChanged();
+                }
 	}

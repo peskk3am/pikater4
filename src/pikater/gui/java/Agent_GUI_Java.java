@@ -1,6 +1,7 @@
 
 package pikater.gui.java;
 
+import jade.content.ContentManager;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
@@ -35,6 +36,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Pattern;
 
 import pikater.Agent_GUI;
+import pikater.DataInputDialog;
 import pikater.DataManagerService;
 import pikater.gui.java.improved.AgentOptionsDialog;
 import pikater.gui.java.improved.FileBrowserFrame;
@@ -45,6 +47,8 @@ import pikater.gui.java.improved.NewExperimentFrame;
 import pikater.gui.java.improved.ResultsBrowserFrame;
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Evaluation;
+import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.LoadResults;
@@ -255,6 +259,12 @@ public class Agent_GUI_Java extends Agent_GUI {
                         pikater.gui.java.improved.ResultsBrowserFrame source = (pikater.gui.java.improved.ResultsBrowserFrame)ev.getSource();
                         source.addTrainingFile((String)ev.getParameter(0), di);
                     }
+
+                    if (ev.getSource() instanceof DataInputDialog) {
+                        DataInputDialog did = (DataInputDialog)ev.getSource();
+                        did.setDataInstances(di);
+                    }
+
                 }
                 catch (Exception e) {
                     myGUI.showError("Error: " + e.getLocalizedMessage());
@@ -307,6 +317,8 @@ public class Agent_GUI_Java extends Agent_GUI {
                 break;
 
             case GuiConstants.GET_AGENT_TYPES:
+
+                System.err.println("GET_AGENT_TYPES");
 
                 java.util.LinkedList<String> filterAgents = new java.util.LinkedList<String>();
 
@@ -501,6 +513,63 @@ public class Agent_GUI_Java extends Agent_GUI {
                 String fileName = (String)ev.getParameter(1);
 
                 DataManagerService.importFile(this, 1, fileName, fileContent, true);
+
+                if (ev.getSource() instanceof DataInputDialog) {
+
+                    GuiEvent ge = new GuiEvent(ev.getSource(), GuiConstants.GET_DATA);
+                    ge.addParameter(fileName);
+                    this.postGuiEvent(ge);
+
+                }
+
+                break;
+                
+            case GuiConstants.LABEL_NEW_DATA:
+
+                fileContent = (String)ev.getParameter(0);
+                fileName = (String)ev.getParameter(1);
+
+                DataManagerService.importFile(this, 1, fileName, fileContent, true);
+
+                Execute ex = (Execute)ev.getParameter(2);
+
+                try {
+                    ACLMessage response = loadAgent(ex.getTask().getAgent().getName(), ex, ex.getTask().getAgent().getObject());
+
+                    System.err.println("Response received");
+
+                    if (response.getPerformative() != ACLMessage.INFORM) {
+
+                        myGUI.showError(response.getContent());
+
+                    }
+
+                    /*System.err.println("Extracting results");
+
+                    Result res = (Result)getContentManager().extractContent(response);
+
+                    System.err.println("Content extracted" + res.getValue().toString());
+
+                    Evaluation eval = (Evaluation)res.getValue();
+
+                    System.err.println("Values obtained");
+
+                    DataInputDialog did = (DataInputDialog)ev.getSource();
+
+                    did.setDataInstances(eval.getData_table());*/
+                    
+                } catch (FIPAException e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                } /*catch (CodecException ce) {
+                    ce.printStackTrace();
+                } catch (UngroundedException ue) {
+                    ue.printStackTrace();
+                } catch (OntologyException oe) {
+                    oe.printStackTrace();
+                }*/
+
+                break;
 
 /*            case MainWindow.IMPORT_FILE:
 

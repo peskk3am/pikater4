@@ -47,6 +47,10 @@ public class FileGroupsPanel extends javax.swing.JDialog {
     }
 
     public FileGroup getFileGroup() {
+
+        if (trainingFileName.getText().isEmpty() && testingFileName.getText().isEmpty())
+            return null;
+
         FileGroup fg = new FileGroup();
         fg.setTrainFile(trainingFileName.getText());
         fg.setTestFile(testingFileName.getText());
@@ -71,6 +75,7 @@ public class FileGroupsPanel extends javax.swing.JDialog {
         testingFileName = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -106,14 +111,24 @@ public class FileGroupsPanel extends javax.swing.JDialog {
             }
         });
 
+        jButton3.setText("Cancel");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -151,7 +166,9 @@ public class FileGroupsPanel extends javax.swing.JDialog {
                     .addComponent(jButton2)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton5)
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -166,9 +183,11 @@ public class FileGroupsPanel extends javax.swing.JDialog {
         FileSelectDialog fsg = new FileSelectDialog((Frame)this.getParent(), true, files, myAgent);
         fsg.setVisible(true);
 
-        if (fsg.getSelectedFile() != null)
+        if (fsg.getSelectedFile() != null) {
             trainingFileName.setText(fsg.getSelectedFile().toString());
-
+            if (testingFileName.getText().isEmpty())
+                testingFileName.setText(fsg.getSelectedFile().toString());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -183,6 +202,12 @@ public class FileGroupsPanel extends javax.swing.JDialog {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        trainingFileName.setText("");
+        testingFileName.setText("");
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -204,6 +229,7 @@ public class FileGroupsPanel extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

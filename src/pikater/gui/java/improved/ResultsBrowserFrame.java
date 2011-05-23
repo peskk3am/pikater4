@@ -21,7 +21,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
+import pikater.DataInputDialog;
+import pikater.DataManagerService;
+import pikater.ontology.messages.Agent;
+import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.LoadResults;
 import pikater.ontology.messages.Task;
 
@@ -306,14 +311,17 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     }
 
     public void addResult(Task t) {
+
         currentResults.add(t);
         currentResultsTable.setModel(currentResults);
         TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
         tca.adjustColumns();
 
-        GuiEvent ge = new GuiEvent(this, GuiConstants.GET_DATA);
-        ge.addParameter(t.getData().getExternal_train_file_name());
-        myAgent.postGuiEvent(ge);
+        if (currentResults.getTrainingFile(t.getData().getExternal_train_file_name()) == null) {
+            GuiEvent ge = new GuiEvent(this, GuiConstants.GET_DATA);
+            ge.addParameter(t.getData().getExternal_train_file_name());
+            myAgent.postGuiEvent(ge);
+        }
 
         jTabbedPane1.setSelectedComponent(jPanel4);
         this.setVisible(true);
@@ -490,7 +498,22 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
+
+        Point p = jMenuItem1.getLocation();
+        int row = currentResultsTable.getSelectedRow();
+
+        DataInputDialog did = new DataInputDialog(this, true, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
+        did.setVisible(true);
+
+        String arffData = did.getArffData();
+
+        if (arffData == null) {
+            return;
+        }
+
+        
+
+       
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**

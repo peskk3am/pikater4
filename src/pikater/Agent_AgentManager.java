@@ -201,13 +201,35 @@ public class Agent_AgentManager extends Agent {
 								
 								getContentManager().fillContent(first_message, ac);
 
+                                                                /*reply = request.createReply();
+
+                                                                ACLMessage first_reply = null;
+
+                                                                try {
+                                                                    first_reply = FIPAService.doFipaRequestClient(Agent_AgentManager.this, first_message);
+                                                                    System.err.println("GOT REPLY");
+                                                                }
+                                                                catch (FIPAException fe) {
+                                                                    fe.printStackTrace();
+                                                                    reply.setPerformative(ACLMessage.FAILURE);
+                                                                    return reply;
+                                                                }
+
+                                                                FileWriter fw = new FileWriter("message");
+                                                                fw.write(first_reply.getContent());
+                                                                fw.close();
+
+                                                                reply.setPerformative(ACLMessage.INFORM);
+                                                                reply.setContent(first_reply.getContent());
+                                                                 *
+                                                                 */
+
 								send(first_message);
-							}
-							else{							
-								reply = request.createReply();
-								reply.setContent("Agent "+newAgent.getLocalName()+" resurected.");
-								reply.setPerformative(ACLMessage.INFORM);
-							}
+							}						
+							reply = request.createReply();
+							reply.setContent("Agent "+newAgent.getLocalName()+" resurected.");
+							reply.setPerformative(ACLMessage.INFORM);
+							
 														
 							return reply;
 					}
