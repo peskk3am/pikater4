@@ -64,7 +64,7 @@ public class DataInstances implements Concept {
 	// =============================
 
 	public int getClass_index() {
-		return class_index;
+		return class_index == -1 ? getAttributes().size() - 1 : class_index;
 	}
 
 	public void setClass_index(int classIndex) {

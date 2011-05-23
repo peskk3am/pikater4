@@ -1,6 +1,7 @@
 
 package pikater.gui.java;
 
+import com.sun.xml.internal.ws.addressing.model.MissingAddressingHeaderException;
 import jade.content.ContentManager;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.OntologyException;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Pattern;
 
 import pikater.Agent_GUI;
-import pikater.DataInputDialog;
+import pikater.gui.java.improved.DataInputFrame;
 import pikater.DataManagerService;
 import pikater.gui.java.improved.AgentOptionsDialog;
 import pikater.gui.java.improved.FileBrowserFrame;
@@ -51,6 +52,7 @@ import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetFileInfo;
+import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.LoadResults;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
@@ -260,8 +262,8 @@ public class Agent_GUI_Java extends Agent_GUI {
                         source.addTrainingFile((String)ev.getParameter(0), di);
                     }
 
-                    if (ev.getSource() instanceof DataInputDialog) {
-                        DataInputDialog did = (DataInputDialog)ev.getSource();
+                    if (ev.getSource() instanceof DataInputFrame) {
+                        DataInputFrame did = (DataInputFrame)ev.getSource();
                         did.setDataInstances(di);
                     }
 
@@ -514,7 +516,7 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 DataManagerService.importFile(this, 1, fileName, fileContent, true);
 
-                if (ev.getSource() instanceof DataInputDialog) {
+                if (ev.getSource() instanceof DataInputFrame) {
 
                     GuiEvent ge = new GuiEvent(ev.getSource(), GuiConstants.GET_DATA);
                     ge.addParameter(fileName);
@@ -534,15 +536,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                 Execute ex = (Execute)ev.getParameter(2);
 
                 try {
-                    ACLMessage response = loadAgent(ex.getTask().getAgent().getName(), ex, ex.getTask().getAgent().getObject());
-
-                    System.err.println("Response received");
-
-                    if (response.getPerformative() != ACLMessage.INFORM) {
-
-                        myGUI.showError(response.getContent());
-
-                    }
+                    loadAgent(ex.getTask().getAgent().getName(), ex, ex.getTask().getAgent().getObject());
 
                     /*System.err.println("Extracting results");
 
@@ -586,5 +580,54 @@ public class Agent_GUI_Java extends Agent_GUI {
                 break;*/
 
         }
+    }
+
+    @Override
+    protected void displayResurrectedResult(ACLMessage inform) {
+
+        try {
+            Result r = (Result)getContentManager().extractContent(inform);
+
+            Evaluation eval = (Evaluation)r.getValue();
+
+            DataInputFrame did = myGUI.getDataInputDialog();
+
+            if (did == null) {
+                return;
+            }
+
+            if (eval.getLabeled_data() == null || eval.getLabeled_data().size() == 0) {
+                System.err.println("No data instances");
+            }
+
+            DataInstances di = (DataInstances)eval.getLabeled_data().get(0);
+            int cIdx = di.getClass_index();
+
+            for (int i = 0; i < di.getInstances().size(); i++) {
+                Instance inst = (Instance)di.getInstances().get(i);
+                List newMissing = new jade.util.leap.ArrayList();
+                for (int j = 0; j < inst.getMissing().size(); j++) {
+                    if (j == cIdx)
+                        newMissing.add(false);
+                    else
+                        newMissing.add(inst.getMissing().get((j)));
+                }
+                inst.setMissing(newMissing);
+            }
+
+            did.setDataInstances((DataInstances)eval.getLabeled_data().get(0));
+
+        }
+        catch (CodecException ce) {
+            ce.printStackTrace();
+        }
+        catch (OntologyException oe) {
+            oe.printStackTrace();
+        }
+
+        
+
+
+
     }
 }

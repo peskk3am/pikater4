@@ -148,12 +148,12 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	protected DataInstances getPredictions(Instances test,
 			DataInstances onto_test) {
 
-		Evaluation eval = test();
+		//Evaluation eval = test();
 		double pre[] = new double[test.numInstances()];
 		for (int i = 0; i < test.numInstances(); i++) {
 			try {
-				pre[i] = eval.evaluateModelOnce((Classifier)getModelObject(), test
-						.instance(i));
+				pre[i] = getModelObject().classifyInstance(test.instance(i));
+                                System.err.println(pre[i]);
 			} catch (Exception e) {
 				pre[i] = Integer.MAX_VALUE;
 			}

@@ -41,6 +41,10 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
     }
 
+    public DataInputFrame getDataInputDialog() {
+        return rbf.getDataInputDialog();
+    }
+
     public void showInfo(String info) {
         infoText += "<font color = green>" + info + "<br></font>\n";
         infoTextPane.setText("<html><body>" + infoText + "</body></html>");

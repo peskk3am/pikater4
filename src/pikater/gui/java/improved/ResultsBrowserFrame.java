@@ -20,8 +20,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
-import pikater.DataInputDialog;
 import pikater.DataManagerService;
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Data;
@@ -40,6 +40,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     LoadResults filter;
     ResultsFilterDialog rfd = new ResultsFilterDialog(this, true);
     CurrentResultsTableModel currentResults = new CurrentResultsTableModel();
+    DataInputFrame did = null;
 
     /** Creates new form ResultsBrowserFrame */
     public ResultsBrowserFrame() {
@@ -304,6 +305,10 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public DataInputFrame getDataInputDialog() {
+        return did;
+    }
+
     public void showResults(List results) {
         savedResultsTable.setModel(new SavedResultsTableModel(results));
         TableColumnAdjuster tca = new TableColumnAdjuster(savedResultsTable);
@@ -499,22 +504,22 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
 
-        Point p = jMenuItem1.getLocation();
-        int row = currentResultsTable.getSelectedRow();
-
-        DataInputDialog did = new DataInputDialog(this, true, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
-        did.setVisible(true);
-
-        String arffData = did.getArffData();
-
-        if (arffData == null) {
+        if (did != null) {
+            JOptionPane.showMessageDialog(this, "Cannot open two label windows", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        
+        Point p = jMenuItem1.getLocation();
+        int row = currentResultsTable.getSelectedRow();
 
+        did = new DataInputFrame(this, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
+        did.setVisible(true);
        
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    public void dataInputDialogClosed() {
+        did = null;
+    }
 
     /**
      * @param args the command line arguments

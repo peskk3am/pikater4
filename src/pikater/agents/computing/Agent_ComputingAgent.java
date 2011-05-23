@@ -826,7 +826,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 							// instead of MyWekaEvaluation is sent!!!
 							ContentElement content = getContentManager()
 									.extractContent(incoming_request);
-														
+
+                                                        if (resurrected)
+                                                            eval.setObject(null);
+
 							Result result = new Result((Action) content, eval);
 							getContentManager().fillContent(result_msg, result);
 							

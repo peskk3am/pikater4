@@ -9,7 +9,7 @@
  * Created on May 21, 2011, 10:18:44 PM
  */
 
-package pikater;
+package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import pikater.gui.java.improved.DataInstancesTableModel;
 import pikater.gui.java.improved.GuiConstants;
+import pikater.gui.java.improved.ResultsBrowserFrame;
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
@@ -34,17 +35,19 @@ import pikater.ontology.messages.Task;
  *
  * @author martin
  */
-public class DataInputDialog extends javax.swing.JDialog {
+public class DataInputFrame extends javax.swing.JFrame {
 
     DataInstancesTableModel sampleModel;
     DataInstancesTableModel model;
     DataInstances sampleInstances;
     GuiAgent myAgent;
+    ResultsBrowserFrame rbf;
     byte[] object;
 
     /** Creates new form DataInputDialog */
-    public DataInputDialog(java.awt.Frame parent, boolean modal, DataInstances sampleInstances, GuiAgent myAgent, byte[] object) {
-        super(parent, modal);
+    public DataInputFrame(ResultsBrowserFrame rbf, DataInstances sampleInstances, GuiAgent myAgent, byte[] object) {
+        super("");
+        this.rbf = rbf;
         initComponents();
 
         this.myAgent = myAgent;
@@ -82,6 +85,11 @@ public class DataInputDialog extends javax.swing.JDialog {
         addRowButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -323,6 +331,10 @@ public class DataInputDialog extends javax.swing.JDialog {
         myAgent.postGuiEvent(ge);
 
     }//GEN-LAST:event_loadCSVButtonActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        rbf.dataInputDialogClosed();
+    }//GEN-LAST:event_formWindowClosing
 
     public void setDataInstances(DataInstances di) {
 
