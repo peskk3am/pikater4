@@ -93,7 +93,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	private float default_error_rate = (float) 0.3;
 	protected String default_method = "Random";
 	private int default_maximum_tries = 10;
+	private String default_get_results = "after_each_computation";
 
+	private String myAgentName;
 	/*
 	 * should use the following methods: refreshOptions(ontology.messages.Agent
 	 * agent) should be called after user changes options of an agent
@@ -525,13 +527,16 @@ public abstract class Agent_GUI extends GuiAgent {
 			}
 
 		};
-
-		addBehaviour(receive_results);
+		
+		if (problem.getGet_results().equals("after_each_computation")){
+			addBehaviour(receive_results);
+		}
 
 	}
 
-	protected int createNewProblem(String timeout) {
+	protected int createNewProblem(String timeout, String get_results) {
 		int _timeout;
+		String _get_results;
 		Problem problem = new Problem();
 		problem.setGui_id(Integer.toString(problem_id)); // agent manager
 															// changes the id
@@ -540,6 +545,12 @@ public abstract class Agent_GUI extends GuiAgent {
 			_timeout = default_timeout;
 		} else {
 			_timeout = Integer.parseInt(timeout);
+		}
+
+		if (get_results == null) {
+			_get_results = default_get_results;
+		} else {
+			_get_results = get_results;
 		}
 
 		Method method = new Method();
@@ -552,6 +563,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		problem.setAgents(new ArrayList());
 		problem.setData(new ArrayList());
 		problem.setSent(false);
+		problem.setGet_results(_get_results);
+		problem.setGui_agent(myAgentName);
 		problems.add(problem);
 
 		return problem_id++;
@@ -1170,6 +1183,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 
 	protected void setup() {
+		myAgentName = this.getLocalName();
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
@@ -1326,8 +1340,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		while (p_itr.hasNext()) {
 			Element next_problem = (Element) p_itr.next();
 
-			int p_id = createNewProblem(next_problem
-					.getAttributeValue("timeout"));
+			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
+					next_problem.getAttributeValue("get_results"));
 
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();

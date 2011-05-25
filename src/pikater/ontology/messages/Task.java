@@ -18,6 +18,9 @@ public class Task implements Concept {
 								//    message (agent is sent in the message with the results)
 								//    file (agent is stored in the file by agentManager) --> TODO database
 
+	private String _get_results;
+	private String _gui_agent;
+	
 	private int userID;
 	private String start;
 	private String finish;
@@ -90,6 +93,18 @@ public class Task implements Concept {
 
 	public String getSave_mode() {
 		return _save_mode;
+	}
+	public void setGet_results(String _get_results) {
+		this._get_results = _get_results;
+	}
+	public String getGet_results() {
+		return _get_results;
+	}
+	public void setGui_agent(String _gui_agent) {
+		this._gui_agent = _gui_agent;
+	}
+	public String getGui_agent() {
+		return _gui_agent;
 	}
 
 }
