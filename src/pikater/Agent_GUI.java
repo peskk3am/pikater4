@@ -151,7 +151,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	/* automatically called after all replies from computing agents are received */
 
 	protected abstract void displayPartialResult(ACLMessage inform);
-
+	protected abstract void displayTaskResult(ACLMessage inform);
 	/*
 	 * Process the partial results received from computing agents maybe only the
 	 * content would be better as a parameter
@@ -1298,6 +1298,10 @@ public abstract class Agent_GUI extends GuiAgent {
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 				MessageTemplate.MatchConversationId("resurrected-results"));
 
+		private MessageTemplate afterTaskMsgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+				MessageTemplate.MatchConversationId("result_after_task"));
+
 		public CompAgentResultsServer(Agent agent) {
 			super(agent);
 		}
@@ -1306,7 +1310,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		public void action() {
 			
 			ACLMessage res = receive(resurrectedMsgTemplate);					
-			ACLMessage par = receive(partialMsgTemplate);					
+			ACLMessage par = receive(partialMsgTemplate);
+			ACLMessage aft = receive(afterTaskMsgTemplate);
 
 			if (res != null) {
 				displayResurrectedResult(res);
@@ -1318,9 +1323,15 @@ public abstract class Agent_GUI extends GuiAgent {
 					return;
 				}
 				else{
-					block();
-				}
-			}				
+					if (aft != null) {
+						displayTaskResult(aft);
+						return;
+					}				
+					else{
+						block();
+					}
+				}				
+			}
 		}
 	}
 

@@ -117,6 +117,47 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		}
 	}
 
+	@Override
+	protected void displayTaskResult(ACLMessage inform) {
+		
+		ContentElement content;
+		try {
+			content = getContentManager().extractContent(inform);
+			
+			System.out.println(content);
+			
+			if (content instanceof Result) {
+				
+				Result result = (Result) content;
+				if (result.getValue() instanceof Task) {					
+					Task task = ((Task) result.getValue());
+				
+					System.out.println("Agent " + getLocalName()
+							+ ": options for agent "
+							+ task.getAgent().getName() + " were "
+							+ task.getAgent().optionsToString()
+							+ " error_rate: "
+							+ task.getResult().getError_rate());
+				}
+				
+			}
+			else {
+				System.out.println("Agent " + getLocalName()
+							+ ": there were no tasks in this computation.");
+			}
+		
+		} catch (UngroundedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			System.out.println("Agent " + getLocalName() + " "
+					+ inform.getContent());
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Override
 	protected void DisplayWrongOption(int problemGuiId, String agentName,
