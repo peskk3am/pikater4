@@ -258,7 +258,8 @@ public class DataInputFrame extends javax.swing.JFrame {
         Task t = new Task();
         t.setAgent(a);
         t.setData(d);
-
+        t.setGet_results("after_each_computation");
+        t.setGui_agent(myAgent.getName());
         t.setId("pokusny task pro pokusneho oziveneho agenta");
         t.setComputation_id("neni soucasti zadne computation");
         t.setProblem_id("neni soucasti zadneho problemu");

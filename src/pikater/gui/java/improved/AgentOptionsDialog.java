@@ -181,7 +181,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public synchronized void setAgentOptions(List options) {
+    public void setAgentOptions(List options) {
 
         System.err.println("SETAGENTOPTIONS");
 
