@@ -8,3 +8,6 @@ $ L float 1 1 r 0 1
 
 #  Number of epochs to train through.
 $ N int 1 1 r 1 1000
+
+#  Seed of the random number generator (Default = 0).
+$ S int 1 1 r 0 MAXINT

@@ -119,6 +119,20 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		//opt.setValue("0.3");
 		_options.add(opt);
 		
+		opt = new pikater.ontology.messages.Option();
+		opt.setName("S");
+		opt.setData_type("INT");
+		opt.setIs_a_set(false);
+		interval = new Interval();
+		interval.setMin((float)0);
+		interval.setMax((float)Integer.MAX_VALUE);
+		opt.setRange(interval);
+		opt.setMutable(false);//???
+		opt.setDescription("Seed of the random number generator (Value should be >= 0 and and a long, Default = 0). ");
+		opt.setSynopsis("-S num ");
+		opt.setDefault_value("0");
+		_options.add(opt);
+		
 		agent_options.setOptions(_options);
 	}
 
@@ -153,6 +167,7 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		//parameters
 		NEpochs=10;//default
 		LearningRate=0.3;
+		randgen.setSeed(0);
 			
 		if(current_task.getAgent().getOptions()!=null){
 			Iterator itr = current_task.getAgent().getOptions().iterator();
@@ -165,7 +180,10 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 				}else if(next_opt.getName().compareTo("L")==0){
 					LearningRate = Double.parseDouble(next_opt.getValue());
 					//System.out.println("Perceptron: parameter L, value:"+ next_opt.getValue());;
-				}else{
+				}else if(next_opt.getName().compareTo("S")==0){
+					randgen.setSeed(Integer.parseInt(next_opt.getValue()));
+					//System.out.println("Perceptron: parameter N, value:"+ next_opt.getValue());
+				}else {
 					/*error?*/
 					System.out.println("Perceptron: Unknown parameter "+next_opt.getName() +", value:"+ next_opt.getValue());
 				}
