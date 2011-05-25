@@ -155,6 +155,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
 
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             String agentType = jComboBox1.getSelectedItem().toString();
+            optionPanels.clear();
 
             GuiEvent ge = new GuiEvent(this, GuiConstants.GET_AGENT_OPTIONS);
             ge.addParameter(agentType);

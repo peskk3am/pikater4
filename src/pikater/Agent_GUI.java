@@ -123,6 +123,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	protected abstract void displayResurrectedResult(ACLMessage inform);
 
+        protected abstract void displayFileImportProgress(int completed, int all);
 	
 	protected abstract void mySetup();
 
@@ -1204,7 +1205,12 @@ public abstract class Agent_GUI extends GuiAgent {
 				+ System.getProperty("file.separator");
 		File incomingFiles = new File(incomingFilesPath);
 
-	for (String fileName : incomingFiles.list()) {
+                int incomingFilesNumber = incomingFiles.list().length;
+                int currenInFile = 0;
+               for (String fileName : incomingFiles.list()) {
+
+                displayFileImportProgress(currenInFile, incomingFilesNumber);
+                currenInFile++;
                 DataManagerService.importFile(this, 1, fileName, null);
 
                 String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
@@ -1248,19 +1254,17 @@ public abstract class Agent_GUI extends GuiAgent {
                         System.err.println("Error reading file");
                     }
 
-                }
-                catch (CodecException ce) {
+                } catch (CodecException ce) {
                     ce.printStackTrace();
-                }
-                catch (FIPAException fe) {
+                } catch (FIPAException fe) {
                     fe.printStackTrace();
-                }
-                catch (OntologyException oe) {
+                } catch (OntologyException oe) {
                     oe.printStackTrace();
                 }
 
 
             }
+               displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
 
 		System.out.println("GUI agent " + getLocalName()
 				+ " is alive and waiting...");

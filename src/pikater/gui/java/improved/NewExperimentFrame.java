@@ -17,8 +17,13 @@ import jade.util.leap.LinkedList;
 import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.ResourceBundle;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -211,6 +216,8 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         fileDialog.setFileFilter(null);
 
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        setTitle(bundle1.getString("NEW_EXPERIMENT_FRAME_TITLE")); // NOI18N
+
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("OPTION_MANAGER"))); // NOI18N
 
         optManagerLabel.setText("Random -E 0.1 -M 5");
@@ -450,6 +457,12 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
     private void startExperimentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startExperimentButtonActionPerformed
 
+        if (agentList.isEmpty() || fileGroups.isEmpty()) {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("ERROR_AGENTS_FILES"), ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("ERROR"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+
         LinkedList optManOptions = new LinkedList();
         optManOptions.add(omd.getType());
         if (omd.getType().equals("Random")) {
@@ -482,9 +495,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
         try {
 
-
             SAXBuilder builder = new SAXBuilder();
-            Document doc = builder.build("file://" + xml.getAbsolutePath());
+            FileInputStream fis = new FileInputStream(xml);
+            Document doc = builder.build(fis);
             Element root_element = doc.getRootElement();
 
             java.util.List _problems = root_element.getChildren("experiment"); // return
@@ -565,8 +578,10 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
                     AgentOptionsDialog aod = new AgentOptionsDialog((Frame)this.getParent(), true, agentTypes, myAgent);
 
-                    if (!agent_type.equals("?"))
+                    if (!agent_type.equals("?")) {
                         aod.setAgentOptions(((Agent_GUI_Java)myAgent).getAgentOptionsSynchronous(agent_type));
+                        System.err.println("OPTIONS COUNT:" + aod.getAgentOptions().size());
+                    }
                     aod.setAgentType(agent_type);
 
                     System.err.println("Here");
@@ -617,9 +632,12 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
-        fileDialog.showOpenDialog(this);
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("XML Files (*.bxml)", "bxml");
+        fileDialog.setFileFilter(fnf);
+        
+        int result = fileDialog.showOpenDialog(this);
 
-        if (fileDialog.getSelectedFile() == null) {
+        if (result == JFileChooser.CANCEL_OPTION) {
             return;
         }
 

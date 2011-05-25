@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import pikater.DataManagerService;
 import pikater.ontology.messages.Agent;
@@ -92,8 +94,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsExportButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         currentResultsTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        saveResultsButton = new javax.swing.JButton();
+        loadCurrentResultsButton = new javax.swing.JButton();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
         jMenuItem1.setText(bundle.getString("DETAILS")); // NOI18N
@@ -238,17 +240,17 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsTable.setComponentPopupMenu(jPopupMenu1);
         jScrollPane3.setViewportView(currentResultsTable);
 
-        jButton1.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveResultsButton.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
+        saveResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveResultsButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        loadCurrentResultsButton.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
+        loadCurrentResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                loadCurrentResultsButtonActionPerformed(evt);
             }
         });
 
@@ -260,9 +262,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(loadCurrentResultsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(saveResultsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(currentResultsExportButton))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE))
@@ -275,8 +277,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)
+                    .addComponent(loadCurrentResultsButton)
+                    .addComponent(saveResultsButton)
                     .addComponent(currentResultsExportButton))
                 .addContainerGap())
         );
@@ -457,25 +459,58 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     }//GEN-LAST:event_savedResultsExportButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser choose = new JFileChooser();
+    private void saveResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveResultsButtonActionPerformed
+        JFileChooser choose = new JFileChooser() {
+
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+
+                if (!f.getAbsolutePath().endsWith(".bres")) {
+                    f = new File(f.getAbsolutePath() + ".bres");
+                }
+
+                setSelectedFile(f);
+
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("FILE_EXISTS"), null, JOptionPane.YES_NO_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            super.setSelectedFile(null);
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("BANG results file", "bres");
+        choose.setFileFilter(fnf);
+        choose.setAcceptAllFileFilterUsed(false);
 
         choose.showSaveDialog(this);
 
         File f = choose.getSelectedFile();
 
-        if (f == null)
+        if (f == null) {
+            System.err.println("Selection canceled");
             return;
-
+        }
+        
         currentResults.writeFile(f.getAbsolutePath());
 
+    }//GEN-LAST:event_saveResultsButtonActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void loadCurrentResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCurrentResultsButtonActionPerformed
         JFileChooser choose = new JFileChooser();
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("BANG results file", "bres");
+        choose.setFileFilter(fnf);
+        choose.setAcceptAllFileFilterUsed(false);
 
-        choose.showSaveDialog(this);
+        choose.showOpenDialog(this);
 
         File f = choose.getSelectedFile();
 
@@ -486,7 +521,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
         TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
         tca.adjustColumns();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_loadCurrentResultsButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
@@ -542,8 +577,6 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JTable currentResultsTable;
     private javax.swing.JButton editFilterButton;
     private javax.swing.JTextArea filterText;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
@@ -555,7 +588,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loadCurrentResultsButton;
     private javax.swing.JButton loadResultsButton;
+    private javax.swing.JButton saveResultsButton;
     private javax.swing.JButton savedResultsExportButton;
     private javax.swing.JTable savedResultsTable;
     // End of variables declaration//GEN-END:variables

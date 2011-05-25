@@ -28,6 +28,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -71,6 +72,7 @@ public class Agent_GUI_Java extends Agent_GUI {
         myGUI = new pikater.gui.java.improved.MainWindow(this);
 
         myGUI.setVisible(true);
+        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("PIKATER_START"));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class Agent_GUI_Java extends Agent_GUI {
     @Override
     protected void allOptionsReceived(int problemId) {
         sendProblem(problemId);
-        myGUI.showInfo("Starting experiment");
+        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("STARTING_EXPERIMENT") + problemId);
     }
 
     /*@Override
@@ -103,7 +105,7 @@ public class Agent_GUI_Java extends Agent_GUI {
             Results res = (Results) r.getValue();
             List tasks = res.getResults();
 
-            myGUI.showInfo("Got results from: " + ((Task)tasks.get(0)).getAgent().getName());
+            myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + ((Task)tasks.get(0)).getId().split("_")[1]);
 
             Iterator it = tasks.iterator();
 
@@ -150,17 +152,48 @@ public class Agent_GUI_Java extends Agent_GUI {
     }
 
     public List getAgentOptionsSynchronous(String agentType) {
-        
-        List options = null;
+
+        java.util.LinkedList<String> filterOptions = new java.util.LinkedList<String>();
+
         try {
-            options = getOptions(agentType);
-        }
-        catch (Exception e) {
-            myGUI.showError("Problem while loading options: " + e.getLocalizedMessage());
+            FileReader in = new FileReader("guiDisplayOptions");
+            Scanner s = new Scanner(in);
+
+            while (s.hasNextLine()) {
+                filterOptions.add(s.nextLine());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
-        if (options == null)
-              options = new LinkedList();
+        List options = null;
+        
+        try {
+            options = getOptions(agentType);
+
+            for (int i = options.size() - 1; i >= 0; i--) {
+                Option o = (Option) options.get(i);
+                if (!filterOptions.contains(agentType + "-" + o.getName())) {
+                    options.remove(o);
+                }
+            }
+
+        } catch (CodecException ce) {
+            ce.printStackTrace();
+            myGUI.showError("Codec Error: " + ce.getLocalizedMessage());
+        } catch (OntologyException oe) {
+            oe.printStackTrace();
+            myGUI.showError("Ontology Error: " + oe.getLocalizedMessage());
+        } catch (FIPAException fe) {
+            fe.printStackTrace();
+            myGUI.showError("FIPA error: " + fe.getLocalizedMessage());
+        }
+
+        if (options == null) {
+            options = new LinkedList();
+        }
+
         return options;
     }
 
@@ -307,7 +340,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                     e.printStackTrace();
                 }
                 catch (OntologyException e) {
-                    myGUI.showError("Ontlogy error: " + e.getLocalizedMessage());
+                    myGUI.showError("Ontology error: " + e.getLocalizedMessage());
                     e.printStackTrace();
                 }
                 catch (FIPAException e) {
@@ -627,5 +660,10 @@ public class Agent_GUI_Java extends Agent_GUI {
 
 
 
+    }
+
+    @Override
+    protected void displayFileImportProgress(int completed, int all) {
+        myGUI.showFileImportProgress(completed, all);
     }
 }
