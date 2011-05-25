@@ -486,7 +486,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                 ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(1);
                 ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(2);
             
-                int problemID = createNewProblem("10000", null);
+                int problemID = createNewProblem("10000", "after_each_task");
 
                 if (optionManager.get(0).equals("Random")) {
                     addMethodToProblem(problemID, optionManager.get(0).toString(),
@@ -655,9 +655,6 @@ public class Agent_GUI_Java extends Agent_GUI {
         catch (OntologyException oe) {
             oe.printStackTrace();
         }
-
-        
-
 
 
     }

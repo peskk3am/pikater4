@@ -129,7 +129,7 @@ public class Agent_GUI_WS extends Agent_GUI {
 						jade.util.leap.Iterator it = sp.getFileNames()
 								.iterator();
 
-						int problemID = createNewProblem("30000");
+						int problemID = createNewProblem("30000", null);
 
 						while (it.hasNext()) {
 							String s = (String) it.next();
