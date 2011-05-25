@@ -10,7 +10,7 @@ $ L float 1 1 r 0 1
 $ M float 1 1 r 0 0.9
 
 #  Number of epochs to train through.
-$ N int 1 1 r 100 1000
+$ N int 1 1 r 1 10000
 
 #  Percentage size of validation set to use to terminate
 #  training (if this is non zero it can pre-empt num of epochs.

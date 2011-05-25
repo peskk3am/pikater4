@@ -1,27 +1,30 @@
 <experiments>
-    <experiment timeout="10000" > <!-- get_results="after_each_task"> -->
-        <!-- <method name="Random" error_rate="0.001" maximum_tries="4" />  -->
-        <method name="ChooseXValues" />
+    <experiment timeout="10000" get_results="after_each_task">
+        <method name="Random" error_rate="0.001" maximum_tries="1" />
+        <!-- <method name="ChooseXValues" /> -->
         
-        <!-- <dataset train="iris.arff" test="iris.arff" /> -->
-        <dataset train="weather.arff" test="weather.arff" />
+        <dataset train="iris.arff" test="iris.arff" />
+        <!-- <dataset train="weather.arff" test="weather.arff" /> -->
         
-        <agent type="RBFNetwork">
+        <!-- <agent type="RBFNetwork">
             <parameter name="W" value="?" set="0.01,0.3" />            
         </agent>
-        
+        -->
         
         <!--               
         <agent name="rbf3">
             <parameter name="B" value="?" />
         </agent>
-        
-        <agent type="MultilayerPerceptron">
-            
-            <parameter name="H" value="3,?" lower="2" upper="8" />
-            <parameter name="L" value="?" />
+        -->
+
+        <agent type="MultilayerPerceptron">            
+            <parameter name="H" value="5,3" lower="2" upper="30" />
+            <parameter name="L" value="0.4" />
+            <parameter name="S" value="?" />
+            <parameter name="N" value="1500" />
         </agent>
-        
+
+        <!--
         <agent type="?">
         </agent>
 		
