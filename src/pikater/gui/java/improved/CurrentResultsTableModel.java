@@ -11,13 +11,21 @@ import jade.util.leap.List;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import pikater.ontology.messages.DataInstances;
@@ -34,7 +42,7 @@ public class CurrentResultsTableModel extends AbstractTableModel{
 
     HashMap<String, DataInstances> trainingFiles = new HashMap<String, DataInstances>();
 
-    String [] columns = {java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("DATE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("AGENT TYPE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("OPTIONS"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("ERROR"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RMSE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("KAPPA"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("MAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RRSE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST")};
+    String [] columns = {java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("DATE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("AGENT TYPE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("OPTIONS"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("ERROR"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RMSE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("KAPPA"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("MAE"), java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("RRSE")};
 
     public Task getResult(int index) {
         return (Task)results.get(index);
@@ -64,6 +72,9 @@ public class CurrentResultsTableModel extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
+
+        if (new File("studentMode").exists())
+            return 6;
         return 11;
     }
 
@@ -73,27 +84,40 @@ public class CurrentResultsTableModel extends AbstractTableModel{
 
         switch (columnIndex) {
             case 0:
+                
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date d = df.parse(t.getStart());
+                    DateFormat outputFormat = DateFormat.getDateTimeInstance();
+                    return outputFormat.format(d);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                
                 return t.getStart();
+
+
             case 1:
-                return t.getAgent().getType();
-            case 2:
-                return t.getAgent().optionsToString();
-            case 3:
-                return t.getResult().getError_rate();
-            case 4:
-                return t.getResult().getRoot_mean_squared_error();
-            case 5:
-                return t.getResult().getKappa_statistic();
-            case 6:
-                return t.getResult().getRelative_absolute_error();
-            case 7:
-                return t.getResult().getMean_absolute_error();
-            case 8:
-                return t.getResult().getRoot_mean_squared_error();
-            case 9:
                 return t.getData().getExternal_train_file_name();
-            case 10:
+            case 2:
                 return t.getData().getExternal_test_file_name();
+            case 3:
+                return t.getAgent().getType();
+            case 4:
+                return t.getAgent().optionsToString();
+            case 5:
+                return t.getResult().getError_rate();
+            case 6:
+                return t.getResult().getRoot_mean_squared_error();
+            case 7:
+                return t.getResult().getKappa_statistic();
+            case 8:
+                return t.getResult().getRelative_absolute_error();
+            case 9:
+                return t.getResult().getMean_absolute_error();
+            case 10:
+                return t.getResult().getRoot_mean_squared_error();
+            
             default:
                 return null;
         }
@@ -110,6 +134,7 @@ public class CurrentResultsTableModel extends AbstractTableModel{
             ObjectOutputStream encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
 
             encoder.writeObject(results);
+            encoder.writeObject(trainingFiles);
 
             encoder.close();
         }
@@ -127,6 +152,7 @@ public class CurrentResultsTableModel extends AbstractTableModel{
             ObjectInputStream encoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
 
             results = (List)encoder.readObject();
+            trainingFiles = (HashMap<String, DataInstances>)encoder.readObject();
 
             encoder.close();
 

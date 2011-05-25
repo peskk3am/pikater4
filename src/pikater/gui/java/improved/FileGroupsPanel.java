@@ -111,7 +111,8 @@ public class FileGroupsPanel extends javax.swing.JDialog {
             }
         });
 
-        jButton3.setText("Cancel");
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jButton3.setText(bundle1.getString("CANCEL")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);

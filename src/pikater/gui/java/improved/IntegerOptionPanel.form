@@ -51,7 +51,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Automatic settings"/>
+            <TitledBorder title="Automatic settings">
+              <ResourceString PropertyName="titleX" bundle="pikater/gui/java/improved/Strings.properties" key="AUTO_SETTINGS" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
@@ -83,7 +85,7 @@
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="toSpinner" linkSize="3" min="-2" pref="50" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="setTextField" pref="162" max="32767" attributes="0"/>
+                              <Component id="setTextField" pref="137" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
                       </Group>
@@ -192,7 +194,9 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Manual settings"/>
+            <TitledBorder title="Manual settings">
+              <ResourceString PropertyName="titleX" bundle="pikater/gui/java/improved/Strings.properties" key="MANUAL_SETTINGS" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </TitledBorder>
           </Border>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
@@ -206,7 +210,7 @@
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="manualSpinner" min="-2" pref="96" max="-2" attributes="0"/>
-                  <EmptySpace pref="80" max="32767" attributes="0"/>
+                  <EmptySpace pref="106" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

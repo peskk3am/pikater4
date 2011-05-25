@@ -182,7 +182,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 0, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
             optionsPanel.add(optionPanel);
         }
 
@@ -204,7 +204,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 0, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
             optionsPanel.add(optionPanel);
         }
 

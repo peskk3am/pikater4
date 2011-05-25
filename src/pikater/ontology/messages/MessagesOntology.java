@@ -180,6 +180,7 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_DATA = "GET-DATA";
 	public static final String GET_DATA_FILE_NAME = "file_name";
+        public static final String GET_DATA_SAVE_META = "saveMetadata";
 
 	public static final String SAVE_METADATA = "SAVE-METADATA";
 	public static final String SAVE_METADATA_METADATA = "metadata";
@@ -251,6 +252,8 @@ public class MessagesOntology extends Ontology {
         public static final String LOAD_RESULTS_AFTER_DATE = "startDate";
         public static final String LOAD_RESULTS_BEFORE_DATE = "endDate";
         public static final String LOAD_RESULTS_USER_ID = "userID";
+
+        public static final String DELETE_TEMP_FILES = "DELETE-TEMP-FILES";
         
 
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
@@ -311,6 +314,7 @@ public class MessagesOntology extends Ontology {
 			add(new AgentActionSchema(LOAD_AGENT), LoadAgent.class);
 			add(new AgentActionSchema(SAVE_AGENT), SaveAgent.class);
 			add(new AgentActionSchema(GET_SAVED_AGENTS), GetSavedAgents.class);
+                        add(new AgentActionSchema(DELETE_TEMP_FILES), DeleteTempFiles.class);
 			// add(new AgentActionSchema(SEND_OPTIONS), SendOptions.class);
 
 			ConceptSchema cs = (ConceptSchema) getSchema(COMPUTATION);
@@ -642,6 +646,7 @@ public class MessagesOntology extends Ontology {
 			as.add(GET_DATA_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
+                        as.add(GET_DATA_SAVE_META, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
 
@@ -713,11 +718,13 @@ public class MessagesOntology extends Ontology {
                         as.add(LOAD_RESULTS_TRAIN, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_TEST, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_USER_ID, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
-                        
+
                         as.setResult((ConceptSchema)getSchema(SAVED_RESULT), 0, ObjectSchema.UNLIMITED);
 			// as = (AgentActionSchema)getSchema(SEND_OPTIONS);
 			// as.add(SEND_OPTIONS_OPTIONS, (ConceptSchema)getSchema(OPTION), 1,
 			// ObjectSchema.UNLIMITED);
+
+                        as = (AgentActionSchema)getSchema(DELETE_TEMP_FILES);
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

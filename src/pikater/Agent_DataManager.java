@@ -40,6 +40,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import pikater.ontology.messages.DeleteTempFiles;
 
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
@@ -122,7 +123,7 @@ public class Agent_DataManager extends Agent {
             log.info(s);
         }
 
-        File data = new File("data" + System.getProperty("file.separator") + "files");
+        File data = new File("data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp");
         if (!data.exists()) {
             log.info("Creating directory data/files");
             if (data.mkdirs()) {
@@ -221,7 +222,7 @@ public class Agent_DataManager extends Agent {
             protected ACLMessage handleRequest(ACLMessage request)
                     throws NotUnderstoodException, RefuseException {
 
-                log.info("Agent " + getLocalName() + " received request: " + request.getContent());
+                //log.info("Agent " + getLocalName() + " received request: " + request.getContent());
 
                 try {
                     Action a = (Action) getContentManager().extractContent(
@@ -281,31 +282,9 @@ public class Agent_DataManager extends Agent {
                                 stmt.executeUpdate(query);
                                 stmt.close();
 
-                                // insert the same file into the metadata table,
-                                // other values will be filled in when the file
-                                // is read by a reader agent
-                                // stmt = db.createStatement();
-
-                                // not needed anymore, there is now a trigger
-                                // which does the same
-								/*
-                                 * query =
-                                 * "INSERT INTO metadata (externalFilename, internalFilename"
-                                 * + // ", defaultTask, attributeType,
-                                 * missingValues ") VALUES (\'" +
-                                 * im.getExternalFilename() + "\', \'" +
-                                 * internalFilename + "\')";
-                                 *
-                                 * log.info("Executing query: " + query);
-                                 * stmt.execute(query);
-                                 */
-
                                 // move the file to db\files directory
                                 String newName = System.getProperty("user.dir") + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
-                                // Boolean res = f.renameTo(new File(newName));
                                 move(f, new File(newName));
-
-                                // move(f, new File(newName));
 
                             }
 
@@ -695,6 +674,27 @@ public class Agent_DataManager extends Agent {
                         return reply;
                     }
 
+                    if (a.getAction() instanceof DeleteTempFiles) {
+
+                        String path = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp" + System.getProperty("file.separator");
+
+                        File tempDir = new File(path);
+                        String[] files = tempDir.list();
+
+                        if (files != null) {
+                            for (String file : files) {
+                                File d = new File(path + file);
+                                d.delete();
+                            }
+                        }
+
+                        ACLMessage reply = request.createReply();
+                        reply.setPerformative(ACLMessage.INFORM);
+
+                        return reply;
+
+                    }
+
                 } catch (OntologyException e) {
                     e.printStackTrace();
                     log.error("Problem extracting content: " + e.getMessage());
@@ -750,25 +750,11 @@ public class Agent_DataManager extends Agent {
         return md5;
     }
 
-    public void updateMetadata() {
-        try {
-            Statement stmt = db.createStatement();
-            String query = "UPDATE metadata SET defaultTask='Classification', attributeType='Categorical', missingValues='False' WHERE externalFilename='car.arff';" + " UPDATE metadata SET defaultTask='Regression', attributeType='Multivariate', missingValues='False' WHERE externalFilename='machine.arff';" + " UPDATE metadata SET defaultTask='Regression', attributeType='Real', missingValues='True' WHERE externalFilename='communities.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Integer', missingValues='True' WHERE externalFilename='lung-cancer.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Integer', missingValues='False' WHERE externalFilename='haberman.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Categorical', missingValues='False' WHERE externalFilename='tic-tac-toe.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Integer', missingValues='False' WHERE externalFilename='letter-recognition.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Real', missingValues='False' WHERE externalFilename='magic.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Real', missingValues='False' WHERE externalFilename='iris.arff';" + " UPDATE metadata SET defaultTask='Classification', attributeType='Multivariate', missingValues='False' WHERE externalFilename='weather.arff';";
-
-            stmt.executeUpdate(query);
-            log.info("Executing query: " + query);
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
     // Move file (src) to File/directory dest.
     public static synchronized void move(File src, File dest)
             throws FileNotFoundException, IOException {
         copy(src, dest);
-        // src.delete();
+        src.delete();
     }
 
     // Copy file (src) to File/directory dest.

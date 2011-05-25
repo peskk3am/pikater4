@@ -52,6 +52,7 @@ import org.jdom.input.SAXBuilder;
 
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.Interval;
 import pikater.ontology.messages.MessagesOntology;
@@ -1203,9 +1204,63 @@ public abstract class Agent_GUI extends GuiAgent {
 				+ System.getProperty("file.separator");
 		File incomingFiles = new File(incomingFilesPath);
 
-		for (String fileName : incomingFiles.list()) {
-			DataManagerService.importFile(this, 1, fileName, null);
-		}
+	for (String fileName : incomingFiles.list()) {
+                DataManagerService.importFile(this, 1, fileName, null);
+
+                String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
+                internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
+
+                sd = new ServiceDescription();
+                sd.setType("ARFFReader");
+
+                dfd = new DFAgentDescription();
+                dfd.addServices(sd);
+
+                try {
+                    DFAgentDescription readers[] = DFService.search(this, dfd);
+
+                    if (readers.length == 0) {
+                        System.err.println("No readers found");
+                        break;
+                    }
+
+                    AID reader = readers[0].getName();
+
+                    GetData gd = new GetData();
+                    gd.setFile_name(internalFilename);
+                    gd.setSaveMetadata(true);
+
+                    Action a = new Action();
+                    a.setAction(gd);
+                    a.setActor(this.getAID());
+
+                    ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+                    req.addReceiver(reader);
+                    req.setLanguage(codec.getName());
+                    req.setOntology(ontology.getName());
+                    req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+                    getContentManager().fillContent(req, a);
+
+                    ACLMessage response = FIPAService.doFipaRequestClient(this, req);
+
+                    if (response.getPerformative() != ACLMessage.INFORM) {
+                        System.err.println("Error reading file");
+                    }
+
+                }
+                catch (CodecException ce) {
+                    ce.printStackTrace();
+                }
+                catch (FIPAException fe) {
+                    fe.printStackTrace();
+                }
+                catch (OntologyException oe) {
+                    oe.printStackTrace();
+                }
+
+
+            }
 
 		System.out.println("GUI agent " + getLocalName()
 				+ " is alive and waiting...");

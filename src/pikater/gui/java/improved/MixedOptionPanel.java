@@ -29,8 +29,11 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         initComponents();
 
         userSpecifiedValueText.setText(o.getDefault_value());
-        lowerSpinner.setValue(o.getRange().getMin());
-        upperSpinner.setValue(o.getRange().getMax());
+        //lowerSpinner.setValue(o.getRange().getMin());
+        //upperSpinner.setValue(o.getRange().getMax());
+
+        autoPanel.setVisible(false);
+        manualPanel.setVisible(false);
     }
 
     public boolean isDefault() {
@@ -84,8 +87,8 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             patternText.setText(o.getValue());
             if (o.getRange().getMax() != null && o.getRange().getMin() != null) {
                 intervalRadio.setSelected(true);
-                lowerSpinner.setValue(o.getRange().getMin().intValue());
-                upperSpinner.setValue(o.getRange().getMax().intValue());
+                //lowerSpinner.setValue(o.getRange().getMin().intValue());
+                //upperSpinner.setValue(o.getRange().getMax().intValue());
             }
             if (o.getIs_a_set()) {
                 setRadio.setSelected(true);
@@ -158,8 +161,10 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             }
         });
 
-        autoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Automatic settings"));
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        autoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("AUTO_SETTINGS"))); // NOI18N
 
+        lowerSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1000, 1));
         lowerSpinner.setEnabled(false);
 
         setText.setEnabled(false);
@@ -167,6 +172,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         jLabel1.setText(bundle.getString("OPTION PATTERN")); // NOI18N
         jLabel1.setEnabled(false);
 
+        upperSpinner.setModel(new javax.swing.SpinnerNumberModel(100, 1, 1000, 1));
         upperSpinner.setEnabled(false);
 
         jLabel3.setText(bundle.getString("TO")); // NOI18N
@@ -184,11 +190,18 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         intervalRadio.setText(bundle.getString("INTERVAL")); // NOI18N
         intervalRadio.setEnabled(false);
 
+        patternText.setText("?");
         patternText.setEnabled(false);
+        patternText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                patternTextActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText(bundle.getString("MAXIMUM TRIES")); // NOI18N
         jLabel5.setEnabled(false);
 
+        triesSpinner.setModel(new javax.swing.SpinnerNumberModel(5, 1, 20, 1));
         triesSpinner.setEnabled(false);
 
         javax.swing.GroupLayout autoPanelLayout = new javax.swing.GroupLayout(autoPanel);
@@ -220,7 +233,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(triesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         autoPanelLayout.setVerticalGroup(
             autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,7 +260,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
                 .addGap(12, 12, 12))
         );
 
-        manualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Manual settings"));
+        manualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("MANUAL_SETTINGS"))); // NOI18N
 
         userSpecifiedValueText.setEnabled(false);
         userSpecifiedValueText.addActionListener(new java.awt.event.ActionListener() {
@@ -313,7 +326,9 @@ public class MixedOptionPanel extends javax.swing.JPanel {
 
         for (Component c : autoPanel.getComponents()) {
             c.setEnabled(autoRadio.isSelected());
-        }        
+        }
+
+        autoPanel.setVisible(autoRadio.isSelected());
 
     }//GEN-LAST:event_autoRadioStateChanged
 
@@ -322,8 +337,13 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         for (Component c : manualPanel.getComponents()) {
             c.setEnabled(manualRadio.isSelected());
         }
-        
+
+        manualPanel.setVisible(manualRadio.isSelected());
     }//GEN-LAST:event_manualRadioStateChanged
+
+    private void patternTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patternTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_patternTextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

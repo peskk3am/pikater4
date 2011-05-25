@@ -14,6 +14,7 @@ package pikater.gui.java.improved;
 import jade.gui.GuiAgent;
 import java.io.File;
 import javax.swing.JFrame;
+import pikater.DataManagerService;
 import pikater.ontology.messages.Task;
 
 /**
@@ -101,7 +102,12 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Pikater 1.0");
+        setTitle("BANG 1.0");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jToolBar1.setRollover(true);
 
@@ -277,6 +283,10 @@ public class MainWindow extends javax.swing.JFrame {
         nef.openFileDialog();
         nef.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        DataManagerService.deleteTempFiles(myAgent);
+    }//GEN-LAST:event_formWindowClosing
 
     public void addResult(Task t) {
         rbf.addResult(t);

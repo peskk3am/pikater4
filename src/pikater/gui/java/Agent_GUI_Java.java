@@ -1,8 +1,6 @@
 
 package pikater.gui.java;
 
-import com.sun.xml.internal.ws.addressing.model.MissingAddressingHeaderException;
-import jade.content.ContentManager;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;

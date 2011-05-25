@@ -22,12 +22,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
+import weka.core.Attribute;
+import weka.core.AttributeStats;
 import weka.core.Instances;
 
 public class Agent_ARFFReader extends Agent {
@@ -109,8 +112,9 @@ public class Agent_ARFFReader extends Agent {
 		try {
 			ContentElement content = getContentManager()
 					.extractContent(request);
-			String file_name = ((GetData) ((Action) content).getAction())
-					.getFile_name();
+                        GetData gd = (GetData) ((Action) content).getAction();
+			String file_name = gd.getFile_name();
+                        boolean saveMetadata = gd.getSaveMetadata();
 			DataInstances instances = new DataInstances();
 			// Read the file
 			working = true;
@@ -123,15 +127,55 @@ public class Agent_ARFFReader extends Agent {
 
 			instances.fillWekaInstances(data);
 
-			Metadata m = new Metadata();
-			m.setInternal_name(file_name);
-			int ninst = instances.getInstances().size();
-			if (ninst > 0) {
-				m.setNumber_of_attributes(((Instance) instances.getInstances()
-						.iterator().next()).getValues().size());
-			}
-			m.setNumber_of_instances(instances.getInstances().size());
-			//DataManagerService.saveMetadata(this, m);
+                        boolean missing = false;
+                        ArrayList<Integer> types = new ArrayList<Integer>();
+
+                        for (int i = 0; i < data.numAttributes(); i++) {
+                            Attribute a = data.attribute(i);
+                            AttributeStats as = data.attributeStats(i);
+
+                            if (as.missingCount > 0)
+                                missing = true;
+
+                            if (i != (data.classIndex() >= 0 ? data.classIndex() : data.numAttributes() - 1)) {
+                                if (!types.contains(a.type())) {
+                                    types.add(a.type());
+                                    System.err.println(a.type());
+                                }
+                            }
+                        }
+			if (saveMetadata) {
+                            Metadata m = new Metadata();
+                            if (types.size() > 1)
+                                m.setAttribute_type("Multivariate");
+                            else {
+                                switch (types.get(0)) {
+                                    case Attribute.NOMINAL:
+                                        m.setAttribute_type("Categorical");
+                                        break;
+                                    case Attribute.NUMERIC:
+                                        m.setAttribute_type("Numeric");
+                                        break;
+                                }
+                            }
+                            if (data.attribute(data.classIndex() >= 0 ? data.classIndex() : data.numAttributes() - 1).type() == Attribute.NUMERIC)
+                                m.setDefault_task("Regression");
+                            else
+                                m.setDefault_task("Classification");
+
+                            m.setInternal_name(file_name);
+                            m.setMissing_values(missing);
+                            int ninst = instances.getInstances().size();
+                            System.err.println("Reader: " + ninst);
+
+                            if (ninst > 0) {
+                                    m.setNumber_of_attributes(((Instance) instances.getInstances()
+                                                    .iterator().next()).getValues().size());
+                            }
+                            m.setNumber_of_instances(instances.getInstances().size());
+                        
+                            DataManagerService.saveMetadata(this, m);
+                        }
 
 			// Prepare the content
 			Result result = new Result((Action) content, instances);
