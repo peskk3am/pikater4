@@ -11,8 +11,10 @@
 
 package pikater.gui.java.improved;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import javax.swing.JEditorPane;
 
 /**
@@ -38,7 +40,7 @@ public class AboutDialog extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         try {
-            jEditorPane1 = jEditorPane1 = new JEditorPane(new URL("file://" + System.getProperty("user.dir") + System.getProperty("file.separator") + "about.html"));
+            jEditorPane1 = jEditorPane1 = new JEditorPane(new URL("file", "localhost", (new File("about.html")).getAbsolutePath()));
 
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 

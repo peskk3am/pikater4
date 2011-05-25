@@ -126,6 +126,19 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         }
     }
 
+    public int getNumberOfTasks() {
+        int sum = 0;
+        for (Agent a: agentList.agents) {
+            int product = 1;
+            for (int i = 0; i < a.getOptions().size(); i++) {
+                Option o = (Option)a.getOptions().get(i);
+                product *= o.getNumberOfOptions();
+            }
+            sum += product;
+        }
+        return sum;
+    }
+
     public void openFileDialog() {
         addFilesButtonActionPerformed(null);
     }
@@ -477,6 +490,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         ge.addParameter(optManOptions);
         ge.addParameter(agentList.getAgents());
         ge.addParameter(fileGroups.getFileGroups());
+        ge.addParameter(getNumberOfTasks());
 
         myAgent.postGuiEvent(ge);
 
@@ -576,13 +590,14 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                     String agent_name = next_agent.getAttributeValue("name");
                     String agent_type = next_agent.getAttributeValue("type");
 
-                    AgentOptionsDialog aod = new AgentOptionsDialog((Frame)this.getParent(), true, agentTypes, myAgent);
+                    AgentOptionsDialog aod = new AgentOptionsDialog((Frame)this.getParent(), true, agentTypes, myAgent, false);
 
                     if (!agent_type.equals("?")) {
                         aod.setAgentOptions(((Agent_GUI_Java)myAgent).getAgentOptionsSynchronous(agent_type));
                         System.err.println("OPTIONS COUNT:" + aod.getAgentOptions().size());
                     }
                     aod.setAgentType(agent_type);
+                    aod.setAgentTypeChangedEventEnabled(true);
 
                     System.err.println("Here");
 

@@ -52,7 +52,7 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="jEditorPane1 = new JEditorPane(new URL(&quot;file://&quot; + System.getProperty(&quot;user.dir&quot;) + System.getProperty(&quot;file.separator&quot;) + &quot;about.html&quot;))"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="jEditorPane1 = new JEditorPane(new URL(&quot;file&quot;, &quot;localhost&quot;, (new File(&quot;about.html&quot;)).getAbsolutePath()))"/>
             <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="try {"/>
             <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="}&#xa;catch (IOException ex) {&#xa;    ex.printStackTrace();&#xa;}"/>
           </AuxValues>

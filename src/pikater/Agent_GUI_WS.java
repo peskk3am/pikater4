@@ -370,4 +370,9 @@ public class Agent_GUI_WS extends Agent_GUI {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    protected void displayTaskResult(ACLMessage inform) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

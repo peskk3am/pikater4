@@ -29,6 +29,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     private String[] agentTypes;
     private LinkedList<OptionPanel> optionPanels;
     private List options;
+    private boolean agentTypeChangedEnabled;
 
     /** Creates new form AgentOptionsDialog */
     public AgentOptionsDialog(java.awt.Frame parent, boolean modal) {
@@ -37,13 +38,22 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     }
 
     public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent) {
+        this(parent, modal, agentTypes, myAgent, true);
+    }
+
+    public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent, boolean agentTypeChangedEnabled) {
         super(parent, modal);
+        this.agentTypeChangedEnabled = agentTypeChangedEnabled;
         this.agentTypes = agentTypes;
         this.myAgent = myAgent;
         optionPanels = new LinkedList<OptionPanel>();
         initComponents();
         options = new jade.util.leap.LinkedList();
         jComboBox1.setSelectedIndex(1);
+    }
+
+    public void setAgentTypeChangedEventEnabled(boolean state) {
+        agentTypeChangedEnabled = state;
     }
 
     public void setOption(Option o) {
@@ -153,6 +163,9 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         //    return;
         //}
 
+        if (!agentTypeChangedEnabled)
+            return;
+        
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             String agentType = jComboBox1.getSelectedItem().toString();
             optionPanels.clear();
@@ -168,10 +181,13 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void setAgentOptions(List options) {
+    public synchronized void setAgentOptions(List options) {
+
+        System.err.println("SETAGENTOPTIONS");
 
         this.options = options;
         optionsPanel.removeAll();
+        optionPanels.clear();
 
         for (int i = 0; i < options.size(); i++) {
             OptionPanel op = new OptionPanel((Option)options.get(i), getAgentType());

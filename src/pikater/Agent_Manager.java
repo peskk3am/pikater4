@@ -712,8 +712,8 @@ public class Agent_Manager extends Agent {
 				// int rnd = generator.nextInt(Agents.length);
 				// return Agents[rnd];
 				int i = 0;
-				while ((isBusy(Agents[i]) || busyAgents.contains(Agents[i]))
-						&& i < Agents.length) {
+				while ((i < Agents.length) && (isBusy(Agents[i]) || busyAgents.contains(Agents[i])))
+				{
 					i++;
 				}
 				if (i < Agents.length) {

@@ -28,9 +28,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.util.regex.Pattern;
 import java.util.regex.Pattern;
@@ -66,6 +69,9 @@ public class Agent_GUI_Java extends Agent_GUI {
      */
     private static final long serialVersionUID = -3678714827126048550L;
     transient protected pikater.gui.java.improved.MainWindow myGUI;
+    private HashMap<Integer, Integer> experimentTasks = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> finishedTasks = new HashMap<Integer, Integer>();
+
 
     public Agent_GUI_Java() {
 
@@ -84,7 +90,7 @@ public class Agent_GUI_Java extends Agent_GUI {
     @Override
     protected void allOptionsReceived(int problemId) {
         sendProblem(problemId);
-        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("STARTING_EXPERIMENT") + problemId);
+        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("STARTING_EXPERIMENT") + (problemId + 1));
     }
 
     /*@Override
@@ -92,27 +98,18 @@ public class Agent_GUI_Java extends Agent_GUI {
         // TODO Auto-generated method stub
     }*/
 
-    @Override
-    protected void displayPartialResult(ACLMessage inform) {
-        if (inform.getPerformative() != ACLMessage.INFORM) {
-            System.err.println("Received FAILURE");
-            myGUI.showError(inform.getContent());
-            return;
-        }
+    private void showResult(Task t) {
 
-        try {
-            Result r = (Result) getContentManager().extractContent(inform);
-            Results res = (Results) r.getValue();
-            List tasks = res.getResults();
+        int problemID = Integer.parseInt(t.getId().split("_")[1]);
+        int finished = finishedTasks.get(problemID) + 1;
+        finishedTasks.put(problemID, finished);
+        int total = experimentTasks.get(problemID);
 
-            myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + ((Task)tasks.get(0)).getId().split("_")[1]);
+        String finTot = " (" + finished + "/" + total + ")";
 
-            Iterator it = tasks.iterator();
-
-            while (it.hasNext()) {
-                Task t = (Task) it.next();
-
-                String testInternalFilename = t.getData().getTest_file_name();
+        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + (problemID + 1) + finTot);
+        
+        String testInternalFilename = t.getData().getTest_file_name();
                 String trainInternalFilename = t.getData().getTrain_file_name();
 
 				String[] path = testInternalFilename.split(Pattern.quote(
@@ -135,6 +132,29 @@ public class Agent_GUI_Java extends Agent_GUI {
                 else {
                     myGUI.showError("Error: " + t.getResult().getStatus());
                 }
+    }
+
+    @Override
+    protected void displayPartialResult(ACLMessage inform) {
+        if (inform.getPerformative() != ACLMessage.INFORM) {
+            System.err.println("Received FAILURE");
+            myGUI.showError(inform.getContent());
+            return;
+        }
+
+        try {
+            Result r = (Result) getContentManager().extractContent(inform);
+            Results res = (Results) r.getValue();
+            List tasks = res.getResults();
+
+            myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + ((Task)tasks.get(0)).getId().split("_")[1]);
+
+            Iterator it = tasks.iterator();
+
+            while (it.hasNext()) {
+                Task t = (Task) it.next();
+
+                showResult(t);
             }
         } catch (UngroundedException e) {
             e.printStackTrace();
@@ -485,8 +505,12 @@ public class Agent_GUI_Java extends Agent_GUI {
                 LinkedList optionManager = (LinkedList) ev.getParameter(0);
                 ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(1);
                 ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(2);
+                int tasks = (Integer)ev.getParameter(3);
             
                 int problemID = createNewProblem("10000", "after_each_task");
+
+                experimentTasks.put(problemID, tasks);
+                finishedTasks.put(problemID, 0);
 
                 if (optionManager.get(0).equals("Random")) {
                     addMethodToProblem(problemID, optionManager.get(0).toString(),
@@ -662,5 +686,20 @@ public class Agent_GUI_Java extends Agent_GUI {
     @Override
     protected void displayFileImportProgress(int completed, int all) {
         myGUI.showFileImportProgress(completed, all);
+    }
+
+    @Override
+    protected void displayTaskResult(ACLMessage inform) {
+        try {
+            Result r = (Result) getContentManager().extractContent(inform);
+            Task t = (Task) r.getValue();
+            showResult(t);
+        } catch (CodecException ex) {
+            ex.printStackTrace();
+        } catch (UngroundedException ex) {
+            ex.printStackTrace();
+        } catch (OntologyException ex) {
+            ex.printStackTrace();
+        }
     }
 }

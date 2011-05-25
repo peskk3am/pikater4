@@ -153,7 +153,6 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		for (int i = 0; i < test.numInstances(); i++) {
 			try {
 				pre[i] = getModelObject().classifyInstance(test.instance(i));
-                                System.err.println(pre[i]);
 			} catch (Exception e) {
 				pre[i] = Integer.MAX_VALUE;
 			}

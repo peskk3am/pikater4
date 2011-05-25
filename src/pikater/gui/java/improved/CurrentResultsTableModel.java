@@ -61,6 +61,7 @@ public class CurrentResultsTableModel extends AbstractTableModel{
     }
 
     public void add(Task t) {
+        t.setFinish(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(new Date()));
         results.add(t);
         this.fireTableDataChanged();
     }
@@ -85,7 +86,7 @@ public class CurrentResultsTableModel extends AbstractTableModel{
         switch (columnIndex) {
             case 0:
                 
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                /*DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
                     Date d = df.parse(t.getStart());
                     DateFormat outputFormat = DateFormat.getDateTimeInstance();
@@ -94,7 +95,8 @@ public class CurrentResultsTableModel extends AbstractTableModel{
                     ex.printStackTrace();
                 }
                 
-                return t.getStart();
+                return t.getStart();*/
+                return t.getFinish();
 
 
             case 1:

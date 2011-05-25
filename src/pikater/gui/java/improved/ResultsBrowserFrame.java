@@ -15,6 +15,8 @@ import jade.gui.GuiEvent;
 import jade.util.leap.List;
 import jade.util.leap.LinkedList;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import pikater.DataManagerService;
@@ -43,6 +46,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     ResultsFilterDialog rfd = new ResultsFilterDialog(this, true);
     CurrentResultsTableModel currentResults = new CurrentResultsTableModel();
     DataInputFrame did = null;
+    int currentResultsLastSelected = -1;
+    boolean userHidden = false;
+    int mouseOverRow = -1;
 
     /** Creates new form ResultsBrowserFrame */
     public ResultsBrowserFrame() {
@@ -97,6 +103,16 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         saveResultsButton = new javax.swing.JButton();
         loadCurrentResultsButton = new javax.swing.JButton();
 
+        jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                jPopupMenu1PopupMenuWillBecomeVisible(evt);
+            }
+        });
+
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
         jMenuItem1.setText(bundle.getString("DETAILS")); // NOI18N
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +132,14 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
         setTitle(bundle1.getString("PIKATER 1.0 - RESULTS BROWSER")); // NOI18N
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results Filter"));
 
@@ -235,9 +259,17 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             }
         });
 
+        currentResultsTable.setAutoCreateRowSorter(true);
         currentResultsTable.setModel(currentResults);
         currentResultsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         currentResultsTable.setComponentPopupMenu(jPopupMenu1);
+        currentResultsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        currentResultsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        currentResultsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                currentResultsTableMouseMoved(evt);
+            }
+        });
         jScrollPane3.setViewportView(currentResultsTable);
 
         saveResultsButton.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
@@ -319,8 +351,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     public void addResult(Task t) {
 
+        currentResultsLastSelected = currentResultsTable.getSelectedRow();
         currentResults.add(t);
-        currentResultsTable.setModel(currentResults);
         TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
         tca.adjustColumns();
 
@@ -331,7 +363,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         }
 
         jTabbedPane1.setSelectedComponent(jPanel4);
-        this.setVisible(true);
+        if (!this.isVisible() && !userHidden)
+            this.setVisible(true);
+        currentResultsTable.getSelectionModel().setSelectionInterval(currentResultsLastSelected, currentResultsLastSelected);
     }
 
     public void addTrainingFile(String name, DataInstances data) {
@@ -525,10 +559,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
-        Point p = jMenuItem1.getLocation();
-        int row = currentResultsTable.rowAtPoint(p);
-
-        currentResultsTable.getSelectionModel().setSelectionInterval(row, row);
+        int row = currentResultsTable.getSelectedRow();
 
         Task t = currentResults.getResult(row);
 
@@ -549,13 +580,33 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             return;
         }
 
-        Point p = jMenuItem1.getLocation();
         int row = currentResultsTable.getSelectedRow();
 
         did = new DataInputFrame(this, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
         did.setVisible(true);
        
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        userHidden = true;
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        userHidden = true;
+    }//GEN-LAST:event_formWindowClosing
+
+    private void currentResultsTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_currentResultsTableMouseMoved
+
+        Point p = evt.getPoint();
+        int row = currentResultsTable.rowAtPoint(p);
+
+        mouseOverRow = row;
+
+    }//GEN-LAST:event_currentResultsTableMouseMoved
+
+    private void jPopupMenu1PopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jPopupMenu1PopupMenuWillBecomeVisible
+        currentResultsTable.getSelectionModel().setSelectionInterval(mouseOverRow, mouseOverRow);
+    }//GEN-LAST:event_jPopupMenu1PopupMenuWillBecomeVisible
 
     public void dataInputDialogClosed() {
         did = null;

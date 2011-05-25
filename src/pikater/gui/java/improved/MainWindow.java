@@ -14,6 +14,7 @@ package pikater.gui.java.improved;
 import jade.gui.GuiAgent;
 import java.io.File;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
@@ -36,6 +37,7 @@ public class MainWindow extends javax.swing.JFrame {
     TableColumnAdjuster tca;
     FileImportProgressDialog fipd = null;
     Thread fipdThread = null;
+    ArrayList<Integer> experimentOptions = new ArrayList<Integer>();
 
     /** Creates new form MainWindow */
     public MainWindow() {
