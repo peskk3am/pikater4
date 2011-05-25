@@ -170,7 +170,8 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 		configFileName = getConfigFileName();
 		try {
-			System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + configFileName);
+			System.out.println("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+
+					System.getProperty("user.dir")+ System.getProperty("file.separator") + configFileName);
 			getProblemsFromXMLFile(configFileName);
 		}
 		// indicates a well-formedness error
@@ -185,7 +186,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 		String agentName = "1_RBFNetwork1_2011-05-22_23-17-33.112";
 	// test of loading an agent
-	
+	/*
 		Agent a = new Agent();
 		a.setName(agentName);
 		a.setGui_id("pokusny oziveny agent");

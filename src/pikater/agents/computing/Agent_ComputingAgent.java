@@ -841,6 +841,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 							e.printStackTrace();
 						}
 					}
+					if (current_task.getGet_results().equals("after_each_task")){
+						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));
+					}
 					send(result_msg);	
 					
 				}

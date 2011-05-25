@@ -415,6 +415,8 @@ public abstract class Agent_OptionsManager extends Agent {
 				task.setComputation_id(computation_id); // TODO vzit z
 														// receivedComputation
 				task.setProblem_id(problem_id);
+				task.setGet_results(receivedComputation.getGet_results());
+				task.setGui_agent(receivedComputation.getGui_agent());
 				// task.setOptions(opt);
 
 				// Data data = new Data();
