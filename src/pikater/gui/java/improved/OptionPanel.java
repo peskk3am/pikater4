@@ -38,11 +38,13 @@ public class OptionPanel extends javax.swing.JPanel {
                 o.setValue(bop.getUserSpecifiedValue());
                 o.setUser_value(bop.getUserSpecifiedValue());
                 o.setMutable(false);
+                o.setNumberOfOptions(1);
             }
             else {
                 o.setUser_value("?");
                 o.setValue("?");
                 o.setMutable(true);
+                o.setNumberOfOptions(2);
             }
         }
         if (o.getData_type().equals("INT") || o.getData_type().equals("FLOAT")) {
@@ -55,6 +57,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 o.setMutable(false);
                 //o.setRange(null);
                 o.setNumber_of_values_to_try(0);
+                o.setNumberOfOptions(1);
                 return o;
             }
             o.setUser_value("?");
@@ -65,6 +68,10 @@ public class OptionPanel extends javax.swing.JPanel {
                 range.setMin((Float)iop.getLowerLimit().floatValue());
                 range.setMax((Float)iop.getUpperLimit().floatValue());
                 o.setRange(range);
+                if (o.getData_type().equals("INT"))
+                    o.setNumberOfOptions(Math.min((int)(range.getMax() - range.getMin()) + 1, iop.getNumberOfTries()));
+                else
+                    o.setNumberOfOptions(iop.getNumberOfTries());
             }
             if (iop.isSet()) {
                 LinkedList l = new LinkedList();
@@ -74,6 +81,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 }
                 o.setSet(l);
                 o.setIs_a_set(true);
+                o.setNumberOfOptions(Math.min(l.size(), iop.getNumberOfTries()));
             }
             o.setNumber_of_values_to_try(iop.getNumberOfTries());
         }
@@ -86,6 +94,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 o.setUser_value(mop.getUserValue());
                 o.setMutable(false);
                 o.setNumber_of_values_to_try(0);
+                o.setNumberOfOptions(1);
                 return o;
             }
             o.setValue(mop.getPattern());
@@ -96,6 +105,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 range.setMin(Float.parseFloat(mop.getLower()));
                 range.setMax(Float.parseFloat(mop.getUpper()));
                 o.setRange(range);
+                o.setNumberOfOptions(Math.min((int)(range.getMax() - range.getMin()) + 1, mop.getTries()));
             }
             if (mop.isSet()) {
                 LinkedList l = new LinkedList();
@@ -107,6 +117,7 @@ public class OptionPanel extends javax.swing.JPanel {
 
                 o.setSet(l);
                 o.setIs_a_set(true);
+                o.setNumberOfOptions(Math.min(l.size(), mop.getTries()));
             }
             o.setNumber_of_values_to_try(mop.getTries());
         }
@@ -182,7 +193,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 0, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
             optionsPanel.add(optionPanel);
         }
 
@@ -204,7 +215,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 0, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
             optionsPanel.add(optionPanel);
         }
 

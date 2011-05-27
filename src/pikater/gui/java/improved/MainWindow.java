@@ -12,8 +12,20 @@
 package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.ResourceBundle;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import pikater.DataManagerService;
 import pikater.ontology.messages.Task;
 
 /**
@@ -26,31 +38,78 @@ public class MainWindow extends javax.swing.JFrame {
 
     ResultsBrowserFrame rbf;
     NewExperimentFrame nef;
-    String infoText = "";
+    TableColumnAdjuster tca;
+    FileImportProgressDialog fipd = null;
+    Thread fipdThread = null;
+    ArrayList<Integer> experimentOptions = new ArrayList<Integer>();
 
     /** Creates new form MainWindow */
     public MainWindow() {
         initComponents();
     }
 
-
     public MainWindow(GuiAgent myAgent) {
         this.myAgent = myAgent;
         rbf = new ResultsBrowserFrame(myAgent);
         nef = new NewExperimentFrame(this, true, myAgent);
         initComponents();
+        logTable.getColumnModel().getColumn(0).setHeaderValue(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("LOG_TIME"));
+        logTable.getColumnModel().getColumn(1).setHeaderValue(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("LOG_EVENT"));
+        tca = new TableColumnAdjuster(logTable);
+        jButton3.setIcon(new ImageIcon("images/Virginia_Iris.png"));
+        jButton4.setIcon(new ImageIcon("images/Muybridge_runner.jpg"));
+    }
+
+    public DataInputFrame getDataInputDialog() {
+        return rbf.getDataInputDialog();
+    }
+
+    public void showFileImportProgress(int completed, int all) {
+
+        if (all == 0)
+            return;
+        if (fipd == null) {
+            fipd = new FileImportProgressDialog(this, true);
+            fipd.setMax(all);
+            fipd.setValue(completed);
+            fipdThread = new Thread(new Runnable() {
+                public void run() {
+                    fipd.setVisible(true);
+                }
+            });
+            fipdThread.start();
+        }
+        else {
+            fipd.setValue(completed);
+            if (completed == all) {
+                fipd.setVisible(false);
+                try {
+                    fipdThread.join();
+                }
+                catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        }
+
     }
 
     public void showInfo(String info) {
-        infoText += "<font color = green>" + info + "<br></font>\n";
-        infoTextPane.setText("<html><body>" + infoText + "</body></html>");
-        infoTextPane.setCaretPosition(infoTextPane.getDocument().getLength());
+        String infoText = "<html><body><font color = green>" + info + "<br></font></body></html>";
+        String date = "<html><body><font color = green>" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date()) + "<br></font></body></html>";
+        DefaultTableModel dtm = (DefaultTableModel)logTable.getModel();
+        Object[] row = {date, infoText};
+        dtm.addRow(row);
+        tca.adjustColumns();
     }
 
     public void showError(String error) {
-        infoText += "<font color = red>" + error + "<br></font>\n";
-        infoTextPane.setText("<html><body>" + infoText + "</body></html>");
-        infoTextPane.setCaretPosition(infoTextPane.getDocument().getLength());
+        String infoText = "<html><body><font color = red>" + error + "<br></font></body></html>";
+        String date = "<html><body><font color = red>" + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date()) + "<br></font></body></html>";
+        DefaultTableModel dtm = (DefaultTableModel)logTable.getModel();
+        Object[] row = {date, infoText};
+        dtm.addRow(row);
+        tca.adjustColumns();
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -66,21 +125,16 @@ public class MainWindow extends javax.swing.JFrame {
         resultsBrowserButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        infoTextPane = new javax.swing.JTextPane();
+        jPanel1 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        logTable = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -97,7 +151,14 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Pikater 1.0");
+        setTitle("BANG 1.0");
+        setMinimumSize(getPreferredSize());
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jToolBar1.setRollover(true);
 
@@ -135,12 +196,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        infoTextPane.setContentType("text/html");
-        infoTextPane.setEditable(false);
-        infoTextPane.setText("<html>\n<body>");
-        jScrollPane1.setViewportView(infoTextPane);
-
         jButton3.setText("Iris");
+        jButton3.setToolTipText(bundle.getString("IRIS_TOOLTIP")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -148,22 +205,92 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButton4.setText(bundle.getString("OWN_EXPERIMENT")); // NOI18N
+        jButton4.setToolTipText(bundle.getString("CUSTOM_TOOLTIP")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton3, jButton4});
+
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton3, jButton4});
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LOG_BORDER_TITLE"))); // NOI18N
+
+        logTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Title 1", "Title 2"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(logTable);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         fileMenu.setText(bundle.getString("FILE")); // NOI18N
 
         openMenuItem.setText(bundle.getString("OPEN")); // NOI18N
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(openMenuItem);
-
-        saveMenuItem.setText(bundle.getString("SAVE")); // NOI18N
-        fileMenu.add(saveMenuItem);
-
-        saveAsMenuItem.setText(bundle.getString("SAVE_AS_...")); // NOI18N
-        fileMenu.add(saveAsMenuItem);
 
         exitMenuItem.setText(bundle.getString("EXIT")); // NOI18N
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -175,28 +302,17 @@ public class MainWindow extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        editMenu.setText(bundle.getString("EDIT")); // NOI18N
-
-        cutMenuItem.setText(bundle.getString("CUT")); // NOI18N
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setText(bundle.getString("COPY")); // NOI18N
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setText(bundle.getString("PASTE")); // NOI18N
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setText(bundle.getString("DELETE")); // NOI18N
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
-
         helpMenu.setText(bundle.getString("HELP")); // NOI18N
 
         contentsMenuItem.setText(bundle.getString("CONTENTS")); // NOI18N
         helpMenu.add(contentsMenuItem);
 
         aboutMenuItem.setText(bundle.getString("ABOUT")); // NOI18N
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -209,34 +325,24 @@ public class MainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButton3, jButton4});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButton3, jButton4});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -270,9 +376,36 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         nef = new NewExperimentFrame(this, true, myAgent);
-        nef.openFileDialog();
+        if (!nef.openFileDialog())
+            return;
         nef.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        DataManagerService.deleteTempFiles(myAgent);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+        AboutDialog ad = new AboutDialog(this, false);
+        ad.setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
+
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("XML Files (*.bxml)", "bxml");
+        jfc.setFileFilter(fnf);
+
+        int result = jfc.showOpenDialog(this);
+
+        if (result == JFileChooser.CANCEL_OPTION) {
+            return;
+        }
+        
+        nef = new NewExperimentFrame(this, true, myAgent);
+        nef.loadXML(jfc.getSelectedFile());
+        nef.setVisible(true);
+
+    }//GEN-LAST:event_openMenuItemActionPerformed
 
     public void addResult(Task t) {
         rbf.addResult(t);
@@ -292,27 +425,22 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem contentsMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JTextPane infoTextPane;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JDialog jDialog1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JTable logTable;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JButton resultsBrowserButton;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 
 }

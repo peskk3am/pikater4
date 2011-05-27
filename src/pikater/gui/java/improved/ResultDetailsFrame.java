@@ -38,7 +38,7 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
         for (int i = 0; i < dataInstances.size(); i++) {
 		DataInstances di = (DataInstances)dataInstances.get(i);
 		JTable table = new JTable(new DataInstancesTableModel(di));
-		this.jTabbedPane1.insertTab(di.getName(), null, new JScrollPane(table), null, jTabbedPane1.getComponentCount()-1);
+		this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST_DATA") + ": " + di.getName(), null, new JScrollPane(table), null, jTabbedPane1.getComponentCount()-1);
 		tables.add(table);
 	}
 
@@ -58,6 +58,8 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
 
         xComboBox.setSelectedIndex(0);
         yComboBox.setSelectedIndex(1);
+
+        this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN_DATA") + ": " + di.getName(), null, new JScrollPane(trainData), null, 0);
 
         jButton1ActionPerformed(null);
 
@@ -96,9 +98,10 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
         jSlider1.setMaximum(20);
         jSlider1.setValue(5);
 
-        jLabel3.setText("Point size");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jLabel3.setText(bundle.getString("POINT_SIZE")); // NOI18N
 
-        jButton1.setText("Update plot");
+        jButton1.setText(bundle.getString("UPDATE_PLOT")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -183,7 +186,6 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
         jTabbedPane1.addTab(bundle.getString("VISALISATION"), jPanel1); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -15,13 +15,18 @@ import jade.gui.GuiEvent;
 import jade.util.leap.List;
 import jade.util.leap.LinkedList;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
-import pikater.DataInputDialog;
 import pikater.DataManagerService;
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Data;
@@ -40,6 +45,10 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     LoadResults filter;
     ResultsFilterDialog rfd = new ResultsFilterDialog(this, true);
     CurrentResultsTableModel currentResults = new CurrentResultsTableModel();
+    DataInputFrame did = null;
+    int currentResultsLastSelected = -1;
+    boolean userHidden = false;
+    int mouseOverRow = -1;
 
     /** Creates new form ResultsBrowserFrame */
     public ResultsBrowserFrame() {
@@ -91,8 +100,18 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsExportButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         currentResultsTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        saveResultsButton = new javax.swing.JButton();
+        loadCurrentResultsButton = new javax.swing.JButton();
+
+        jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+                jPopupMenu1PopupMenuWillBecomeVisible(evt);
+            }
+        });
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
         jMenuItem1.setText(bundle.getString("DETAILS")); // NOI18N
@@ -113,6 +132,14 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
         java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
         setTitle(bundle1.getString("PIKATER 1.0 - RESULTS BROWSER")); // NOI18N
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results Filter"));
 
@@ -142,7 +169,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(editFilterButton)
@@ -176,14 +203,14 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 779, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -206,7 +233,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 709, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 711, Short.MAX_VALUE)
                                 .addComponent(savedResultsExportButton)))
                         .addGap(2, 2, 2)))
                 .addContainerGap())
@@ -232,22 +259,30 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             }
         });
 
+        currentResultsTable.setAutoCreateRowSorter(true);
         currentResultsTable.setModel(currentResults);
         currentResultsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         currentResultsTable.setComponentPopupMenu(jPopupMenu1);
+        currentResultsTable.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        currentResultsTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        currentResultsTable.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                currentResultsTableMouseMoved(evt);
+            }
+        });
         jScrollPane3.setViewportView(currentResultsTable);
 
-        jButton1.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveResultsButton.setText(bundle.getString("SAVE_RESULTS")); // NOI18N
+        saveResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveResultsButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        loadCurrentResultsButton.setText(bundle.getString("LOAD_RESULTS")); // NOI18N
+        loadCurrentResultsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                loadCurrentResultsButtonActionPerformed(evt);
             }
         });
 
@@ -255,32 +290,32 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(loadCurrentResultsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(saveResultsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(currentResultsExportButton)))
+                        .addComponent(currentResultsExportButton))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(currentResultsExportButton)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(loadCurrentResultsButton)
+                    .addComponent(saveResultsButton)
+                    .addComponent(currentResultsExportButton))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Current Results", jPanel4);
+        jTabbedPane1.addTab(bundle.getString("CURRENT_RESULTS"), jPanel4); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -288,21 +323,25 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(14, 14, 14))
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(14, 14, 14))
+                .addComponent(jTabbedPane1)
+                .addContainerGap())
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public DataInputFrame getDataInputDialog() {
+        return did;
+    }
 
     public void showResults(List results) {
         savedResultsTable.setModel(new SavedResultsTableModel(results));
@@ -312,8 +351,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     public void addResult(Task t) {
 
+        currentResultsLastSelected = currentResultsTable.getSelectedRow();
         currentResults.add(t);
-        currentResultsTable.setModel(currentResults);
         TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
         tca.adjustColumns();
 
@@ -324,7 +363,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         }
 
         jTabbedPane1.setSelectedComponent(jPanel4);
-        this.setVisible(true);
+        if (!this.isVisible() && !userHidden)
+            this.setVisible(true);
+        currentResultsTable.getSelectionModel().setSelectionInterval(currentResultsLastSelected, currentResultsLastSelected);
     }
 
     public void addTrainingFile(String name, DataInstances data) {
@@ -356,9 +397,39 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     private void currentResultsExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_currentResultsExportButtonActionPerformed
 
-        JFileChooser fChooser = new JFileChooser();
-        fChooser.showSaveDialog(this);
+        JFileChooser fChooser = new JFileChooser() {
 
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+
+                if (!f.getAbsolutePath().endsWith(".csv")) {
+                    f = new File(f.getAbsolutePath() + ".csv");
+                }
+
+                setSelectedFile(f);
+
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("FILE_EXISTS"), null, JOptionPane.YES_NO_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            super.setSelectedFile(null);
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("CSV (*.csv)", "csv");
+        fChooser.setFileFilter(fnef);
+        fChooser.setAcceptAllFileFilterUsed(false);
+
+        fChooser.showSaveDialog(this);
+        
         File output = fChooser.getSelectedFile();
 
         if (output == null) {
@@ -368,7 +439,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         try {
             FileWriter out = new FileWriter(output);
 
-            for (String s : currentResults.columns) {
+            for (int i = 0; i < currentResultsTable.getColumnCount(); i++) {
+                String s = currentResultsTable.getModel().getColumnName(i);
                 out.write("\"" + s + "\"");
                 if (!s.equals(currentResults.columns[currentResults.columns.length - 1])) {
                     out.write(",");
@@ -379,7 +451,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
             for (int i = 0; i < currentResultsTable.getModel().getRowCount(); i++) {
                 for (int j = 0; j < currentResultsTable.getModel().getColumnCount(); j++) {
-                    if (j < 3) {
+                    if (j < 3 || j == 4) {
                         out.write("\"" + currentResultsTable.getModel().getValueAt(i, j).toString() + "\"");
                     } else {
                         out.write(currentResultsTable.getModel().getValueAt(i, j).toString());
@@ -452,25 +524,58 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     }//GEN-LAST:event_savedResultsExportButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser choose = new JFileChooser();
+    private void saveResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveResultsButtonActionPerformed
+        JFileChooser choose = new JFileChooser() {
+
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+
+                if (!f.getAbsolutePath().endsWith(".bres")) {
+                    f = new File(f.getAbsolutePath() + ".bres");
+                }
+
+                setSelectedFile(f);
+
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("FILE_EXISTS"), null, JOptionPane.YES_NO_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            super.setSelectedFile(null);
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("BANG results file", "bres");
+        choose.setFileFilter(fnf);
+        choose.setAcceptAllFileFilterUsed(false);
 
         choose.showSaveDialog(this);
 
         File f = choose.getSelectedFile();
 
-        if (f == null)
+        if (f == null) {
+            System.err.println("Selection canceled");
             return;
-
+        }
+        
         currentResults.writeFile(f.getAbsolutePath());
 
+    }//GEN-LAST:event_saveResultsButtonActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void loadCurrentResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCurrentResultsButtonActionPerformed
         JFileChooser choose = new JFileChooser();
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("BANG results file", "bres");
+        choose.setFileFilter(fnf);
+        choose.setAcceptAllFileFilterUsed(false);
 
-        choose.showSaveDialog(this);
+        choose.showOpenDialog(this);
 
         File f = choose.getSelectedFile();
 
@@ -478,11 +583,13 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             return;
 
         currentResults.loadFile(f.getAbsolutePath());
-    }//GEN-LAST:event_jButton2ActionPerformed
+
+        TableColumnAdjuster tca = new TableColumnAdjuster(currentResultsTable);
+        tca.adjustColumns();
+    }//GEN-LAST:event_loadCurrentResultsButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
-        Point p = jMenuItem1.getLocation();
         int row = currentResultsTable.getSelectedRow();
 
         Task t = currentResults.getResult(row);
@@ -499,22 +606,42 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
 
-        Point p = jMenuItem1.getLocation();
-        int row = currentResultsTable.getSelectedRow();
-
-        DataInputDialog did = new DataInputDialog(this, true, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
-        did.setVisible(true);
-
-        String arffData = did.getArffData();
-
-        if (arffData == null) {
+        if (did != null) {
+            JOptionPane.showMessageDialog(this, "Cannot open two label windows", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        
+        int row = currentResultsTable.getSelectedRow();
 
+        did = new DataInputFrame(this, currentResults.getTrainingFile(currentResults.getResult(row).getData().getExternal_train_file_name()), myAgent, currentResults.getResult(row).getResult().getObject());
+        did.setVisible(true);
        
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        userHidden = true;
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        userHidden = true;
+    }//GEN-LAST:event_formWindowClosing
+
+    private void currentResultsTableMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_currentResultsTableMouseMoved
+
+        Point p = evt.getPoint();
+        int row = currentResultsTable.rowAtPoint(p);
+
+        mouseOverRow = row;
+
+    }//GEN-LAST:event_currentResultsTableMouseMoved
+
+    private void jPopupMenu1PopupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jPopupMenu1PopupMenuWillBecomeVisible
+        currentResultsTable.getSelectionModel().setSelectionInterval(mouseOverRow, mouseOverRow);
+    }//GEN-LAST:event_jPopupMenu1PopupMenuWillBecomeVisible
+
+    public void dataInputDialogClosed() {
+        did = null;
+    }
 
     /**
      * @param args the command line arguments
@@ -532,8 +659,6 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JTable currentResultsTable;
     private javax.swing.JButton editFilterButton;
     private javax.swing.JTextArea filterText;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
@@ -545,7 +670,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loadCurrentResultsButton;
     private javax.swing.JButton loadResultsButton;
+    private javax.swing.JButton saveResultsButton;
     private javax.swing.JButton savedResultsExportButton;
     private javax.swing.JTable savedResultsTable;
     // End of variables declaration//GEN-END:variables

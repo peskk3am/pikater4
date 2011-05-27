@@ -133,14 +133,14 @@ public class FileDetailsFrame extends javax.swing.JFrame implements GuiConstants
             }
         });
 
-        jButton1.setText("Update plot");
+        jButton1.setText(bundle.getString("UPDATE_PLOT")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Point size");
+        jLabel3.setText(bundle.getString("POINT_SIZE")); // NOI18N
 
         jSlider1.setMaximum(20);
         jSlider1.setMinimum(1);

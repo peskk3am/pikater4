@@ -87,7 +87,7 @@ public class DataInstancesTableModel extends AbstractTableModel {
 
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    if (column < getColumnCount() )
+                    if (column < getColumnCount() - 1)
                         return true;
                     return false;
                 }
@@ -129,14 +129,21 @@ public class DataInstancesTableModel extends AbstractTableModel {
                     String output = "";
 
                     for (int j = 0; j < getRowCount(); j++) {
+                        boolean allMissing = true;
+                        String line = "";
                         for (int i = 0; i < getColumnCount(); i++) {
+                            if (!getValueAt(j, i).equals("?")) {
+                                allMissing = false;
+                            }
                             if (i < getColumnCount() - 1) {
-                                output += getValueAt(j, i).toString() + ",";
+                                line += getValueAt(j, i).toString() + ",";
                             }
                             else {
-                                output += getValueAt(j, i).toString() + "\n";
+                                line += getValueAt(j, i).toString() + "\n";
                             }
                         }
+                        if (!allMissing)
+                            output += line;
                     }
 
                     return output;

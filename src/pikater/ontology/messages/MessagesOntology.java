@@ -34,6 +34,8 @@ public class MessagesOntology extends Ontology {
 	public static final String TASK_USERID = "userID";
 	public static final String TASK_START = "start";
 	public static final String TASK_FINISH = "finish";	
+	public static final String TASK_GET_RESULTS = "get_results";	
+	public static final String TASK_GUI_AGENT = "gui_agent";	
 	
 	public static final String DATA = "data";
 	public static final String DATA_TRAIN_FILE_NAME = "train_file_name";
@@ -54,6 +56,8 @@ public class MessagesOntology extends Ontology {
 	public static final String COMPUTATION_TIMEOUT = "timeout";
 	public static final String COMPUTATION_METHOD = "method";
 	public static final String COMPUTATION_START = "start";
+	public static final String COMPUTATION_GET_RESULTS = "get_results";
+	public static final String COMPUTATION_GUI_AGENT = "gui_agent";	
 
 	public static final String PROBLEM = "PROBLEM";
 	public static final String PROBLEM_ID = "id";
@@ -64,6 +68,8 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM_TIMEOUT = "timeout";
 	public static final String PROBLEM_METHOD = "method";
 	public static final String PROBLEM_START = "start";
+	public static final String PROBLEM_GET_RESULTS = "get_results";
+	public static final String PROBLEM_GUI_AGENT = "gui_agent";	
 	
 	public static final String METHOD = "METHOD";
 	public static final String METHOD_NAME = "name";
@@ -180,6 +186,7 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_DATA = "GET-DATA";
 	public static final String GET_DATA_FILE_NAME = "file_name";
+        public static final String GET_DATA_SAVE_META = "saveMetadata";
 
 	public static final String SAVE_METADATA = "SAVE-METADATA";
 	public static final String SAVE_METADATA_METADATA = "metadata";
@@ -251,6 +258,8 @@ public class MessagesOntology extends Ontology {
         public static final String LOAD_RESULTS_AFTER_DATE = "startDate";
         public static final String LOAD_RESULTS_BEFORE_DATE = "endDate";
         public static final String LOAD_RESULTS_USER_ID = "userID";
+
+        public static final String DELETE_TEMP_FILES = "DELETE-TEMP-FILES";
         
 
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
@@ -311,6 +320,7 @@ public class MessagesOntology extends Ontology {
 			add(new AgentActionSchema(LOAD_AGENT), LoadAgent.class);
 			add(new AgentActionSchema(SAVE_AGENT), SaveAgent.class);
 			add(new AgentActionSchema(GET_SAVED_AGENTS), GetSavedAgents.class);
+                        add(new AgentActionSchema(DELETE_TEMP_FILES), DeleteTempFiles.class);
 			// add(new AgentActionSchema(SEND_OPTIONS), SendOptions.class);
 
 			ConceptSchema cs = (ConceptSchema) getSchema(COMPUTATION);
@@ -324,6 +334,10 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
 			cs.add(COMPUTATION_METHOD, (ConceptSchema) getSchema(METHOD));
 			cs.add(COMPUTATION_START,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(COMPUTATION_GET_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(COMPUTATION_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 
 			cs = (ConceptSchema) getSchema(PROBLEM);
@@ -343,6 +357,10 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
 			cs.add(PROBLEM_METHOD, (ConceptSchema) getSchema(METHOD));
 			cs.add(PROBLEM_START,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(PROBLEM_GET_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(PROBLEM_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			
 			cs = (ConceptSchema) getSchema(METHOD);
@@ -367,7 +385,11 @@ public class MessagesOntology extends Ontology {
 					ObjectSchema.OPTIONAL);
 			cs.add(TASK_SAVE_MODE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
-			
+			cs.add(TASK_GET_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));			
+			cs.add(TASK_GUI_AGENT,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+
 			cs.add(TASK_USERID,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));			
 			cs.add(TASK_START,
@@ -642,6 +664,7 @@ public class MessagesOntology extends Ontology {
 			as.add(GET_DATA_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
+                        as.add(GET_DATA_SAVE_META, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
 
@@ -713,11 +736,13 @@ public class MessagesOntology extends Ontology {
                         as.add(LOAD_RESULTS_TRAIN, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_TEST, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
                         as.add(LOAD_RESULTS_USER_ID, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
-                        
+
                         as.setResult((ConceptSchema)getSchema(SAVED_RESULT), 0, ObjectSchema.UNLIMITED);
 			// as = (AgentActionSchema)getSchema(SEND_OPTIONS);
 			// as.add(SEND_OPTIONS_OPTIONS, (ConceptSchema)getSchema(OPTION), 1,
 			// ObjectSchema.UNLIMITED);
+
+                        as = (AgentActionSchema)getSchema(DELETE_TEMP_FILES);
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

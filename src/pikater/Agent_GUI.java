@@ -52,6 +52,7 @@ import org.jdom.input.SAXBuilder;
 
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.Interval;
 import pikater.ontology.messages.MessagesOntology;
@@ -92,7 +93,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	private float default_error_rate = (float) 0.3;
 	protected String default_method = "Random";
 	private int default_maximum_tries = 10;
+	private String default_get_results = "after_each_computation";
 
+	private String myAgentName;
 	/*
 	 * should use the following methods: refreshOptions(ontology.messages.Agent
 	 * agent) should be called after user changes options of an agent
@@ -120,6 +123,10 @@ public abstract class Agent_GUI extends GuiAgent {
 	 * after receiving the message from a manager
 	 */
 
+	protected abstract void displayResurrectedResult(ACLMessage inform);
+
+        protected abstract void displayFileImportProgress(int completed, int all);
+	
 	protected abstract void mySetup();
 
 	/*
@@ -145,7 +152,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	/* automatically called after all replies from computing agents are received */
 
 	protected abstract void displayPartialResult(ACLMessage inform);
-
+	protected abstract void displayTaskResult(ACLMessage inform);
 	/*
 	 * Process the partial results received from computing agents maybe only the
 	 * content would be better as a parameter
@@ -521,13 +528,16 @@ public abstract class Agent_GUI extends GuiAgent {
 			}
 
 		};
-
-		addBehaviour(receive_results);
+		
+		if (problem.getGet_results().equals("after_each_computation")){
+			addBehaviour(receive_results);
+		}
 
 	}
 
-	protected int createNewProblem(String timeout) {
+	protected int createNewProblem(String timeout, String get_results) {
 		int _timeout;
+		String _get_results;
 		Problem problem = new Problem();
 		problem.setGui_id(Integer.toString(problem_id)); // agent manager
 															// changes the id
@@ -536,6 +546,12 @@ public abstract class Agent_GUI extends GuiAgent {
 			_timeout = default_timeout;
 		} else {
 			_timeout = Integer.parseInt(timeout);
+		}
+
+		if (get_results == null) {
+			_get_results = default_get_results;
+		} else {
+			_get_results = get_results;
 		}
 
 		Method method = new Method();
@@ -548,6 +564,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		problem.setAgents(new ArrayList());
 		problem.setData(new ArrayList());
 		problem.setSent(false);
+		problem.setGet_results(_get_results);
+		problem.setGui_agent(myAgentName);
 		problems.add(problem);
 
 		return problem_id++;
@@ -1166,6 +1184,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 
 	protected void setup() {
+		myAgentName = this.getLocalName();
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
@@ -1200,9 +1219,66 @@ public abstract class Agent_GUI extends GuiAgent {
 				+ System.getProperty("file.separator");
 		File incomingFiles = new File(incomingFilesPath);
 
-		for (String fileName : incomingFiles.list()) {
-			DataManagerService.importFile(this, 1, fileName, null);
-		}
+                int incomingFilesNumber = incomingFiles.list().length;
+                int currenInFile = 0;
+               for (String fileName : incomingFiles.list()) {
+
+                displayFileImportProgress(currenInFile, incomingFilesNumber);
+                currenInFile++;
+                DataManagerService.importFile(this, 1, fileName, null);
+
+                String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
+                internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
+
+                sd = new ServiceDescription();
+                sd.setType("ARFFReader");
+
+                dfd = new DFAgentDescription();
+                dfd.addServices(sd);
+
+                try {
+                    DFAgentDescription readers[] = DFService.search(this, dfd);
+
+                    if (readers.length == 0) {
+                        System.err.println("No readers found");
+                        break;
+                    }
+
+                    AID reader = readers[0].getName();
+
+                    GetData gd = new GetData();
+                    gd.setFile_name(internalFilename);
+                    gd.setSaveMetadata(true);
+
+                    Action a = new Action();
+                    a.setAction(gd);
+                    a.setActor(this.getAID());
+
+                    ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+                    req.addReceiver(reader);
+                    req.setLanguage(codec.getName());
+                    req.setOntology(ontology.getName());
+                    req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+                    getContentManager().fillContent(req, a);
+
+                    ACLMessage response = FIPAService.doFipaRequestClient(this, req);
+
+                    if (response.getPerformative() != ACLMessage.INFORM) {
+                        System.err.println("Error reading file");
+                    }
+
+                } catch (CodecException ce) {
+                    ce.printStackTrace();
+                } catch (FIPAException fe) {
+                    fe.printStackTrace();
+                } catch (OntologyException oe) {
+                    oe.printStackTrace();
+                }
+
+
+            }
+               displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
 
 		System.out.println("GUI agent " + getLocalName()
 				+ " is alive and waiting...");
@@ -1211,15 +1287,24 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end setup
 
-	/* This behavior captures partial results from computating agents */
+	/* This behavior captures partial results from computating agents and results from ressurected agents */
 	protected class CompAgentResultsServer extends CyclicBehaviour {
 		/**
 		 * 
 		 */
+		
 		private static final long serialVersionUID = -8456018173216610239L;
-		private MessageTemplate resMsgTemplate = MessageTemplate.and(
+		private MessageTemplate partialMsgTemplate = MessageTemplate.and(
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 				MessageTemplate.MatchConversationId("partial-results"));
+
+		private MessageTemplate resurrectedMsgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+				MessageTemplate.MatchConversationId("resurrected-results"));
+
+		private MessageTemplate afterTaskMsgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+				MessageTemplate.MatchConversationId("result_after_task"));
 
 		public CompAgentResultsServer(Agent agent) {
 			super(agent);
@@ -1227,11 +1312,29 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		@Override
 		public void action() {
-			ACLMessage msg = receive(resMsgTemplate);
-			if (msg != null) {
-				displayPartialResult(msg);
-			} else {
-				block();
+			
+			ACLMessage res = receive(resurrectedMsgTemplate);					
+			ACLMessage par = receive(partialMsgTemplate);
+			ACLMessage aft = receive(afterTaskMsgTemplate);
+
+			if (res != null) {
+				displayResurrectedResult(res);
+				return;
+			}
+			else {
+				if (par != null) {
+					displayPartialResult(par);
+					return;
+				}
+				else{
+					if (aft != null) {
+						displayTaskResult(aft);
+						return;
+					}				
+					else{
+						block();
+					}
+				}				
 			}
 		}
 	}
@@ -1239,7 +1342,8 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build("file://" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		Document doc = builder.build("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
 		java.util.List _problems = root_element.getChildren("experiment"); // return
@@ -1251,8 +1355,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		while (p_itr.hasNext()) {
 			Element next_problem = (Element) p_itr.next();
 
-			int p_id = createNewProblem(next_problem
-					.getAttributeValue("timeout"));
+			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
+					next_problem.getAttributeValue("get_results"));
 
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();
@@ -1340,7 +1444,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 		
-	protected ACLMessage loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
+	protected void loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
 		// protected void loadAgent(String _name, int _userID, String _timestamp) {
 		pikater.ontology.messages.LoadAgent _loadAgent = new pikater.ontology.messages.LoadAgent();
 		
@@ -1355,6 +1459,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		request.addReceiver(new AID("agentManager", false));
 		request.setOntology(MessagesOntology.getInstance().getName());
 		request.setLanguage(codec.getName());
+		request.setConversationId("resurrected-results");
 		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
 		Action a = new Action();
@@ -1371,7 +1476,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			e.printStackTrace();
 		}
 
-		return FIPAService.doFipaRequestClient(this, request);
+		FIPAService.doFipaRequestClient(this, request);
 	}
 	
 /*

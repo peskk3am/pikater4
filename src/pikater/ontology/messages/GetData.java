@@ -8,6 +8,7 @@ public class GetData extends Action {
 	 */
 	private static final long serialVersionUID = -8760296402786723483L;
 	private String file_name;
+        private boolean saveMetadata = false;
 
 	public String getFile_name() {
 		return file_name;
@@ -16,4 +17,12 @@ public class GetData extends Action {
 	public void setFile_name(String fileName) {
 		file_name = fileName;
 	}
+
+        public boolean getSaveMetadata() {
+            return saveMetadata;
+        }
+
+        public void setSaveMetadata(boolean saveMetadata) {
+            this.saveMetadata = saveMetadata;
+        }
 }

@@ -11,7 +11,15 @@
 package pikater.gui.java.improved;
 
 import java.awt.Component;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
+import pikater.gui.java.improved.verifiers.FloatSetInputVerifier;
+import pikater.gui.java.improved.verifiers.IntegerSetInputVerifier;
 import pikater.ontology.messages.Option;
 
 /**
@@ -43,7 +51,29 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
     }
 
     public String getSet() {
-        return setTextField.getText();
+        try {
+            if (this.dataType.equals("INT"))
+                return setTextField.getText();
+            String[] numbers = setTextField.getText().split(" ");
+            String outNumbers = "";
+            NumberFormat nf = NumberFormat.getInstance();
+            for (int i = 0; i < numbers.length; i++) {
+                ParsePosition pos = new ParsePosition(0);
+                if (i < numbers.length - 1) {
+                    outNumbers += nf.parse(numbers[i], pos).floatValue() + " ";
+                } else {
+                    outNumbers += nf.parse(numbers[i], pos).floatValue();
+                }
+                if (pos.getIndex() != numbers[i].length())
+                    throw new ParseException("Incorrect string", pos.getIndex());
+            }
+            return outNumbers;
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Incorrect number format", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return null;
     }
 
     public Float getLowerLimit() {
@@ -139,6 +169,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         triesSpinner.setModel(new SpinnerNumberModel(tries, 0, 100, 1));
         jPanel1.setVisible(false);
         jPanel2.setVisible(false);
+        setTextField.setInputVerifier(new IntegerSetInputVerifier(this));
     }
 
     public IntegerOptionPanel(double lower, double upper, int tries, double defaultValue) {
@@ -153,6 +184,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         triesSpinner.setModel(new SpinnerNumberModel(tries, 0, 100, 1));
         jPanel1.setVisible(false);
         jPanel2.setVisible(false);
+        setTextField.setInputVerifier(new FloatSetInputVerifier((this)));
     }
 
     /** This method is called from within the constructor to
@@ -183,19 +215,20 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         valueSetByOptMan = new javax.swing.JRadioButton();
         manualValue = new javax.swing.JRadioButton();
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Automatic settings"));
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("AUTO_SETTINGS"))); // NOI18N
         jPanel1.setEnabled(false);
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
-        jLabel3.setText(bundle.getString("TO")); // NOI18N
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Bundle"); // NOI18N
+        jLabel3.setText(bundle1.getString("TO")); // NOI18N
         jLabel3.setEnabled(false);
 
-        jLabel4.setText(bundle.getString("MAXIMUM TRIES")); // NOI18N
+        jLabel4.setText(bundle1.getString("MAXIMUM TRIES")); // NOI18N
         jLabel4.setEnabled(false);
 
         toSpinner.setEnabled(false);
 
-        jLabel2.setText(bundle.getString("TRY VALUES FROM")); // NOI18N
+        jLabel2.setText(bundle1.getString("TRY VALUES FROM")); // NOI18N
         jLabel2.setEnabled(false);
 
         fromSpinner.setEnabled(false);
@@ -204,11 +237,11 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
 
         buttonGroup2.add(intervalRadio);
         intervalRadio.setSelected(true);
-        intervalRadio.setText(bundle.getString("INTERVAL")); // NOI18N
+        intervalRadio.setText(bundle1.getString("INTERVAL")); // NOI18N
         intervalRadio.setEnabled(false);
 
         buttonGroup2.add(setRadio);
-        setRadio.setText(bundle.getString("SET")); // NOI18N
+        setRadio.setText(bundle1.getString("SET")); // NOI18N
         setRadio.setEnabled(false);
 
         setTextField.setEnabled(false);
@@ -232,13 +265,13 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(fromSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fromSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(toSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(setTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                        .addGap(56, 56, 56)))
+                                .addComponent(toSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(setTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                        .addGap(36, 36, 36)))
                 .addContainerGap())
         );
 
@@ -251,9 +284,9 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(intervalRadio)
-                    .addComponent(jLabel3)
                     .addComponent(toSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fromSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fromSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(setRadio)
@@ -265,13 +298,13 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
                 .addGap(17, 17, 17))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Manual settings"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("MANUAL_SETTINGS"))); // NOI18N
         jPanel2.setEnabled(false);
 
         manualSpinner.setEnabled(false);
 
         jLabel1.setLabelFor(manualSpinner);
-        jLabel1.setText(bundle.getString("VALUE")); // NOI18N
+        jLabel1.setText(bundle1.getString("VALUE")); // NOI18N
         jLabel1.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -283,7 +316,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(manualSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,7 +330,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(defaultValueRadio);
         defaultValueRadio.setSelected(true);
-        defaultValueRadio.setText(bundle.getString("KEEP DEFAULT VALUE")); // NOI18N
+        defaultValueRadio.setText(bundle1.getString("KEEP DEFAULT VALUE")); // NOI18N
         defaultValueRadio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 defaultValueRadioActionPerformed(evt);
@@ -305,7 +338,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         });
 
         buttonGroup1.add(valueSetByOptMan);
-        valueSetByOptMan.setText(bundle.getString("VALUE IS SET BY OPTION MANAGER")); // NOI18N
+        valueSetByOptMan.setText(bundle1.getString("VALUE IS SET BY OPTION MANAGER")); // NOI18N
         valueSetByOptMan.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 valueSetByOptManStateChanged(evt);
@@ -313,7 +346,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         });
 
         buttonGroup1.add(manualValue);
-        manualValue.setText(bundle.getString("SPECIFY MANUAL VALUE")); // NOI18N
+        manualValue.setText(bundle1.getString("SPECIFY MANUAL VALUE")); // NOI18N
         manualValue.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 manualValueStateChanged(evt);
@@ -327,8 +360,11 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
             .addComponent(defaultValueRadio)
             .addComponent(valueSetByOptMan)
             .addComponent(manualValue)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

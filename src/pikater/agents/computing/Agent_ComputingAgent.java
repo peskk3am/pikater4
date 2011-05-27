@@ -553,8 +553,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 						return;
 					}
 					cont = false;
-                                        if (!resurrected)
-                                            state = states.NEW;
+					if (!resurrected){ 
+						state = states.NEW;
+					}
 					// Set options
 					setOptions(execute_action.getTask());
 					eval = null;
@@ -728,10 +729,6 @@ public abstract class Agent_ComputingAgent extends Agent {
 							if (! mode.equals("test_only")){ train(); }
 						}
 
-                                                System.err.println(output);
-                                                System.err.println(state);
-                                                System.err.println(states.TRAINED);
-
                                                 if (state == states.TRAINED) {
 							eval = evaluateCA();
 							if (output.equals("predictions")) {
@@ -829,7 +826,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 							// instead of MyWekaEvaluation is sent!!!
 							ContentElement content = getContentManager()
 									.extractContent(incoming_request);
-														
+
+                                                        if (resurrected)
+                                                            eval.setObject(null);
+
 							Result result = new Result((Action) content, eval);
 							getContentManager().fillContent(result_msg, result);
 							
@@ -841,7 +841,37 @@ public abstract class Agent_ComputingAgent extends Agent {
 							e.printStackTrace();
 						}
 					}
-					send(result_msg);	
+					
+					send(result_msg);
+					
+					if (current_task.getGet_results().equals("after_each_task")){
+												
+						current_task.setResult(eval);
+						ContentElement content;
+						try {
+							content = getContentManager().extractContent(incoming_request);
+	                        if (resurrected) eval.setObject(null);
+							
+	                        Result result = new Result((Action) content, current_task);
+							getContentManager().fillContent(result_msg, result);												
+												
+						} catch (UngroundedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (CodecException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (OntologyException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						result_msg.clearAllReceiver();
+						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));
+						result_msg.setConversationId("result_after_task");
+						send(result_msg);
+					}
+					
 					
 				}
 			}, SENDRESULTS_STATE);

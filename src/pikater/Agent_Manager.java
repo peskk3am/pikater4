@@ -580,6 +580,8 @@ public class Agent_Manager extends Agent {
 							computation.setTimeout(problem.getTimeout());
 							computation.setMethod(problem.getMethod());
 							computation.setStart(problem.getStart());
+							computation.setGet_results(problem.getGet_results());
+							computation.setGui_agent(problem.getGui_agent());
 							computation_i++;
 
 							msgVector.add(Compute(computation));
@@ -710,11 +712,11 @@ public class Agent_Manager extends Agent {
 				// int rnd = generator.nextInt(Agents.length);
 				// return Agents[rnd];
 				int i = 0;
-				while ((isBusy(Agents[i]) || busyAgents.contains(Agents[i]))
-						&& i < Agents.length - 1) {
+				while ((i < Agents.length) && (isBusy(Agents[i]) || busyAgents.contains(Agents[i])))
+				{
 					i++;
 				}
-				if (i < Agents.length - 1) {
+				if (i < Agents.length) {
 					busyAgents.add(Agents[i]);
 					return Agents[i];
 				} else {

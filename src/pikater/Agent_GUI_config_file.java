@@ -20,6 +20,8 @@ import org.jdom.JDOMException;
 
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Data;
+import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
@@ -71,9 +73,92 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		} catch (OntologyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}		
+	}
+	
+	@Override
+	protected void displayResurrectedResult(ACLMessage inform) {
+		ContentElement content;
+		try {
+			content = getContentManager().extractContent(inform);
+			if (content instanceof Result) {
+				Result result = (Result) content;
+				
+				if (result.getValue() instanceof Evaluation) {					
+					Evaluation eval = ((Evaluation) result.getValue());
+				
+					System.out.println("Agent " + getLocalName()
+									+ ": "
+									+ " error_rate: "
+									+ eval.getError_rate());
+					
+					List dataList = eval.getLabeled_data();
+					Iterator itr = dataList.iterator();
+					while (itr.hasNext()) {
+						System.out.println("Instances: "+((DataInstances)itr.next()).getInstances());
+					}
+				}
+				
+			}
+			else {
+				System.out.println("Agent " + getLocalName()
+							+ ": there were no tasks in this computation.");
+			}
+		
+		} catch (UngroundedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			System.out.println("Agent " + getLocalName() + " "
+					+ inform.getContent());
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
+	@Override
+	protected void displayTaskResult(ACLMessage inform) {
+		
+		ContentElement content;
+		try {
+			content = getContentManager().extractContent(inform);
+			
+			System.out.println(content);
+			
+			if (content instanceof Result) {
+				
+				Result result = (Result) content;
+				if (result.getValue() instanceof Task) {					
+					Task task = ((Task) result.getValue());
+				
+					System.out.println("Agent " + getLocalName()
+							+ ": options for agent "
+							+ task.getAgent().getName() + " were "
+							+ task.getAgent().optionsToString()
+							+ " error_rate: "
+							+ task.getResult().getError_rate());
+				}
+				
+			}
+			else {
+				System.out.println("Agent " + getLocalName()
+							+ ": there were no tasks in this computation.");
+			}
+		
+		} catch (UngroundedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			System.out.println("Agent " + getLocalName() + " "
+					+ inform.getContent());
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@Override
 	protected void DisplayWrongOption(int problemGuiId, String agentName,
 			String optionName, String errorMessage) {
@@ -126,6 +211,8 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 		configFileName = getConfigFileName();
 		try {
+			System.out.println("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+
+					System.getProperty("user.dir")+ System.getProperty("file.separator") + configFileName);
 			getProblemsFromXMLFile(configFileName);
 		}
 		// indicates a well-formedness error
@@ -138,19 +225,22 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		}
 		// */
 
-		String agentName = "1_RBFNetwork1_2011-05-19_14-08-20.632";
+		String agentName = "1_RBFNetwork1_2011-05-22_23-17-33.112";
 	// test of loading an agent
-	 
+	/*
 		Agent a = new Agent();
 		a.setName(agentName);
 		a.setGui_id("pokusny oziveny agent");
 		
 		Data d = new Data();
 		d.setMode("test_only");
-		d.setTest_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef");
-		d.setTrain_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef");
-		d.setExternal_test_file_name("iris.arff");
-		d.setExternal_train_file_name("iris.arff");
+		d.setTest_file_name("data/files/772c551b8486b932aed784a582b9c1b1");
+		d.setTrain_file_name("data/files/772c551b8486b932aed784a582b9c1b1"); // weather
+		
+		// d.setTest_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef");
+		// d.setTrain_file_name("data/files/25d7d5d689042a3816aa1598d5fd56ef"); // iris
+		d.setExternal_test_file_name("weather.arff");
+		d.setExternal_train_file_name("weather.arff");
 		d.setOutput("predictions");
 		
 		Task t = new Task();		
@@ -206,5 +296,10 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		// TODO Auto-generated method stub
 
 	}
+
+    @Override
+    protected void displayFileImportProgress(int completed, int all) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

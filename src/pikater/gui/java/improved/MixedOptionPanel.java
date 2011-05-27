@@ -12,6 +12,8 @@
 package pikater.gui.java.improved;
 
 import java.awt.Component;
+import pikater.gui.java.improved.verifiers.IntegerSetInputVerifier;
+import pikater.gui.java.improved.verifiers.MLPLayersVerifier;
 import pikater.ontology.messages.Option;
 
 /**
@@ -29,8 +31,12 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         initComponents();
 
         userSpecifiedValueText.setText(o.getDefault_value());
-        lowerSpinner.setValue(o.getRange().getMin());
-        upperSpinner.setValue(o.getRange().getMax());
+        //lowerSpinner.setValue(o.getRange().getMin());
+        //upperSpinner.setValue(o.getRange().getMax());
+
+        autoPanel.setVisible(false);
+        manualPanel.setVisible(false);
+        
     }
 
     public boolean isDefault() {
@@ -84,8 +90,8 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             patternText.setText(o.getValue());
             if (o.getRange().getMax() != null && o.getRange().getMin() != null) {
                 intervalRadio.setSelected(true);
-                lowerSpinner.setValue(o.getRange().getMin().intValue());
-                upperSpinner.setValue(o.getRange().getMax().intValue());
+                //lowerSpinner.setValue(o.getRange().getMin().intValue());
+                //upperSpinner.setValue(o.getRange().getMax().intValue());
             }
             if (o.getIs_a_set()) {
                 setRadio.setSelected(true);
@@ -158,15 +164,19 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             }
         });
 
-        autoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Automatic settings"));
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings"); // NOI18N
+        autoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("AUTO_SETTINGS"))); // NOI18N
 
+        lowerSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 1000, 1));
         lowerSpinner.setEnabled(false);
 
         setText.setEnabled(false);
+        setText.setInputVerifier(new IntegerSetInputVerifier(this, "ai"));
 
         jLabel1.setText(bundle.getString("OPTION PATTERN")); // NOI18N
         jLabel1.setEnabled(false);
 
+        upperSpinner.setModel(new javax.swing.SpinnerNumberModel(100, 1, 1000, 1));
         upperSpinner.setEnabled(false);
 
         jLabel3.setText(bundle.getString("TO")); // NOI18N
@@ -184,11 +194,19 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         intervalRadio.setText(bundle.getString("INTERVAL")); // NOI18N
         intervalRadio.setEnabled(false);
 
+        patternText.setText("?");
         patternText.setEnabled(false);
+        patternText.setInputVerifier(new MLPLayersVerifier(this, "?ai"));
+        patternText.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                patternTextActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText(bundle.getString("MAXIMUM TRIES")); // NOI18N
         jLabel5.setEnabled(false);
 
+        triesSpinner.setModel(new javax.swing.SpinnerNumberModel(5, 1, 20, 1));
         triesSpinner.setEnabled(false);
 
         javax.swing.GroupLayout autoPanelLayout = new javax.swing.GroupLayout(autoPanel);
@@ -196,46 +214,55 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         autoPanelLayout.setHorizontalGroup(
             autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(autoPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2)
+                .addGap(6, 6, 6)
+                .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(autoPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addContainerGap())
                     .addGroup(autoPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(patternText))
+                        .addComponent(patternText, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                        .addGap(6, 6, 6))))
+            .addGroup(autoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(autoPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(triesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(autoPanelLayout.createSequentialGroup()
                         .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(intervalRadio)
                             .addComponent(setRadio))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(setText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(autoPanelLayout.createSequentialGroup()
-                                .addComponent(lowerSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lowerSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(upperSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(autoPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(triesSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(upperSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(setText))))
+                .addContainerGap())
         );
+
+        autoPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lowerSpinner, upperSpinner});
+
         autoPanelLayout.setVerticalGroup(
             autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(autoPanelLayout.createSequentialGroup()
                 .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(patternText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(patternText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(intervalRadio)
-                    .addComponent(lowerSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(upperSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(upperSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lowerSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(intervalRadio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(autoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(setRadio)
@@ -247,9 +274,10 @@ public class MixedOptionPanel extends javax.swing.JPanel {
                 .addGap(12, 12, 12))
         );
 
-        manualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Manual settings"));
+        manualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle1.getString("MANUAL_SETTINGS"))); // NOI18N
 
         userSpecifiedValueText.setEnabled(false);
+        userSpecifiedValueText.setInputVerifier(new MLPLayersVerifier(this, "ai"));
         userSpecifiedValueText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 userSpecifiedValueTextActionPerformed(evt);
@@ -267,7 +295,7 @@ public class MixedOptionPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userSpecifiedValueText, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                .addComponent(userSpecifiedValueText, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                 .addContainerGap())
         );
         manualPanelLayout.setVerticalGroup(
@@ -287,8 +315,11 @@ public class MixedOptionPanel extends javax.swing.JPanel {
             .addComponent(manualRadio)
             .addComponent(autoRadio)
             .addComponent(defaultRadio)
-            .addComponent(autoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(manualPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(autoPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(manualPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,7 +344,9 @@ public class MixedOptionPanel extends javax.swing.JPanel {
 
         for (Component c : autoPanel.getComponents()) {
             c.setEnabled(autoRadio.isSelected());
-        }        
+        }
+
+        autoPanel.setVisible(autoRadio.isSelected());
 
     }//GEN-LAST:event_autoRadioStateChanged
 
@@ -322,8 +355,13 @@ public class MixedOptionPanel extends javax.swing.JPanel {
         for (Component c : manualPanel.getComponents()) {
             c.setEnabled(manualRadio.isSelected());
         }
-        
+
+        manualPanel.setVisible(manualRadio.isSelected());
     }//GEN-LAST:event_manualRadioStateChanged
+
+    private void patternTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patternTextActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_patternTextActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

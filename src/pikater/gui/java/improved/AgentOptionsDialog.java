@@ -29,6 +29,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     private String[] agentTypes;
     private LinkedList<OptionPanel> optionPanels;
     private List options;
+    private boolean agentTypeChangedEnabled;
 
     /** Creates new form AgentOptionsDialog */
     public AgentOptionsDialog(java.awt.Frame parent, boolean modal) {
@@ -37,13 +38,22 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     }
 
     public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent) {
+        this(parent, modal, agentTypes, myAgent, true);
+    }
+
+    public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent, boolean agentTypeChangedEnabled) {
         super(parent, modal);
+        this.agentTypeChangedEnabled = agentTypeChangedEnabled;
         this.agentTypes = agentTypes;
         this.myAgent = myAgent;
         optionPanels = new LinkedList<OptionPanel>();
         initComponents();
         options = new jade.util.leap.LinkedList();
         jComboBox1.setSelectedIndex(1);
+    }
+
+    public void setAgentTypeChangedEventEnabled(boolean state) {
+        agentTypeChangedEnabled = state;
     }
 
     public void setOption(Option o) {
@@ -127,8 +137,8 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -138,7 +148,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
@@ -153,8 +163,12 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         //    return;
         //}
 
+        if (!agentTypeChangedEnabled)
+            return;
+        
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             String agentType = jComboBox1.getSelectedItem().toString();
+            optionPanels.clear();
 
             GuiEvent ge = new GuiEvent(this, GuiConstants.GET_AGENT_OPTIONS);
             ge.addParameter(agentType);
@@ -169,8 +183,11 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
 
     public void setAgentOptions(List options) {
 
+        System.err.println("SETAGENTOPTIONS");
+
         this.options = options;
         optionsPanel.removeAll();
+        optionPanels.clear();
 
         for (int i = 0; i < options.size(); i++) {
             OptionPanel op = new OptionPanel((Option)options.get(i), getAgentType());

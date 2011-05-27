@@ -129,7 +129,7 @@ public class Agent_GUI_WS extends Agent_GUI {
 						jade.util.leap.Iterator it = sp.getFileNames()
 								.iterator();
 
-						int problemID = createNewProblem("30000");
+						int problemID = createNewProblem("30000", null);
 
 						while (it.hasNext()) {
 							String s = (String) it.next();
@@ -359,5 +359,20 @@ public class Agent_GUI_WS extends Agent_GUI {
 		// TODO Auto-generated method stub
 
 	}
+
+    @Override
+    protected void displayResurrectedResult(ACLMessage inform) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    protected void displayFileImportProgress(int completed, int all) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    protected void displayTaskResult(ACLMessage inform) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

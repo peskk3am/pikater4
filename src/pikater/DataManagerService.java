@@ -14,6 +14,7 @@ import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.ArrayList;
 import jade.util.leap.List;
+import pikater.ontology.messages.DeleteTempFiles;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
@@ -306,6 +307,35 @@ public class DataManagerService extends FIPAService {
 			e.printStackTrace();
 		}
 	}
+
+        public static void deleteTempFiles(Agent agent) {
+
+            DeleteTempFiles dtf = new DeleteTempFiles();
+
+            ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+            request.addReceiver(new AID("dataManager", false));
+            request.setOntology(MessagesOntology.getInstance().getName());
+            request.setLanguage(codec.getName());
+            request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+            Action a = new Action();
+            a.setActor(agent.getAID());
+            a.setAction(dtf);
+
+            try {
+                agent.getContentManager().fillContent(request, a);
+
+                FIPAService.doFipaRequestClient(agent, request);
+
+            } catch (CodecException e) {
+                e.printStackTrace();
+            } catch (OntologyException e) {
+                e.printStackTrace();
+            } catch (FIPAException e) {
+                e.printStackTrace();
+            }
+
+        }
 
 	public static ArrayList getFiles(Agent agent, int userID) {
 		GetFiles gfi = new GetFiles();
