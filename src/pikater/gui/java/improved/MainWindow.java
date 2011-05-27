@@ -12,11 +12,15 @@
 package pikater.gui.java.improved;
 
 import jade.gui.GuiAgent;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -52,6 +56,8 @@ public class MainWindow extends javax.swing.JFrame {
         logTable.getColumnModel().getColumn(0).setHeaderValue(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("LOG_TIME"));
         logTable.getColumnModel().getColumn(1).setHeaderValue(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("LOG_EVENT"));
         tca = new TableColumnAdjuster(logTable);
+        jButton3.setIcon(new ImageIcon("images/Virginia_Iris.png"));
+        jButton4.setIcon(new ImageIcon("images/Muybridge_runner.jpg"));
     }
 
     public DataInputFrame getDataInputDialog() {
@@ -191,6 +197,7 @@ public class MainWindow extends javax.swing.JFrame {
         jToolBar1.add(jButton1);
 
         jButton3.setText("Iris");
+        jButton3.setToolTipText(bundle.getString("IRIS_TOOLTIP")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -198,6 +205,7 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButton4.setText(bundle.getString("OWN_EXPERIMENT")); // NOI18N
+        jButton4.setToolTipText(bundle.getString("CUSTOM_TOOLTIP")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -368,7 +376,8 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         nef = new NewExperimentFrame(this, true, myAgent);
-        nef.openFileDialog();
+        if (!nef.openFileDialog())
+            return;
         nef.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -426,7 +435,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTable logTable;

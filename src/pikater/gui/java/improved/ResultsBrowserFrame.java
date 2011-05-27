@@ -397,9 +397,39 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
     private void currentResultsExportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_currentResultsExportButtonActionPerformed
 
-        JFileChooser fChooser = new JFileChooser();
-        fChooser.showSaveDialog(this);
+        JFileChooser fChooser = new JFileChooser() {
 
+            @Override
+            public void approveSelection() {
+                File f = getSelectedFile();
+
+                if (!f.getAbsolutePath().endsWith(".csv")) {
+                    f = new File(f.getAbsolutePath() + ".csv");
+                }
+
+                setSelectedFile(f);
+
+                if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                    int result = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("FILE_EXISTS"), null, JOptionPane.YES_NO_OPTION);
+                    switch (result) {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            return;
+                        case JOptionPane.NO_OPTION:
+                            super.setSelectedFile(null);
+                            return;
+                    }
+                }
+                super.approveSelection();
+            }
+        };
+
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("CSV (*.csv)", "csv");
+        fChooser.setFileFilter(fnef);
+        fChooser.setAcceptAllFileFilterUsed(false);
+
+        fChooser.showSaveDialog(this);
+        
         File output = fChooser.getSelectedFile();
 
         if (output == null) {
@@ -409,7 +439,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         try {
             FileWriter out = new FileWriter(output);
 
-            for (String s : currentResults.columns) {
+            for (int i = 0; i < currentResultsTable.getColumnCount(); i++) {
+                String s = currentResultsTable.getModel().getColumnName(i);
                 out.write("\"" + s + "\"");
                 if (!s.equals(currentResults.columns[currentResults.columns.length - 1])) {
                     out.write(",");
@@ -420,7 +451,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
 
             for (int i = 0; i < currentResultsTable.getModel().getRowCount(); i++) {
                 for (int j = 0; j < currentResultsTable.getModel().getColumnCount(); j++) {
-                    if (j < 3) {
+                    if (j < 3 || j == 4) {
                         out.write("\"" + currentResultsTable.getModel().getValueAt(i, j).toString() + "\"");
                     } else {
                         out.write(currentResultsTable.getModel().getValueAt(i, j).toString());

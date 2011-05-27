@@ -38,7 +38,7 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
         for (int i = 0; i < dataInstances.size(); i++) {
 		DataInstances di = (DataInstances)dataInstances.get(i);
 		JTable table = new JTable(new DataInstancesTableModel(di));
-		this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN_DATA") + ": " + di.getName(), null, new JScrollPane(table), null, jTabbedPane1.getComponentCount()-1);
+		this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST_DATA") + ": " + di.getName(), null, new JScrollPane(table), null, jTabbedPane1.getComponentCount()-1);
 		tables.add(table);
 	}
 
@@ -59,7 +59,7 @@ public class ResultDetailsFrame extends javax.swing.JFrame {
         xComboBox.setSelectedIndex(0);
         yComboBox.setSelectedIndex(1);
 
-        this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TEST_DATA") + ": " + di.getName(), null, new JScrollPane(trainData), null, 0);
+        this.jTabbedPane1.insertTab(java.util.ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TRAIN_DATA") + ": " + di.getName(), null, new JScrollPane(trainData), null, 0);
 
         jButton1ActionPerformed(null);
 

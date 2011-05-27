@@ -87,7 +87,7 @@ public class DataInstancesTableModel extends AbstractTableModel {
 
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    if (column < getColumnCount() )
+                    if (column < getColumnCount() - 1)
                         return true;
                     return false;
                 }

@@ -690,6 +690,11 @@ public class Agent_GUI_Java extends Agent_GUI {
 
     @Override
     protected void displayTaskResult(ACLMessage inform) {
+
+        if (inform.getPerformative() != ACLMessage.INFORM) {
+            myGUI.showError(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TASK_FAILURE") + inform.getContent());
+        }
+
         try {
             Result r = (Result) getContentManager().extractContent(inform);
             Task t = (Task) r.getValue();

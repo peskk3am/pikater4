@@ -33,8 +33,6 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.sun.org.apache.bcel.internal.classfile.InnerClass;
-
 import pikater.agents.computing.Agent_ComputingAgent;
 import pikater.agents.computing.Agent_ComputingAgent.states;
 import pikater.ontology.messages.Execute;

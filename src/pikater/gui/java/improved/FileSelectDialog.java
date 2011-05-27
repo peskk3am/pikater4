@@ -203,7 +203,7 @@ public class FileSelectDialog extends javax.swing.JDialog {
                 }
                 
                 
-                String[] columns =  line.split(",");
+                String[] columns =  line.split("[;,]");
 
                 String arffHeader = "";
                 arffHeader += "@RELATION " + input.getName() + "\n";
@@ -219,9 +219,9 @@ public class FileSelectDialog extends javax.swing.JDialog {
                     if (line.isEmpty())
                         continue;
 
-                    arffContent += line + "\n";
+                    arffContent += line.replaceAll("[;,]", ",") + "\n";
 
-                    String className = line.split(",")[columns.length - 1];
+                    String className = line.split("[;,]")[columns.length - 1];
 
                     if (!classes.contains(className))
                         classes.add(className);

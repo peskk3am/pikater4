@@ -275,7 +275,7 @@ public class DataInputFrame extends javax.swing.JFrame {
     private void loadCSVButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCSVButtonActionPerformed
         JFileChooser openFile = new JFileChooser();
 
-        FileNameExtensionFilter fnf = new FileNameExtensionFilter("CSV, ARFF", "csv", "arff");
+        FileNameExtensionFilter fnf = new FileNameExtensionFilter("CSV (*.csv)", "csv");
         openFile.setFileFilter(fnf);
 
         int result = openFile.showOpenDialog(this);
@@ -315,7 +315,7 @@ public class DataInputFrame extends javax.swing.JFrame {
                 }
 
 
-                String[] columns = line.split(",");
+                String[] columns = line.split("[,;]");
 
                 String arffHeader = "";
                 arffHeader += "@RELATION " + f.getName() + "\n";
@@ -333,9 +333,9 @@ public class DataInputFrame extends javax.swing.JFrame {
                         continue;
                     }
 
-                    arffContent += line + "\n";
+                    arffContent += line.replaceAll("[;,]", ",") + "\n";
 
-                    String className = line.split(",")[columns.length - 1];
+                    String className = line.split("[;,]")[columns.length - 1];
 
                     if (!classes.contains(className)) {
                         classes.add(className);

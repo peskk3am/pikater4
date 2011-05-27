@@ -570,6 +570,8 @@ public class Agent_DataManager extends Agent {
 
                         getContentManager().fillContent(reply, r);
 
+                        System.err.println("Sending reply");
+
                         return reply;
                     }
 

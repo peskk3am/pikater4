@@ -139,8 +139,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         return sum;
     }
 
-    public void openFileDialog() {
+    public boolean openFileDialog() {
         addFilesButtonActionPerformed(null);
+        return fileGroups.getSize() > 0;
     }
 
     public void setFiles(ArrayList files) {
