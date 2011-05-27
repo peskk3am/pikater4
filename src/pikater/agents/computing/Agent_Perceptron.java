@@ -30,6 +30,9 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 	//weight matrix (size: |output_vec|*|input_vec|)
 	double weights[];
 	Random randgen=new Random();
+	//normalization factors for each attribute
+	double attributeRanges[];
+	double attributeBases[];
 	
 	@Override
 	protected Evaluation evaluateCA() {
@@ -233,6 +236,8 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		if(class_index<0)
 			class_index = attributes.size()-1;
 		attr2neur = new int[attributes.size()];
+		attributeRanges = new double[attributes.size()];
+		attributeBases = new double[attributes.size()];
 		int index = 0;
 		int cur_neu = 1;//first neuron for threshold input
 		Iterator attr_iter = attributes.iterator();
@@ -259,6 +264,34 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 			}
 			
 			index++;
+		}
+		//Maximal and minimal values of each attribute
+		double mins[] = new double[attributes.size()];
+		double maxs[] = new double[attributes.size()];
+		for(int i = 0; i < attributes.size(); i++){
+			mins[i] = Double.MAX_VALUE;
+			maxs[i] = Double.MIN_VALUE;
+		}
+		Iterator inst_iter = instances.getInstances().iterator();
+		while (inst_iter.hasNext()) {
+			Instance inst = (pikater.ontology.messages.Instance)inst_iter.next();
+			Iterator val_iter = inst.getValues().iterator();
+			int aind=0;
+			while (val_iter.hasNext()){
+				Double val = (Double)val_iter.next();
+				if(val < mins[aind])
+					mins[aind] = val;
+				if(val > maxs[aind])
+					maxs[aind] = val;
+				aind++;
+			}
+		}
+		//normalization factors for each attribute
+		for(int i = 0; i < attributes.size(); i++){
+			attributeRanges[i]= (maxs[i]-mins[i])/2;
+			if(attributeRanges[i] == 0)
+				attributeRanges[i]=1.0;
+			attributeBases[i] = (maxs[i]+mins[i])/2;
 		}
 		
 		//create input
@@ -291,6 +324,9 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 					input_vec[neu_ind]=1;
 				}else{
 					//DATE/NUMERIC
+					//normalization to [-1,1]
+					next_val-=attributeBases[index];
+					next_val/=attributeRanges[index];
 					input_vec[attr2neur[index]]=next_val;
 				}
 			}
