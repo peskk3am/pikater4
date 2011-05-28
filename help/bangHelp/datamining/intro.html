@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>Data mining – strojové dobývání znalostí z dat</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+
+
+<h1>Data mining – strojové dobývání znalostí z dat</h1>
+
+<p>
+Oblast <i>data miningu</i>, neboli získávání znalostí z dat, je důležitou součástí informatiky. Objem dat, která jsou ukládána v počítačových systémech, neustále roste a spolu s tím roste i význam data miningu. Jeho cílem je nalezení nějaké informace, která je v datech obsažena. Říkáme, že vytváříme <i>model</i> dat. Takový model představuje potom jednodušší a mnohem menší reprezentaci informace a můžeme ho použít i k získání znalostí o datech, která jsme při tvorbě modelu nepoužili. Vlastnosti, kdy model dokáže dobře reprezentovat i data, která nebyla použita při jeho tvorbě, se říká <i>generalizace</i>. 
+</p>
+<p>
+Je celá řada způsobů, jak model z dat vytvořit, a jejich volba  závisí na informacích, které chceme modelem reprezentovat. My se zaměříme na modely, které postihují velmi častý typ informace, a to tzv. <i>funkční závislost</i>. Předpokládáme, že data mají tvar množiny uspořádaných dvojic T = {(x<sub>i</sub>, d<sub>i</sub>); i=1, ..., N}, kde N je velikost dat, kde x<sub>i</sub> je vstupní vektor (vstupů může být více, počet si označíme D a budeme mu říkat <i>dimenze problému</i>) a d<sub>i</sub> je odpovídající výstupní hodnota (zatímco výstup je pro jednoduchost jen jeden). Množině T říkáme <i>tréninková množina</i>, protože ji používáme pro tvorbu (trénování, učení) modelu. Často máme k dispozici i <i>testovací množinu</i>, pomocí které ověřujeme, že jsme model dat vytvořili dobře a je možné ho použít i na další data. Je důležité, aby data z testovací množiny nebyla použita v tréninkové množině. Běžnou praxí při data miningu bývá rozdělit dostupná data na větší tréninkovou část (80-90%) a menší testovací (10-20%). 
+</p>
+<p>
+U funkčně závislých dat předpokládáme, že existuje nějaká funkce F, která realizuje zobrazení mezi vstupy x a výstupem d, neboli platí d<sub>i</sub> = F(x<sub>i</sub>). My tuto funkci neznáme, ale známe příklady odpovídajících vstupních hodnot x a d. Hodnoty d i složek x mohou být buď číselné (například celá nebo reálná čísla) anebo se může  jednat o hodnoty z množiny pevně určených hodnot, kterým říkáme <i>kategoriální</i> veličiny. Pokud je výstup d kategoriální, mluvíme o problému <i>klasifikace</i>, a pokud je d číselná, mluvíme o regresi. Každá z těchto úloh má jiný typ počítání chyby, jak uvidíme dále.
+</p>
+<p>
+<b>Příklad:</b> Teplota lidského těla by například mohla být reprezentována číselnou proměnnou s reálnými hodnotami v rozsahu od 35 do 42. Výška člověka v centimetrech by se mohla reprezentovat jako celočíselná hodnota z intervalu mezi nulou a nějakou vhodnou horní mezí. Pohlaví je typická kategoriální veličina se dvěma hodnotami – žena a muž. Další příklady kategoriálních veličin jsou třeba měsíce v roce, jména karet, jména nemocí, apod. Typickou klasifikační úlohou je například určení diagnózy nemoci na základě vstupů o různých příznacích (jako je například teplota). 
+</p>
+<p>
+Tvorba modelu je tedy hledání funkce F. Každá metoda data miningu pracuje s jinou vnitřní reprezentací funkce F, ale důležité je, že princip, jak F hledat, je obecný a nazývá se <i>učení s učitelem</i>. Učení s učitelem se snaží minimalizovat chybu modelu na tréninkové množině. Představme si, že v průběhu tvorby modelu máme nějakou aproximaci modelu F<sub>0</sub> a zjistíme jeho výstupy na vstupech z tréninkové množiny, tzn. určíme hodnoty y<sub>i</sub> = F<sub>0</sub>(x<sub>i</sub>). Naším cílem při tvorbě modelu je, aby hodnoty y<sub>i</sub> (skutečný výstup našeho modelu F<sub>0</sub>) a d<sub>i</sub> (požadovaný výstup daný daty) byly co nejblíže. Matematické metody tvorby modelů počítají hodnotu chyby <i>modelu</i> E, která se spočítá jako nějaká matematická operace hodnot d<sub>i</sub> a y<sub>i</sub> sečtená přes všechna i probíhající tréninkovou množinu od 1 do N. Pokud jsou hodnoty d a y číselné, jde o regresi a přirozenou operací je například absolutní hodnota rozdílu mezi d<sub>i</sub> a y<sub>i</sub>. Nejvíce používanou chybou je <i>kvadratická</i> chyba, která počítá součet členů (y<sub>i</sub>-d<sub>i</sub>)<sup>2</sup>. V případě klasifikace počítáme jen počet dat, kde se hodnoty d<sub>i</sub> a y<sub>i</sub> liší a mluvíme o klasifikační chybě. Výpočetní systémy většinou počítají i další statistické veličiny související s chybou, jako střední hodnota a rozptyl, případně chybu relativizují tím, že ji dělí počtem dat v množině.
+</p>
+<p>
+Metody data miningu využijí hodnoty spočtené chyby k tomu, aby zjistily dosavadní úspěšnost našeho modelu F<sub>0</sub>, ale typicky se chyba využije i ke tvorbě dalšího – lepšího – modelu F<sub>1</sub>. Ten se pak zase ohodnotí, vytvoří se F<sub>2</sub>, atd. Není výjimečné, že tento proces trvá i několik tisíc iterací. Naštěstí se děje automaticky, my jen určíme, zda chceme počítat například určitý počet iterací anebo dokud chyba neklesne pod určitou mez. 
+</p>
+<p>
+Problém tvorby modelu je výpočetně náročný. Uvědomme si, že často pracujeme s daty, kde N je v řádech tisíců či miliónů. Dalším problémem, který znesnadňuje práci strojům i představivost lidem, je vysoká dimenze problému. Člověk si těžko představuje věci, které jsou více než trojdimenzionální, takže pro problémy s D větší než dvě se většinou nemůžeme spolehnout na geometrickou intuici. Musíme tedy spoléhat na to, že naše metody tvorby modelu jsou dostatečně efektivní a dají nám vhled do problému tím, že si můžeme testovat odpovědi modelu na nejrůznější vstupy.
+</p>
+<p>
+V následujícím textu se stručně seznámíme se dvěma populárními metodami tvorby modelů, které spadají do kategorie metod umělé inteligence. Nejde zdaleka o jediné možnosti, lidé, kteří se v praxi zabývají data miningem, mají k dispozici desítky až stovky metod pocházejících z různých oblastí informatiky a matematiky, od statistiky po biologicky inspirovanou umělou inteligenci.
+</p>
+</body>
+</html>

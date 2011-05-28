@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="toplevelfolder" url="images/toplevel.gif" />
+	<mapID target="datamining.intro" url="bangHelp/datamining/intro.html" />
+	<mapID target="datamining.mlp" url="bangHelp/datamining/mlp.html" />
+	<mapID target="datamining.rbf" url="bangHelp/datamining/rbf.html" />
+	<mapID target="datamining.iris" url="bangHelp/datamining/iris.html" />
+	<mapID target="iris.intro" url="bangHelp/iris/intro.html"/>
+	<mapID target="marks.intro" url="bangHelp/marks/intro.html" />
+</map>

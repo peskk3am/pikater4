@@ -15,10 +15,14 @@ import jade.gui.GuiAgent;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javax.help.CSH;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -305,6 +309,11 @@ public class MainWindow extends javax.swing.JFrame {
         helpMenu.setText(bundle.getString("HELP")); // NOI18N
 
         contentsMenuItem.setText(bundle.getString("CONTENTS")); // NOI18N
+        contentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contentsMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(contentsMenuItem);
 
         aboutMenuItem.setText(bundle.getString("ABOUT")); // NOI18N
@@ -406,6 +415,28 @@ public class MainWindow extends javax.swing.JFrame {
         nef.setVisible(true);
 
     }//GEN-LAST:event_openMenuItemActionPerformed
+
+    private void contentsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentsMenuItemActionPerformed
+        
+        String helpHS = "BANGHelp.hs";
+        ClassLoader cl = ClassLoader.getSystemClassLoader();
+        HelpSet hs = null;
+        try {
+            URL hsURL = HelpSet.findHelpSet(cl, helpHS);
+            hs = new HelpSet(null, hsURL);
+        } catch (Exception ee) {
+        // Say what the exception really is
+            ee.printStackTrace();
+            System.out.println( "HelpSet " + ee.getMessage());
+            System.out.println("HelpSet "+ helpHS +" not found");
+        return;
+        }
+        // Create a HelpBroker object:
+        HelpBroker hb = hs.createHelpBroker();
+        // Create a "Help" menu item to trigger the help viewer:
+        hb.setDisplayed(true);
+
+    }//GEN-LAST:event_contentsMenuItemActionPerformed
 
     public void addResult(Task t) {
         rbf.addResult(t);
