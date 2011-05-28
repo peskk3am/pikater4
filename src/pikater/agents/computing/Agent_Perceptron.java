@@ -33,6 +33,7 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 	//normalization factors for each attribute
 	double attributeRanges[];
 	double attributeBases[];
+	boolean doNormalization=true;
 	
 	@Override
 	protected Evaluation evaluateCA() {
@@ -136,6 +137,16 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		opt.setDefault_value("0");
 		_options.add(opt);
 		
+		opt = new pikater.ontology.messages.Option();
+		opt.setName("C");
+		opt.setData_type("BOOLEAN");
+		opt.setIs_a_set(false);
+		opt.setMutable(false);//???
+		opt.setDescription("Normalizing a numeric class will NOT be done.(Set this to not normalize the class if it's numeric).");
+		opt.setSynopsis("-C");
+		opt.setDefault_value("False");
+		_options.add(opt);
+		
 		agent_options.setOptions(_options);
 	}
 
@@ -171,6 +182,7 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		NEpochs=10;//default
 		LearningRate=0.3;
 		randgen.setSeed(0);
+		doNormalization = true;
 			
 		if(current_task.getAgent().getOptions()!=null){
 			Iterator itr = current_task.getAgent().getOptions().iterator();
@@ -186,6 +198,8 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 				}else if(next_opt.getName().compareTo("S")==0){
 					randgen.setSeed(Integer.parseInt(next_opt.getValue()));
 					//System.out.println("Perceptron: parameter N, value:"+ next_opt.getValue());
+				}else if(next_opt.getName().compareTo("C")==0){
+					doNormalization = false;
 				}else {
 					/*error?*/
 					System.out.println("Perceptron: Unknown parameter "+next_opt.getName() +", value:"+ next_opt.getValue());
@@ -299,7 +313,7 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 		//create random weights
 		weights=new double[input_vec.length*output_vec.length];
 		for(int i=0; i<weights.length;i++)
-			weights[i]=randgen.nextDouble()-0.5;//[-0.5,0.5)
+			weights[i]=(randgen.nextDouble()-0.5);//[-0.5,0.5)
 		return true;
 	}
 	
@@ -325,9 +339,11 @@ public class Agent_Perceptron extends Agent_ComputingAgent {
 				}else{
 					//DATE/NUMERIC
 					//normalization to [-1,1]
-					next_val-=attributeBases[index];
-					next_val/=attributeRanges[index];
-					input_vec[attr2neur[index]]=next_val;
+					if(doNormalization){
+						next_val-=attributeBases[index];
+						next_val/=attributeRanges[index];
+						input_vec[attr2neur[index]]=next_val;
+					}
 				}
 			}
 			index++;
