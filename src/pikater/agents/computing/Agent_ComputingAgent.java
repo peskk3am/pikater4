@@ -98,7 +98,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 	
 	protected abstract void train() throws Exception;
 
-	protected abstract pikater.ontology.messages.Evaluation evaluateCA();
+	protected abstract pikater.ontology.messages.Evaluation evaluateCA() throws Exception;
 
 	protected abstract DataInstances getPredictions(Instances test,
 			DataInstances onto_test);
@@ -845,26 +845,27 @@ public abstract class Agent_ComputingAgent extends Agent {
 					send(result_msg);
 					
 					if (current_task.getGet_results().equals("after_each_task")){
-												
-						current_task.setResult(eval);
-						ContentElement content;
-						try {
-							content = getContentManager().extractContent(incoming_request);
-	                        if (resurrected) eval.setObject(null);
-							
-	                        Result result = new Result((Action) content, current_task);
-							getContentManager().fillContent(result_msg, result);												
-												
-						} catch (UngroundedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (CodecException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (OntologyException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						//if (result_msg == null){
+							current_task.setResult(eval);
+							ContentElement content;
+							try {
+								content = getContentManager().extractContent(incoming_request);
+		                        if (resurrected) eval.setObject(null);
+								
+		                        Result result = new Result((Action) content, current_task);
+								getContentManager().fillContent(result_msg, result);												
+													
+							} catch (UngroundedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (CodecException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (OntologyException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						//}
 						
 						result_msg.clearAllReceiver();
 						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));

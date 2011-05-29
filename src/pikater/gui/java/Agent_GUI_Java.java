@@ -693,6 +693,7 @@ public class Agent_GUI_Java extends Agent_GUI {
 
         if (inform.getPerformative() != ACLMessage.INFORM) {
             myGUI.showError(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TASK_FAILURE") + inform.getContent());
+            return;
         }
 
         try {

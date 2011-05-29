@@ -1298,13 +1298,11 @@ public abstract class Agent_GUI extends GuiAgent {
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 				MessageTemplate.MatchConversationId("partial-results"));
 
-		private MessageTemplate resurrectedMsgTemplate = MessageTemplate.and(
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-				MessageTemplate.MatchConversationId("resurrected-results"));
+		private MessageTemplate resurrectedMsgTemplate =
+				(MessageTemplate.MatchConversationId("resurrected-results"));
 
-		private MessageTemplate afterTaskMsgTemplate = MessageTemplate.and(
-				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-				MessageTemplate.MatchConversationId("result_after_task"));
+		private MessageTemplate afterTaskMsgTemplate = 				
+				(MessageTemplate.MatchConversationId("result_after_task"));
 
 		public CompAgentResultsServer(Agent agent) {
 			super(agent);

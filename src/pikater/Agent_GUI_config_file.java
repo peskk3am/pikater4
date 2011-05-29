@@ -299,7 +299,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
     @Override
     protected void displayFileImportProgress(int completed, int all) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
