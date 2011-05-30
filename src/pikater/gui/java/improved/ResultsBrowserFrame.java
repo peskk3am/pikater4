@@ -102,6 +102,8 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsTable = new javax.swing.JTable();
         saveResultsButton = new javax.swing.JButton();
         loadCurrentResultsButton = new javax.swing.JButton();
+        showDetailsButton = new javax.swing.JButton();
+        labelDataButton = new javax.swing.JButton();
 
         jPopupMenu1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
@@ -286,6 +288,20 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             }
         });
 
+        showDetailsButton.setText(bundle.getString("DETAILS")); // NOI18N
+        showDetailsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showDetailsButtonActionPerformed(evt);
+            }
+        });
+
+        labelDataButton.setText(bundle.getString("LABEL_DATA")); // NOI18N
+        labelDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                labelDataButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -294,6 +310,10 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(showDetailsButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelDataButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                         .addComponent(loadCurrentResultsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(saveResultsButton)
@@ -302,6 +322,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        jPanel4Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {currentResultsExportButton, labelDataButton, loadCurrentResultsButton, saveResultsButton, showDetailsButton});
+
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -311,7 +334,9 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loadCurrentResultsButton)
                     .addComponent(saveResultsButton)
-                    .addComponent(currentResultsExportButton))
+                    .addComponent(currentResultsExportButton)
+                    .addComponent(showDetailsButton)
+                    .addComponent(labelDataButton))
                 .addContainerGap())
         );
 
@@ -323,7 +348,7 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 844, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -639,6 +664,16 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
         currentResultsTable.getSelectionModel().setSelectionInterval(mouseOverRow, mouseOverRow);
     }//GEN-LAST:event_jPopupMenu1PopupMenuWillBecomeVisible
 
+    private void showDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDetailsButtonActionPerformed
+        if (currentResultsTable.getSelectedRow() >= 0)
+            jMenuItem1ActionPerformed(null);
+    }//GEN-LAST:event_showDetailsButtonActionPerformed
+
+    private void labelDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labelDataButtonActionPerformed
+        if (currentResultsTable.getSelectedRow() >= 0)
+            jMenuItem2ActionPerformed(null);
+    }//GEN-LAST:event_labelDataButtonActionPerformed
+
     public void dataInputDialogClosed() {
         did = null;
     }
@@ -670,10 +705,12 @@ public class ResultsBrowserFrame extends javax.swing.JFrame implements GuiConsta
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton labelDataButton;
     private javax.swing.JButton loadCurrentResultsButton;
     private javax.swing.JButton loadResultsButton;
     private javax.swing.JButton saveResultsButton;
     private javax.swing.JButton savedResultsExportButton;
     private javax.swing.JTable savedResultsTable;
+    private javax.swing.JButton showDetailsButton;
     // End of variables declaration//GEN-END:variables
 }
