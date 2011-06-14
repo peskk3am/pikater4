@@ -33,8 +33,9 @@ public class MessagesOntology extends Ontology {
 	public static final String TASK_SAVE_MODE = "save_mode";	
 	public static final String TASK_USERID = "userID";
 	public static final String TASK_START = "start";
-	public static final String TASK_FINISH = "finish";	
+	public static final String TASK_FINISH = "finish";
 	public static final String TASK_GET_RESULTS = "get_results";	
+	public static final String TASK_SAVE_RESULTS = "save_results";	
 	public static final String TASK_GUI_AGENT = "gui_agent";	
 	
 	public static final String DATA = "data";
@@ -55,8 +56,8 @@ public class MessagesOntology extends Ontology {
 	public static final String COMPUTATION_DATA = "data";
 	public static final String COMPUTATION_TIMEOUT = "timeout";
 	public static final String COMPUTATION_METHOD = "method";
-	public static final String COMPUTATION_START = "start";
 	public static final String COMPUTATION_GET_RESULTS = "get_results";
+	public static final String COMPUTATION_SAVE_RESULTS = "save_results";	
 	public static final String COMPUTATION_GUI_AGENT = "gui_agent";	
 
 	public static final String PROBLEM = "PROBLEM";
@@ -69,6 +70,7 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM_METHOD = "method";
 	public static final String PROBLEM_START = "start";
 	public static final String PROBLEM_GET_RESULTS = "get_results";
+	public static final String PROBLEM_SAVE_RESULTS = "save_results";	
 	public static final String PROBLEM_GUI_AGENT = "gui_agent";	
 	
 	public static final String METHOD = "METHOD";
@@ -333,10 +335,10 @@ public class MessagesOntology extends Ontology {
 			cs.add(COMPUTATION_TIMEOUT,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
 			cs.add(COMPUTATION_METHOD, (ConceptSchema) getSchema(METHOD));
-			cs.add(COMPUTATION_START,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(COMPUTATION_GET_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(COMPUTATION_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(COMPUTATION_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 
@@ -360,6 +362,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(PROBLEM_GET_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(PROBLEM_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(PROBLEM_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			
@@ -386,7 +390,9 @@ public class MessagesOntology extends Ontology {
 			cs.add(TASK_SAVE_MODE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_GET_RESULTS,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));			
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(TASK_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(TASK_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 
@@ -396,7 +402,7 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_FINISH,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
-
+			
 			cs = (ConceptSchema) getSchema(DATA);
 			cs.add(DATA_TRAIN_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));

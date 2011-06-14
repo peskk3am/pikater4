@@ -37,107 +37,58 @@ public class Agent_ChooseXValues extends Agent_OptionsManager {
 	}
 
 	private String[] generateOptionValues(Option next) {
-		Random generator = new Random();
+		Object[] possible_values = null;
+		
 		String optionName = " -" + next.getName() + " ";
 		// number of values ~ number of "?"s set by user
 		System.out.println("user value:" + next.getUser_value());
 		String[] values = next.getUser_value().split(",");
-		int numArgs = values.length;
 
 		if (!next.getIs_a_set()) {
-			if (next.getData_type().equals("INT") || next.getData_type().equals("MIXED")) {
-				int x = next.getNumber_of_values_to_try();
-				int range = (int) (next.getRange().getMax()
-						- next.getRange().getMin() + 1);
-				// if there is less possibilities than x -> change x
-				if (range < x) {
-					x = range;
-				}
-				String[] a = new String[x];
-				for (int i = 0; i < x; i++) {
-					String si = "";
-					for (int j = 1; j < numArgs; j++) {
-						if (values[j - 1].equals("?")) {
-							int vInt = (int) (next.getRange().getMin() + i
-									* (range / x));
-							si += Integer.toString(vInt) + ",";
-						}
-						else {
-							si += values[j - 1] + ",";
-						}
-					}
-					if (values[numArgs - 1].equals("?")) {
-						int vInt = (int) (next.getRange().getMin() + i
-								* (range / x));
-						si += Integer.toString(vInt);
-					}
-					else {
-						si += values[numArgs - 1] + ",";
-					}
-					
-					a[i] = optionName + si;
-				}
-				return a;
-			}
-			if (next.getData_type().equals("FLOAT")) {
-				int x = next.getNumber_of_values_to_try();
-				float dv = (next.getRange().getMax() - next.getRange().getMin())
-						/ (x - 1);
-				String[] a = new String[x];
-
-				for (int i = 0; i < x; i++) {
-					String sf = "";
-					for (int j = 1; j < numArgs; j++) {
-						if (values[j - 1].equals("?")) {
-							float vFloat = next.getRange().getMin() + i * dv;
-							sf += Float.toString(vFloat) + ",";
-						}
-						else {
-							sf += values[j - 1] + ",";
-						}
-					}
-					if (values[numArgs - 1].equals("?")) {
-						float vFloat = next.getRange().getMin() + i * dv;
-						sf += Float.toString(vFloat);
-					}
-					else {
-						sf += values[numArgs - 1] + ",";
-					}
-					
-					a[i] = optionName + sf;
-				}
-				return a;
-			}
-			if (next.getData_type().equals("BOOLEAN")) {
-				return new String[] { optionName + " True",
-						optionName + " False" };
-			}
-		} else {
-
-			// int x = next.getNumber_of_values_to_try();
+			possible_values = getPossibleValues(next);
+			System.out.println("possible_values: "+possible_values.toString());
+		}	
+		else{				
+			int x = next.getNumber_of_values_to_try();
 			// if (next.getSet().size() < x){
-			// x = next.getSet().size();
+			// 	x = next.getSet().size();
 			// }
 
-			// sub_generate(0, "-H ", next.getSet().toArray(), values );
-			System.out.println("velikost pole:"
-					+ next.getSet().toArray().length);
-			sub_generate(0, "-" + next.getName() + " ",
-					next.getSet().toArray(), values);
-
-			// copy vector to array:
-			String[] a = new String[sub_options_vector.size()];
-			int i = 0;
-			for (Enumeration e = sub_options_vector.elements(); e
-					.hasMoreElements();) {
-				String next_option = (String) e.nextElement();
-				a[i] = next_option;
-				i++;
+			if (next.getSet().size() > x){
+				// choose first x values only
+				possible_values = new Object[x];
+				for (int i=0; i < x; i++){
+					possible_values[i] = next.getSet().get(i);
+				}
 			}
-			return a;
-		}
+			else{
+				possible_values = next.getSet().toArray();
+			}
 
-		return new String[0];
+		}
+				
+		System.out.println("velikost pole:"
+				+ possible_values.length);				
+
+		sub_options_vector = new Vector<String>();
+		
+		sub_generate(0, "-" + next.getName() + " ",
+				possible_values, values);
+
+		// copy vector to array:
+		String[] a = new String[sub_options_vector.size()];
+		int i = 0;
+		for (Enumeration e = sub_options_vector.elements(); e
+				.hasMoreElements();) {			
+			String next_option = (String) e.nextElement();
+			System.out.println("kopirovani: " + next_option);
+			a[i] = next_option;
+			i++;
+		}
+		return a;
+	
+
+		// return new String[0];
 	}
 
 	@Override
@@ -259,4 +210,79 @@ public class Agent_ChooseXValues extends Agent_OptionsManager {
 
 		return;
 	}
+
+	private String[] getPossibleValues(Option next){
+		
+		// String optionName = " -" + next.getName() + " ";
+		String optionName = "";
+		// number of values ~ number of "?"s set by user
+		System.out.println("user value:" + next.getUser_value());
+		String[] values = next.getUser_value().split(",");		
+		int numArgs = values.length;
+		
+		if (next.getData_type().equals("INT") || next.getData_type().equals("MIXED")) {
+			int x = next.getNumber_of_values_to_try();
+			int range = (int) (next.getRange().getMax()
+					- next.getRange().getMin() + 1);
+			// if there is less possibilities than x -> change x
+			if (range < x) {
+				x = range;
+			}
+			String[] a = new String[x];
+			for (int i = 0; i < x; i++) {
+				String si = "";
+				
+				if (values[numArgs - 1].equals("?")) {
+					int vInt = (int) (next.getRange().getMin() + i
+							* (range / x));
+					si += Integer.toString(vInt);
+				}
+				else {
+					si += values[numArgs - 1] + ",";
+				}
+				
+				a[i] = optionName + si;
+			}
+			return a;
+		}
+		if (next.getData_type().equals("FLOAT")) {
+			int x = next.getNumber_of_values_to_try();
+			float dv = (next.getRange().getMax() - next.getRange().getMin())
+					/ (x - 1);
+			String[] a = new String[x];
+
+			for (int i = 0; i < x; i++) {
+				String sf = "";
+				for (int j = 1; j < numArgs; j++) {
+					if (values[j - 1].equals("?")) {
+						float vFloat = next.getRange().getMin() + i * dv;
+						sf += Float.toString(vFloat) + ",";
+					}
+					else {
+						sf += values[j - 1] + ",";
+					}
+				}
+				if (values[numArgs - 1].equals("?")) {
+					float vFloat = next.getRange().getMin() + i * dv;
+					sf += Float.toString(vFloat);
+				}
+				else {
+					sf += values[numArgs - 1] + ",";
+				}
+				
+				a[i] = optionName + sf;
+			}
+			return a;
+		}
+		if (next.getData_type().equals("BOOLEAN")) {
+			String[] a = new String[] { optionName + " True",
+					optionName + " False" };
+			return a;
+		}
+		
+		return new String[0];
+		
+	} // end getPossibleValues
+	
+	
 }

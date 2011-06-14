@@ -28,6 +28,8 @@ import jade.util.leap.List;
 
 import java.util.Date;
 import java.util.Vector;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 import pikater.ontology.messages.Computation;
 import pikater.ontology.messages.Compute;
@@ -122,7 +124,7 @@ public abstract class Agent_OptionsManager extends Agent {
 					error_rate = computation.getMethod().getError_rate();
 					maximum_tries = computation.getMethod().getMaximum_tries();
 					problem_id = computation.getProblem_id();
-					start = computation.getStart();
+					start = getDateTime();
 					if (timeout < 0) {
 						timeout = System.currentTimeMillis()
 								+ computation.getTimeout();
@@ -262,6 +264,7 @@ public abstract class Agent_OptionsManager extends Agent {
 					Task task = ((Execute) ((Action) content).getAction())
 							.getTask();
 					task.setResult(evaluation);
+					task.setFinish(getDateTime());
 					results.add(task);
 				}
 
@@ -416,6 +419,7 @@ public abstract class Agent_OptionsManager extends Agent {
 														// receivedComputation
 				task.setProblem_id(problem_id);
 				task.setGet_results(receivedComputation.getGet_results());
+				task.setSave_results(receivedComputation.getSave_results());
 				task.setGui_agent(receivedComputation.getGui_agent());
 				// task.setOptions(opt);
 
@@ -582,5 +586,11 @@ public abstract class Agent_OptionsManager extends Agent {
 		}
 		return str;
 	}
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
 }

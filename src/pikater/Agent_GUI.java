@@ -94,6 +94,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected String default_method = "Random";
 	private int default_maximum_tries = 10;
 	private String default_get_results = "after_each_computation";
+	private boolean default_save_results = true;
 
 	private String myAgentName;
 	/*
@@ -395,7 +396,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end getAgentOptions
 
-	protected void sendProblem(int _problem_id) {
+	protected void sendProblem(int _problem_id) throws Exception {
 		// find the problem according to a _problem_id
 		Problem problem = null;
 
@@ -409,7 +410,12 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 
 		if (problem == null) { // TODO exception
-			return;
+			throw new Exception("Error creating problem.");
+		}
+		
+		String error = checkProblem(problem);
+		if (error != null){
+			throw new Exception(error);
 		}
 		
 		problem.setStart(getDateTime());
@@ -426,6 +432,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		msg.setReplyByDate(new Date(System.currentTimeMillis() + 30000));
 
 		msg.setConversationId(problem.getGui_id() + getLocalName());
+		
 		// Prepare the content.
 		Solve solve = new Solve();
 		solve.setProblem(problem);
@@ -535,9 +542,23 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	}
 
-	protected int createNewProblem(String timeout, String get_results) {
+	private String checkProblem(Problem problem){
+		String error = null;
+		if (problem.getAgents().isEmpty()){
+			error = "No agents specified";
+		}
+		if (problem.getData().isEmpty()){
+			error = "No datasets specified";
+		}
+		
+		return error;
+	}
+	
+	protected int createNewProblem(String timeout, String get_results,
+			String save_results) {
 		int _timeout;
 		String _get_results;
+		boolean _save_results;
 		Problem problem = new Problem();
 		problem.setGui_id(Integer.toString(problem_id)); // agent manager
 															// changes the id
@@ -554,6 +575,23 @@ public abstract class Agent_GUI extends GuiAgent {
 			_get_results = get_results;
 		}
 
+		if (save_results == null) {
+			_save_results = default_save_results;
+		} else {
+			if (save_results.equals("no")){
+				_save_results = false;
+			}
+			else{
+				if (save_results.equals("yes")){
+					_save_results = true;
+				}
+				else{
+					_save_results = default_save_results;
+				}
+			}
+			
+		}
+		
 		Method method = new Method();
 		method.setName(default_method);
 		method.setError_rate(default_error_rate);
@@ -566,6 +604,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		problem.setSent(false);
 		problem.setGet_results(_get_results);
 		problem.setGui_agent(myAgentName);
+		problem.setSave_results(_save_results);
 		problems.add(problem);
 
 		return problem_id++;
@@ -875,7 +914,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 
 	protected void addMethodToProblem(int problem_id, String name,
-			String errorRate, String maximumTries) {
+			String errorRate, String maximumTries, String number_of_values_to_try) {
 		// get the problem
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
@@ -896,6 +935,9 @@ public abstract class Agent_GUI extends GuiAgent {
 					} else {
 						method.setMaximum_tries(Integer.parseInt(maximumTries));
 					}
+				}
+				if (name.equals("ChooseXValues") && number_of_values_to_try != null){
+					default_number_of_values_to_try = Integer.parseInt(number_of_values_to_try);
 				}
 				next_problem.setMethod(method);
 			}
@@ -1006,7 +1048,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				Option o = new Option();
 				o.setData_type(next_option.getData_type());
 				o.setDefault_value(next_option.getDefault_value());
-				// o.setIs_a_set(next_option.getIs_a_set());
+				o.setIs_a_set(next_option.getIs_a_set());
 				o.setName(next_option.getName());
 				o.setNumber_of_args(next_option.getNumber_of_args());
 				o.setRange(next_option.getRange());
@@ -1354,7 +1396,8 @@ public abstract class Agent_GUI extends GuiAgent {
 			Element next_problem = (Element) p_itr.next();
 
 			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
-					next_problem.getAttributeValue("get_results"));
+					next_problem.getAttributeValue("get_results"),
+					next_problem.getAttributeValue("save_results"));
 
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();
@@ -1368,7 +1411,8 @@ public abstract class Agent_GUI extends GuiAgent {
 				Element next_method = (Element) m_itr.next();
 				addMethodToProblem(p_id, next_method.getAttributeValue("name"),
 						next_method.getAttributeValue("error_rate"),
-						next_method.getAttributeValue("maximum_tries"));
+						next_method.getAttributeValue("maximum_tries"),
+						next_method.getAttributeValue("number_of_values_to_try"));
 			}
 
 			java.util.List dataset = next_problem.getChildren("dataset");
