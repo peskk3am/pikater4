@@ -130,6 +130,7 @@ public class Agent_Manager extends Agent {
 	double maxInstances = Integer.MIN_VALUE;
 
 	Vector<AID> busyAgents = new Vector<AID>(); // by this manager
+	private String[] type;
 
 	private class SendComputation extends AchieveREInitiator {
 		/**
@@ -854,8 +855,11 @@ public class Agent_Manager extends Agent {
 			// AgentController agent =
 			// container.createNewAgent(option_manager_name, "Agent_Random", new
 			// String[0] );
-			AgentController agent = container.createNewAgent(
-					option_manager_name, agentTypes.get(computation.getMethod().getName()), new String[0]);
+			
+			String[] opt_manager_type = new String[1];
+			opt_manager_type[0] = "RandomSearch";
+			AgentController agent = container.createNewAgent(								
+					option_manager_name, "pikater.Agent_OptionsManager", opt_manager_type);
 			agent.start();
 		} catch (Exception e) {
 			System.err.println("Exception while adding agent"

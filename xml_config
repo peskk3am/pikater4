@@ -1,12 +1,20 @@
 <experiments>
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
-        <method name="ChooseXValues" number_of_values_to_try="5" />
+	    <method name="Random" maximum_tries="4" error_rate="0.1" />
+
+<!--    <method name="ChooseXValues" number_of_values_to_try="5" /> -->
 
 <!--
+ 		<dataset train="trains.arff" test="trains.arff" />
+
+
  		<dataset train="car.arff" test="car.arff" />
 		<dataset train="letter-recognition.arff" test="letter-recognition.arff" />
 		<dataset train="magic.arff" test="magic.arff" />		
+-->
 		<dataset train="iris.arff" test="iris.arff" />
+		
+<!--		
 		<dataset train="weather.arff" test="weather.arff" />	
 		<dataset train="anneal.arff" test="anneal.arff" />		ok
 		<dataset train="anneal.ORIG.arff" test="anneal.ORIG.arff" />
@@ -44,6 +52,12 @@
 		<dataset train="kdd_JapaneseVowels_test.arff" test="kdd_JapaneseVowels_test.arff" /> moc velky
 		<dataset train="kdd_synthetic_control.arff" test="kdd_synthetic_control.arff" />
 		<dataset train="kdd_SyskillWebert-BioMedical.arff" test="kdd_SyskillWebert-BioMedical.arff" />
+-->
+
+        <agent type="RBFNetwork">
+        	<parameter name="B" value="?" />
+		</agent>
+<!--
 
         <agent type="RBFNetwork">
         	<parameter name="B" value="?" />
@@ -61,7 +75,7 @@
         	<parameter name="H" value="?,?" />
         	<parameter name="N" value="?" set="100, 500, 1000, 4000" />
         </agent>
--->
+
         <agent type="LinearRegression">
            	<parameter name="S" value="?" />
         	<parameter name="C" value="?" />
@@ -90,7 +104,7 @@
             <parameter name="M" value="?" />
             <parameter name="Q" value="?" />
         </agent>
-
+-->
     </experiment>
        
 </experiments>

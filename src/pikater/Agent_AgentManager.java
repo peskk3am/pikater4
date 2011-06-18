@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 
 import pikater.agents.computing.Agent_ComputingAgent;
 import pikater.agents.computing.Agent_ComputingAgent.states;
+import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
@@ -45,6 +46,7 @@ import pikater.ontology.messages.ImportFile;
 import pikater.ontology.messages.LoadAgent;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
+import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SaveAgent;
 import pikater.ontology.messages.SaveMetadata;
 import pikater.ontology.messages.SaveResults;
@@ -65,17 +67,21 @@ import jade.core.Agent;
 import jade.core.AgentContainer;
 import jade.core.LifeCycle;
 import jade.domain.AMSService;
+import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.persistence.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.proto.SimpleAchieveREInitiator;
 import jade.util.leap.ArrayList;
+import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
@@ -320,6 +326,18 @@ public class Agent_AgentManager extends Agent {
 						return reply;												
 					}	
 					*/									
+				 	if (a.getAction() instanceof CreateAgent){
+						CreateAgent ca = (CreateAgent) a.getAction();
+						
+						String name = generateName(ca.getType());						
+						createAgent("pikater.Agent_"+ca.getType(), name, ca.getArguments());
+						
+						ACLMessage reply = request.createReply();
+						reply.setPerformative(ACLMessage.INFORM);
+						reply.setContent(name);
+
+						return reply;												
+					}	
 				
 				} catch (OntologyException e) {
 					e.printStackTrace();
@@ -403,7 +421,49 @@ public class Agent_AgentManager extends Agent {
         return dateFormat.format(date);
     }
     
+	private void createAgent(String type, String name, List args) throws ControllerException {
+		// get a container controller for creating new agents
+		PlatformController container = getContainerController();
+		
+		Object[] Args;
+		if (args == null){
+			Args = new Object[0];
+		}
+		else{
+			Args = args.toArray();
+		}
+
+		AgentController agent = container.createNewAgent(name, type, Args);
+		agent.start();
+		// provide agent time to register with DF etc.
+		doWait(300);
+	}
+	
+	public String generateName(String agentType) {
+		int number = 0;
+		String name = agentType + number;
+		boolean success = false;
+		while (!success) {
+			// try to find an agent with "name"
+			DFAgentDescription template = new DFAgentDescription();
+			ServiceDescription sd = new ServiceDescription();
+			sd.setName(name);
+			template.addServices(sd);
+			try {
+				DFAgentDescription[] result = DFService.search(this, template);
+				// if the agent with this name already exists, increase number
+				if (result.length > 0) {
+					number++;
+					name = agentType + number;
+				} else {
+					success = true;
+					return name;
+				}
+			} catch (FIPAException fe) {
+				fe.printStackTrace();
+			}
+		}
+		return null;
+	}
+    
 }
-
-
-

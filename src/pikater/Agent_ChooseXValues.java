@@ -11,7 +11,7 @@ import java.util.Vector;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
 
-public class Agent_ChooseXValues extends Agent_OptionsManager {
+public class Agent_ChooseXValues extends Agent_OptionsManagerOld {
 	/**
 	 * 
 	 */
