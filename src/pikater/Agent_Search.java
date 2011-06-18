@@ -46,7 +46,7 @@ public abstract class Agent_Search extends Agent {
 		return error_rate;
 	}
 	protected float getMaximum_tries() {
-		return error_rate;
+		return maximum_tries;
 	}
 	protected Evaluation getEvaluation() {
 		return evaluation;

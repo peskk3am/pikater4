@@ -55,6 +55,7 @@ import org.jdom.output.XMLOutputter;
 
 import pikater.ontology.messages.Computation;
 import pikater.ontology.messages.Compute;
+import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.MessagesOntology;
@@ -102,7 +103,7 @@ public class Agent_Manager extends Agent {
 		}
 
 		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
-		agentTypes.put("Random", "pikater.Agent_Random");
+		agentTypes.put("Random", "RandomSearch");
 		
 	}
 	
@@ -842,31 +843,39 @@ public class Agent_Manager extends Agent {
 		// creates an Option Manager agent and returns a message for this agent
 
 		// create an Option Manager agent
-		String option_manager_name = computation.getId();
-		PlatformController container = getContainerController(); // get a
-																	// container
-																	// controller
-																	// for
-																	// creating
-																	// new
-																	// agents
-
+		
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+		CreateAgent ca = new CreateAgent();
+		ca.setName(computation.getId());
+		ca.setType("OptionsManager");
+		
+		List args = new ArrayList();
+		args.add(computation.getMethod().getName());
+		ca.setArguments(args);
+		
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		ACLMessage msg_name = null;
 		try {
-			// AgentController agent =
-			// container.createNewAgent(option_manager_name, "Agent_Random", new
-			// String[0] );
-			
-			String[] opt_manager_type = new String[1];
-			opt_manager_type[0] = "RandomSearch";
-			AgentController agent = container.createNewAgent(								
-					option_manager_name, "pikater.Agent_OptionsManager", opt_manager_type);
-			agent.start();
-		} catch (Exception e) {
+			getContentManager().fillContent(msg_ca, a);	
+			msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+		} catch (FIPAException e) {
 			System.err.println("Exception while adding agent"
-					+ computation.getId() + ": " + e);
-			// TODO send it to GUI agent
+					+ computation.getId() + ": " + e);		
+		} catch (CodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+
 
 		// create a message for the Option Manager agent
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -877,11 +886,11 @@ public class Agent_Manager extends Agent {
 			Compute compute = new Compute();
 			compute.setComputation(computation);
 
-			Action a = new Action();
-			a.setAction(compute);
-			a.setActor(this.getAID());
+			Action ac = new Action();
+			ac.setAction(compute);
+			ac.setActor(this.getAID());
 
-			getContentManager().fillContent(msg, a);
+			getContentManager().fillContent(msg, ac);
 		} catch (CodecException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -890,7 +899,7 @@ public class Agent_Manager extends Agent {
 			e.printStackTrace();
 		}
 
-		msg.addReceiver(new AID(option_manager_name, AID.ISLOCALNAME));
+		msg.addReceiver(new AID(computation.getId(), AID.ISLOCALNAME));
 		msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
 		msg.setReplyByDate(new Date(System.currentTimeMillis() + 10000));

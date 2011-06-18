@@ -1,11 +1,13 @@
 package pikater;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.regex.Pattern;
@@ -96,6 +99,11 @@ public class Agent_AgentManager extends Agent {
 	Logger log;
 	Codec codec = new SLCodec();
 	Ontology ontology = MessagesOntology.getInstance();
+	
+	private String path = System.getProperty("user.dir") + System.getProperty("file.separator");
+
+	private HashMap<String, String> agentTypes = new HashMap<String, String>();
+	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();	
 
 	public Agent_AgentManager() {
 		super();
@@ -125,6 +133,7 @@ public class Agent_AgentManager extends Agent {
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
+		getAgentTypesFromFile();
 		
 		MessageTemplate mt = MessageTemplate.and(MessageTemplate
 				.MatchOntology(ontology.getName()), MessageTemplate
@@ -328,14 +337,21 @@ public class Agent_AgentManager extends Agent {
 					*/									
 				 	if (a.getAction() instanceof CreateAgent){
 						CreateAgent ca = (CreateAgent) a.getAction();
+																	
+						String agent_name;
+						if (ca.getName() != null){
+							agent_name = ca.getName();
+						}
+						else{
+							agent_name = generateName(ca.getType());
+						}
 						
-						String name = generateName(ca.getType());						
-						createAgent("pikater.Agent_"+ca.getType(), name, ca.getArguments());
+						createAgent(ca.getType(), agent_name, ca.getArguments());
 						
 						ACLMessage reply = request.createReply();
 						reply.setPerformative(ACLMessage.INFORM);
-						reply.setContent(name);
-
+						reply.setContent(agent_name);
+						System.out.println(myAgent.getLocalName()+": Agent "+agent_name+" created.");
 						return reply;												
 					}	
 				
@@ -432,14 +448,20 @@ public class Agent_AgentManager extends Agent {
 		else{
 			Args = args.toArray();
 		}
-
-		AgentController agent = container.createNewAgent(name, type, Args);
+		
+		/*
+		System.out.println("name: "+name);
+		System.out.println("type: "+agentTypes.get(type));
+		System.out.println("args: "+Args);
+		*/
+		
+		AgentController agent = container.createNewAgent(name, agentTypes.get(type), Args);
 		agent.start();
 		// provide agent time to register with DF etc.
 		doWait(300);
 	}
 	
-	public String generateName(String agentType) {
+	private String generateName(String agentType) {
 		int number = 0;
 		String name = agentType + number;
 		boolean success = false;
@@ -464,6 +486,43 @@ public class Agent_AgentManager extends Agent {
 			}
 		}
 		return null;
+	}
+	
+	private void getAgentTypesFromFile(){
+		// Sets up a file reader to read the agent_types file
+		FileReader input;
+		try {
+			input = new FileReader(path + "agent_types");
+			// Filter FileReader through a Buffered read to read a line at a
+			// time
+			BufferedReader bufRead = new BufferedReader(input);
+			String line = bufRead.readLine();
+
+			// Read through file one line at time
+			while (line != null) {
+				String[] agentClass = line.split(":");
+				agentTypes.put(agentClass[0], agentClass[1]);
+				if(agentClass.length>2){
+					Object[] opts = new Object[agentClass.length-2];
+					for(int i = 0; i < opts.length; i++)
+						opts[i] = agentClass[i+2];
+					this.agentOptions.put(agentClass[0], opts);
+				}
+				line = bufRead.readLine();
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
+		agentTypes.put("Random", "pikater.Agent_RandomSearch");
+		agentTypes.put("OptionsManager", "pikater.Agent_OptionsManager");
+
 	}
     
 }
