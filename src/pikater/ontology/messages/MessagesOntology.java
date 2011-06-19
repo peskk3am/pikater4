@@ -8,6 +8,7 @@ import jade.content.schema.ConceptSchema;
 import jade.content.schema.ObjectSchema;
 import jade.content.schema.PredicateSchema;
 import jade.content.schema.PrimitiveSchema;
+import jade.util.leap.List;
 
 public class MessagesOntology extends Ontology {
 
@@ -33,8 +34,9 @@ public class MessagesOntology extends Ontology {
 	public static final String TASK_SAVE_MODE = "save_mode";	
 	public static final String TASK_USERID = "userID";
 	public static final String TASK_START = "start";
-	public static final String TASK_FINISH = "finish";	
+	public static final String TASK_FINISH = "finish";
 	public static final String TASK_GET_RESULTS = "get_results";	
+	public static final String TASK_SAVE_RESULTS = "save_results";	
 	public static final String TASK_GUI_AGENT = "gui_agent";	
 	
 	public static final String DATA = "data";
@@ -55,8 +57,8 @@ public class MessagesOntology extends Ontology {
 	public static final String COMPUTATION_DATA = "data";
 	public static final String COMPUTATION_TIMEOUT = "timeout";
 	public static final String COMPUTATION_METHOD = "method";
-	public static final String COMPUTATION_START = "start";
 	public static final String COMPUTATION_GET_RESULTS = "get_results";
+	public static final String COMPUTATION_SAVE_RESULTS = "save_results";	
 	public static final String COMPUTATION_GUI_AGENT = "gui_agent";	
 
 	public static final String PROBLEM = "PROBLEM";
@@ -69,6 +71,7 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM_METHOD = "method";
 	public static final String PROBLEM_START = "start";
 	public static final String PROBLEM_GET_RESULTS = "get_results";
+	public static final String PROBLEM_SAVE_RESULTS = "save_results";	
 	public static final String PROBLEM_GUI_AGENT = "gui_agent";	
 	
 	public static final String METHOD = "METHOD";
@@ -261,6 +264,16 @@ public class MessagesOntology extends Ontology {
 
         public static final String DELETE_TEMP_FILES = "DELETE-TEMP-FILES";
         
+        public static final String GET_NEXT_PARAMETERS = "get_next_parameters";
+        public static final String GET_NEXT_PARAMETERS_OPTIONS = "options";
+        public static final String GET_NEXT_PARAMETERS_EVALUATION = "evaluation";
+        public static final String GET_NEXT_PARAMETERS_ERROR_RATE = "error_rate";
+        public static final String GET_NEXT_PARAMETERS_MAXIMUM_TRIES = "maximum_tries";
+        
+        public static final String CREATE_AGENT = "create_agent";
+        public static final String CREATE_AGENT_TYPE = "type";
+        public static final String CREATE_AGENT_NAME = "name";        
+        public static final String CREATE_AGENT_ARGUMENTS = "arguments";        
 
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
@@ -321,7 +334,9 @@ public class MessagesOntology extends Ontology {
 			add(new AgentActionSchema(SAVE_AGENT), SaveAgent.class);
 			add(new AgentActionSchema(GET_SAVED_AGENTS), GetSavedAgents.class);
                         add(new AgentActionSchema(DELETE_TEMP_FILES), DeleteTempFiles.class);
-			// add(new AgentActionSchema(SEND_OPTIONS), SendOptions.class);
+            add(new AgentActionSchema(GET_NEXT_PARAMETERS), GetNextParameters.class);
+            add(new AgentActionSchema(CREATE_AGENT), CreateAgent.class);
+            // add(new AgentActionSchema(SEND_OPTIONS), SendOptions.class);
 
 			ConceptSchema cs = (ConceptSchema) getSchema(COMPUTATION);
 			cs.add(COMPUTATION_ID,
@@ -333,10 +348,10 @@ public class MessagesOntology extends Ontology {
 			cs.add(COMPUTATION_TIMEOUT,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
 			cs.add(COMPUTATION_METHOD, (ConceptSchema) getSchema(METHOD));
-			cs.add(COMPUTATION_START,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(COMPUTATION_GET_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(COMPUTATION_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(COMPUTATION_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 
@@ -360,6 +375,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(PROBLEM_GET_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(PROBLEM_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(PROBLEM_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			
@@ -386,7 +403,9 @@ public class MessagesOntology extends Ontology {
 			cs.add(TASK_SAVE_MODE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_GET_RESULTS,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));			
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(TASK_SAVE_RESULTS,
+					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(TASK_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 
@@ -396,7 +415,7 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_FINISH,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
-
+			
 			cs = (ConceptSchema) getSchema(DATA);
 			cs.add(DATA_TRAIN_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
@@ -743,6 +762,17 @@ public class MessagesOntology extends Ontology {
 			// ObjectSchema.UNLIMITED);
 
                         as = (AgentActionSchema)getSchema(DELETE_TEMP_FILES);
+
+            as = (AgentActionSchema) getSchema(GET_NEXT_PARAMETERS);                       
+            as.add(GET_NEXT_PARAMETERS_OPTIONS, (ConceptSchema) getSchema(OPTION), 1, ObjectSchema.UNLIMITED);
+            as.add(GET_NEXT_PARAMETERS_EVALUATION, (ConceptSchema) getSchema(EVALUATION), ObjectSchema.OPTIONAL);
+            as.add(GET_NEXT_PARAMETERS_ERROR_RATE, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.OPTIONAL);
+            as.add(GET_NEXT_PARAMETERS_MAXIMUM_TRIES, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
+
+            as = (AgentActionSchema) getSchema(CREATE_AGENT);                       
+            as.add(CREATE_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING));
+            as.add(CREATE_AGENT_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+            as.add(CREATE_AGENT_ARGUMENTS, (PrimitiveSchema)getSchema(BasicOntology.STRING), 0, ObjectSchema.UNLIMITED);
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

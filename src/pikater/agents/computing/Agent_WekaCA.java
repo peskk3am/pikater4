@@ -94,28 +94,23 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		return "/options/"+getAgentType() +".opt";
 	}
 
-	protected Evaluation test(){
+	protected Evaluation test() throws Exception{
 		working = true;
 		System.out.println("Agent " + getLocalName() + ": Testing...");
 
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;
-		try {
-			eval = new Evaluation(train);
-			eval.evaluateModel(cls, test);
-			System.out.println(eval.toSummaryString(getLocalName() + " agent: "
-					+ "\nResults\n=======\n", false));
+		eval = new Evaluation(train);
+		eval.evaluateModel(cls, test);
+		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
+				+ "\nResults\n=======\n", false));
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		working = false;
 		return eval;
 	}
 
 	@Override
-	protected pikater.ontology.messages.Evaluation evaluateCA() {
+	protected pikater.ontology.messages.Evaluation evaluateCA() throws Exception{
 		float defaultValue = (float) Integer.MAX_VALUE;
 		Evaluation eval = test();
 

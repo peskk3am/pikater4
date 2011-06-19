@@ -98,7 +98,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 	
 	protected abstract void train() throws Exception;
 
-	protected abstract pikater.ontology.messages.Evaluation evaluateCA();
+	protected abstract pikater.ontology.messages.Evaluation evaluateCA() throws Exception;
 
 	protected abstract DataInstances getPredictions(Instances test,
 			DataInstances onto_test);
@@ -558,7 +558,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}
 					// Set options
 					setOptions(execute_action.getTask());
-					eval = null;
+					eval = new Evaluation();
 					success = true;
 					Data data = execute_action.getTask().getData();
 					output = data.getOutput();
@@ -721,6 +721,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 						List labeledData = new ArrayList();
 						
+						Date start = new Date();
 						if (state != states.TRAINED ) {
 							train();
 						}
@@ -728,8 +729,10 @@ public abstract class Agent_ComputingAgent extends Agent {
                                                 {
 							if (! mode.equals("test_only")){ train(); }
 						}
-
-                                                if (state == states.TRAINED) {
+						Date end = new Date();
+						int duration = (int)(end.getTime() - start.getTime());
+						
+                        if (state == states.TRAINED) {
 							eval = evaluateCA();
 							if (output.equals("predictions")) {
 								DataInstances di = new DataInstances();
@@ -743,6 +746,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 								eval.setLabeled_data(labeledData);
 							}
 						}
+                        eval.setDuration(duration);						
 																	
 					} catch (Exception e) {
 						success = false;
@@ -845,7 +849,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 					send(result_msg);
 					
 					if (current_task.getGet_results().equals("after_each_task")){
-												
+						if (result_msg.getPerformative() == ACLMessage.FAILURE){	
+							eval.setError_rate(Integer.MAX_VALUE);
+							eval.setStatus(result_msg.getContent());
+						}
 						current_task.setResult(eval);
 						ContentElement content;
 						try {

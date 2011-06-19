@@ -14,6 +14,7 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
+import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -25,26 +26,33 @@ import jade.proto.IteratedAchieveREInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
+import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
+import jade.wrapper.PlatformController;
 
 import java.util.Date;
 import java.util.Vector;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 import pikater.ontology.messages.Computation;
 import pikater.ontology.messages.Compute;
+import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.GetNextParameters;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Task;
 
-public abstract class Agent_OptionsManager extends Agent {
-	/**
-	 * 
-	 */
+public class Agent_OptionsManager extends Agent {
+
 	private static final long serialVersionUID = -7210526529341802567L;
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
-
+	
+	private String search_agent_name;
+	
 	private String trainFileName;
 	private String testFileName;
 
@@ -71,18 +79,12 @@ public abstract class Agent_OptionsManager extends Agent {
 	private ACLMessage msgPrev = new ACLMessage(ACLMessage.FAILURE);
 	private boolean sendAgain = false;
 
-	protected abstract String getAgentType();
-
-	protected abstract boolean finished();
-
-	protected abstract void generateNewOptions(
-			pikater.ontology.messages.Evaluation result);
+	protected String getAgentType() {
+		return "Option Manager";
+	}
 
 	private class ComputeComputation extends IteratedAchieveREInitiator {
 
-		/**
-			 * 
-			 */
 		private static final long serialVersionUID = -138067991593729776L;
 		private List results = new ArrayList();
 
@@ -122,7 +124,7 @@ public abstract class Agent_OptionsManager extends Agent {
 					error_rate = computation.getMethod().getError_rate();
 					maximum_tries = computation.getMethod().getMaximum_tries();
 					problem_id = computation.getProblem_id();
-					start = computation.getStart();
+					start = getDateTime();
 					if (timeout < 0) {
 						timeout = System.currentTimeMillis()
 								+ computation.getTimeout();
@@ -154,21 +156,6 @@ public abstract class Agent_OptionsManager extends Agent {
 			}
 			msgPrev = outgoingRequest;
 
-			/*
-			 * ACLMessage outgoingRequest = new ACLMessage(ACLMessage.REQUEST);
-			 * 
-			 * outgoingRequest.setProtocol(FIPANames.InteractionProtocol.
-			 * FIPA_REQUEST); outgoingRequest.addReceiver(responder);
-			 * outgoingRequest.setContent(incomingRequest.getContent());
-			 * outgoingRequest.setReplyByDate(incomingRequest.getReplyByDate());
-			 */
-			// System.out.println("Agent "+getLocalName()+": outgoingRequest: "+outgoingRequest);
-
-			// if (outgoingRequest.getPerformative() == ACLMessage.CANCEL){
-			// System.out.println("cancel hned na zacatku");
-			// storeNotification(ACLMessage.CANCEL);
-			// return null;
-			// }
 			Vector v = new Vector(1);
 			v.addElement(outgoingRequest);
 			return v;
@@ -187,18 +174,10 @@ public abstract class Agent_OptionsManager extends Agent {
 
 			storeTask();
 
-			if (finished() || finished) {
+			if (finished) {
 				storeNotification(ACLMessage.INFORM);
 			}
 			msgPrev = msgNew;
-
-			// prepare the result to be added to results List:
-
-			// set the Evaluation
-			// ontology.messages.Evaluation evaluation = new
-			// ontology.messages.Evaluation();
-			// evaluation.setError_rate((float)result.errorRate);
-			// evaluation.setPct_incorrect((float)result.pctIncorrect);
 
 		}
 
@@ -245,7 +224,7 @@ public abstract class Agent_OptionsManager extends Agent {
 
 				storeTask();
 
-				if (finished() || finished) {
+				if (finished) {
 					storeNotification(ACLMessage.INFORM);
 				}
 				msgPrev = msgNew;
@@ -262,6 +241,7 @@ public abstract class Agent_OptionsManager extends Agent {
 					Task task = ((Execute) ((Action) content).getAction())
 							.getTask();
 					task.setResult(evaluation);
+					task.setFinish(getDateTime());
 					results.add(task);
 				}
 
@@ -300,25 +280,11 @@ public abstract class Agent_OptionsManager extends Agent {
 			String incomingRequestkey = ((AchieveREResponder) parent).REQUEST_KEY;
 			ACLMessage incomingRequest = (ACLMessage) getDataStore().get(
 					incomingRequestkey);
-			// System.out.println("Agent "+getLocalName()+"incomingRequestkey: "+incomingRequestkey);
-
-			/*
-			 * // Prepare the notification to the request originator and store
-			 * it in the DataStore ACLMessage notification =
-			 * incomingRequest.createReply();
-			 * notification.setPerformative(performative); String
-			 * notificationkey = (String) ((AchieveREResponder)
-			 * parent).RESULT_NOTIFICATION_KEY;
-			 * getDataStore().put(notificationkey, notification);
-			 */
 
 			ACLMessage msgOut = incomingRequest.createReply();
 			msgOut.setPerformative(performative);
 
-			if (finished() || finished) {
-				// String incomingReplykey = (String) this.REPLY_KEY;
-				// ACLMessage incomingReply = (ACLMessage)
-				// getDataStore().get(incomingReplykey);
+			if (finished) {
 
 				System.out
 						.println("Agent "
@@ -359,7 +325,7 @@ public abstract class Agent_OptionsManager extends Agent {
 		} // end storeNotification
 
 		ACLMessage newMessage(ACLMessage _result) {
-			ACLMessage msg;
+			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
 			if (_result != null) {
 				if (_result.getPerformative() != ACLMessage.FAILURE) {
 					ContentElement content;
@@ -388,67 +354,115 @@ public abstract class Agent_OptionsManager extends Agent {
 			}
 			// System.out.println(getLocalName()+": error_rate "+error_rate+" maximum tries "+maximum_tries);
 
-			if (!(finished || finished())) {
 
-				if (Options != null) {
-					generateNewOptions(evaluation);
+			List mutableOptions = getMutableOptions(Options);
+			List nextOptions = null;
+			
+			if (Options != null){ 
+				if (!mutableOptions.isEmpty()) {
+					ACLMessage request = new ACLMessage(ACLMessage.REQUEST);					
+					request.addReceiver(new AID(search_agent_name, AID.ISLOCALNAME));
+					request.setLanguage(codec.getName());
+					request.setOntology(ontology.getName());
+					request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+					
+					GetNextParameters gp = new GetNextParameters();
+					gp.setError_rate(error_rate);
+					gp.setEvaluation(evaluation);
+					gp.setMaximum_tries(maximum_tries);
+					gp.setOptions(getMutableOptions(Options));  
+										
+					Action a = new Action();
+					a.setAction(gp);
+					a.setActor(myAgent.getAID());						
+					try {
+						getContentManager().fillContent(request, a);
+						ACLMessage msg_new_options = FIPAService.doFipaRequestClient(myAgent, request);
+						
+						ContentElement content = getContentManager().extractContent(msg_new_options);
+						if (content instanceof Result) {
+							Result result = (Result) content;
+	
+							if (result.getValue() instanceof List) {
+								List receivedOptions = (List)result.getValue();
+								if (receivedOptions.isEmpty()){
+									finished = true;
+								}
+								else{
+									nextOptions = addMutableOptions(receivedOptions);
+								}
+							}
+						}
+						
+					} catch (CodecException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (OntologyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (FIPAException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}																	
 				}
-				Agent.setOptions(Options);
-				System.out.println(getLocalName() + ": new options for agent "
-						+ receiver + " are " + Agent.optionsToString());
-
-				msg = new ACLMessage(ACLMessage.REQUEST);
-				msg.setLanguage(codec.getName());
-				msg.setOntology(ontology.getName());
-				msg.addReceiver(new AID(receiver, AID.ISLOCALNAME));
-				msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-				// We want to receive a reply in 30 secs
-				msg.setReplyByDate(new Date(
-								System.currentTimeMillis() + 30000));
-
-				Execute execute = new Execute();
-
-				Task task = new Task();
-				String id = computation_id + "_" + task_i;
-				task_i++;
-				task.setId(id);
-				task.setComputation_id(computation_id); // TODO vzit z
-														// receivedComputation
-				task.setProblem_id(problem_id);
-				task.setGet_results(receivedComputation.getGet_results());
-				task.setGui_agent(receivedComputation.getGui_agent());
-				// task.setOptions(opt);
-
-				// Data data = new Data();
-				// data.setTrain_file_name(trainFileName);
-				// data.setTest_file_name(testFileName);
-
-				// task.setData(data);
-				task.setData(receivedComputation.getData());
-				task.setAgent(Agent);
-				task.setStart(start);
-
-				execute.setTask(task);
-
-				Action a = new Action();
-				a.setAction(execute);
-				a.setActor(myAgent.getAID());
-
-				try {
-					getContentManager().fillContent(msg, a);
-				} catch (CodecException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (OntologyException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				else{
+					nextOptions = Options;
 				}
-
-				if (Options == null || noMutableOptions()) {
-					finished = true;
+			
+				if (!finished){
+					// fill in the message content
+					Agent.setOptions(nextOptions);
+					System.out.println(getLocalName() + ": new options for agent "
+							+ receiver + " are " + Agent.optionsToString());
+	
+					msg = new ACLMessage(ACLMessage.REQUEST);
+					msg.setLanguage(codec.getName());
+					msg.setOntology(ontology.getName());
+					msg.addReceiver(new AID(receiver, AID.ISLOCALNAME));
+					msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+					// We want to receive a reply in 30 secs
+					msg.setReplyByDate(new Date(
+									System.currentTimeMillis() + 30000));
+	
+					Execute execute = new Execute();
+	
+					Task task = new Task();
+					String id = computation_id + "_" + task_i;
+					task_i++;
+					task.setId(id);
+					task.setComputation_id(computation_id); // TODO vzit z
+															// receivedComputation
+					task.setProblem_id(problem_id);
+					task.setGet_results(receivedComputation.getGet_results());
+					task.setSave_results(receivedComputation.getSave_results());
+					task.setGui_agent(receivedComputation.getGui_agent());
+	
+					task.setData(receivedComputation.getData());
+					task.setAgent(Agent);
+					task.setStart(start);
+	
+					execute.setTask(task);
+	
+					Action ac = new Action();
+					ac.setAction(execute);
+					ac.setActor(myAgent.getAID());
+	
+					try {
+						getContentManager().fillContent(msg, ac);
+					} catch (CodecException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (OntologyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+			}
+			else{ // Options == null					
+				finished = true;
+			}
 
-			} else {
+			if (finished == true){
 				msg = new ACLMessage(ACLMessage.CANCEL);
 			}
 
@@ -512,14 +526,51 @@ public abstract class Agent_OptionsManager extends Agent {
 
 	@Override
 	protected void setup() {
-
 		System.out.println(getLocalName() + " is alive...");
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
 		registerWithDF();
+		
+		// get object type from Option manager arguments
+		Object[] args = getArguments();
+		String search_agent_type = null;
+		if (args != null && args.length == 1) {
+			search_agent_type = (String)args[0]; 
+		}
+		else {
+			System.err.print("Search agent type has not been specified.");
+			return;
+		}
 
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+		CreateAgent ca = new CreateAgent();
+		ca.setType(search_agent_type);
+
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		ACLMessage msg_name = null;
+		try {
+			getContentManager().fillContent(msg_ca, a);	
+			msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		search_agent_name = msg_name.getContent();
+		
 		MessageTemplate template_inform = MessageTemplate.and(MessageTemplate
 				.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
 				MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
@@ -554,17 +605,6 @@ public abstract class Agent_OptionsManager extends Agent {
 
 	} // end setup
 
-	private boolean noMutableOptions() {
-		Iterator itr = Options.iterator();
-		while (itr.hasNext()) {
-			Option next_option = (Option) itr.next();
-			if (next_option.getMutable()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private String getImmutableOptions() {
 		String str = "";
 		Iterator itr = Options.iterator();
@@ -582,5 +622,47 @@ public abstract class Agent_OptionsManager extends Agent {
 		}
 		return str;
 	}
+	
+	private List getMutableOptions(List Options){
+		List mutable = new ArrayList();
+		Iterator itr = Options.iterator();
+		while (itr.hasNext()) {
+			Option o = (Option) itr.next();
+			if (o.getMutable()){				
+				mutable.add(o);
+			}
+		}
+		return mutable;
+	}
+	
+	private List addMutableOptions(List newOptions){
+		// copy Options
+		List _Options = new ArrayList();
+		Iterator itr = Options.iterator();
+		while (itr.hasNext()) {
+			Option opt = (Option) itr.next();
+			_Options.add(opt);		
+		}
+		
+		itr = _Options.iterator();
+		while (itr.hasNext()) {
+			Option opt = (Option) itr.next();
+			
+			Iterator itr_new = newOptions.iterator();
+			while (itr_new.hasNext()) {
+				Option opt_new = (Option) itr_new.next();			
+				if (opt.getName().equals(opt_new.getName())){				
+					opt.setValue(opt_new.getValue());					
+				}
+			}
+		}
+		return _Options;
+	}
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }    
 
 }

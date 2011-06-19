@@ -18,10 +18,12 @@ import jade.util.leap.List;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +93,18 @@ public class Agent_DataManager extends Agent {
 
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
+        
+        try {
+    		loadMetadataFromFile("metadata");
+    	} catch (IOException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	} catch (SQLException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}	
 
+        
         LinkedList<String> tableNames = new LinkedList<String>();
         LinkedList<String> triggerNames = new LinkedList<String>();
         try {
@@ -154,7 +167,7 @@ public class Agent_DataManager extends Agent {
             log.fatal("Error creating table METADATA: " + e.getMessage());
             e.printStackTrace();
         }
-
+    
         try {
             if (!tableNames.contains("RESULTS")) {
                 log.info("Creating table RESULTS");
@@ -232,7 +245,7 @@ public class Agent_DataManager extends Agent {
                         ImportFile im = (ImportFile) a.getAction();
 
                         String pathPrefix = System.getProperty("user.dir") + System.getProperty("file.separator") + "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp" + System.getProperty("file.separator");
-
+                        
                         if (im.isTempFile()) {
 
                             FileWriter fw = new FileWriter(pathPrefix + im.getExternalFilename());
@@ -256,6 +269,8 @@ public class Agent_DataManager extends Agent {
 
                             String internalFilename = md5(path);
 
+                            emptyMetadataToDB(internalFilename, im.getExternalFilename());
+                            
                             File f = new File(path);
 
                             Statement stmt = db.createStatement();
@@ -275,11 +290,12 @@ public class Agent_DataManager extends Agent {
                             } else {
 
                                 stmt = db.createStatement();
-
-                                log.info("Executing query: " + query);
+                              
                                 query = "INSERT into fileMapping (userId, externalFilename, internalFilename) VALUES (" + im.getUserID() + ",\'" + im.getExternalFilename() + "\',\'" + internalFilename + "\')";
-
+                                log.info("Executing query: " + query);
+                                
                                 stmt.executeUpdate(query);
+                                
                                 stmt.close();
 
                                 // move the file to db\files directory
@@ -287,7 +303,7 @@ public class Agent_DataManager extends Agent {
                                 move(f, new File(newName));
 
                             }
-
+                                                        
                             ACLMessage reply = request.createReply();
                             reply.setPerformative(ACLMessage.INFORM);
 
@@ -300,6 +316,8 @@ public class Agent_DataManager extends Agent {
                             String fileContent = im.getFileContent();
                             String fileName = im.getExternalFilename();
                             String internalFilename = DigestUtils.md5Hex(fileContent);
+                            
+                            emptyMetadataToDB(internalFilename, fileName);
 
                             Statement stmt = db.createStatement();
                             String query = "SELECT COUNT(*) AS num FROM fileMapping WHERE internalFilename = \'" + internalFilename + "\'";
@@ -386,11 +404,11 @@ public class Agent_DataManager extends Agent {
 
                     }
                     if (a.getAction() instanceof SaveResults) {
+                        SaveResults sr = (SaveResults) a.getAction();
+                        Task res = sr.getTask();
 
-                        if (!(new File("studentMode").exists())) {
-
-                            SaveResults sr = (SaveResults) a.getAction();
-                            Task res = sr.getTask();
+                        if (!(new File("studentMode").exists()) 
+                        		&& res.getSave_results() ) {
 
                             Statement stmt = db.createStatement();
 
@@ -415,7 +433,9 @@ public class Agent_DataManager extends Agent {
 
                                                             query += ",";
                                                             query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
-                                                            query += "\'" + currentTimestamp + "\',";
+                                                            query += "\'" + java.sql.Timestamp.valueOf(res.getFinish()) + "\',";
+                                                            
+                                                            // query += "\'" + currentTimestamp + "\',";
                                                             query += "\'" + res.getResult().getDuration() + "\',";
 
                                                             query += "\'" + res.getResult().getObject_filename() + "\'";
@@ -752,6 +772,31 @@ public class Agent_DataManager extends Agent {
         return md5;
     }
 
+	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{
+		String query = "";
+		
+		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
+
+		// read first line
+		String line = bufRdr.readLine();
+		String captions[] = line.split(";");
+				
+		while((line = bufRdr.readLine()) != null){
+			String values[] = line.split(";");
+			 query += "UPDATE metadata SET ";
+			 for (int i=0; i<captions.length-2; i++) {
+				 query += captions[i]+"='"+values[i]+"', ";
+			 }
+			 query += captions[captions.length-2]+"=\'"+values[captions.length-2]+"\' ";
+			 query += "WHERE externalFilename=\'"+values[captions.length-1]+"\'; ";			 
+		}
+
+		Statement stmt = db.createStatement();
+		log.info("Executing query: " + query);
+		stmt.executeUpdate(query);
+		stmt.close();
+	}
+    
     // Move file (src) to File/directory dest.
     public static synchronized void move(File src, File dest)
             throws FileNotFoundException, IOException {
@@ -774,4 +819,35 @@ public class Agent_DataManager extends Agent {
         in.close();
         out.close();
     }
+    
+    private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException{ 
+
+	    Statement stmt = db.createStatement();
+	    
+	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
+	    String query1 = "SELECT COUNT(*) AS number FROM fileMapping WHERE internalFilename = \'" + internalFilename + "\'";
+	    
+	    log.info("Executing query " + query);
+	    log.info("Executing query " + query1);
+	    
+	    ResultSet rs = stmt.executeQuery(query);
+	    ResultSet rs1 = stmt.executeQuery(query1);
+		
+	    rs.next();
+	    rs1.next();
+	    int isInMetadata = rs.getInt("number");
+	    int isInFileMapping = rs1.getInt("number");
+	
+	    if (isInMetadata == 0 && isInFileMapping == 1) {
+	        log.info("Executing query: " + query);
+	        query = "INSERT into metadata (externalFilename, internalFilename, defaultTask, " +
+	        		"attributeType, numberOfInstances, numberOfAttributes, missingValues)" +
+	        		"VALUES (\'" + externalFilename + "\',\'" + internalFilename + "\', null, " +
+	        				"null, 0, 0, false)";
+	        stmt.executeUpdate(query);       
+	    }	        
+        stmt.close();
+
+	}
+    
 }

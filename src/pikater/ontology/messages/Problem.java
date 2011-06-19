@@ -19,6 +19,7 @@ public class Problem implements Concept {
 	private String _start;
 	private String _get_results; // after_each_computation, after_each_task
 	private String _gui_agent;
+	private boolean _save_results;
 
 	public void setAgents(List agents) {
 		_agents = agents;
@@ -98,5 +99,13 @@ public class Problem implements Concept {
 
 	public String getGui_agent() {
 		return _gui_agent;
+	}
+
+	public void setSave_results(boolean _save_results) {
+		this._save_results = _save_results;
+	}
+
+	public boolean getSave_results() {
+		return _save_results;
 	}
 }

@@ -168,7 +168,12 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 	@Override
 	protected void allOptionsReceived(int problem_id) {
-		sendProblem(problem_id);
+		try {
+			sendProblem(problem_id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -299,7 +304,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
     @Override
     protected void displayFileImportProgress(int completed, int all) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
