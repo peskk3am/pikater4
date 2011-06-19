@@ -11,7 +11,7 @@ import java.util.Vector;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
 
-public class Agent_ChooseXValues extends Agent_OptionsManagerOld {
+public class Agent_ChooseXValues extends Agent_Search {
 	/**
 	 * 
 	 */
@@ -92,10 +92,10 @@ public class Agent_ChooseXValues extends Agent_OptionsManagerOld {
 	}
 
 	@Override
-	protected void generateNewOptions(Evaluation result) {
+	protected void generateNewOptions(List Options) {
 		if (n == Integer.MAX_VALUE) {
 			// generate the options_vector when called for the first time
-			generateOptions_vector();
+			generateOptions_vector(Options);
 		}
 		if (n == 0) {
 			return;
@@ -145,7 +145,7 @@ public class Agent_ChooseXValues extends Agent_OptionsManagerOld {
 		return "";
 	}
 
-	private void generateOptions_vector() {
+	private void generateOptions_vector(List Options) {
 		Vector<String[]> possible_options = new Vector<String[]>();
 
 		Iterator itr = Options.iterator();

@@ -1,8 +1,8 @@
 <experiments>
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
-	    <method name="Random" maximum_tries="5" error_rate="0.1" />
+<!--	    <method name="Random" maximum_tries="5" error_rate="0.1" /> -->
 
-<!--    <method name="ChooseXValues" number_of_values_to_try="5" /> -->
+	    <method name="ChooseXValues" number_of_values_to_try="5" />
 
 <!--
  		<dataset train="trains.arff" test="trains.arff" />
