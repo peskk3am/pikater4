@@ -89,7 +89,12 @@ public class Agent_GUI_Java extends Agent_GUI {
 
     @Override
     protected void allOptionsReceived(int problemId) {
-        sendProblem(problemId);
+        try {
+			sendProblem(problemId);
+		} catch (Exception e) {
+			System.err.println("Problem hasn't been specified correctly.");
+			e.printStackTrace();
+		}
         myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("STARTING_EXPERIMENT") + (problemId + 1));
     }
 
@@ -507,19 +512,23 @@ public class Agent_GUI_Java extends Agent_GUI {
                 ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(2);
                 int tasks = (Integer)ev.getParameter(3);
             
-                int problemID = createNewProblem("10000", "after_each_task");
+                int problemID = createNewProblem("10000", "after_each_task", "no");
+                // createNewProblem (
+                // 		timeout,
+                //		get_results - "after_each_task", "after_each_computation",
+                //		save_results - "yes", "no")
 
                 experimentTasks.put(problemID, tasks);
                 finishedTasks.put(problemID, 0);
 
                 if (optionManager.get(0).equals("Random")) {
                     addMethodToProblem(problemID, optionManager.get(0).toString(),
-                            optionManager.get(1).toString(), optionManager.get(2).toString());
+                            optionManager.get(1).toString(), optionManager.get(2).toString(), null);
                 }
 
                 if (optionManager.get(0).equals("ChooseXValues")) {
-                    addMethodToProblem(problemID, optionManager.get(0).toString(), null, null);
-                    setDefault_number_of_values_to_try((Integer)optionManager.get(1));
+                    addMethodToProblem(problemID, optionManager.get(0).toString(), null, null, optionManager.get(1).toString());
+                    // setDefault_number_of_values_to_try((Integer)optionManager.get(1));
                 }
 
                 for (int i = 0; i < files.size(); i++) {
