@@ -1,9 +1,0 @@
-<experiments>
-    <experiment timeout="10000">
-        <method name="ChooseXValues" />  
-        
-        <dataset train="iris.arff" test="iris.arff" output="predictions"/>
-        
-    </experiment>
-       
-</experiments>
