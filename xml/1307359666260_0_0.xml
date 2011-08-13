@@ -1,0 +1,90 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="1" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16369710862636566" />
+      <metric kappa_statistic="0.4346904456615448" />
+      <metric mean_absolute_error="0.05456570163369179" />
+      <metric root_mean_squared_error="0.23359303176403046" />
+      <metric relative_absolute_error="40.62809371948242" />
+      <metric root_relative_squared_error="90.46348571777344" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16369710862636566" />
+      <metric kappa_statistic="0.4346904456615448" />
+      <metric mean_absolute_error="0.05456570163369179" />
+      <metric root_mean_squared_error="0.23359303176403046" />
+      <metric relative_absolute_error="40.62809371948242" />
+      <metric root_relative_squared_error="90.46348571777344" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="7" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16369710862636566" />
+      <metric kappa_statistic="0.4346904456615448" />
+      <metric mean_absolute_error="0.05456570163369179" />
+      <metric root_mean_squared_error="0.23359303176403046" />
+      <metric relative_absolute_error="40.62809371948242" />
+      <metric root_relative_squared_error="90.46348571777344" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16369710862636566" />
+      <metric kappa_statistic="0.4346904456615448" />
+      <metric mean_absolute_error="0.05456570163369179" />
+      <metric root_mean_squared_error="0.23359303176403046" />
+      <metric relative_absolute_error="40.62809371948242" />
+      <metric root_relative_squared_error="90.46348571777344" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="13" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16369710862636566" />
+      <metric kappa_statistic="0.4346904456615448" />
+      <metric mean_absolute_error="0.05456570163369179" />
+      <metric root_mean_squared_error="0.23359303176403046" />
+      <metric relative_absolute_error="40.62809371948242" />
+      <metric root_relative_squared_error="90.46348571777344" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.16369710862636566" />
+    <metric average_kappa_statistic="0.4346904158592224" />
+    <metric average_mean_absolute_error="0.054565705358982086" />
+    <metric average_root_mean_squared_error="0.23359303176403046" />
+    <metric average_relative_absolute_error="40.62809371948242" />
+    <metric average_root_relative_squared_error="90.46348571777344" />
+  </statistics>
+</result>

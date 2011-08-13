@@ -1,0 +1,550 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="0" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="1" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="True" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-10" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="2.5000074E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="5.0000046E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="7.5000025E-5" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="LinearRegression0" libname="weka">
+        <parameter name="S" value="2" />
+        <parameter name="C" value="False" />
+        <parameter name="R" value="1.0E-4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="2.147483648E9" />
+    <metric average_kappa_statistic="2.147483648E9" />
+    <metric average_mean_absolute_error="2.147483648E9" />
+    <metric average_root_mean_squared_error="2.147483648E9" />
+    <metric average_relative_absolute_error="2.147483648E9" />
+    <metric average_root_relative_squared_error="2.147483648E9" />
+  </statistics>
+</result>

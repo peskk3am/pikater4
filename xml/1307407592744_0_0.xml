@@ -1,0 +1,90 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="1" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="4" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="7" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="10" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="13" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.0" />
+    <metric average_kappa_statistic="1.0" />
+    <metric average_mean_absolute_error="0.0" />
+    <metric average_root_mean_squared_error="0.0" />
+    <metric average_relative_absolute_error="0.0" />
+    <metric average_root_relative_squared_error="0.0" />
+  </statistics>
+</result>

@@ -1,0 +1,204 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="D" value="?" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="D" value="?" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05293276160955429" />
+      <metric kappa_statistic="0.8860695958137512" />
+      <metric mean_absolute_error="0.05350422114133835" />
+      <metric root_mean_squared_error="0.22775529325008392" />
+      <metric relative_absolute_error="11.542278289794922" />
+      <metric root_relative_squared_error="47.313377380371094" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="D" value="True" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="D" value="False" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+        <parameter name="K" value="True" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05293276160955429" />
+      <metric kappa_statistic="0.8860695958137512" />
+      <metric mean_absolute_error="0.05350422114133835" />
+      <metric root_mean_squared_error="0.22775529325008392" />
+      <metric relative_absolute_error="11.542278289794922" />
+      <metric root_relative_squared_error="47.313377380371094" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05293276160955429" />
+      <metric kappa_statistic="0.8860695958137512" />
+      <metric mean_absolute_error="0.05350422114133835" />
+      <metric root_mean_squared_error="0.22775529325008392" />
+      <metric relative_absolute_error="11.542278289794922" />
+      <metric root_relative_squared_error="47.313377380371094" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes12" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+        <parameter name="K" value="False" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05293276160955429" />
+      <metric kappa_statistic="0.8860695958137512" />
+      <metric mean_absolute_error="0.05350422114133835" />
+      <metric root_mean_squared_error="0.22775529325008392" />
+      <metric relative_absolute_error="11.542278289794922" />
+      <metric root_relative_squared_error="47.313377380371094" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="1.073741824E9" />
+    <metric average_kappa_statistic="1.073741824E9" />
+    <metric average_mean_absolute_error="1.073741824E9" />
+    <metric average_root_mean_squared_error="1.073741824E9" />
+    <metric average_relative_absolute_error="1.073741824E9" />
+    <metric average_root_relative_squared_error="1.073741824E9" />
+  </statistics>
+</result>

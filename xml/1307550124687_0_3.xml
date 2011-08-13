@@ -1,0 +1,78 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes0" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="D" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes0" libname="weka">
+        <parameter name="K" value="True" />
+        <parameter name="D" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07122506946325302" />
+      <metric kappa_statistic="0.8449674248695374" />
+      <metric mean_absolute_error="0.07238340377807617" />
+      <metric root_mean_squared_error="0.2591184079647064" />
+      <metric relative_absolute_error="15.720182418823242" />
+      <metric root_relative_squared_error="54.0167236328125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes0" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="D" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.08262108266353607" />
+      <metric kappa_statistic="0.8176100850105286" />
+      <metric mean_absolute_error="0.08443310111761093" />
+      <metric root_mean_squared_error="0.27932244539260864" />
+      <metric relative_absolute_error="18.337127685546875" />
+      <metric root_relative_squared_error="58.2285270690918" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="NaiveBayes0" libname="weka">
+        <parameter name="K" value="False" />
+        <parameter name="D" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.17094017565250397" />
+      <metric kappa_statistic="0.6447008848190308" />
+      <metric mean_absolute_error="0.166749969124794" />
+      <metric root_mean_squared_error="0.3850443959236145" />
+      <metric relative_absolute_error="36.21465301513672" />
+      <metric root_relative_squared_error="80.26769256591797" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="5.36870912E8" />
+    <metric average_kappa_statistic="5.36870912E8" />
+    <metric average_mean_absolute_error="5.36870912E8" />
+    <metric average_root_mean_squared_error="5.36870912E8" />
+    <metric average_relative_absolute_error="5.36870912E8" />
+    <metric average_root_relative_squared_error="5.36870912E8" />
+  </statistics>
+</result>

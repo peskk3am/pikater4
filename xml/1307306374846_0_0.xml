@@ -1,0 +1,2260 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.18025736510753632" />
+      <metric root_mean_squared_error="0.2722949981689453" />
+      <metric relative_absolute_error="38.82466506958008" />
+      <metric root_relative_squared_error="56.7884521484375" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.17950373888015747" />
+      <metric root_mean_squared_error="0.2661561369895935" />
+      <metric relative_absolute_error="38.66234588623047" />
+      <metric root_relative_squared_error="55.5081672668457" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.18014580011367798" />
+      <metric root_mean_squared_error="0.2630009353160858" />
+      <metric relative_absolute_error="38.80063247680664" />
+      <metric root_relative_squared_error="54.850135803222656" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.17282837629318237" />
+      <metric root_mean_squared_error="0.2598120868206024" />
+      <metric relative_absolute_error="37.22457504272461" />
+      <metric root_relative_squared_error="54.185081481933594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.18239931762218475" />
+      <metric root_mean_squared_error="0.2695492208003998" />
+      <metric relative_absolute_error="39.286006927490234" />
+      <metric root_relative_squared_error="56.2158088684082" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.02646264061331749" />
+      <metric root_mean_squared_error="0.03298784792423248" />
+      <metric relative_absolute_error="5.699645519256592" />
+      <metric root_relative_squared_error="6.879777431488037" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.024836119264364243" />
+      <metric root_mean_squared_error="0.03104664385318756" />
+      <metric relative_absolute_error="5.349318027496338" />
+      <metric root_relative_squared_error="6.4749298095703125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.02150876820087433" />
+      <metric root_mean_squared_error="0.026217922568321228" />
+      <metric relative_absolute_error="4.632657527923584" />
+      <metric root_relative_squared_error="5.467875957489014" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.01750926673412323" />
+      <metric root_mean_squared_error="0.021358150988817215" />
+      <metric relative_absolute_error="3.771226644515991" />
+      <metric root_relative_squared_error="4.454347133636475" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.1276557743549347" />
+      <metric root_mean_squared_error="0.2467319518327713" />
+      <metric relative_absolute_error="27.495088577270508" />
+      <metric root_relative_squared_error="51.457157135009766" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.018085643649101257" />
+      <metric root_mean_squared_error="0.022419104352593422" />
+      <metric relative_absolute_error="3.895369529724121" />
+      <metric root_relative_squared_error="4.675613880157471" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.017073441296815872" />
+      <metric root_mean_squared_error="0.021252566948533058" />
+      <metric relative_absolute_error="3.677356481552124" />
+      <metric root_relative_squared_error="4.432326793670654" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.014755276031792164" />
+      <metric root_mean_squared_error="0.01790088787674904" />
+      <metric relative_absolute_error="3.1780593395233154" />
+      <metric root_relative_squared_error="3.7333178520202637" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.012010871432721615" />
+      <metric root_mean_squared_error="0.014559089206159115" />
+      <metric relative_absolute_error="2.5869569778442383" />
+      <metric root_relative_squared_error="3.0363693237304688" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12474419921636581" />
+      <metric root_mean_squared_error="0.24547603726387024" />
+      <metric relative_absolute_error="26.86798095703125" />
+      <metric root_relative_squared_error="51.195228576660156" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.014558560214936733" />
+      <metric root_mean_squared_error="0.018010931089520454" />
+      <metric relative_absolute_error="3.1356897354125977" />
+      <metric root_relative_squared_error="3.75626802444458" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013763850554823875" />
+      <metric root_mean_squared_error="0.017109965905547142" />
+      <metric relative_absolute_error="2.964521646499634" />
+      <metric root_relative_squared_error="3.5683674812316895" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011883484199643135" />
+      <metric root_mean_squared_error="0.014392286539077759" />
+      <metric relative_absolute_error="2.5595197677612305" />
+      <metric root_relative_squared_error="3.001581907272339" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.009673968888819218" />
+      <metric root_mean_squared_error="0.011694706976413727" />
+      <metric relative_absolute_error="2.0836241245269775" />
+      <metric root_relative_squared_error="2.438988447189331" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12347514182329178" />
+      <metric root_mean_squared_error="0.2450067102909088" />
+      <metric relative_absolute_error="26.594646453857422" />
+      <metric root_relative_squared_error="51.09735107421875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.012503886595368385" />
+      <metric root_mean_squared_error="0.015453474596142769" />
+      <metric relative_absolute_error="2.6931447982788086" />
+      <metric root_relative_squared_error="3.222898006439209" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011828498914837837" />
+      <metric root_mean_squared_error="0.01469489000737667" />
+      <metric relative_absolute_error="2.5476765632629395" />
+      <metric root_relative_squared_error="3.0646913051605225" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.01020592451095581" />
+      <metric root_mean_squared_error="0.012349608354270458" />
+      <metric relative_absolute_error="2.1981992721557617" />
+      <metric root_relative_squared_error="2.575571298599243" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008308523334562778" />
+      <metric root_mean_squared_error="0.010028314776718616" />
+      <metric relative_absolute_error="1.7895281314849854" />
+      <metric root_relative_squared_error="2.091454029083252" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12273097783327103" />
+      <metric root_mean_squared_error="0.24476012587547302" />
+      <metric relative_absolute_error="26.434364318847656" />
+      <metric root_relative_squared_error="51.045921325683594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.198125958442688" />
+      <metric root_mean_squared_error="0.28099697828292847" />
+      <metric relative_absolute_error="42.673282623291016" />
+      <metric root_relative_squared_error="58.60329818725586" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.19959568977355957" />
+      <metric root_mean_squared_error="0.2827407121658325" />
+      <metric relative_absolute_error="42.98984146118164" />
+      <metric root_relative_squared_error="58.966957092285156" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.19942091405391693" />
+      <metric root_mean_squared_error="0.28088900446891785" />
+      <metric relative_absolute_error="42.95219421386719" />
+      <metric root_relative_squared_error="58.580780029296875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.192142516374588" />
+      <metric root_mean_squared_error="0.2774445414543152" />
+      <metric relative_absolute_error="41.384544372558594" />
+      <metric root_relative_squared_error="57.86241912841797" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.20045703649520874" />
+      <metric root_mean_squared_error="0.27788692712783813" />
+      <metric relative_absolute_error="43.17536163330078" />
+      <metric root_relative_squared_error="57.954681396484375" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.029683740809559822" />
+      <metric root_mean_squared_error="0.0370108000934124" />
+      <metric relative_absolute_error="6.393421173095703" />
+      <metric root_relative_squared_error="7.718783855438232" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.027864402160048485" />
+      <metric root_mean_squared_error="0.03487857058644295" />
+      <metric relative_absolute_error="6.001563549041748" />
+      <metric root_relative_squared_error="7.274096488952637" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.02419811300933361" />
+      <metric root_mean_squared_error="0.029568716883659363" />
+      <metric relative_absolute_error="5.2119011878967285" />
+      <metric root_relative_squared_error="6.16670036315918" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.019606616348028183" />
+      <metric root_mean_squared_error="0.023949382826685905" />
+      <metric relative_absolute_error="4.222963333129883" />
+      <metric root_relative_squared_error="4.994760990142822" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12897174060344696" />
+      <metric root_mean_squared_error="0.24725639820098877" />
+      <metric relative_absolute_error="27.77853012084961" />
+      <metric root_relative_squared_error="51.56653594970703" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.020089993253350258" />
+      <metric root_mean_squared_error="0.024890730157494545" />
+      <metric relative_absolute_error="4.327075481414795" />
+      <metric root_relative_squared_error="5.1910834312438965" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.018963966518640518" />
+      <metric root_mean_squared_error="0.02361576072871685" />
+      <metric relative_absolute_error="4.0845465660095215" />
+      <metric root_relative_squared_error="4.925182342529297" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.016412947326898575" />
+      <metric root_mean_squared_error="0.01993827149271965" />
+      <metric relative_absolute_error="3.5350964069366455" />
+      <metric root_relative_squared_error="4.158224105834961" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013320657424628735" />
+      <metric root_mean_squared_error="0.016159381717443466" />
+      <metric relative_absolute_error="2.8690648078918457" />
+      <metric root_relative_squared_error="3.3701181411743164" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12565556168556213" />
+      <metric root_mean_squared_error="0.24576112627983093" />
+      <metric relative_absolute_error="27.064273834228516" />
+      <metric root_relative_squared_error="51.25468826293945" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.016116086393594742" />
+      <metric root_mean_squared_error="0.019923966377973557" />
+      <metric relative_absolute_error="3.4711570739746094" />
+      <metric root_relative_squared_error="4.155241012573242" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.015233322978019714" />
+      <metric root_mean_squared_error="0.01893949694931507" />
+      <metric relative_absolute_error="3.2810235023498535" />
+      <metric root_relative_squared_error="3.949924945831299" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013167171739041805" />
+      <metric root_mean_squared_error="0.01596136949956417" />
+      <metric relative_absolute_error="2.8360061645507812" />
+      <metric root_relative_squared_error="3.3288216590881348" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010693459771573544" />
+      <metric root_mean_squared_error="0.012934214435517788" />
+      <metric relative_absolute_error="2.3032066822052" />
+      <metric root_relative_squared_error="2.6974937915802" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12422064691781998" />
+      <metric root_mean_squared_error="0.24520254135131836" />
+      <metric relative_absolute_error="26.755216598510742" />
+      <metric root_relative_squared_error="51.13819122314453" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013816140592098236" />
+      <metric root_mean_squared_error="0.017062339931726456" />
+      <metric relative_absolute_error="2.9757840633392334" />
+      <metric root_relative_squared_error="3.5584347248077393" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013066655956208706" />
+      <metric root_mean_squared_error="0.016233393922448158" />
+      <metric relative_absolute_error="2.814356565475464" />
+      <metric root_relative_squared_error="3.3855538368225098" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011285517364740372" />
+      <metric root_mean_squared_error="0.013665287755429745" />
+      <metric relative_absolute_error="2.4307267665863037" />
+      <metric root_relative_squared_error="2.8499627113342285" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.009168451651930809" />
+      <metric root_mean_squared_error="0.011070803739130497" />
+      <metric relative_absolute_error="1.9747434854507446" />
+      <metric root_relative_squared_error="2.308870315551758" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.25" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12338229268789291" />
+      <metric root_mean_squared_error="0.24490897357463837" />
+      <metric relative_absolute_error="26.574647903442383" />
+      <metric root_relative_squared_error="51.076969146728516" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.14862202107906342" />
+      <metric root_mean_squared_error="0.25811922550201416" />
+      <metric relative_absolute_error="32.01089859008789" />
+      <metric root_relative_squared_error="53.83203125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.10535810887813568" />
+      <metric root_mean_squared_error="0.14363299310207367" />
+      <metric relative_absolute_error="22.692516326904297" />
+      <metric root_relative_squared_error="29.95536231994629" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.09326962381601334" />
+      <metric root_mean_squared_error="0.12040788680315018" />
+      <metric relative_absolute_error="20.088842391967773" />
+      <metric root_relative_squared_error="25.11165428161621" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.09031450748443604" />
+      <metric root_mean_squared_error="0.11778136342763901" />
+      <metric relative_absolute_error="19.452354431152344" />
+      <metric root_relative_squared_error="24.563880920410156" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.1502968966960907" />
+      <metric root_mean_squared_error="0.25710609555244446" />
+      <metric relative_absolute_error="32.371639251708984" />
+      <metric root_relative_squared_error="53.62073516845703" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.019532302394509315" />
+      <metric root_mean_squared_error="0.024444133043289185" />
+      <metric relative_absolute_error="4.2069573402404785" />
+      <metric root_relative_squared_error="5.0979437828063965" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.01830238476395607" />
+      <metric root_mean_squared_error="0.02284811995923519" />
+      <metric relative_absolute_error="3.942052125930786" />
+      <metric root_relative_squared_error="4.765087604522705" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.015800567343831062" />
+      <metric root_mean_squared_error="0.019201427698135376" />
+      <metric relative_absolute_error="3.4031989574432373" />
+      <metric root_relative_squared_error="4.004551887512207" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013158117420971394" />
+      <metric root_mean_squared_error="0.016033334657549858" />
+      <metric relative_absolute_error="2.8340561389923096" />
+      <metric root_relative_squared_error="3.3438305854797363" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12452948838472366" />
+      <metric root_mean_squared_error="0.24568136036396027" />
+      <metric relative_absolute_error="26.821735382080078" />
+      <metric root_relative_squared_error="51.23805236816406" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013582590967416763" />
+      <metric root_mean_squared_error="0.01691935956478119" />
+      <metric relative_absolute_error="2.9254813194274902" />
+      <metric root_relative_squared_error="3.5286154747009277" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.012833119370043278" />
+      <metric root_mean_squared_error="0.01597628742456436" />
+      <metric relative_absolute_error="2.764056444168091" />
+      <metric root_relative_squared_error="3.33193302154541" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011066514067351818" />
+      <metric root_mean_squared_error="0.01340877078473568" />
+      <metric relative_absolute_error="2.383556842803955" />
+      <metric root_relative_squared_error="2.796464681625366" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.009169032797217369" />
+      <metric root_mean_squared_error="0.011111842468380928" />
+      <metric relative_absolute_error="1.974868655204773" />
+      <metric root_relative_squared_error="2.3174290657043457" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12248577177524567" />
+      <metric root_mean_squared_error="0.2449088990688324" />
+      <metric relative_absolute_error="26.381549835205078" />
+      <metric root_relative_squared_error="51.07695007324219" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011006188578903675" />
+      <metric root_mean_squared_error="0.013683691620826721" />
+      <metric relative_absolute_error="2.3705637454986572" />
+      <metric root_relative_squared_error="2.8538007736206055" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010421453043818474" />
+      <metric root_mean_squared_error="0.012962419539690018" />
+      <metric relative_absolute_error="2.2446205615997314" />
+      <metric root_relative_squared_error="2.703376054763794" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0089807054027915" />
+      <metric root_mean_squared_error="0.010869602672755718" />
+      <metric relative_absolute_error="1.9343057870864868" />
+      <metric root_relative_squared_error="2.266908884048462" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007423573173582554" />
+      <metric root_mean_squared_error="0.008975088596343994" />
+      <metric relative_absolute_error="1.5989234447479248" />
+      <metric root_relative_squared_error="1.8717987537384033" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12158050388097763" />
+      <metric root_mean_squared_error="0.24462038278579712" />
+      <metric relative_absolute_error="26.186569213867188" />
+      <metric root_relative_squared_error="51.01677703857422" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.009487689472734928" />
+      <metric root_mean_squared_error="0.011782932095229626" />
+      <metric relative_absolute_error="2.0435023307800293" />
+      <metric root_relative_squared_error="2.457388162612915" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008991328999400139" />
+      <metric root_mean_squared_error="0.011179005727171898" />
+      <metric relative_absolute_error="1.9365938901901245" />
+      <metric root_relative_squared_error="2.3314363956451416" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007744508795440197" />
+      <metric root_mean_squared_error="0.009368041530251503" />
+      <metric relative_absolute_error="1.6680480241775513" />
+      <metric root_relative_squared_error="1.9537509679794312" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.006392141338437796" />
+      <metric root_mean_squared_error="0.007717373315244913" />
+      <metric relative_absolute_error="1.376768946647644" />
+      <metric root_relative_squared_error="1.609495997428894" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.5" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12104551494121552" />
+      <metric root_mean_squared_error="0.24446898698806763" />
+      <metric relative_absolute_error="26.07134246826172" />
+      <metric root_relative_squared_error="50.985206604003906" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.13628524541854858" />
+      <metric root_mean_squared_error="0.2539879381656647" />
+      <metric relative_absolute_error="29.353744506835938" />
+      <metric root_relative_squared_error="52.970428466796875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.06561987102031708" />
+      <metric root_mean_squared_error="0.0864666998386383" />
+      <metric relative_absolute_error="14.133509635925293" />
+      <metric root_relative_squared_error="18.03305435180664" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.05693379044532776" />
+      <metric root_mean_squared_error="0.07171209901571274" />
+      <metric relative_absolute_error="12.262661933898926" />
+      <metric root_relative_squared_error="14.95590877532959" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.05852729082107544" />
+      <metric root_mean_squared_error="0.07454944401979446" />
+      <metric relative_absolute_error="12.605877876281738" />
+      <metric root_relative_squared_error="15.547652244567871" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.13776884973049164" />
+      <metric root_mean_squared_error="0.252531498670578" />
+      <metric relative_absolute_error="29.673290252685547" />
+      <metric root_relative_squared_error="52.66667938232422" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.015627652406692505" />
+      <metric root_mean_squared_error="0.019744697958230972" />
+      <metric relative_absolute_error="3.3659558296203613" />
+      <metric root_relative_squared_error="4.11785364151001" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.014533238485455513" />
+      <metric root_mean_squared_error="0.018165865913033485" />
+      <metric relative_absolute_error="3.1302361488342285" />
+      <metric root_relative_squared_error="3.7885804176330566" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.012568335048854351" />
+      <metric root_mean_squared_error="0.015277407132089138" />
+      <metric relative_absolute_error="2.7070260047912598" />
+      <metric root_relative_squared_error="3.186178207397461" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.011760557070374489" />
+      <metric root_mean_squared_error="0.014487739652395248" />
+      <metric relative_absolute_error="2.533043146133423" />
+      <metric root_relative_squared_error="3.021489143371582" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12237970530986786" />
+      <metric root_mean_squared_error="0.24516484141349792" />
+      <metric relative_absolute_error="26.358707427978516" />
+      <metric root_relative_squared_error="51.13032913208008" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010896352119743824" />
+      <metric root_mean_squared_error="0.013706826604902744" />
+      <metric relative_absolute_error="2.3469064235687256" />
+      <metric root_relative_squared_error="2.858625888824463" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010293792933225632" />
+      <metric root_mean_squared_error="0.012836035341024399" />
+      <metric relative_absolute_error="2.2171247005462646" />
+      <metric root_relative_squared_error="2.677018165588379" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008887002244591713" />
+      <metric root_mean_squared_error="0.010777139104902744" />
+      <metric relative_absolute_error="1.91412353515625" />
+      <metric root_relative_squared_error="2.2476251125335693" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008214210160076618" />
+      <metric root_mean_squared_error="0.010093617253005505" />
+      <metric relative_absolute_error="1.7692145109176636" />
+      <metric root_relative_squared_error="2.1050734519958496" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12082258611917496" />
+      <metric root_mean_squared_error="0.24463815987110138" />
+      <metric relative_absolute_error="26.023324966430664" />
+      <metric root_relative_squared_error="51.02048873901367" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008842159993946552" />
+      <metric root_mean_squared_error="0.011101552285254002" />
+      <metric relative_absolute_error="1.9044653177261353" />
+      <metric root_relative_squared_error="2.3152832984924316" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008392064832150936" />
+      <metric root_mean_squared_error="0.010456309653818607" />
+      <metric relative_absolute_error="1.8075215816497803" />
+      <metric root_relative_squared_error="2.1807146072387695" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007238534279167652" />
+      <metric root_mean_squared_error="0.008770070970058441" />
+      <metric relative_absolute_error="1.5590689182281494" />
+      <metric root_relative_squared_error="1.8290412425994873" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.006641550920903683" />
+      <metric root_mean_squared_error="0.00814735796302557" />
+      <metric relative_absolute_error="1.430487871170044" />
+      <metric root_relative_squared_error="1.699171543121338" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.12012593448162079" />
+      <metric root_mean_squared_error="0.2444416880607605" />
+      <metric relative_absolute_error="25.87327766418457" />
+      <metric root_relative_squared_error="50.97951126098633" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007629703264683485" />
+      <metric root_mean_squared_error="0.00956801138818264" />
+      <metric relative_absolute_error="1.6433206796646118" />
+      <metric root_relative_squared_error="1.9954557418823242" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007255970034748316" />
+      <metric root_mean_squared_error="0.009037379175424576" />
+      <metric relative_absolute_error="1.5628242492675781" />
+      <metric root_relative_squared_error="1.8847897052764893" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.006254752166569233" />
+      <metric root_mean_squared_error="0.007574448361992836" />
+      <metric relative_absolute_error="1.3471773862838745" />
+      <metric root_relative_squared_error="1.579688310623169" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0057089258916676044" />
+      <metric root_mean_squared_error="0.006993946153670549" />
+      <metric relative_absolute_error="1.2296148538589478" />
+      <metric root_relative_squared_error="1.4586217403411865" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.75" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.11971239000558853" />
+      <metric root_mean_squared_error="0.2443387657403946" />
+      <metric relative_absolute_error="25.78420639038086" />
+      <metric root_relative_squared_error="50.958045959472656" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.13123677670955658" />
+      <metric root_mean_squared_error="0.2522943913936615" />
+      <metric relative_absolute_error="28.266382217407227" />
+      <metric root_relative_squared_error="52.61723327636719" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.05055171251296997" />
+      <metric root_mean_squared_error="0.06615596264600754" />
+      <metric relative_absolute_error="10.8880615234375" />
+      <metric root_relative_squared_error="13.797150611877441" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.044790931046009064" />
+      <metric root_mean_squared_error="0.05586676299571991" />
+      <metric relative_absolute_error="9.647276878356934" />
+      <metric root_relative_squared_error="11.651287078857422" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.04445392265915871" />
+      <metric root_mean_squared_error="0.05580362305045128" />
+      <metric relative_absolute_error="9.574690818786621" />
+      <metric root_relative_squared_error="11.638118743896484" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="100" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.13244418799877167" />
+      <metric root_mean_squared_error="0.25043877959251404" />
+      <metric relative_absolute_error="28.52644157409668" />
+      <metric root_relative_squared_error="52.23023223876953" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.013637691736221313" />
+      <metric root_mean_squared_error="0.017457202076911926" />
+      <metric relative_absolute_error="2.9373490810394287" />
+      <metric root_relative_squared_error="3.640784978866577" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.012383443303406239" />
+      <metric root_mean_squared_error="0.015517340041697025" />
+      <metric relative_absolute_error="2.667203187942505" />
+      <metric root_relative_squared_error="3.2362172603607178" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010813028551638126" />
+      <metric root_mean_squared_error="0.01316054631024599" />
+      <metric relative_absolute_error="2.3289601802825928" />
+      <metric root_relative_squared_error="2.7446963787078857" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.010174254886806011" />
+      <metric root_mean_squared_error="0.012356213293969631" />
+      <metric relative_absolute_error="2.191377878189087" />
+      <metric root_relative_squared_error="2.576948881149292" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="880" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.1209006980061531" />
+      <metric root_mean_squared_error="0.2449219822883606" />
+      <metric relative_absolute_error="26.040149688720703" />
+      <metric root_relative_squared_error="51.07967758178711" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.009398282505571842" />
+      <metric root_mean_squared_error="0.011971257627010345" />
+      <metric relative_absolute_error="2.024245500564575" />
+      <metric root_relative_squared_error="2.49666428565979" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.008818568661808968" />
+      <metric root_mean_squared_error="0.011022301390767097" />
+      <metric relative_absolute_error="1.8993839025497437" />
+      <metric root_relative_squared_error="2.298754930496216" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007668799255043268" />
+      <metric root_mean_squared_error="0.009315007366240025" />
+      <metric relative_absolute_error="1.6517413854599" />
+      <metric root_relative_squared_error="1.942690372467041" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007204421330243349" />
+      <metric root_mean_squared_error="0.008720639161765575" />
+      <metric relative_absolute_error="1.5517215728759766" />
+      <metric root_relative_squared_error="1.8187320232391357" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1660" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.11961200833320618" />
+      <metric root_mean_squared_error="0.24451978504657745" />
+      <metric relative_absolute_error="25.76258659362793" />
+      <metric root_relative_squared_error="50.99580001831055" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007600054144859314" />
+      <metric root_mean_squared_error="0.009661809541285038" />
+      <metric relative_absolute_error="1.636934757232666" />
+      <metric root_relative_squared_error="2.0150177478790283" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.007204961031675339" />
+      <metric root_mean_squared_error="0.008997399359941483" />
+      <metric relative_absolute_error="1.5518378019332886" />
+      <metric root_relative_squared_error="1.8764516115188599" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.006253003142774105" />
+      <metric root_mean_squared_error="0.007588979788124561" />
+      <metric relative_absolute_error="1.346800684928894" />
+      <metric root_relative_squared_error="1.5827189683914185" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.005870007444173098" />
+      <metric root_mean_squared_error="0.007095349952578545" />
+      <metric relative_absolute_error="1.264309287071228" />
+      <metric root_relative_squared_error="1.4797699451446533" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="2440" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.11903195083141327" />
+      <metric root_mean_squared_error="0.24436984956264496" />
+      <metric relative_absolute_error="25.637649536132812" />
+      <metric root_relative_squared_error="50.96452713012695" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.006547261029481888" />
+      <metric root_mean_squared_error="0.00831378810107708" />
+      <metric relative_absolute_error="1.4101792573928833" />
+      <metric root_relative_squared_error="1.7338813543319702" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0062371063977479935" />
+      <metric root_mean_squared_error="0.007785334717482328" />
+      <metric relative_absolute_error="1.3433767557144165" />
+      <metric root_relative_squared_error="1.6236696243286133" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0054061561822891235" />
+      <metric root_mean_squared_error="0.0065581477247178555" />
+      <metric relative_absolute_error="1.1644028425216675" />
+      <metric root_relative_squared_error="1.3677338361740112" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.005072524305433035" />
+      <metric root_mean_squared_error="0.0061264317482709885" />
+      <metric relative_absolute_error="1.0925437211990356" />
+      <metric root_relative_squared_error="1.2776973247528076" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="3220" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="weather.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0714285746216774" />
+      <metric kappa_statistic="0.8510638475418091" />
+      <metric mean_absolute_error="0.11868657916784286" />
+      <metric root_mean_squared_error="0.24429135024547577" />
+      <metric relative_absolute_error="25.563262939453125" />
+      <metric root_relative_squared_error="50.948158264160156" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.020571423694491386" />
+    <metric average_kappa_statistic="0.9571067094802856" />
+    <metric average_mean_absolute_error="0.05412546172738075" />
+    <metric average_root_mean_squared_error="0.08928994834423065" />
+    <metric average_relative_absolute_error="11.657793045043945" />
+    <metric average_root_relative_squared_error="18.621856689453125" />
+  </statistics>
+</result>

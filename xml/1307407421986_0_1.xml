@@ -1,0 +1,370 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.19072164595127106" />
+      <metric kappa_statistic="0.7480431199073792" />
+      <metric mean_absolute_error="0.06423409283161163" />
+      <metric root_mean_squared_error="0.1792123019695282" />
+      <metric relative_absolute_error="33.59858322143555" />
+      <metric root_relative_squared_error="58.130516052246094" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.17525772750377655" />
+      <metric kappa_statistic="0.7692738175392151" />
+      <metric mean_absolute_error="0.06078792363405228" />
+      <metric root_mean_squared_error="0.17433863878250122" />
+      <metric relative_absolute_error="31.796010971069336" />
+      <metric root_relative_squared_error="56.54966354370117" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.27319586277008057" />
+      <metric kappa_statistic="0.6465087532997131" />
+      <metric mean_absolute_error="0.09218891710042953" />
+      <metric root_mean_squared_error="0.21469619870185852" />
+      <metric relative_absolute_error="48.220760345458984" />
+      <metric root_relative_squared_error="69.64031219482422" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.27319586277008057" />
+      <metric kappa_statistic="0.6321945786476135" />
+      <metric mean_absolute_error="0.08991982042789459" />
+      <metric root_mean_squared_error="0.21203751862049103" />
+      <metric relative_absolute_error="47.03387451171875" />
+      <metric root_relative_squared_error="68.77792358398438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3144329786300659" />
+      <metric kappa_statistic="0.5844365358352661" />
+      <metric mean_absolute_error="0.10631218552589417" />
+      <metric root_mean_squared_error="0.23055604100227356" />
+      <metric relative_absolute_error="55.60813903808594" />
+      <metric root_relative_squared_error="74.78472137451172" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.2886597812175751" />
+      <metric kappa_statistic="0.6168306469917297" />
+      <metric mean_absolute_error="0.0952475443482399" />
+      <metric root_mean_squared_error="0.21822871267795563" />
+      <metric relative_absolute_error="49.82061767578125" />
+      <metric root_relative_squared_error="70.78614044189453" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3350515365600586" />
+      <metric kappa_statistic="0.5628510117530823" />
+      <metric mean_absolute_error="0.11449279636144638" />
+      <metric root_mean_squared_error="0.239262193441391" />
+      <metric relative_absolute_error="59.88713073730469" />
+      <metric root_relative_squared_error="77.60870361328125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.30927833914756775" />
+      <metric kappa_statistic="0.5868091583251953" />
+      <metric mean_absolute_error="0.10031645745038986" />
+      <metric root_mean_squared_error="0.22396032512187958" />
+      <metric relative_absolute_error="52.471988677978516" />
+      <metric root_relative_squared_error="72.6452865600586" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.005154639016836882" />
+      <metric kappa_statistic="0.993206799030304" />
+      <metric mean_absolute_error="0.0017182130832225084" />
+      <metric root_mean_squared_error="0.029310518875718117" />
+      <metric relative_absolute_error="0.8987364172935486" />
+      <metric root_relative_squared_error="9.50735855102539" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.2525773048400879" />
+      <metric kappa_statistic="0.65449059009552" />
+      <metric mean_absolute_error="0.09281045198440552" />
+      <metric root_mean_squared_error="0.2154187262058258" />
+      <metric relative_absolute_error="48.545860290527344" />
+      <metric root_relative_squared_error="69.87467193603516" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.24226804077625275" />
+      <metric kappa_statistic="0.6678566336631775" />
+      <metric mean_absolute_error="0.08891653269529343" />
+      <metric root_mean_squared_error="0.2108512967824936" />
+      <metric relative_absolute_error="46.509090423583984" />
+      <metric root_relative_squared_error="68.39315032958984" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.23711340129375458" />
+      <metric kappa_statistic="0.6764556765556335" />
+      <metric mean_absolute_error="0.08866744488477707" />
+      <metric root_mean_squared_error="0.21055574715137482" />
+      <metric relative_absolute_error="46.37880325317383" />
+      <metric root_relative_squared_error="68.29728698730469" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.30927833914756775" />
+      <metric kappa_statistic="0.5853962302207947" />
+      <metric mean_absolute_error="0.11309536546468735" />
+      <metric root_mean_squared_error="0.2377975732088089" />
+      <metric relative_absolute_error="59.15618133544922" />
+      <metric root_relative_squared_error="77.13362884521484" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3505154550075531" />
+      <metric kappa_statistic="0.5257235169410706" />
+      <metric mean_absolute_error="0.12589596211910248" />
+      <metric root_mean_squared_error="0.25089436769485474" />
+      <metric relative_absolute_error="65.85172271728516" />
+      <metric root_relative_squared_error="81.38179779052734" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3350515365600586" />
+      <metric kappa_statistic="0.5567973852157593" />
+      <metric mean_absolute_error="0.11949891597032547" />
+      <metric root_mean_squared_error="0.24443702399730682" />
+      <metric relative_absolute_error="62.505653381347656" />
+      <metric root_relative_squared_error="79.28724670410156" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3505154550075531" />
+      <metric kappa_statistic="0.5257235169410706" />
+      <metric mean_absolute_error="0.12589596211910248" />
+      <metric root_mean_squared_error="0.25089436769485474" />
+      <metric relative_absolute_error="65.85172271728516" />
+      <metric root_relative_squared_error="81.38179779052734" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.36082473397254944" />
+      <metric kappa_statistic="0.5148786902427673" />
+      <metric mean_absolute_error="0.13005487620830536" />
+      <metric root_mean_squared_error="0.25500479340553284" />
+      <metric relative_absolute_error="68.027099609375" />
+      <metric root_relative_squared_error="82.71507263183594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="flags.arff" test="flags.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3505154550075531" />
+      <metric kappa_statistic="0.5257235169410706" />
+      <metric mean_absolute_error="0.12589596211910248" />
+      <metric root_mean_squared_error="0.25089436769485474" />
+      <metric relative_absolute_error="65.85172271728516" />
+      <metric root_relative_squared_error="81.38179779052734" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.24768038094043732" />
+    <metric average_kappa_statistic="0.6686598658561707" />
+    <metric average_mean_absolute_error="0.08679747581481934" />
+    <metric average_root_mean_squared_error="0.19241751730442047" />
+    <metric average_relative_absolute_error="45.400691986083984" />
+    <metric average_root_relative_squared_error="62.413856506347656" />
+  </statistics>
+</result>

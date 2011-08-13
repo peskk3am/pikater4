@@ -1,0 +1,61 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="2,2" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.013333333656191826" />
+      <metric kappa_statistic="0.9800000190734863" />
+      <metric mean_absolute_error="0.027729671448469162" />
+      <metric root_mean_squared_error="0.08928970992565155" />
+      <metric relative_absolute_error="6.239176273345947" />
+      <metric root_relative_squared_error="18.941207885742188" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="11,11" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.013333333656191826" />
+      <metric kappa_statistic="0.9800000190734863" />
+      <metric mean_absolute_error="0.02195264957845211" />
+      <metric root_mean_squared_error="0.08969954401254654" />
+      <metric relative_absolute_error="4.9393463134765625" />
+      <metric root_relative_squared_error="19.028146743774414" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="20,20" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.013333333656191826" />
+      <metric kappa_statistic="0.9800000190734863" />
+      <metric mean_absolute_error="0.022883452475070953" />
+      <metric root_mean_squared_error="0.09011189639568329" />
+      <metric relative_absolute_error="5.148777008056641" />
+      <metric root_relative_squared_error="19.115619659423828" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.013333332724869251" />
+    <metric average_kappa_statistic="0.9800000190734863" />
+    <metric average_mean_absolute_error="0.024188591167330742" />
+    <metric average_root_mean_squared_error="0.0897003784775734" />
+    <metric average_relative_absolute_error="5.442432880401611" />
+    <metric average_root_relative_squared_error="19.028324127197266" />
+  </statistics>
+</result>

@@ -1,0 +1,435 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.46164289116859436" />
+      <metric kappa_statistic="0.27426332235336304" />
+      <metric mean_absolute_error="0.3793405294418335" />
+      <metric root_mean_squared_error="0.43543529510498047" />
+      <metric relative_absolute_error="88.0492935180664" />
+      <metric root_relative_squared_error="93.82117462158203" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.46164289116859436" />
+      <metric kappa_statistic="0.27426332235336304" />
+      <metric mean_absolute_error="0.3793405294418335" />
+      <metric root_mean_squared_error="0.43543529510498047" />
+      <metric relative_absolute_error="88.0492935180664" />
+      <metric root_relative_squared_error="93.82117462158203" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.46164289116859436" />
+      <metric kappa_statistic="0.27426332235336304" />
+      <metric mean_absolute_error="0.3793405294418335" />
+      <metric root_mean_squared_error="0.43543529510498047" />
+      <metric relative_absolute_error="88.0492935180664" />
+      <metric root_relative_squared_error="93.82117462158203" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.45824846625328064" />
+      <metric kappa_statistic="0.27993977069854736" />
+      <metric mean_absolute_error="0.37978413701057434" />
+      <metric root_mean_squared_error="0.43570536375045776" />
+      <metric relative_absolute_error="88.15225982666016" />
+      <metric root_relative_squared_error="93.8793716430664" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4691106677055359" />
+      <metric kappa_statistic="0.2636374831199646" />
+      <metric mean_absolute_error="0.38074108958244324" />
+      <metric root_mean_squared_error="0.4362557530403137" />
+      <metric relative_absolute_error="88.37437438964844" />
+      <metric root_relative_squared_error="93.99795532226562" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.44263407588005066" />
+      <metric kappa_statistic="0.30792146921157837" />
+      <metric mean_absolute_error="0.3659229874610901" />
+      <metric root_mean_squared_error="0.4280717074871063" />
+      <metric relative_absolute_error="84.93492126464844" />
+      <metric root_relative_squared_error="92.23458099365234" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.44263407588005066" />
+      <metric kappa_statistic="0.30792146921157837" />
+      <metric mean_absolute_error="0.3659229874610901" />
+      <metric root_mean_squared_error="0.4280717074871063" />
+      <metric relative_absolute_error="84.93492126464844" />
+      <metric root_relative_squared_error="92.23458099365234" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.44263407588005066" />
+      <metric kappa_statistic="0.30792146921157837" />
+      <metric mean_absolute_error="0.3659229874610901" />
+      <metric root_mean_squared_error="0.4280717074871063" />
+      <metric relative_absolute_error="84.93492126464844" />
+      <metric root_relative_squared_error="92.23458099365234" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.44195517897605896" />
+      <metric kappa_statistic="0.3093363046646118" />
+      <metric mean_absolute_error="0.36652910709381104" />
+      <metric root_mean_squared_error="0.42844247817993164" />
+      <metric relative_absolute_error="85.07561492919922" />
+      <metric root_relative_squared_error="92.31446838378906" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.46367955207824707" />
+      <metric kappa_statistic="0.2760050892829895" />
+      <metric mean_absolute_error="0.3736895024776459" />
+      <metric root_mean_squared_error="0.43234920501708984" />
+      <metric relative_absolute_error="86.73762512207031" />
+      <metric root_relative_squared_error="93.15623474121094" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4473862946033478" />
+      <metric kappa_statistic="0.30236634612083435" />
+      <metric mean_absolute_error="0.367700457572937" />
+      <metric root_mean_squared_error="0.42926886677742004" />
+      <metric relative_absolute_error="85.34749603271484" />
+      <metric root_relative_squared_error="92.49252319335938" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4473862946033478" />
+      <metric kappa_statistic="0.30236634612083435" />
+      <metric mean_absolute_error="0.367700457572937" />
+      <metric root_mean_squared_error="0.42926886677742004" />
+      <metric relative_absolute_error="85.34749603271484" />
+      <metric root_relative_squared_error="92.49252319335938" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4467073976993561" />
+      <metric kappa_statistic="0.30226561427116394" />
+      <metric mean_absolute_error="0.3686860203742981" />
+      <metric root_mean_squared_error="0.42973825335502625" />
+      <metric relative_absolute_error="85.57625579833984" />
+      <metric root_relative_squared_error="92.59366607666016" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4487440586090088" />
+      <metric kappa_statistic="0.29986265301704407" />
+      <metric mean_absolute_error="0.3710632622241974" />
+      <metric root_mean_squared_error="0.4311729967594147" />
+      <metric relative_absolute_error="86.12803649902344" />
+      <metric root_relative_squared_error="92.90280151367188" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.45621180534362793" />
+      <metric kappa_statistic="0.28897011280059814" />
+      <metric mean_absolute_error="0.37810465693473816" />
+      <metric root_mean_squared_error="0.435116708278656" />
+      <metric relative_absolute_error="87.76243591308594" />
+      <metric root_relative_squared_error="93.75253295898438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4351663291454315" />
+      <metric kappa_statistic="0.3186332881450653" />
+      <metric mean_absolute_error="0.3619956374168396" />
+      <metric root_mean_squared_error="0.4256509244441986" />
+      <metric relative_absolute_error="84.02334594726562" />
+      <metric root_relative_squared_error="91.71298217773438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4351663291454315" />
+      <metric kappa_statistic="0.3186332881450653" />
+      <metric mean_absolute_error="0.3619956374168396" />
+      <metric root_mean_squared_error="0.4256509244441986" />
+      <metric relative_absolute_error="84.02334594726562" />
+      <metric root_relative_squared_error="91.71298217773438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4338085651397705" />
+      <metric kappa_statistic="0.32264700531959534" />
+      <metric mean_absolute_error="0.36754241585731506" />
+      <metric root_mean_squared_error="0.42905256152153015" />
+      <metric relative_absolute_error="85.3108139038086" />
+      <metric root_relative_squared_error="92.4459228515625" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4331296682357788" />
+      <metric kappa_statistic="0.32388025522232056" />
+      <metric mean_absolute_error="0.36910945177078247" />
+      <metric root_mean_squared_error="0.4298551380634308" />
+      <metric relative_absolute_error="85.6745376586914" />
+      <metric root_relative_squared_error="92.61885070800781" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4480651617050171" />
+      <metric kappa_statistic="0.30027177929878235" />
+      <metric mean_absolute_error="0.3766399919986725" />
+      <metric root_mean_squared_error="0.4341605305671692" />
+      <metric relative_absolute_error="87.4224624633789" />
+      <metric root_relative_squared_error="93.54651641845703" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4338085651397705" />
+      <metric kappa_statistic="0.3236204981803894" />
+      <metric mean_absolute_error="0.3628524839878082" />
+      <metric root_mean_squared_error="0.42631298303604126" />
+      <metric relative_absolute_error="84.22222900390625" />
+      <metric root_relative_squared_error="91.85563659667969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4338085651397705" />
+      <metric kappa_statistic="0.3236204981803894" />
+      <metric mean_absolute_error="0.3628524839878082" />
+      <metric root_mean_squared_error="0.42631298303604126" />
+      <metric relative_absolute_error="84.22222900390625" />
+      <metric root_relative_squared_error="91.85563659667969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.44534963369369507" />
+      <metric kappa_statistic="0.3047417402267456" />
+      <metric mean_absolute_error="0.36652839183807373" />
+      <metric root_mean_squared_error="0.42847612500190735" />
+      <metric relative_absolute_error="85.07544708251953" />
+      <metric root_relative_squared_error="92.32171630859375" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.4514596164226532" />
+      <metric kappa_statistic="0.2931596636772156" />
+      <metric mean_absolute_error="0.3676474392414093" />
+      <metric root_mean_squared_error="0.42904552817344666" />
+      <metric relative_absolute_error="85.33518981933594" />
+      <metric root_relative_squared_error="92.44440460205078" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.46503734588623047" />
+      <metric kappa_statistic="0.2712829113006592" />
+      <metric mean_absolute_error="0.3736123740673065" />
+      <metric root_mean_squared_error="0.4325253665447235" />
+      <metric relative_absolute_error="86.71971893310547" />
+      <metric root_relative_squared_error="93.1941909790039" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.448282390832901" />
+    <metric average_kappa_statistic="0.2988717555999756" />
+    <metric average_mean_absolute_error="0.3704226315021515" />
+    <metric average_root_mean_squared_error="0.4305953085422516" />
+    <metric average_relative_absolute_error="85.9793472290039" />
+    <metric average_root_relative_squared_error="92.7783203125" />
+  </statistics>
+</result>

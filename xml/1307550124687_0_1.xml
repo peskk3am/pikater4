@@ -1,0 +1,370 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.011396011337637901" />
+      <metric kappa_statistic="0.975324273109436" />
+      <metric mean_absolute_error="0.01443494763225317" />
+      <metric root_mean_squared_error="0.08495571464300156" />
+      <metric relative_absolute_error="3.1349728107452393" />
+      <metric root_relative_squared_error="17.71016502380371" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.011396011337637901" />
+      <metric kappa_statistic="0.975324273109436" />
+      <metric mean_absolute_error="0.01443494763225317" />
+      <metric root_mean_squared_error="0.08495571464300156" />
+      <metric relative_absolute_error="3.1349728107452393" />
+      <metric root_relative_squared_error="17.71016502380371" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.03133903071284294" />
+      <metric kappa_statistic="0.9324941039085388" />
+      <metric mean_absolute_error="0.039252929389476776" />
+      <metric root_mean_squared_error="0.14009448885917664" />
+      <metric relative_absolute_error="8.52492618560791" />
+      <metric root_relative_squared_error="29.2045841217041" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.03133903071284294" />
+      <metric kappa_statistic="0.9324941039085388" />
+      <metric mean_absolute_error="0.039252929389476776" />
+      <metric root_mean_squared_error="0.14009448885917664" />
+      <metric relative_absolute_error="8.52492618560791" />
+      <metric root_relative_squared_error="29.2045841217041" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.8603021502494812" />
+      <metric mean_absolute_error="0.08102577924728394" />
+      <metric root_mean_squared_error="0.20127813518047333" />
+      <metric relative_absolute_error="17.59712791442871" />
+      <metric root_relative_squared_error="41.95914077758789" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.8603021502494812" />
+      <metric mean_absolute_error="0.08102577924728394" />
+      <metric root_mean_squared_error="0.20127813518047333" />
+      <metric relative_absolute_error="17.59712791442871" />
+      <metric root_relative_squared_error="41.95914077758789" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0683760717511177" />
+      <metric kappa_statistic="0.8564417362213135" />
+      <metric mean_absolute_error="0.0844903364777565" />
+      <metric root_mean_squared_error="0.20553629100322723" />
+      <metric relative_absolute_error="18.349557876586914" />
+      <metric root_relative_squared_error="42.8468132019043" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="True" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0683760717511177" />
+      <metric kappa_statistic="0.8564417362213135" />
+      <metric mean_absolute_error="0.0844903364777565" />
+      <metric root_mean_squared_error="0.20553629100322723" />
+      <metric relative_absolute_error="18.349557876586914" />
+      <metric root_relative_squared_error="42.8468132019043" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="1" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.014245014637708664" />
+      <metric kappa_statistic="0.9688846468925476" />
+      <metric mean_absolute_error="0.02362298220396042" />
+      <metric root_mean_squared_error="0.10868068039417267" />
+      <metric relative_absolute_error="5.1304240226745605" />
+      <metric root_relative_squared_error="22.655954360961914" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="3" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.014245014637708664" />
+      <metric kappa_statistic="0.9688846468925476" />
+      <metric mean_absolute_error="0.02362298220396042" />
+      <metric root_mean_squared_error="0.10868068039417267" />
+      <metric relative_absolute_error="5.1304240226745605" />
+      <metric root_relative_squared_error="22.655954360961914" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.04273504391312599" />
+      <metric kappa_statistic="0.9046455025672913" />
+      <metric mean_absolute_error="0.07685238122940063" />
+      <metric root_mean_squared_error="0.1960259974002838" />
+      <metric relative_absolute_error="16.690752029418945" />
+      <metric root_relative_squared_error="40.864261627197266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="5" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.04273504391312599" />
+      <metric kappa_statistic="0.9046455025672913" />
+      <metric mean_absolute_error="0.07685238122940063" />
+      <metric root_mean_squared_error="0.1960259974002838" />
+      <metric relative_absolute_error="16.690752029418945" />
+      <metric root_relative_squared_error="40.864261627197266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07122506946325302" />
+      <metric kappa_statistic="0.8405038714408875" />
+      <metric mean_absolute_error="0.1202552318572998" />
+      <metric root_mean_squared_error="0.24520933628082275" />
+      <metric relative_absolute_error="26.116954803466797" />
+      <metric root_relative_squared_error="51.117191314697266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="7" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07122506946325302" />
+      <metric kappa_statistic="0.8405038714408875" />
+      <metric mean_absolute_error="0.1202552318572998" />
+      <metric root_mean_squared_error="0.24520933628082275" />
+      <metric relative_absolute_error="26.116954803466797" />
+      <metric root_relative_squared_error="51.117191314697266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="True" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07407407462596893" />
+      <metric kappa_statistic="0.8361874222755432" />
+      <metric mean_absolute_error="0.12791641056537628" />
+      <metric root_mean_squared_error="0.2528995871543884" />
+      <metric relative_absolute_error="27.780805587768555" />
+      <metric root_relative_squared_error="52.72032928466797" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="J480" libname="weka">
+        <parameter name="U" value="False" />
+        <parameter name="M" value="9" />
+        <parameter name="B" value="False" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07407407462596893" />
+      <metric kappa_statistic="0.8361874222755432" />
+      <metric mean_absolute_error="0.12791641056537628" />
+      <metric root_mean_squared_error="0.2528995871543884" />
+      <metric relative_absolute_error="27.780805587768555" />
+      <metric root_relative_squared_error="52.72032928466797" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.03789173811674118" />
+    <metric average_kappa_statistic="0.9174783825874329" />
+    <metric average_mean_absolute_error="0.05678509920835495" />
+    <metric average_root_mean_squared_error="0.14346802234649658" />
+    <metric average_relative_absolute_error="12.332551956176758" />
+    <metric average_root_relative_squared_error="29.9078426361084" />
+  </statistics>
+</result>

@@ -1,0 +1,435 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.20093457400798798" />
+      <metric kappa_statistic="0.7256655693054199" />
+      <metric mean_absolute_error="0.08041325956583023" />
+      <metric root_mean_squared_error="0.2006036937236786" />
+      <metric relative_absolute_error="38.00458526611328" />
+      <metric root_relative_squared_error="61.829193115234375" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.17757008969783783" />
+      <metric kappa_statistic="0.7578897476196289" />
+      <metric mean_absolute_error="0.08012963086366653" />
+      <metric root_mean_squared_error="0.19773539900779724" />
+      <metric relative_absolute_error="37.870540618896484" />
+      <metric root_relative_squared_error="60.94514083862305" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.21495327353477478" />
+      <metric kappa_statistic="0.7021662592887878" />
+      <metric mean_absolute_error="0.08500444144010544" />
+      <metric root_mean_squared_error="0.20450741052627563" />
+      <metric relative_absolute_error="40.17445373535156" />
+      <metric root_relative_squared_error="63.032379150390625" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.21962617337703705" />
+      <metric kappa_statistic="0.6975128650665283" />
+      <metric mean_absolute_error="0.08610176295042038" />
+      <metric root_mean_squared_error="0.20763583481311798" />
+      <metric relative_absolute_error="40.69306564331055" />
+      <metric root_relative_squared_error="63.99660873413086" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.2102803736925125" />
+      <metric kappa_statistic="0.7095110416412354" />
+      <metric mean_absolute_error="0.08465255796909332" />
+      <metric root_mean_squared_error="0.20552939176559448" />
+      <metric relative_absolute_error="40.008148193359375" />
+      <metric root_relative_squared_error="63.34737014770508" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.12616822123527527" />
+      <metric kappa_statistic="0.828178882598877" />
+      <metric mean_absolute_error="0.05204496160149574" />
+      <metric root_mean_squared_error="0.16171428561210632" />
+      <metric relative_absolute_error="24.597278594970703" />
+      <metric root_relative_squared_error="49.842872619628906" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.20560747385025024" />
+      <metric kappa_statistic="0.7179825305938721" />
+      <metric mean_absolute_error="0.08197398483753204" />
+      <metric root_mean_squared_error="0.20259007811546326" />
+      <metric relative_absolute_error="38.742210388183594" />
+      <metric root_relative_squared_error="62.441429138183594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16355140507221222" />
+      <metric kappa_statistic="0.7745469808578491" />
+      <metric mean_absolute_error="0.06921417266130447" />
+      <metric root_mean_squared_error="0.1810615211725235" />
+      <metric relative_absolute_error="32.71171951293945" />
+      <metric root_relative_squared_error="55.805992126464844" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.14018692076206207" />
+      <metric kappa_statistic="0.8093597888946533" />
+      <metric mean_absolute_error="0.05770419165492058" />
+      <metric root_mean_squared_error="0.16762004792690277" />
+      <metric relative_absolute_error="27.27191925048828" />
+      <metric root_relative_squared_error="51.66312026977539" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.15887850522994995" />
+      <metric kappa_statistic="0.7842805981636047" />
+      <metric mean_absolute_error="0.06423922628164291" />
+      <metric root_mean_squared_error="0.17886362969875336" />
+      <metric relative_absolute_error="30.360483169555664" />
+      <metric root_relative_squared_error="55.12856674194336" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.08878504484891891" />
+      <metric kappa_statistic="0.8799102306365967" />
+      <metric mean_absolute_error="0.03585498407483101" />
+      <metric root_mean_squared_error="0.13399186730384827" />
+      <metric relative_absolute_error="16.945636749267578" />
+      <metric root_relative_squared_error="41.29838562011719" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.16355140507221222" />
+      <metric kappa_statistic="0.7759028077125549" />
+      <metric mean_absolute_error="0.06941768527030945" />
+      <metric root_mean_squared_error="0.1839892864227295" />
+      <metric relative_absolute_error="32.80790328979492" />
+      <metric root_relative_squared_error="56.7083740234375" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.14953270554542542" />
+      <metric kappa_statistic="0.795789361000061" />
+      <metric mean_absolute_error="0.06280411034822464" />
+      <metric root_mean_squared_error="0.17289824783802032" />
+      <metric relative_absolute_error="29.682222366333008" />
+      <metric root_relative_squared_error="53.28994369506836" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.1355140209197998" />
+      <metric kappa_statistic="0.8147075772285461" />
+      <metric mean_absolute_error="0.05172586441040039" />
+      <metric root_mean_squared_error="0.15792684257030487" />
+      <metric relative_absolute_error="24.44646644592285" />
+      <metric root_relative_squared_error="48.67552185058594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.1214953288435936" />
+      <metric kappa_statistic="0.8346606492996216" />
+      <metric mean_absolute_error="0.049859680235385895" />
+      <metric root_mean_squared_error="0.15665718913078308" />
+      <metric relative_absolute_error="23.564477920532227" />
+      <metric root_relative_squared_error="48.28419494628906" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0607476644217968" />
+      <metric kappa_statistic="0.9175165891647339" />
+      <metric mean_absolute_error="0.022244054824113846" />
+      <metric root_mean_squared_error="0.10288521647453308" />
+      <metric relative_absolute_error="10.512894630432129" />
+      <metric root_relative_squared_error="31.710832595825195" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.14953270554542542" />
+      <metric kappa_statistic="0.7969699501991272" />
+      <metric mean_absolute_error="0.052677083760499954" />
+      <metric root_mean_squared_error="0.1608603149652481" />
+      <metric relative_absolute_error="24.896028518676758" />
+      <metric root_relative_squared_error="49.57966232299805" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.15420560538768768" />
+      <metric kappa_statistic="0.7892632484436035" />
+      <metric mean_absolute_error="0.059724386781454086" />
+      <metric root_mean_squared_error="0.16976769268512726" />
+      <metric relative_absolute_error="28.226696014404297" />
+      <metric root_relative_squared_error="52.32505416870117" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.09813084453344345" />
+      <metric kappa_statistic="0.8667378425598145" />
+      <metric mean_absolute_error="0.044340625405311584" />
+      <metric root_mean_squared_error="0.14515097439289093" />
+      <metric relative_absolute_error="20.956085205078125" />
+      <metric root_relative_squared_error="44.73780059814453" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0607476644217968" />
+      <metric kappa_statistic="0.9177190661430359" />
+      <metric mean_absolute_error="0.036714743822813034" />
+      <metric root_mean_squared_error="0.1296534538269043" />
+      <metric relative_absolute_error="17.351972579956055" />
+      <metric root_relative_squared_error="39.96122360229492" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.023364486172795296" />
+      <metric kappa_statistic="0.9682812690734863" />
+      <metric mean_absolute_error="0.0122219854965806" />
+      <metric root_mean_squared_error="0.07471910119056702" />
+      <metric relative_absolute_error="5.776305198669434" />
+      <metric root_relative_squared_error="23.02959632873535" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.11682242900133133" />
+      <metric kappa_statistic="0.8412132859230042" />
+      <metric mean_absolute_error="0.045236799865961075" />
+      <metric root_mean_squared_error="0.15067672729492188" />
+      <metric relative_absolute_error="21.37963104248047" />
+      <metric root_relative_squared_error="46.440921783447266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10747663676738739" />
+      <metric kappa_statistic="0.8543269634246826" />
+      <metric mean_absolute_error="0.0432778000831604" />
+      <metric root_mean_squared_error="0.14517420530319214" />
+      <metric relative_absolute_error="20.453777313232422" />
+      <metric root_relative_squared_error="44.74496078491211" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.08878504484891891" />
+      <metric kappa_statistic="0.8797006011009216" />
+      <metric mean_absolute_error="0.034317564219236374" />
+      <metric root_mean_squared_error="0.12743648886680603" />
+      <metric relative_absolute_error="16.219026565551758" />
+      <metric root_relative_squared_error="39.277915954589844" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="glass.arff" test="glass.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.06542056053876877" />
+      <metric kappa_statistic="0.911374032497406" />
+      <metric mean_absolute_error="0.030685652047395706" />
+      <metric root_mean_squared_error="0.12055537849664688" />
+      <metric relative_absolute_error="14.502527236938477" />
+      <metric root_relative_squared_error="37.15705108642578" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.13607478141784668" />
+    <metric average_kappa_statistic="0.8140466213226318" />
+    <metric average_mean_absolute_error="0.05570324510335922" />
+    <metric average_root_mean_squared_error="0.16160815954208374" />
+    <metric average_relative_absolute_error="26.326242446899414" />
+    <metric average_root_relative_squared_error="49.81016540527344" />
+  </statistics>
+</result>

@@ -1,0 +1,90 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="1" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.5139171481132507" />
+      <metric kappa_statistic="0.16141659021377563" />
+      <metric mean_absolute_error="0.3426114618778229" />
+      <metric root_mean_squared_error="0.5853301882743835" />
+      <metric relative_absolute_error="79.5240478515625" />
+      <metric root_relative_squared_error="126.11832427978516" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="4" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.5139171481132507" />
+      <metric kappa_statistic="0.16141659021377563" />
+      <metric mean_absolute_error="0.3426114618778229" />
+      <metric root_mean_squared_error="0.5853301882743835" />
+      <metric relative_absolute_error="79.5240478515625" />
+      <metric root_relative_squared_error="126.11832427978516" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="7" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.5139171481132507" />
+      <metric kappa_statistic="0.16141659021377563" />
+      <metric mean_absolute_error="0.3426114618778229" />
+      <metric root_mean_squared_error="0.5853301882743835" />
+      <metric relative_absolute_error="79.5240478515625" />
+      <metric root_relative_squared_error="126.11832427978516" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="10" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.5159538388252258" />
+      <metric kappa_statistic="0.15689617395401" />
+      <metric mean_absolute_error="0.3439692258834839" />
+      <metric root_mean_squared_error="0.5864889025688171" />
+      <metric relative_absolute_error="79.83920288085938" />
+      <metric root_relative_squared_error="126.36798095703125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="13" />
+      </algorithm>
+      <dataset train="cmc.arff" test="cmc.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.5173116326332092" />
+      <metric kappa_statistic="0.15445205569267273" />
+      <metric mean_absolute_error="0.34487441182136536" />
+      <metric root_mean_squared_error="0.5872600674629211" />
+      <metric relative_absolute_error="80.04930877685547" />
+      <metric root_relative_squared_error="126.53414916992188" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.5150033235549927" />
+    <metric average_kappa_statistic="0.1591196060180664" />
+    <metric average_mean_absolute_error="0.3433355987071991" />
+    <metric average_root_mean_squared_error="0.5859478712081909" />
+    <metric average_relative_absolute_error="79.69213104248047" />
+    <metric average_root_relative_squared_error="126.25141906738281" />
+  </statistics>
+</result>

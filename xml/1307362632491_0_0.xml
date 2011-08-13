@@ -1,0 +1,435 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.012249442748725414" />
+      <metric kappa_statistic="0.969666063785553" />
+      <metric mean_absolute_error="0.005073001608252525" />
+      <metric root_mean_squared_error="0.0503636859357357" />
+      <metric relative_absolute_error="3.7772152423858643" />
+      <metric root_relative_squared_error="19.50432777404785" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.018930958583950996" />
+      <metric kappa_statistic="0.9525504112243652" />
+      <metric mean_absolute_error="0.00833775196224451" />
+      <metric root_mean_squared_error="0.06456683576107025" />
+      <metric relative_absolute_error="6.208057403564453" />
+      <metric root_relative_squared_error="25.004776000976562" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.057906460016965866" />
+      <metric kappa_statistic="0.8529981970787048" />
+      <metric mean_absolute_error="0.025952385738492012" />
+      <metric root_mean_squared_error="0.11391309648752213" />
+      <metric relative_absolute_error="19.323421478271484" />
+      <metric root_relative_squared_error="44.11508560180664" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0634743869304657" />
+      <metric kappa_statistic="0.8410757780075073" />
+      <metric mean_absolute_error="0.028514886274933815" />
+      <metric root_mean_squared_error="0.11940453201532364" />
+      <metric relative_absolute_error="21.231386184692383" />
+      <metric root_relative_squared_error="46.24175262451172" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.005567928776144981" />
+      <metric kappa_statistic="0.9861042499542236" />
+      <metric mean_absolute_error="0.0023509033489972353" />
+      <metric root_mean_squared_error="0.03428485989570618" />
+      <metric relative_absolute_error="1.7504167556762695" />
+      <metric root_relative_squared_error="13.277485847473145" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.01781737245619297" />
+      <metric kappa_statistic="0.9552513360977173" />
+      <metric mean_absolute_error="0.007821613922715187" />
+      <metric root_mean_squared_error="0.06253644824028015" />
+      <metric relative_absolute_error="5.823755264282227" />
+      <metric root_relative_squared_error="24.218467712402344" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02338530123233795" />
+      <metric kappa_statistic="0.9409900307655334" />
+      <metric mean_absolute_error="0.010954786092042923" />
+      <metric root_mean_squared_error="0.07400941103696823" />
+      <metric relative_absolute_error="8.156627655029297" />
+      <metric root_relative_squared_error="28.661598205566406" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.03006681427359581" />
+      <metric kappa_statistic="0.9247670769691467" />
+      <metric mean_absolute_error="0.014404479414224625" />
+      <metric root_mean_squared_error="0.0848660096526146" />
+      <metric relative_absolute_error="10.72517204284668" />
+      <metric root_relative_squared_error="32.86602783203125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0011135857785120606" />
+      <metric kappa_statistic="0.9972213506698608" />
+      <metric mean_absolute_error="3.711952595040202E-4" />
+      <metric root_mean_squared_error="0.013623422011733055" />
+      <metric relative_absolute_error="0.27638161182403564" />
+      <metric root_relative_squared_error="5.275937557220459" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.010022271424531937" />
+      <metric kappa_statistic="0.9750754237174988" />
+      <metric mean_absolute_error="0.004836143925786018" />
+      <metric root_mean_squared_error="0.04917389526963234" />
+      <metric relative_absolute_error="3.6008574962615967" />
+      <metric root_relative_squared_error="19.043556213378906" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0423162579536438" />
+      <metric kappa_statistic="0.8957718014717102" />
+      <metric mean_absolute_error="0.01823120377957821" />
+      <metric root_mean_squared_error="0.09547565877437592" />
+      <metric relative_absolute_error="13.574444770812988" />
+      <metric root_relative_squared_error="36.97482681274414" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.04120267182588577" />
+      <metric kappa_statistic="0.8975252509117126" />
+      <metric mean_absolute_error="0.01900278590619564" />
+      <metric root_mean_squared_error="0.0974750891327858" />
+      <metric relative_absolute_error="14.148942947387695" />
+      <metric root_relative_squared_error="37.7491455078125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0011135857785120606" />
+      <metric kappa_statistic="0.9972218871116638" />
+      <metric mean_absolute_error="4.949269932694733E-4" />
+      <metric root_mean_squared_error="0.015730973333120346" />
+      <metric relative_absolute_error="0.36850881576538086" />
+      <metric root_relative_squared_error="6.092128276824951" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.005567928776144981" />
+      <metric kappa_statistic="0.9861644506454468" />
+      <metric mean_absolute_error="0.0027680560015141964" />
+      <metric root_mean_squared_error="0.03720252588391304" />
+      <metric relative_absolute_error="2.0610170364379883" />
+      <metric root_relative_squared_error="14.40740966796875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.016703786328434944" />
+      <metric kappa_statistic="0.9586885571479797" />
+      <metric mean_absolute_error="0.006842955015599728" />
+      <metric root_mean_squared_error="0.05849339812994003" />
+      <metric relative_absolute_error="5.0950727462768555" />
+      <metric root_relative_squared_error="22.65271759033203" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.028953230008482933" />
+      <metric kappa_statistic="0.928474485874176" />
+      <metric mean_absolute_error="0.012228775769472122" />
+      <metric root_mean_squared_error="0.07819455116987228" />
+      <metric relative_absolute_error="9.105204582214355" />
+      <metric root_relative_squared_error="30.282377243041992" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.012249442748725414" />
+      <metric kappa_statistic="0.969884991645813" />
+      <metric mean_absolute_error="0.005444196984171867" />
+      <metric root_mean_squared_error="0.052173733711242676" />
+      <metric relative_absolute_error="4.0535969734191895" />
+      <metric root_relative_squared_error="20.205303192138672" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02338530123233795" />
+      <metric kappa_statistic="0.9430636763572693" />
+      <metric mean_absolute_error="0.009793662466108799" />
+      <metric root_mean_squared_error="0.06997736543416977" />
+      <metric relative_absolute_error="7.292087078094482" />
+      <metric root_relative_squared_error="27.100109100341797" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="anneal.arff" test="anneal.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02672605775296688" />
+      <metric kappa_statistic="0.9338493943214417" />
+      <metric mean_absolute_error="0.011782434768974781" />
+      <metric root_mean_squared_error="0.07675426453351974" />
+      <metric relative_absolute_error="8.772871971130371" />
+      <metric root_relative_squared_error="29.724597930908203" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.017550110816955566" />
+    <metric average_kappa_statistic="0.9562537670135498" />
+    <metric average_mean_absolute_error="0.007808245252817869" />
+    <metric average_root_mean_squared_error="0.04992878809571266" />
+    <metric average_relative_absolute_error="5.813801288604736" />
+    <metric average_root_relative_squared_error="19.33590316772461" />
+  </statistics>
+</result>

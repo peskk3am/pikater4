@@ -1,0 +1,37 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="M" value="0.2" />
+        <parameter name="N" value="1500" />
+        <parameter name="V" value="0" />
+        <parameter name="S" value="386729760" />
+        <parameter name="E" value="20" />
+        <parameter name="D" value="False" />
+        <parameter name="I" value="False" />
+        <parameter name="G" value="False" />
+        <parameter name="H" value="5,3" />
+        <parameter name="B" value="False" />
+        <parameter name="C" value="False" />
+      </algorithm>
+      <dataset train="iris.arff" test="weather.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.3571428656578064" />
+      <metric kappa_statistic="0.0" />
+      <metric mean_absolute_error="0.24023090302944183" />
+      <metric root_mean_squared_error="0.47486060857772827" />
+      <metric relative_absolute_error="54.05195236206055" />
+      <metric root_relative_squared_error="100.73314666748047" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.3571428656578064" />
+    <metric average_kappa_statistic="0.0" />
+    <metric average_mean_absolute_error="0.24023090302944183" />
+    <metric average_root_mean_squared_error="0.47486060857772827" />
+    <metric average_relative_absolute_error="54.05195236206055" />
+    <metric average_root_relative_squared_error="100.73314666748047" />
+  </statistics>
+</result>

@@ -1,0 +1,37 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="M" value="0.2" />
+        <parameter name="N" value="1500" />
+        <parameter name="V" value="0" />
+        <parameter name="S" value="853954432" />
+        <parameter name="E" value="20" />
+        <parameter name="D" value="False" />
+        <parameter name="I" value="False" />
+        <parameter name="G" value="False" />
+        <parameter name="H" value="5,3" />
+        <parameter name="B" value="False" />
+        <parameter name="C" value="False" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.006666666828095913" />
+      <metric kappa_statistic="0.9900000095367432" />
+      <metric mean_absolute_error="0.010267388075590134" />
+      <metric root_mean_squared_error="0.0665755569934845" />
+      <metric relative_absolute_error="2.310162305831909" />
+      <metric root_relative_squared_error="14.122808456420898" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.006666666828095913" />
+    <metric average_kappa_statistic="0.9900000095367432" />
+    <metric average_mean_absolute_error="0.010267388075590134" />
+    <metric average_root_mean_squared_error="0.0665755569934845" />
+    <metric average_relative_absolute_error="2.310162305831909" />
+    <metric average_root_relative_squared_error="14.122808456420898" />
+  </statistics>
+</result>

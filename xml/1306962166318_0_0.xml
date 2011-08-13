@@ -1,0 +1,146 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="3,3,3" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02666666731238365" />
+      <metric kappa_statistic="0.9599999785423279" />
+      <metric mean_absolute_error="0.03598504140973091" />
+      <metric root_mean_squared_error="0.11746407300233841" />
+      <metric relative_absolute_error="8.096634864807129" />
+      <metric root_relative_squared_error="24.917892456054688" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="3,3,4" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.006666666828095913" />
+      <metric kappa_statistic="0.9900000095367432" />
+      <metric mean_absolute_error="0.01586344838142395" />
+      <metric root_mean_squared_error="0.06783023476600647" />
+      <metric relative_absolute_error="3.5692756175994873" />
+      <metric root_relative_squared_error="14.388965606689453" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="3,4,3" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.019999999552965164" />
+      <metric kappa_statistic="0.9700000286102295" />
+      <metric mean_absolute_error="0.03628353402018547" />
+      <metric root_mean_squared_error="0.1152239590883255" />
+      <metric relative_absolute_error="8.163795471191406" />
+      <metric root_relative_squared_error="24.44269371032715" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="3,4,4" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.006666666828095913" />
+      <metric kappa_statistic="0.9900000095367432" />
+      <metric mean_absolute_error="0.015364707447588444" />
+      <metric root_mean_squared_error="0.06765647232532501" />
+      <metric relative_absolute_error="3.457059144973755" />
+      <metric root_relative_squared_error="14.352105140686035" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="4,3,3" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.006666666828095913" />
+      <metric kappa_statistic="0.9900000095367432" />
+      <metric mean_absolute_error="0.01764322631061077" />
+      <metric root_mean_squared_error="0.06780292838811874" />
+      <metric relative_absolute_error="3.9697258472442627" />
+      <metric root_relative_squared_error="14.383172035217285" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="4,3,4" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.006666666828095913" />
+      <metric kappa_statistic="0.9900000095367432" />
+      <metric mean_absolute_error="0.015295371413230896" />
+      <metric root_mean_squared_error="0.0675601065158844" />
+      <metric relative_absolute_error="3.4414587020874023" />
+      <metric root_relative_squared_error="14.33166217803955" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="4,4,3" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02666666731238365" />
+      <metric kappa_statistic="0.9599999785423279" />
+      <metric mean_absolute_error="0.03754481300711632" />
+      <metric root_mean_squared_error="0.12068704515695572" />
+      <metric relative_absolute_error="8.447583198547363" />
+      <metric root_relative_squared_error="25.601587295532227" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.4" />
+        <parameter name="H" value="4,4,4" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.013333333656191826" />
+      <metric kappa_statistic="0.9800000190734863" />
+      <metric mean_absolute_error="0.025491934269666672" />
+      <metric root_mean_squared_error="0.08949296921491623" />
+      <metric relative_absolute_error="5.735685348510742" />
+      <metric root_relative_squared_error="18.984325408935547" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.014166668057441711" />
+    <metric average_kappa_statistic="0.9787500500679016" />
+    <metric average_mean_absolute_error="0.024934010580182076" />
+    <metric average_root_mean_squared_error="0.08921472728252411" />
+    <metric average_relative_absolute_error="5.610152244567871" />
+    <metric average_root_relative_squared_error="18.92530059814453" />
+  </statistics>
+</result>

@@ -1,0 +1,30 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.01" />
+        <parameter name="R" value="1.0E-8" />
+        <parameter name="S" value="1" />
+        <parameter name="M" value="-1" />
+      </algorithm>
+      <dataset train="iris.arff" test="iris.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02666666731238365" />
+      <metric kappa_statistic="0.9599999785423279" />
+      <metric mean_absolute_error="0.020948875695466995" />
+      <metric root_mean_squared_error="0.10663129389286041" />
+      <metric relative_absolute_error="4.713497161865234" />
+      <metric root_relative_squared_error="22.61991310119629" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.02666666731238365" />
+    <metric average_kappa_statistic="0.9599999785423279" />
+    <metric average_mean_absolute_error="0.020948875695466995" />
+    <metric average_root_mean_squared_error="0.10663129389286041" />
+    <metric average_relative_absolute_error="4.713497161865234" />
+    <metric average_root_relative_squared_error="22.61991310119629" />
+  </statistics>
+</result>

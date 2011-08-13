@@ -1,0 +1,370 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="0.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="1" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="3" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="4" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="5" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="i" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="MultilayerPerceptron0" libname="weka">
+        <parameter name="L" value="1.0" />
+        <parameter name="N" value="5001" />
+        <parameter name="H" value="o" />
+      </algorithm>
+      <dataset train="car.arff" test="car.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="2.147483648E9" />
+      <metric kappa_statistic="2.147483648E9" />
+      <metric mean_absolute_error="2.147483648E9" />
+      <metric root_mean_squared_error="2.147483648E9" />
+      <metric relative_absolute_error="2.147483648E9" />
+      <metric root_relative_squared_error="2.147483648E9" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="2.147483648E9" />
+    <metric average_kappa_statistic="2.147483648E9" />
+    <metric average_mean_absolute_error="2.147483648E9" />
+    <metric average_root_mean_squared_error="2.147483648E9" />
+    <metric average_relative_absolute_error="2.147483648E9" />
+    <metric average_root_relative_squared_error="2.147483648E9" />
+  </statistics>
+</result>

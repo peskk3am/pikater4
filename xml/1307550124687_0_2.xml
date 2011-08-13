@@ -1,0 +1,90 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="1" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.014245014637708664" />
+      <metric kappa_statistic="0.9693155288696289" />
+      <metric mean_absolute_error="0.014245014637708664" />
+      <metric root_mean_squared_error="0.11935248225927353" />
+      <metric relative_absolute_error="3.0937230587005615" />
+      <metric root_relative_squared_error="24.880632400512695" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="4" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.11680911481380463" />
+      <metric kappa_statistic="0.7448539733886719" />
+      <metric mean_absolute_error="0.11680911481380463" />
+      <metric root_mean_squared_error="0.34177348017692566" />
+      <metric relative_absolute_error="25.3685302734375" />
+      <metric root_relative_squared_error="71.2472915649414" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="7" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.1367521435022354" />
+      <metric kappa_statistic="0.699711263179779" />
+      <metric mean_absolute_error="0.1367521435022354" />
+      <metric root_mean_squared_error="0.3698001205921173" />
+      <metric relative_absolute_error="29.699743270874023" />
+      <metric root_relative_squared_error="77.0898208618164" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="10" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.13960114121437073" />
+      <metric kappa_statistic="0.6851211190223694" />
+      <metric mean_absolute_error="0.13960114121437073" />
+      <metric root_mean_squared_error="0.37363237142562866" />
+      <metric relative_absolute_error="30.3184871673584" />
+      <metric root_relative_squared_error="77.88870239257812" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="13" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.15954415500164032" />
+      <metric kappa_statistic="0.6355140209197998" />
+      <metric mean_absolute_error="0.15954415500164032" />
+      <metric root_mean_squared_error="0.3994297981262207" />
+      <metric relative_absolute_error="34.64970016479492" />
+      <metric root_relative_squared_error="83.26652526855469" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.11339031159877777" />
+    <metric average_kappa_statistic="0.7469031810760498" />
+    <metric average_mean_absolute_error="0.11339031159877777" />
+    <metric average_root_mean_squared_error="0.3207976222038269" />
+    <metric average_relative_absolute_error="24.62603759765625" />
+    <metric average_root_relative_squared_error="66.87459564208984" />
+  </statistics>
+</result>

@@ -1,0 +1,90 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="1" />
+      </algorithm>
+      <dataset train="trains.arff" test="trains.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10000000149011612" />
+      <metric kappa_statistic="0.6153846383094788" />
+      <metric mean_absolute_error="0.10000000149011612" />
+      <metric root_mean_squared_error="0.3162277638912201" />
+      <metric relative_absolute_error="28.571428298950195" />
+      <metric root_relative_squared_error="78.44645690917969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="4" />
+      </algorithm>
+      <dataset train="trains.arff" test="trains.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10000000149011612" />
+      <metric kappa_statistic="0.6153846383094788" />
+      <metric mean_absolute_error="0.10000000149011612" />
+      <metric root_mean_squared_error="0.3162277638912201" />
+      <metric relative_absolute_error="28.571428298950195" />
+      <metric root_relative_squared_error="78.44645690917969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="7" />
+      </algorithm>
+      <dataset train="trains.arff" test="trains.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10000000149011612" />
+      <metric kappa_statistic="0.6153846383094788" />
+      <metric mean_absolute_error="0.10000000149011612" />
+      <metric root_mean_squared_error="0.3162277638912201" />
+      <metric relative_absolute_error="28.571428298950195" />
+      <metric root_relative_squared_error="78.44645690917969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="10" />
+      </algorithm>
+      <dataset train="trains.arff" test="trains.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10000000149011612" />
+      <metric kappa_statistic="0.6153846383094788" />
+      <metric mean_absolute_error="0.10000000149011612" />
+      <metric root_mean_squared_error="0.3162277638912201" />
+      <metric relative_absolute_error="28.571428298950195" />
+      <metric root_relative_squared_error="78.44645690917969" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="OneR0" libname="weka">
+        <parameter name="B" value="13" />
+      </algorithm>
+      <dataset train="trains.arff" test="trains.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.10000000149011612" />
+      <metric kappa_statistic="0.6153846383094788" />
+      <metric mean_absolute_error="0.10000000149011612" />
+      <metric root_mean_squared_error="0.3162277638912201" />
+      <metric relative_absolute_error="28.571428298950195" />
+      <metric root_relative_squared_error="78.44645690917969" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.10000000149011612" />
+    <metric average_kappa_statistic="0.6153846383094788" />
+    <metric average_mean_absolute_error="0.10000000149011612" />
+    <metric average_root_mean_squared_error="0.3162277638912201" />
+    <metric average_relative_absolute_error="28.571430206298828" />
+    <metric average_root_relative_squared_error="78.44645690917969" />
+  </statistics>
+</result>

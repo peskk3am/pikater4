@@ -1,0 +1,435 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07977207750082016" />
+      <metric kappa_statistic="0.8254475593566895" />
+      <metric mean_absolute_error="0.130533829331398" />
+      <metric root_mean_squared_error="0.2567664384841919" />
+      <metric relative_absolute_error="28.349254608154297" />
+      <metric root_relative_squared_error="53.526424407958984" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07977207750082016" />
+      <metric kappa_statistic="0.8278688788414001" />
+      <metric mean_absolute_error="0.13291709125041962" />
+      <metric root_mean_squared_error="0.25803080201148987" />
+      <metric relative_absolute_error="28.866849899291992" />
+      <metric root_relative_squared_error="53.78999710083008" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0883190855383873" />
+      <metric kappa_statistic="0.8077595829963684" />
+      <metric mean_absolute_error="0.14910940825939178" />
+      <metric root_mean_squared_error="0.27300021052360535" />
+      <metric relative_absolute_error="32.383487701416016" />
+      <metric root_relative_squared_error="56.91057586669922" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.08547008782625198" />
+      <metric kappa_statistic="0.8109854459762573" />
+      <metric mean_absolute_error="0.14178690314292908" />
+      <metric root_mean_squared_error="0.26773685216903687" />
+      <metric relative_absolute_error="30.793188095092773" />
+      <metric root_relative_squared_error="55.8133544921875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="2" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.09401709586381912" />
+      <metric kappa_statistic="0.7909696102142334" />
+      <metric mean_absolute_error="0.1560845673084259" />
+      <metric root_mean_squared_error="0.2805635631084442" />
+      <metric relative_absolute_error="33.89834976196289" />
+      <metric root_relative_squared_error="58.48725891113281" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0683760717511177" />
+      <metric kappa_statistic="0.8514285683631897" />
+      <metric mean_absolute_error="0.11441285908222198" />
+      <metric root_mean_squared_error="0.24070289731025696" />
+      <metric relative_absolute_error="24.848112106323242" />
+      <metric root_relative_squared_error="50.177764892578125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.8588513135910034" />
+      <metric mean_absolute_error="0.1151144728064537" />
+      <metric root_mean_squared_error="0.23824676871299744" />
+      <metric relative_absolute_error="25.00048828125" />
+      <metric root_relative_squared_error="49.66575241088867" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.08262108266353607" />
+      <metric kappa_statistic="0.8182548880577087" />
+      <metric mean_absolute_error="0.14090771973133087" />
+      <metric root_mean_squared_error="0.2666076421737671" />
+      <metric relative_absolute_error="30.602249145507812" />
+      <metric root_relative_squared_error="55.57795715332031" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.853789746761322" />
+      <metric mean_absolute_error="0.11610715836286545" />
+      <metric root_mean_squared_error="0.24181078374385834" />
+      <metric relative_absolute_error="25.216079711914062" />
+      <metric root_relative_squared_error="50.40871810913086" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="3" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07692307978868484" />
+      <metric kappa_statistic="0.8295840620994568" />
+      <metric mean_absolute_error="0.12374305725097656" />
+      <metric root_mean_squared_error="0.24953263998031616" />
+      <metric relative_absolute_error="26.874439239501953" />
+      <metric root_relative_squared_error="52.01844024658203" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07122506946325302" />
+      <metric kappa_statistic="0.8455078601837158" />
+      <metric mean_absolute_error="0.11860053986310959" />
+      <metric root_mean_squared_error="0.24410869181156158" />
+      <metric relative_absolute_error="25.757591247558594" />
+      <metric root_relative_squared_error="50.88774871826172" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.8588513135910034" />
+      <metric mean_absolute_error="0.11481847614049911" />
+      <metric root_mean_squared_error="0.23841318488121033" />
+      <metric relative_absolute_error="24.936203002929688" />
+      <metric root_relative_squared_error="49.700443267822266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0683760717511177" />
+      <metric kappa_statistic="0.8482490181922913" />
+      <metric mean_absolute_error="0.11474527418613434" />
+      <metric root_mean_squared_error="0.243325337767601" />
+      <metric relative_absolute_error="24.920305252075195" />
+      <metric root_relative_squared_error="50.724449157714844" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0655270665884018" />
+      <metric kappa_statistic="0.8532635569572449" />
+      <metric mean_absolute_error="0.11469145119190216" />
+      <metric root_mean_squared_error="0.24033957719802856" />
+      <metric relative_absolute_error="24.908615112304688" />
+      <metric root_relative_squared_error="50.10202407836914" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="4" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07407407462596893" />
+      <metric kappa_statistic="0.8344219326972961" />
+      <metric mean_absolute_error="0.1222911924123764" />
+      <metric root_mean_squared_error="0.24688301980495453" />
+      <metric relative_absolute_error="26.55912208557129" />
+      <metric root_relative_squared_error="51.466094970703125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05128205195069313" />
+      <metric kappa_statistic="0.8885714411735535" />
+      <metric mean_absolute_error="0.08424621820449829" />
+      <metric root_mean_squared_error="0.2047092616558075" />
+      <metric relative_absolute_error="18.296539306640625" />
+      <metric root_relative_squared_error="42.67440414428711" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.06267806142568588" />
+      <metric kappa_statistic="0.8647540807723999" />
+      <metric mean_absolute_error="0.10316440463066101" />
+      <metric root_mean_squared_error="0.22618786990642548" />
+      <metric relative_absolute_error="22.405179977416992" />
+      <metric root_relative_squared_error="47.15190887451172" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.06267806142568588" />
+      <metric kappa_statistic="0.8618802428245544" />
+      <metric mean_absolute_error="0.10887718200683594" />
+      <metric root_mean_squared_error="0.234221413731575" />
+      <metric relative_absolute_error="23.645877838134766" />
+      <metric root_relative_squared_error="48.82661056518555" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.07122506946325302" />
+      <metric kappa_statistic="0.8410757780075073" />
+      <metric mean_absolute_error="0.11478205770254135" />
+      <metric root_mean_squared_error="0.24066628515720367" />
+      <metric relative_absolute_error="24.928293228149414" />
+      <metric root_relative_squared_error="50.17013168334961" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="5" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.06267806142568588" />
+      <metric kappa_statistic="0.8598954677581787" />
+      <metric mean_absolute_error="0.11363592743873596" />
+      <metric root_mean_squared_error="0.23942840099334717" />
+      <metric relative_absolute_error="24.679378509521484" />
+      <metric root_relative_squared_error="49.912078857421875" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.01" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.025641025975346565" />
+      <metric kappa_statistic="0.9441882371902466" />
+      <metric mean_absolute_error="0.04818755015730858" />
+      <metric root_mean_squared_error="0.15512344241142273" />
+      <metric relative_absolute_error="10.465341567993164" />
+      <metric root_relative_squared_error="32.33757400512695" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.2575" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.05128205195069313" />
+      <metric kappa_statistic="0.8901064395904541" />
+      <metric mean_absolute_error="0.08040265738964081" />
+      <metric root_mean_squared_error="0.19920331239700317" />
+      <metric relative_absolute_error="17.4617977142334" />
+      <metric root_relative_squared_error="41.526615142822266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.505" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.054131053388118744" />
+      <metric kappa_statistic="0.8809255957603455" />
+      <metric mean_absolute_error="0.0825846716761589" />
+      <metric root_mean_squared_error="0.2045682966709137" />
+      <metric relative_absolute_error="17.935686111450195" />
+      <metric root_relative_squared_error="42.64501953125" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="0.7525" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.04273504391312599" />
+      <metric kappa_statistic="0.9056603908538818" />
+      <metric mean_absolute_error="0.06750054657459259" />
+      <metric root_mean_squared_error="0.1851234883069992" />
+      <metric relative_absolute_error="14.6597261428833" />
+      <metric root_relative_squared_error="38.591487884521484" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RBFNetwork0" libname="weka">
+        <parameter name="B" value="6" />
+        <parameter name="W" value="1.0" />
+      </algorithm>
+      <dataset train="ionosphere.arff" test="ionosphere.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.03133903071284294" />
+      <metric kappa_statistic="0.9313050508499146" />
+      <metric mean_absolute_error="0.05265502631664276" />
+      <metric root_mean_squared_error="0.16010315716266632" />
+      <metric relative_absolute_error="11.435585021972656" />
+      <metric root_relative_squared_error="33.37565994262695" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.06586895138025284" />
+    <metric average_kappa_statistic="0.8553439378738403" />
+    <metric average_mean_absolute_error="0.11047600954771042" />
+    <metric average_root_mean_squared_error="0.2334161400794983" />
+    <metric average_relative_absolute_error="23.99310874938965" />
+    <metric average_root_relative_squared_error="48.658729553222656" />
+  </statistics>
+</result>

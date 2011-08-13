@@ -1,0 +1,435 @@
+<result>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0200286116451025" />
+      <metric kappa_statistic="0.956638514995575" />
+      <metric mean_absolute_error="0.025127466768026352" />
+      <metric root_mean_squared_error="0.11203276365995407" />
+      <metric relative_absolute_error="5.420660495758057" />
+      <metric root_relative_squared_error="23.273435592651367" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02718168869614601" />
+      <metric kappa_statistic="0.9413976073265076" />
+      <metric mean_absolute_error="0.0379004031419754" />
+      <metric root_mean_squared_error="0.1363387554883957" />
+      <metric relative_absolute_error="8.17612075805664" />
+      <metric root_relative_squared_error="28.322708129882812" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.03862661123275757" />
+      <metric kappa_statistic="0.9164441823959351" />
+      <metric mean_absolute_error="0.05611778795719147" />
+      <metric root_mean_squared_error="0.16750790178775787" />
+      <metric relative_absolute_error="12.106094360351562" />
+      <metric root_relative_squared_error="34.79771423339844" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="1" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.04577968642115593" />
+      <metric kappa_statistic="0.9015475511550903" />
+      <metric mean_absolute_error="0.06022261083126068" />
+      <metric root_mean_squared_error="0.1735260933637619" />
+      <metric relative_absolute_error="12.991612434387207" />
+      <metric root_relative_squared_error="36.04792404174805" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.004291845485568047" />
+      <metric kappa_statistic="0.9907315373420715" />
+      <metric mean_absolute_error="0.005245588719844818" />
+      <metric root_mean_squared_error="0.05121322721242905" />
+      <metric relative_absolute_error="1.1316125392913818" />
+      <metric root_relative_squared_error="10.638920783996582" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0200286116451025" />
+      <metric kappa_statistic="0.9567832350730896" />
+      <metric mean_absolute_error="0.024880005046725273" />
+      <metric root_mean_squared_error="0.11128778755664825" />
+      <metric relative_absolute_error="5.367276191711426" />
+      <metric root_relative_squared_error="23.118675231933594" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.024320457130670547" />
+      <metric kappa_statistic="0.9473025798797607" />
+      <metric mean_absolute_error="0.033573176711797714" />
+      <metric root_mean_squared_error="0.12942269444465637" />
+      <metric relative_absolute_error="7.242623329162598" />
+      <metric root_relative_squared_error="26.885982513427734" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="3" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.028612302616238594" />
+      <metric kappa_statistic="0.9380549788475037" />
+      <metric mean_absolute_error="0.037931740283966064" />
+      <metric root_mean_squared_error="0.1377166211605072" />
+      <metric relative_absolute_error="8.182881355285645" />
+      <metric root_relative_squared_error="28.608945846557617" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="6.750282868969878E-19" />
+      <metric root_mean_squared_error="1.686248210539362E-17" />
+      <metric relative_absolute_error="1.456214940103755E-16" />
+      <metric root_relative_squared_error="3.5029744218300707E-15" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.005722460802644491" />
+      <metric kappa_statistic="0.9876317381858826" />
+      <metric mean_absolute_error="0.006676204036921263" />
+      <metric root_mean_squared_error="0.0577763095498085" />
+      <metric relative_absolute_error="1.4402340650558472" />
+      <metric root_relative_squared_error="12.00232219696045" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0200286116451025" />
+      <metric kappa_statistic="0.9567109942436218" />
+      <metric mean_absolute_error="0.02541966177523136" />
+      <metric root_mean_squared_error="0.11212965101003647" />
+      <metric relative_absolute_error="5.483694553375244" />
+      <metric root_relative_squared_error="23.293563842773438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.021459227427840233" />
+      <metric kappa_statistic="0.954041600227356" />
+      <metric mean_absolute_error="0.02890278398990631" />
+      <metric root_mean_squared_error="0.11993071436882019" />
+      <metric relative_absolute_error="6.235096454620361" />
+      <metric root_relative_squared_error="24.914138793945312" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="5" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.022889843210577965" />
+      <metric kappa_statistic="0.9510182738304138" />
+      <metric mean_absolute_error="0.030879192054271698" />
+      <metric root_mean_squared_error="0.12365208566188812" />
+      <metric relative_absolute_error="6.661459922790527" />
+      <metric root_relative_squared_error="25.68720817565918" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="2.38245283810559E-19" />
+      <metric root_mean_squared_error="6.639595970047779E-18" />
+      <metric relative_absolute_error="5.139581849596566E-17" />
+      <metric root_relative_squared_error="1.3792947929026282E-15" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.005722460802644491" />
+      <metric kappa_statistic="0.9876523613929749" />
+      <metric mean_absolute_error="0.006880577653646469" />
+      <metric root_mean_squared_error="0.05815407633781433" />
+      <metric relative_absolute_error="1.4843229055404663" />
+      <metric root_relative_squared_error="12.08079719543457" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.014306151308119297" />
+      <metric kappa_statistic="0.9691823124885559" />
+      <metric mean_absolute_error="0.01987873762845993" />
+      <metric root_mean_squared_error="0.0988936722278595" />
+      <metric relative_absolute_error="4.288370609283447" />
+      <metric root_relative_squared_error="20.543949127197266" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.018597997725009918" />
+      <metric kappa_statistic="0.9601032733917236" />
+      <metric mean_absolute_error="0.024801870808005333" />
+      <metric root_mean_squared_error="0.11110225319862366" />
+      <metric relative_absolute_error="5.3504204750061035" />
+      <metric root_relative_squared_error="23.08013343811035" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="7" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02575107291340828" />
+      <metric kappa_statistic="0.9446204900741577" />
+      <metric mean_absolute_error="0.03455552086234093" />
+      <metric root_mean_squared_error="0.13091282546520233" />
+      <metric relative_absolute_error="7.454541206359863" />
+      <metric root_relative_squared_error="27.195537567138672" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="0" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.0" />
+      <metric kappa_statistic="1.0" />
+      <metric mean_absolute_error="0.0" />
+      <metric root_mean_squared_error="0.0" />
+      <metric relative_absolute_error="0.0" />
+      <metric root_relative_squared_error="0.0" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="2" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.004291845485568047" />
+      <metric kappa_statistic="0.9907315373420715" />
+      <metric mean_absolute_error="0.005939220543950796" />
+      <metric root_mean_squared_error="0.052729859948158264" />
+      <metric relative_absolute_error="1.2812472581863403" />
+      <metric root_relative_squared_error="10.953983306884766" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="4" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.014306151308119297" />
+      <metric kappa_statistic="0.9692336320877075" />
+      <metric mean_absolute_error="0.01892499439418316" />
+      <metric root_mean_squared_error="0.0964525043964386" />
+      <metric relative_absolute_error="4.08262300491333" />
+      <metric root_relative_squared_error="20.036828994750977" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="6" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.018597997725009918" />
+      <metric kappa_statistic="0.9601032733917236" />
+      <metric mean_absolute_error="0.022898925468325615" />
+      <metric root_mean_squared_error="0.10625465214252472" />
+      <metric relative_absolute_error="4.939905166625977" />
+      <metric root_relative_squared_error="22.073104858398438" />
+    </evaluation>
+  </experiment>
+  <experiment>
+    <setting>
+      <algorithm name="RandomTree0" libname="weka">
+        <parameter name="K" value="9" />
+        <parameter name="M" value="8" />
+      </algorithm>
+      <dataset train="breast-w.arff" test="breast-w.arff" />
+    </setting>
+    <evaluation>
+      <metric error_rate="0.02575107291340828" />
+      <metric kappa_statistic="0.9447124600410461" />
+      <metric mean_absolute_error="0.032502736896276474" />
+      <metric root_mean_squared_error="0.1268540769815445" />
+      <metric relative_absolute_error="7.011701583862305" />
+      <metric root_relative_squared_error="26.35238265991211" />
+    </evaluation>
+  </experiment>
+  <statistics>
+    <metric average_error_rate="0.016251787543296814" />
+    <metric average_kappa_statistic="0.9649857878684998" />
+    <metric average_mean_absolute_error="0.021570365875959396" />
+    <metric average_root_mean_squared_error="0.08855554461479187" />
+    <metric average_relative_absolute_error="4.6533002853393555" />
+    <metric average_root_relative_squared_error="18.396329879760742" />
+  </statistics>
+</result>
