@@ -426,7 +426,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 			return result_msg;
 		}
 
-		@Override
+		@Override 
 		public void action() {
 			
 			ACLMessage req = receive(resMsgTemplate);

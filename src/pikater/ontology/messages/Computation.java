@@ -13,7 +13,7 @@ public class Computation implements Concept {
 	private Agent _agent;
 	private Data _data;
 	private int _timeout; // miliseconds
-	private Method _method;
+	private Agent _method;
 	private String _get_results;
 	private String _gui_agent;
 	private boolean _save_results;
@@ -59,11 +59,11 @@ public class Computation implements Concept {
 		return _timeout;
 	}
 
-	public Method getMethod() {
+	public Agent getMethod() {
 		return _method;
 	}
 
-	public void setMethod(Method method) {
+	public void setMethod(Agent method) {
 		_method = method;
 	}
 

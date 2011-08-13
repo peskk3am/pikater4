@@ -5,8 +5,11 @@ $a pikater.Agent_Manager manager
 $a pikater.Agent_DataManager dataManager
 $a pikater.Agent_AgentManager agentManager
 
-# get a Problem from "config" file
-$a pikater.gui.java.Agent_GUI_Java very_simple_GUI
-# $a pikater.Agent_GUI_config_file very_simple_GUI xml_config
+$a  jade.tools.sniffer.Sniffer sniffer01 manager
 
-$a  jade.tools.sniffer.Sniffer sniffer01 RBFNetwork0
+# get a Problem from "config" file
+# $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
+
+$a pikater.Agent_GUI_config_file very_simple_GUI xml_config1
+
+

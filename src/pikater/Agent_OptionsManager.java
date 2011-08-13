@@ -11,6 +11,7 @@ import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -21,14 +22,17 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
 import jade.proto.IteratedAchieveREInitiator;
+import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
+import jade.wrapper.StaleProxyException;
 
 import java.util.Date;
 import java.util.Vector;
@@ -38,20 +42,26 @@ import java.text.DateFormat;
 import pikater.ontology.messages.Computation;
 import pikater.ontology.messages.Compute;
 import pikater.ontology.messages.CreateAgent;
+import pikater.ontology.messages.Data;
+import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetNextParameters;
+import pikater.ontology.messages.GetOptions;
+import pikater.ontology.messages.Options;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Results;
+import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
 
 public class Agent_OptionsManager extends Agent {
 
-	private static final long serialVersionUID = -7210526529341802567L;
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 	
 	private String search_agent_name;
+	private Computation computation;
 	
 	private String trainFileName;
 	private String testFileName;
@@ -59,10 +69,14 @@ public class Agent_OptionsManager extends Agent {
 	private Computation receivedComputation;
 
 	private String receiver;
-	private String computation_id;
 	private String problem_id;
 	private String start;
 
+	private List evaluations = new ArrayList();
+	private List options = new ArrayList();		
+	
+	private List results = new ArrayList();
+	
 	protected float error_rate = (float) 0.3;
 	protected int maximum_tries = 10;
 
@@ -83,228 +97,251 @@ public class Agent_OptionsManager extends Agent {
 		return "Option Manager";
 	}
 
-	private class ComputeComputation extends IteratedAchieveREInitiator {
+	protected void executeTasks(List next_options_list){
+		evaluations = new ArrayList();  // premazani Listu, kdyz prijde vic pozadavku najednou (coz by se zatim nemelo dit)
+		options = new ArrayList();
+		
+		Iterator itr = next_options_list.iterator();
+		while (itr.hasNext()) {
+			List next_options = ((Options) itr.next()).getList();
+			next_options = addMutableOptions(next_options);
+			System.out.println("Next options for agent " + computation.getAgent().getName() + " received:");
+			Iterator no_itr = next_options.iterator();
+			while (no_itr.hasNext()) {
+				Option next = (Option) no_itr.next();
+				System.out.println("   " + next.getName() + ": " + next.getValue());							
+			}
 
-		private static final long serialVersionUID = -138067991593729776L;
-		private List results = new ArrayList();
+			// send request to the computing agent(s) (add behavior for each options)
+			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+			msg.addReceiver(new AID(computation.getAgent().getName(), false));
+			msg.setLanguage(codec.getName());
+			msg.setOntology(ontology.getName());
+			msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
-		public ComputeComputation(Agent a, ACLMessage request) {
-			super(a, request);
-			System.out.println(a.getLocalName()
-					+ ": ComputeComputation behavior created.");
-		}
-
-		// Since we don't know what message to send to the responder
-		// when we construct this AchieveREInitiator, we redefine this
-		// method to build the request on the fly
-		@Override
-		protected Vector prepareRequests(ACLMessage request) {
-			// Klara's note: this method is called just once at the beginning of
-			// the behaviour
-			// Retrieve the incoming request from the DataStore
-			String incomingRequestKey = ((AchieveREResponder) parent).REQUEST_KEY;
-			ACLMessage incomingRequest = (ACLMessage) getDataStore().get(
-					incomingRequestKey);
-
-			// System.out.println("Agent "+getLocalName()+": Received action: "+incomingRequest.getContent()+". Preparing response.");
-
+			Execute execute = new Execute();
+			Task task = new Task();
+			// change options
+			pikater.ontology.messages.Agent agent = computation.getAgent();
+			agent.setOptions(next_options);
+			task.setAgent(agent);
+			
+			String id = computation.getId() + "_" + task_i;
+			task_i++;
+			task.setId(id);							
+			task.setComputation_id(computation.getId());
+			task.setProblem_id(computation.getProblem_id());
+			task.setData(computation.getData());
+			task.setGet_results(computation.getGet_results());
+			task.setGui_agent(computation.getGui_agent());
+			task.setSave_results(computation.getSave_results());
+			task.setStart(getDateTime());
+			
+			execute.setTask(task);
+			
+			Action a = new Action();
+			a.setAction(execute);
+			a.setActor(this.getAID());
+					
 			try {
-				ContentElement content = getContentManager().extractContent(
-						incomingRequest);
-				if (((Action) content).getAction() instanceof Compute) {
-					Computation computation = ((Compute) ((Action) content)
-							.getAction()).getComputation();
-					receivedComputation = computation;
-					Agent = computation.getAgent();
-					Options = Agent.getOptions();
-					trainFileName = computation.getData().getTrain_file_name();
-					testFileName = computation.getData().getTest_file_name();
-					receiver = computation.getAgent().getName();
-					computation_id = computation.getId();
-					error_rate = computation.getMethod().getError_rate();
-					maximum_tries = computation.getMethod().getMaximum_tries();
-					problem_id = computation.getProblem_id();
-					start = getDateTime();
-					if (timeout < 0) {
-						timeout = System.currentTimeMillis()
-								+ computation.getTimeout();
-					}
-				}
-
-			} catch (UngroundedException e) {
+				getContentManager().fillContent(msg, a);
+			} catch (CodecException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CodecException e) {
+				e2.printStackTrace();
+			} catch (OntologyException e2) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OntologyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			AID responder = new AID(receiver, AID.ISLOCALNAME);
-
-			// Prepare the request to forward to the responder
-			System.out.println("Agent " + getLocalName()
-					+ ": Forward the request to " + responder.getName());
-
-			ACLMessage outgoingRequest;
-			if (sendAgain) {
-				outgoingRequest = msgPrev;
-			} else {
-				outgoingRequest = newMessage(request);
-			}
-			msgPrev = outgoingRequest;
-
-			Vector v = new Vector(1);
-			v.addElement(outgoingRequest);
-			return v;
-
-		}
-
-		@Override
-		protected void handleInform(ACLMessage inform,
-				java.util.Vector nextRequests) {
-			sendAgain = false;
-			System.out.println(getLocalName() + ": Agent "
-					+ inform.getSender().getName() + " sent a reply.");
-
-			ACLMessage msgNew = newMessage(inform);
-			nextRequests.add(msgNew);
-
-			storeTask();
-
-			if (finished) {
-				storeNotification(ACLMessage.INFORM);
-			}
-			msgPrev = msgNew;
-
-		}
-
-		@Override
-		protected void handleRefuse(ACLMessage refuse) {
-
-			System.out.println(getLocalName() + ": Agent "
-					+ refuse.getSender().getName()
-					+ " refused to perform the requested action");
-			if (System.currentTimeMillis() < timeout) {
-				doWait(200);
-				this.reset();
-				sendAgain = true;
-				addBehaviour(this);
-			} else {
-				finished = true;
-				storeNotification(ACLMessage.FAILURE);
-			}
-		}
-
-		@Override
-		protected void handleFailure(ACLMessage failure) {
-			sendAgain = false;
-			if (failure.getSender().equals(myAgent.getAMS())) {
-				// FAILURE notification from the JADE runtime: the receiver
-				// does not exist
-				System.out.println("Responder does not exist");
-				finished = true;
-				storeNotification(ACLMessage.FAILURE);
-			} else {
-				System.out.println("Agent " + failure.getSender().getName()
-						+ " failed to perform the requested action");
-
-				ACLMessage msgNew = newMessage(failure);
-				          
-				evaluation = new pikater.ontology.messages.Evaluation();
-			  	evaluation.setStatus(failure.getContent()); 
+				e2.printStackTrace();
+			}	
 				
-			  	Vector v = new Vector(1);
-				v.addElement(msgNew);
-
-				String requestsKey = (this).ALL_NEXT_REQUESTS_KEY;
-				getDataStore().put(requestsKey, v);
-
-				storeTask();
-
-				if (finished) {
-					storeNotification(ACLMessage.INFORM);
-				}
-				msgPrev = msgNew;
-			}
-		}
-
-		private void storeTask() {
-			// get the Task from the last message
+			ACLMessage reply = null;
 			try {
-				ContentElement content = getContentManager().extractContent(
-						msgPrev);
-				if (((Action) content).getAction() instanceof Execute) {
-
-					Task task = ((Execute) ((Action) content).getAction())
-							.getTask();
-					task.setResult(evaluation);
-					task.setFinish(getDateTime());
-					results.add(task);
-				}
-
-			} catch (UngroundedException e) {
+				reply = FIPAService.doFipaRequestClient(this, msg);
+			} catch (FIPAException e1) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CodecException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OntologyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e1.printStackTrace();
+			}		
+			if (reply != null && reply.getPerformative() == ACLMessage.INFORM){
+				if (reply != null) {
+					ContentElement content;
+					try {
+						content = getContentManager().extractContent(reply);
+						if (content instanceof Result) {
+							Result result = (Result) content;
+							if (result.getValue() instanceof pikater.ontology.messages.Evaluation) {														
+								Evaluation ev = (pikater.ontology.messages.Evaluation) result.getValue();
+								evaluations.add(ev);
+								task.setResult(ev);
+								task.setFinish(getDateTime());
+								results.add(task);
+							}
+						}
+					} catch (UngroundedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (CodecException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (OntologyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}	
 			}
+			else{
+				// TODO 
+				System.err.println("Agent " + this.getLocalName() + ": computing agent "
+						+ reply.getSender().getLocalName() + "didn't execute the task.");
+			}
+		}
+	}
 
+	protected class RequestServer extends CyclicBehaviour {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1902726126096385876L;
+		/**
+			 * 
+			 */
+		private MessageTemplate resMsgTemplate = MessageTemplate
+				.and(MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+						MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+								MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+										MessageTemplate.MatchOntology(ontology.getName()))));
+
+		public RequestServer(Agent agent) {			
+			super(agent);
 		}
 
-		private void storeNotification(int performative) {
+		@Override 
+		public void action() {
+			
+			ACLMessage request = receive(resMsgTemplate);
+			if (request != null) {
+				try {
+					ContentElement content = getContentManager().extractContent(request);
+					if (((Action) content).getAction() instanceof Compute) {
+						ACLMessage response = request.createReply();
+						response.setPerformative(ACLMessage.AGREE);
+						send(response);
+						
+						Compute compute = (Compute) (((Action) content).getAction());
+						computation = compute.getComputation();
+						Options = computation.getAgent().getOptions(); 
+						
+						// create search agent												
+						ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+						msg_ca.addReceiver(new AID("agentManager", false));
+						msg_ca.setLanguage(codec.getName());
+						msg_ca.setOntology(ontology.getName());
+						CreateAgent ca = new CreateAgent();
+						ca.setType(computation.getMethod().getType());
+												
+						Action a = new Action();
+						a.setAction(ca);
+						a.setActor(myAgent.getAID());
+								
+						String search_agent_name = null;
+						try {
+							getContentManager().fillContent(msg_ca, a);	
+							ACLMessage msg_name = FIPAService.doFipaRequestClient(myAgent, msg_ca);
+							search_agent_name = msg_name.getContent();
+						} catch (FIPAException e) {
+							System.err.println("Exception while adding agent"
+									+ computation.getId() + ": " + e);		
+						} catch (CodecException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (OntologyException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						// send request to the search agent
+						
+						ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+						msg.addReceiver(new AID(search_agent_name, false));
+						msg.setLanguage(codec.getName());
+						msg.setOntology(ontology.getName());
+						msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
-			if (performative == ACLMessage.INFORM) {
-				System.out.println("Agent " + getLocalName()
-						+ ": computation executed successfully");
-			} else {
-				if (performative == ACLMessage.CANCEL) {
-					// there were no tasks to compute => send inform message
-					System.out.println("Agent " + getLocalName()
-							+ ": there were no tasks to compute.");
-				} else {
-					System.out.println("Agent " + getLocalName()
-							+ ": computation failed");
+						GetNextParameters gnp = new GetNextParameters();
+						gnp.setOptions(getMutableOptions(computation.getAgent().getOptions()));						
+						gnp.setSearch_options(computation.getMethod().getOptions());
+						
+						a = new Action();
+						a.setAction(gnp);
+						a.setActor(myAgent.getAID());
+								
+						getContentManager().fillContent(msg, a);	
+
+						addBehaviour(new StartGettingParameters(myAgent, msg, request));
+						
+						return;
+					}
+					if (((Action) content).getAction() instanceof ExecuteParameters) {
+						// options manager received options to execute
+						
+						ExecuteParameters ep = (ExecuteParameters) (((Action) content).getAction());		             
+						// go through list of Options, merge it with the immutable Options						
+						List next_options_list = ep.getParameters(); // 2d list
+
+						executeTasks(next_options_list);
+						
+						// send reply to search agent
+						ACLMessage eval_msg = request.createReply();
+						eval_msg.setPerformative(ACLMessage.INFORM);
+						List l = new ArrayList();
+						l.add(options);
+						l.add(evaluations); // ! evaluations je prazdnej list TODO
+						System.out.println("EEE2"+ evaluations);
+						Result result = new Result((Action) content, l);								
+						
+						getContentManager().fillContent(eval_msg, result);
+						send(eval_msg);
+						
+						return;
+					}
+
+				} catch (CodecException ce) {
+					ce.printStackTrace();
+				} catch (OntologyException oe) {
+					oe.printStackTrace();
 				}
-				performative = ACLMessage.FAILURE;
+				ACLMessage result_msg = request.createReply();
+				result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
+				send(result_msg);
+				return;
+			} else {
+				block();
 			}
+		}
+	}
+	
+	private class SendExecuteTask extends AchieveREInitiator {
+		
+		public SendExecuteTask(Agent a, ACLMessage request, Options opt) {
+			super(a, request);
+			options.add(opt);
+			System.out.println(a.getLocalName()
+					+ ": SendExecuteTask behavior created.");
+		}
 
-			// Retrieve the incoming request from the DataStore
-
-			String incomingRequestkey = ((AchieveREResponder) parent).REQUEST_KEY;
-			ACLMessage incomingRequest = (ACLMessage) getDataStore().get(
-					incomingRequestkey);
-
-			ACLMessage msgOut = incomingRequest.createReply();
-			msgOut.setPerformative(performative);
-
-			if (finished) {
-
-				System.out
-						.println("Agent "
-								+ getLocalName()
-								+ " finished the goal, sending the results to the manager.");
-
-				// prepare the outgoing message content:
-
-				Results _results = new Results();
-				_results.setResults(results);
-				_results.setComputation_id(computation_id);
-				_results.setProblem_id(problem_id);
-
+		
+		protected void handleInform(ACLMessage inform) {
+			System.out.println(getLocalName() + ": Agent "
+					+ inform.getSender().getName() + ": sent results.");
+			
+			if (inform != null) {
 				ContentElement content;
 				try {
-					content = getContentManager().extractContent(
-							incomingRequest);
-					Result result = new Result((Action) content, _results);
-					getContentManager().fillContent(msgOut, result);
-
+					content = getContentManager().extractContent(inform);
+					if (content instanceof Result) {
+						Result result = (Result) content;
+						if (result.getValue() instanceof pikater.ontology.messages.Evaluation) {														
+							Evaluation ev = (pikater.ontology.messages.Evaluation) result.getValue();
+							evaluations.add(ev);
+						}
+					}
 				} catch (UngroundedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -315,163 +352,84 @@ public class Agent_OptionsManager extends Agent {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}			
+		}
 
-			} // end if (finished())
+		protected void handleRefuse(ACLMessage refuse) {
+			System.out.println(getLocalName() + ": Agent "
+					+ refuse.getSender().getName()
+					+ " refused to perform the requested action");
+		}
 
-			// save the outgoing message to the dataStore
-			String notificationkey = ((AchieveREResponder) parent).RESULT_NOTIFICATION_KEY;
-			getDataStore().put(notificationkey, msgOut);
+		protected void handleFailure(ACLMessage failure) {
+		}
 
-		} // end storeNotification
+	};
 
-		ACLMessage newMessage(ACLMessage _result) {
-			ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
-			if (_result != null) {
-				if (_result.getPerformative() != ACLMessage.FAILURE) {
-					ContentElement content;
-					try {
-						content = getContentManager().extractContent(_result);
-						// System.out.println(getLocalName()+": Action: "+((Result)content).getAction());
-						if (content instanceof Result) {
-							Result result = (Result) content;
+	private class StartGettingParameters extends AchieveREInitiator {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2796507853769993352L;
+		private ACLMessage request;
+		private ACLMessage original_request;
+		
+		public StartGettingParameters(Agent a, ACLMessage _request, ACLMessage _original_request) {
+			super(a, _request);
+			System.out.println(a.getLocalName()
+					+ ": StartGettingParameters behavior created.");
+			request = _request;
+			original_request = _original_request;
+		}
 
-							if (result.getValue() instanceof pikater.ontology.messages.Evaluation) {
-								evaluation = (pikater.ontology.messages.Evaluation) result
-										.getValue();
-							}
-						}
-					} catch (CodecException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (OntologyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					System.out.println(getLocalName() + ": Agent "
-							+ _result.getSender().getLocalName()
-							+ "'s errorRate was " + evaluation.getError_rate());
-				}
-			}
-			// System.out.println(getLocalName()+": error_rate "+error_rate+" maximum tries "+maximum_tries);
-
-
-			List mutableOptions = getMutableOptions(Options);
-			List nextOptions = null;
+		
+		protected void handleInform(ACLMessage inform) {
+			System.out.println(getLocalName() + ": Agent "
+					+ inform.getSender().getName() + ": sending of Options have been finished.");
+			// sending of Options have been finished -> send message to Manager
 			
-			if (Options != null){ 
-				if (!mutableOptions.isEmpty()) {
-					ACLMessage request = new ACLMessage(ACLMessage.REQUEST);					
-					request.addReceiver(new AID(search_agent_name, AID.ISLOCALNAME));
-					request.setLanguage(codec.getName());
-					request.setOntology(ontology.getName());
-					request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+			ACLMessage msgOut = original_request.createReply();
+			msgOut.setPerformative(ACLMessage.INFORM);
+			
+			// prepare the outgoing message content:
+			Results _results = new Results();
+			_results.setResults(results);
+			_results.setComputation_id(computation.getId());
+			_results.setProblem_id(computation.getProblem_id());
+
+			ContentElement content;
+				try {
+					content = getContentManager().extractContent(original_request);
+					Result result = new Result((Action) content, _results);
+					getContentManager().fillContent(msgOut, result);
 					
-					GetNextParameters gp = new GetNextParameters();
-					gp.setError_rate(error_rate);
-					gp.setEvaluation(evaluation);
-					gp.setMaximum_tries(maximum_tries);
-					gp.setOptions(getMutableOptions(Options));  
-										
-					Action a = new Action();
-					a.setAction(gp);
-					a.setActor(myAgent.getAID());						
-					try {
-						getContentManager().fillContent(request, a);
-						ACLMessage msg_new_options = FIPAService.doFipaRequestClient(myAgent, request);
-						
-						ContentElement content = getContentManager().extractContent(msg_new_options);
-						if (content instanceof Result) {
-							Result result = (Result) content;
-	
-							if (result.getValue() instanceof List) {
-								List receivedOptions = (List)result.getValue();
-								if (receivedOptions.isEmpty()){
-									finished = true;
-								}
-								else{
-									nextOptions = addMutableOptions(receivedOptions);
-								}
-							}
-						}
-						
-					} catch (CodecException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (OntologyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (FIPAException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}																	
-				}
-				else{
-					nextOptions = Options;
-				}
-			
-				if (!finished){
-					// fill in the message content
-					Agent.setOptions(nextOptions);
-					System.out.println(getLocalName() + ": new options for agent "
-							+ receiver + " are " + Agent.optionsToString());
-	
-					msg = new ACLMessage(ACLMessage.REQUEST);
-					msg.setLanguage(codec.getName());
-					msg.setOntology(ontology.getName());
-					msg.addReceiver(new AID(receiver, AID.ISLOCALNAME));
-					msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-					// We want to receive a reply in 30 secs
-					msg.setReplyByDate(new Date(
-									System.currentTimeMillis() + 30000));
-	
-					Execute execute = new Execute();
-	
-					Task task = new Task();
-					String id = computation_id + "_" + task_i;
-					task_i++;
-					task.setId(id);
-					task.setComputation_id(computation_id); // TODO vzit z
-															// receivedComputation
-					task.setProblem_id(problem_id);
-					task.setGet_results(receivedComputation.getGet_results());
-					task.setSave_results(receivedComputation.getSave_results());
-					task.setGui_agent(receivedComputation.getGui_agent());
-	
-					task.setData(receivedComputation.getData());
-					task.setAgent(Agent);
-					task.setStart(start);
-	
-					execute.setTask(task);
-	
-					Action ac = new Action();
-					ac.setAction(execute);
-					ac.setActor(myAgent.getAID());
-	
-					try {
-						getContentManager().fillContent(msg, ac);
-					} catch (CodecException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (OntologyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			else{ // Options == null					
-				finished = true;
-			}
+					send(msgOut);
+					
+				} catch (UngroundedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CodecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OntologyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+		}
 
-			if (finished == true){
-				msg = new ACLMessage(ACLMessage.CANCEL);
-			}
+		protected void handleRefuse(ACLMessage refuse) {
+			System.out.println(getLocalName() + ": Agent "
+					+ refuse.getSender().getName()
+					+ " refused to perform the requested action");
+			// + preposlat zpravu managerovi
+		}
 
-			return msg;
+		protected void handleFailure(ACLMessage failure) {
+			// preposlat zpravu managerovi
+		}
 
-		} // newMessage
-
-	} // end class ComputeComputation
-
+	};
+	
 	protected boolean registerWithDF() {
 		// register with the DF
 
@@ -532,76 +490,8 @@ public class Agent_OptionsManager extends Agent {
 		getContentManager().registerOntology(ontology);
 
 		registerWithDF();
-		
-		// get object type from Option manager arguments
-		Object[] args = getArguments();
-		String search_agent_type = null;
-		if (args != null && args.length == 1) {
-			search_agent_type = (String)args[0]; 
-		}
-		else {
-			System.err.print("Search agent type has not been specified.");
-			return;
-		}
-
-		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-		msg_ca.addReceiver(new AID("agentManager", false));
-		msg_ca.setLanguage(codec.getName());
-		msg_ca.setOntology(ontology.getName());
-		CreateAgent ca = new CreateAgent();
-		ca.setType(search_agent_type);
-
-		Action a = new Action();
-		a.setAction(ca);
-		a.setActor(this.getAID());
-				
-		ACLMessage msg_name = null;
-		try {
-			getContentManager().fillContent(msg_ca, a);	
-			msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CodecException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		search_agent_name = msg_name.getContent();
-		
-		MessageTemplate template_inform = MessageTemplate.and(MessageTemplate
-				.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-				MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-
-		AchieveREResponder receive_computation = new AchieveREResponder(this,
-				template_inform) {
-			@Override
-			protected ACLMessage prepareResponse(ACLMessage request)
-					throws NotUnderstoodException, RefuseException {
-				System.out.println("Agent " + getLocalName()
-						+ ": REQUEST received from "
-						+ request.getSender().getName() + ".");
-
-				// We agree to perform the action. Note that in the FIPA-Request
-				// protocol the AGREE message is optional. Return null if you
-				// don't want to send it.
-
-				System.out.println("Agent " + getLocalName() + ": Agree");
-				ACLMessage agree = request.createReply();
-				agree.setPerformative(ACLMessage.AGREE);
-				return agree;
-
-			} // end prepareResponse
-
-		};
-
-		receive_computation
-				.registerPrepareResultNotification(new ComputeComputation(this,
-						null));
-
-		addBehaviour(receive_computation);
+			
+		addBehaviour(new RequestServer(this));
 
 	} // end setup
 

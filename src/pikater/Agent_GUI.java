@@ -590,13 +590,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				}
 			}
 			
-		}
-		
-		Method method = new Method();
-		method.setName(default_method);
-		method.setError_rate(default_error_rate);
-		method.setMaximum_tries(default_maximum_tries);
-		problem.setMethod(method);
+		}		
 
 		problem.setTimeout(_timeout);
 		problem.setAgents(new ArrayList());
@@ -768,7 +762,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			String option_name, String option_value, String lower,
 			String upper, String number_of_values_to_try, String set) {
 		// TODO add interval ...
-		System.err.println("Add option to agent");
+		// System.err.println("Add option to agent");
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (!next_problem.getSent()) {
@@ -812,7 +806,7 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 							option.setValue(option_value);
 
-							if (next_problem.getMethod().getName().equals(
+							if (next_problem.getMethod().getType().equals(
 									"ChooseXValues")) {
 								if (number_of_values_to_try == null) {
 									option
@@ -834,6 +828,31 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	}
 
+	protected void addSearchOption(int _problem_id, String option_name, String option_value) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (!next_problem.getSent()) {
+				
+				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
+					pikater.ontology.messages.Agent method = next_problem.getMethod();
+									
+						Option option = new Option();
+						option.setName(option_name);
+
+						if (option_value == null) {
+							option_value = "True";
+						}
+						option.setUser_value(option_value);
+						option.setValue(option_value);						
+
+						List options = method.getOptions();
+						options.add(option);
+						method.setOptions(options);
+				}							
+			}
+		}
+	}
+	
 	protected int addDatasetToProblem(int _problem_id, String _train,
 			String _test, String _label, String _output, String _mode) {
 		// get the problem
@@ -913,32 +932,17 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 
-	protected void addMethodToProblem(int problem_id, String name,
-			String errorRate, String maximumTries, String number_of_values_to_try) {
+	protected void addMethodToProblem(int problem_id, String name) {
 		// get the problem
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (Integer.parseInt(next_problem.getGui_id()) == problem_id
 					&& !next_problem.getSent()) {
 
-				Method method = new Method();
-				method.setName(name);
+				pikater.ontology.messages.Agent method = new pikater.ontology.messages.Agent();
+				method.setType(name);
+				method.setOptions(new ArrayList());
 
-				if (name.equals("Random")) {
-					if (errorRate == null) {
-						method.setError_rate(default_error_rate);
-					} else {
-						method.setError_rate(Float.parseFloat(errorRate));
-					}
-					if (maximumTries == null) {
-						method.setMaximum_tries(default_maximum_tries);
-					} else {
-						method.setMaximum_tries(Integer.parseInt(maximumTries));
-					}
-				}
-				if (name.equals("ChooseXValues") && number_of_values_to_try != null){
-					default_number_of_values_to_try = Integer.parseInt(number_of_values_to_try);
-				}
 				next_problem.setMethod(method);
 			}
 		}
@@ -1407,14 +1411,17 @@ public abstract class Agent_GUI extends GuiAgent {
 			if (method.size() > 1) {
 				// TODO error
 			}
-			while (m_itr.hasNext()) {
-				Element next_method = (Element) m_itr.next();
-				addMethodToProblem(p_id, next_method.getAttributeValue("name"),
-						next_method.getAttributeValue("error_rate"),
-						next_method.getAttributeValue("maximum_tries"),
-						next_method.getAttributeValue("number_of_values_to_try"));
-			}
+			Element next_method = (Element) m_itr.next();
+			addMethodToProblem(p_id, next_method.getAttributeValue("name"));
 
+			java.util.List _search_options = next_method.getChildren("parameter");
+			java.util.Iterator so_itr = _search_options.iterator();
+			while (so_itr.hasNext()) {
+				Element next_option = (Element) so_itr.next();
+				addSearchOption(p_id, next_option.getAttributeValue("name"),
+						next_option.getAttributeValue("value"));
+			}
+			
 			java.util.List dataset = next_problem.getChildren("dataset");
 			java.util.Iterator ds_itr = dataset.iterator();
 			while (ds_itr.hasNext()) {

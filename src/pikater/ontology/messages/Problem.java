@@ -15,7 +15,7 @@ public class Problem implements Concept {
 	private List _agents;
 	private List _data;
 	private int _timeout;
-	private Method _method;
+	private Agent _method;
 	private String _start;
 	private String _get_results; // after_each_computation, after_each_task
 	private String _gui_agent;
@@ -69,11 +69,11 @@ public class Problem implements Concept {
 		_sent = sent;
 	}
 
-	public Method getMethod() {
+	public Agent getMethod() {
 		return _method;
 	}
 
-	public void setMethod(Method method) {
+	public void setMethod(Agent method) {
 		_method = method;
 	}
 

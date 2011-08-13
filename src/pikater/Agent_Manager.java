@@ -852,10 +852,6 @@ public class Agent_Manager extends Agent {
 		ca.setName(computation.getId());
 		ca.setType("OptionsManager");
 		
-		List args = new ArrayList();
-		args.add(computation.getMethod().getName());
-		ca.setArguments(args);
-		
 		Action a = new Action();
 		a.setAction(ca);
 		a.setActor(this.getAID());

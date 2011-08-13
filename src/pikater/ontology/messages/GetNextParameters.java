@@ -7,10 +7,8 @@ public class GetNextParameters extends Action{
 
 	private static final long serialVersionUID = -4554163588726699351L;
 	
-	private List options;
-	private Evaluation evaluation;
-	private float error_rate;
-	private int maximum_tries;
+	private List options; // List of Options
+	private List search_options;
 	
 	public List getOptions() {
 		return options;
@@ -18,23 +16,11 @@ public class GetNextParameters extends Action{
 	public void setOptions(List options) {
 		this.options = options;
 	}
-	public Evaluation getEvaluation() {
-		return evaluation;
+	public List getSearch_options() {
+		return search_options;
 	}
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
-	}
-	public float getError_rate() {
-		return error_rate;
-	}
-	public void setError_rate(float error_rate) {
-		this.error_rate = error_rate;
-	}
-	public int getMaximum_tries() {
-		return maximum_tries;
-	}
-	public void setMaximum_tries(int maximum_tries) {
-		this.maximum_tries = maximum_tries;
+	public void setSearch_options(List search_options) {
+		this.search_options = search_options;
 	}
 
 }

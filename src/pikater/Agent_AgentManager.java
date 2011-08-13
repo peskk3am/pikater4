@@ -124,6 +124,16 @@ public class Agent_AgentManager extends Agent {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		File data = new File("saved");
+        if (!data.exists()) {
+            log.info("Creating directory saved");
+            if (data.mkdirs()) {
+                log.info("Succesfully created directory saved");
+            } else {
+                log.error("Error creating directory saved");
+            }
+        }
+		
 	}
 
 	@Override

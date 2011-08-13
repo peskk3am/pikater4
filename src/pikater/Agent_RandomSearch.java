@@ -8,6 +8,7 @@ import java.util.Random;
 
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
+import pikater.ontology.messages.Options;
 import pikater.ontology.messages.Task;
 
 public class Agent_RandomSearch extends Agent_Search {
@@ -15,6 +16,29 @@ public class Agent_RandomSearch extends Agent_Search {
 	private static final long serialVersionUID = 2777277001533605329L;
 
 	private int number_of_tries = 0;
+	private float error_rate = 1;
+	
+	private int maximum_tries;
+	private float final_error_rate;
+
+	@Override
+	protected void loadSearchOptions(){
+		List search_options = getSearch_options();
+		// find maximum tries in Options
+		Iterator itr = search_options.iterator();
+		while (itr.hasNext()) {
+			Option next = (Option) itr.next();
+			if (next.getName().equals("E")){
+				final_error_rate = Float.parseFloat(next.getValue()); 
+			}
+			if (next.getName().equals("M")){
+				maximum_tries = Integer.parseInt(next.getValue()); 
+			}
+		}
+		System.out.println(getLocalName()+" parameters are: ");
+		System.out.println("   final_error_rate: " + final_error_rate);
+		System.out.println("   maximum_tries: " + maximum_tries);		
+	}
 	
 	@Override
 	protected String getAgentType() {
@@ -23,25 +47,40 @@ public class Agent_RandomSearch extends Agent_Search {
 
 	@Override
 	protected boolean finished() {
-		if (number_of_tries >= getMaximum_tries()) {
+		System.out.println("finished() error_rate: "+ error_rate + " final_error_rate: "+ final_error_rate);
+
+		if (number_of_tries >= maximum_tries) {
 			return true;
 		}
 
-		if (getEvaluation() != null) {
-			if (getEvaluation().getError_rate() < getError_rate()) {
-				return true;
-			}
+		if (error_rate < final_error_rate) {
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	protected void generateNewOptions(List options) {
-		// go through the Options Vector, find mutable options, generate random
-		// values, make it a string
-
+	protected void updateFinished(List evaluations) {
+		if (evaluations == null){
+			error_rate = 1;
+		}
+		else{
+			error_rate = ((Evaluation)(evaluations.get(0))).getError_rate();
+			System.out.println("changing error_rate to: " + error_rate);
+		}
+	}
+		
+	@Override
+	protected List generateNewOptions(List options, List evaluations) {
+		// go through the Options Vector, generate random values
 		Random generator = new Random();
-		Iterator itr = options.iterator();
+		List new_options = new ArrayList();
+		Iterator itr = getOptions().iterator();
+		while (itr.hasNext()) {
+			new_options.add(itr.next());
+		}		
+		
+		itr = new_options.iterator();
 		while (itr.hasNext()) {
 			Option next = (Option) itr.next();
 
@@ -128,7 +167,11 @@ public class Agent_RandomSearch extends Agent_Search {
 				next.setValue(s);
 			}
 		}
-		number_of_tries++;		
+		number_of_tries++;
+		
+		List options_list = new ArrayList();
+		options_list.add(new Options(new_options));
+		return options_list;
 	}
 
 }
