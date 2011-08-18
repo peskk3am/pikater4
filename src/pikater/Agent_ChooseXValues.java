@@ -91,14 +91,13 @@ public class Agent_ChooseXValues extends Agent_Search {
 		// return new String[0];
 	}
 
-	@Override
-	protected void generateNewOptions(List Options) {
+	/*protected List generateNewOptions(List Options) {
 		if (n == Integer.MAX_VALUE) {
 			// generate the options_vector when called for the first time
 			generateOptions_vector(Options);
 		}
 		if (n == 0) {
-			return;
+			return null;
 		}
 		// return options_vector.get(ni++);
 		// go through a string, add the values to the Options
@@ -124,8 +123,9 @@ public class Agent_ChooseXValues extends Agent_Search {
 				}
 			}
 		}
-		Options = newOptions;
-	}
+		//Options = newOptions;
+		return newOptions;
+	}*/
 
 	private String generate(String str, String[][] possible_options_array) {
 		if (possible_options_array.length < 1) {
@@ -283,6 +283,68 @@ public class Agent_ChooseXValues extends Agent_Search {
 		return new String[0];
 		
 	} // end getPossibleValues
+
+	@Override
+	protected List generateNewOptions(List options, List evaluations) {
+		// TODO Auto-generated method stub
+		List Options =getOptions();
+		if(evaluations == null){
+			// generate the options_vector when called for the first time
+			n = Integer.MAX_VALUE;
+			ni = 0;
+			generateOptions_vector(Options);
+		}
+		if (n == 0) {
+			return null;
+		}
+		// return options_vector.get(ni++);
+		// go through a string, add the values to the Options
+		String[] optStringArray = options_vector.get(ni++).replaceFirst("[ ]+",
+				"").split("[ ]+");
+		// List newOpt = (new
+		// ontology.messages.Agent()).stringToOptions(optString);
+
+		List newOptions = new ArrayList();
+		Iterator itr = Options.iterator();
+		while (itr.hasNext()) {
+			Option next = (Option) itr.next();
+			for (int i = 0; i < optStringArray.length; i = i + 2) {
+				// always a couple name - value
+				if (optStringArray[i].equals("-" + next.getName())) {
+					next.setValue(optStringArray[i + 1]);
+					newOptions.add(next);
+				}
+			}
+			if (!newOptions.contains(next)) {
+				if (!next.getValue().equals(next.getDefault_value())) {
+					newOptions.add(next);
+				}
+			}
+		}
+		//Options = newOptions;
+		return newOptions;
+	}
+
+	@Override
+	protected void loadSearchOptions() {
+		List search_options = getSearch_options();
+		// find maximum tries in Options
+		Iterator itr = search_options.iterator();
+		while (itr.hasNext()) {
+			Option next = (Option) itr.next();
+			
+			if (next.getName().equals("T")){
+				//TODO
+				//maximum_tries = Integer.parseInt(next.getValue()); 
+			}
+		}
+		
+	}
+
+	@Override
+	protected void updateFinished(List evaluations) {
+		//???
+	}
 	
 	
 }
