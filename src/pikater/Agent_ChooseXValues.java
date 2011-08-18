@@ -19,8 +19,8 @@ public class Agent_ChooseXValues extends Agent_Search {
 	private int n = Integer.MAX_VALUE;
 	private int ni = 0;
 
-	private Vector<String> options_vector = new Vector<String>();
-	private Vector<String> sub_options_vector = new Vector<String>();
+	private Vector<String> options_vector ;
+	private Vector<String> sub_options_vector ;
 
 	@Override
 	protected boolean finished() {
@@ -292,6 +292,8 @@ public class Agent_ChooseXValues extends Agent_Search {
 			// generate the options_vector when called for the first time
 			n = Integer.MAX_VALUE;
 			ni = 0;
+			options_vector = new Vector<String>();
+			sub_options_vector = new Vector<String>();
 			generateOptions_vector(Options);
 		}
 		if (n == 0) {
