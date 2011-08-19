@@ -9,7 +9,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
-public class Agent_SimulatedAnnealing extends Agent_Search {
+public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	/*
 	 * Implementation of Simulated Annealing option search
 	 * Options:
@@ -145,7 +145,7 @@ public class Agent_SimulatedAnnealing extends Agent_Search {
 			Iterator itr = sol.getList().iterator();
 			while (itr.hasNext()) {
 				Option opt = ((Option) itr.next()).copyOption();
-				opt.setValue(mutateOptValue(opt));
+				opt.setValue(mutateOptValue(opt, 1-stability));
 				new_options.add(opt);
 			}
 		}
@@ -172,157 +172,5 @@ public class Agent_SimulatedAnnealing extends Agent_Search {
 		temperature = 0.8*temperature;
 	}
 
-	//Random option value (for "?")
-	private String randomOptValue(Option next_opt){
-		String[] values = next_opt.getUser_value().split(",");
-		float range = next_opt.getRange().getMax() - next_opt.getRange().getMin();
-		int numArgs = values.length;
-		if (!next_opt.getIs_a_set()) {
-			if (next_opt.getData_type().equals("INT") || next_opt.getData_type().equals("MIXED")) {
-				//INT, MIXED
-				String si = "";
-				for (int i = 0; i < numArgs; i++) {
-					String sg;
-					if (values[i].equals("?")) {
-						int rInt = (int) (next_opt.getRange().getMin() + rnd_gen.nextInt((int) range));
-						sg = Integer.toString(rInt);
-					}
-					else {
-						sg = values[i];
-					}
-					si+=sg;
-					if(i<numArgs-1){
-						si+=",";
-					}
-				}							
-				return si;
-			}else if (next_opt.getData_type().equals("FLOAT")) {
-				//FLOAT
-				String sf = "";
-				for (int i = 0; i < numArgs; i++) {
-					String sg;
-					if (values[i ].equals("?")) {	
-						float rFloat = next_opt.getRange().getMin() + rnd_gen.nextFloat()*range;
-						sg = Float.toString(rFloat);
-					}
-					else {
-						sg = values[i];
-					}
-					sf+=sg;
-					if(i<numArgs-1){
-						sf+=",";
-					}
-				}
-				return sf;
-			}else if (next_opt.getData_type().equals("BOOLEAN")) {
-				//BOOLEAN
-				int rInt2 = rnd_gen.nextInt(2);
-				if (rInt2 == 1) {
-					return "True";
-				} else {
-					return "False";
-				}
-			}
-			else
-				return "";//?
-		} else {
-			//SET
-			String s = "";
-			for (int i = 0; i < numArgs; i++) {
-				String sg;
-				if (values[i].equals("?")) {
-					int index = rnd_gen.nextInt(next_opt.getSet().size());
-					sg = next_opt.getSet().get(index).toString();
-				} else {
-					sg = values[i];
-				}
-				s+=sg;
-				if(i<numArgs-1){
-					s+=",";
-				}
-			}
-			return s;
-		}
-	}
-	
-	//Mutate option value: with probability of stability, the "?" value is kept, random otherwise
-	private String mutateOptValue(Option next_opt){
-		String[] values = next_opt.getUser_value().split(",");
-		String[] old_values = next_opt.getValue().split(",");
-		float range = next_opt.getRange().getMax() - next_opt.getRange().getMin();
-		int numArgs = values.length;
-		if (!next_opt.getIs_a_set()) {
-			if (next_opt.getData_type().equals("INT") || next_opt.getData_type().equals("MIXED")) {
-				//INT, MIXED
-				String si = "";
-				for (int i = 0; i < numArgs; i++) {
-					String sg;
-					if (values[i].equals("?") && (rnd_gen.nextDouble() > stability)) {
-						//Generate new value
-						int rInt = (int) (next_opt.getRange().getMin() + rnd_gen.nextInt((int) range));
-						sg = Integer.toString(rInt);
-					}
-					else {
-						sg = old_values[i];
-					}
-					si+=sg;
-					if(i<numArgs-1){
-						si+=",";
-					}
-				}							
-				return si;
-			}else if (next_opt.getData_type().equals("FLOAT")) {
-				//FLOAT
-				String sf = "";
-				for (int i = 0; i < numArgs; i++) {
-					String sg;
-					if (values[i ].equals("?")&& (rnd_gen.nextDouble() > stability)) {
-						//Generate new value
-						float rFloat = next_opt.getRange().getMin() +  rnd_gen.nextFloat()*range;
-						sg = Float.toString(rFloat);
-					}
-					else {
-						sg = old_values[i];
-					}
-					sf+=sg;
-					if(i<numArgs-1){
-						sf+=",";
-					}
-				}
-				return sf;
-			}else if (next_opt.getData_type().equals("BOOLEAN")) {
-				//BOOLEAN
-				// what if this has been already set???
-				if(rnd_gen.nextDouble() > stability){
-					//Generate new value
-					int rInt2 = rnd_gen.nextInt(2);
-					if (rInt2 == 1) {
-						return "True";
-					} else {
-						return "False";
-					}
-				}else return old_values[0];
-			}
-			else
-				return "";//?
-		} else {
-			//SET
-			String s = "";
-			for (int i = 0; i < numArgs; i++) {
-				String sg;
-				if (values[i].equals("?")&& (rnd_gen.nextDouble() > stability)) {
-					//Generate new value
-					int index = rnd_gen.nextInt(next_opt.getSet().size());
-					sg = next_opt.getSet().get(index).toString();
-				} else {
-					sg = old_values[i];
-				}
-				s+=sg;
-				if(i<numArgs-1){
-					s+=",";
-				}
-			}
-			return s;
-		}
-	}
+
 }
