@@ -175,5 +175,23 @@ public class Option implements Concept {
 		_value = default_value;
 		_default_value = default_value;
 	}
-
+	
+	public Option copyOption(){
+		Option opt = new Option();
+		opt.setMutable(_mutable);
+		opt.setRange(_range);
+		opt.setSet(_set);
+		opt.setIs_a_set(_is_a_set);
+		opt.setNumber_of_args(_number_of_args);
+		opt.setData_type(_data_type);
+		opt.setDescription(_description);
+		opt.setName(_name);
+		opt.setSynopsis(_synopsis);
+		opt.setValue(_value.substring(0)); // when immutable, contains the default value
+		opt.setDefault_value(_default_value);
+		opt.setUser_value(_user_value.substring(0));
+		opt.setNumber_of_values_to_try(_number_of_values_to_try);
+	    opt.setNumberOfOptions(numberOfOptions);
+	    return opt;
+	}
 }
