@@ -40,13 +40,16 @@ import pikater.ontology.messages.Option;
  */
 public class NewExperimentFrame extends javax.swing.JDialog {
 
+
+    public static final String[] searches = {"RandomSearch", "ChooseXValues", "GASearch", "SimulatedAnnealing"};
     java.util.ArrayList<String> files = new java.util.ArrayList<String>();
     java.util.ArrayList<AgentOptionsDialog> agentDialogs = new java.util.ArrayList<AgentOptionsDialog>();
     AgentsListModel agentList = new AgentsListModel();
     FileGroupsModel fileGroups = new FileGroupsModel();
     String[] agentTypes;
     GuiAgent myAgent;
-    OptionManagerDialog omd = new OptionManagerDialog((Frame)this.getParent(), true);
+    AgentOptionsDialog aod;
+
 
     class AgentsListModel extends DefaultListModel {
 
@@ -165,9 +168,11 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
         initComponents();
 
+
+        aod = new AgentOptionsDialog((Frame)this.getParent(), true, searches, myAgent, true);
         this.myAgent = myAgent;
 
-        optManagerLabel.setText(omd.getGuiString());
+        optManagerLabel.setText(aod.getAgentType() + aod.getAgentOptions());
 
         GuiEvent ge = new GuiEvent(this, GuiConstants.GET_AGENT_TYPES);
         myAgent.postGuiEvent(ge);
@@ -476,8 +481,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             return;
         }
 
-
-        LinkedList optManOptions = new LinkedList();
+/*        LinkedList optManOptions = new LinkedList();
         optManOptions.add(omd.getType());
         if (omd.getType().equals("Random")) {
             optManOptions.add(omd.getError());
@@ -485,10 +489,11 @@ public class NewExperimentFrame extends javax.swing.JDialog {
         }
         if (omd.getType().equals("ChooseXValues")) {
             optManOptions.add(omd.getNumTries());
-        }
+        }*/
 
         GuiEvent ge = new GuiEvent(this, GuiConstants.START_EXPERIMENT);
-        ge.addParameter(optManOptions);
+        ge.addParameter(aod.getAgentType());
+        ge.addParameter(aod.getAgentOptions());
         ge.addParameter(agentList.getAgents());
         ge.addParameter(fileGroups.getFileGroups());
         ge.addParameter(getNumberOfTasks());
@@ -536,8 +541,8 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                 }
                 while (m_itr.hasNext()) {
                     Element next_method = (Element) m_itr.next();
-                    omd.setType(next_method.getAttributeValue("name"));
-                    if (omd.getType().equals("Random")) {
+                    aod.setAgentType(next_method.getAttributeValue("name"));
+/*                    if (omd.getType().equals("Random")) {
                         String errRate = next_method.getAttributeValue("error_rate");
                         if (errRate != null)
                             omd.setError(Double.parseDouble(errRate));
@@ -550,10 +555,10 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                         String numTries = next_method.getAttributeValue("number_of_values_to_try");
                         if (numTries != null)
                             omd.setNumTries(Integer.parseInt(numTries));
-                    }
+                    }*/
                 }
 
-                optManagerLabel.setText(omd.getGuiString());
+                optManagerLabel.setText(aod.getAgentType());
 
                 java.util.List dataset = next_problem.getChildren("dataset");
                 java.util.Iterator ds_itr = dataset.iterator();
@@ -680,9 +685,9 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
     private void editOptionManagerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editOptionManagerButtonActionPerformed
 
-        omd.setVisible(true);
+        aod.setVisible(true);
 
-        optManagerLabel.setText(omd.getGuiString());
+        optManagerLabel.setText(aod.getAgentType());
 
     }//GEN-LAST:event_editOptionManagerButtonActionPerformed
 

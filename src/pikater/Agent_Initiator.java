@@ -15,6 +15,7 @@ import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
+import jade.wrapper.StaleProxyException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -120,7 +121,7 @@ public class Agent_Initiator extends Agent {
 			System.err.println("Exception while adding agent: " + e);
 			e.printStackTrace();
 			return 0;
-		}
+		} 
 
 		return 1;
 	}

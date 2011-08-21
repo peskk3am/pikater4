@@ -28,6 +28,8 @@ import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Option;
@@ -129,7 +131,7 @@ public class Agent_GUI_WS extends Agent_GUI {
 						jade.util.leap.Iterator it = sp.getFileNames()
 								.iterator();
 
-						int problemID = createNewProblem("30000", null);
+						int problemID = createNewProblem("30000", null, "file");
 
 						while (it.hasNext()) {
 							String s = (String) it.next();
@@ -325,7 +327,11 @@ public class Agent_GUI_WS extends Agent_GUI {
 
 	@Override
 	protected void allOptionsReceived(int problemId) {
-		sendProblem(problemId);
+        try {
+            sendProblem(problemId);
+        } catch (Exception ex) {
+            Logger.getLogger(Agent_GUI_WS.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	@Override

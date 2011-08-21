@@ -522,12 +522,11 @@ public class Agent_GUI_Java extends Agent_GUI {
                 finishedTasks.put(problemID, 0);
 
                 if (optionManager.get(0).equals("Random")) {
-                    addMethodToProblem(problemID, optionManager.get(0).toString(),
-                            optionManager.get(1).toString(), optionManager.get(2).toString(), null);
+                    addMethodToProblem(problemID, optionManager.get(0).toString());
                 }
 
                 if (optionManager.get(0).equals("ChooseXValues")) {
-                    addMethodToProblem(problemID, optionManager.get(0).toString(), null, null, optionManager.get(1).toString());
+                    addMethodToProblem(problemID, optionManager.get(0).toString());
                     // setDefault_number_of_values_to_try((Integer)optionManager.get(1));
                 }
 
