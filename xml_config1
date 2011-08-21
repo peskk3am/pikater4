@@ -8,9 +8,10 @@
 		
 		<dataset train="iris.arff" test="iris.arff" />
 		
-        <agent type="RBFNetwork">
-        	<parameter name="B" value="?" />
-		</agent>
+        <agent type="MultilayerPerceptron">
+        	<parameter name="L" value="?" />
+        </agent>
+        	
    </experiment>
        
 </experiments>
