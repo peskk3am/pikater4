@@ -50,6 +50,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
@@ -229,9 +230,37 @@ public abstract class Agent_GUI extends GuiAgent {
 				}
 				
 				System.out.println("Creating agent " + newName + ", type: "+ agentType);
-
-				aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
-				doWait(100);
+				
+				// send message to AgentManager to create an agent
+				ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+				msg_ca.addReceiver(new AID("agentManager", false));
+				msg_ca.setLanguage(codec.getName());
+				msg_ca.setOntology(ontology.getName());
+				CreateAgent ca = new CreateAgent();
+				ca.setType(agentType);
+										
+				Action a = new Action();
+				a.setAction(ca);
+				a.setActor(this.getAID());
+						
+				String search_agent_name = null;
+				try {
+					getContentManager().fillContent(msg_ca, a);	
+					ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+					search_agent_name = msg_name.getContent();
+				} catch (FIPAException e) {
+					System.err.println("Exception while adding agent"
+							+ agentType + ": " + e);		
+				} catch (CodecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OntologyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
+				// doWait(100);
 			}
 		}
 		if (aid == null) {
@@ -1330,6 +1359,20 @@ public abstract class Agent_GUI extends GuiAgent {
 				+ " is alive and waiting...");
 
 		mySetup();
+		
+		// test getOptions
+		try {
+			System.out.println(getOptions("RandomSearch").toString());
+		} catch (CodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	} // end setup
 
@@ -1587,5 +1630,6 @@ public abstract class Agent_GUI extends GuiAgent {
         Date date = new Date();
         return dateFormat.format(date);
     }
+    
 
 }
