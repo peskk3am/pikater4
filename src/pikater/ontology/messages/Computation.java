@@ -13,10 +13,10 @@ public class Computation implements Concept {
 	private Agent _agent;
 	private Data _data;
 	private int _timeout; // miliseconds
-	private Method _method;
-	private String _start;
+	private Agent _method;
 	private String _get_results;
 	private String _gui_agent;
+	private boolean _save_results;
 	
 	// Methods required to use this class to represent the TASK role
 	public void setAgent(Agent agent) {
@@ -59,20 +59,12 @@ public class Computation implements Concept {
 		return _timeout;
 	}
 
-	public Method getMethod() {
+	public Agent getMethod() {
 		return _method;
 	}
 
-	public void setMethod(Method method) {
+	public void setMethod(Agent method) {
 		_method = method;
-	}
-
-	public void setStart(String _start) {
-		this._start = _start;
-	}
-
-	public String getStart() {
-		return _start;
 	}
 
 	public void setGet_results(String _get_results) {
@@ -89,5 +81,13 @@ public class Computation implements Concept {
 
 	public String getGui_agent() {
 		return _gui_agent;
+	}
+
+	public void setSave_results(boolean _save_results) {
+		this._save_results = _save_results;
+	}
+
+	public boolean getSave_results() {
+		return _save_results;
 	}
 }

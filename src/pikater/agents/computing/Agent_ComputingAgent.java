@@ -426,7 +426,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 			return result_msg;
 		}
 
-		@Override
+		@Override 
 		public void action() {
 			
 			ACLMessage req = receive(resMsgTemplate);
@@ -721,6 +721,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 						List labeledData = new ArrayList();
 						
+						Date start = new Date();
 						if (state != states.TRAINED ) {
 							train();
 						}
@@ -728,8 +729,10 @@ public abstract class Agent_ComputingAgent extends Agent {
                                                 {
 							if (! mode.equals("test_only")){ train(); }
 						}
-
-                                                if (state == states.TRAINED) {
+						Date end = new Date();
+						int duration = (int)(end.getTime() - start.getTime());
+						
+                        if (state == states.TRAINED) {
 							eval = evaluateCA();
 							if (output.equals("predictions")) {
 								DataInstances di = new DataInstances();
@@ -743,6 +746,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 								eval.setLabeled_data(labeledData);
 							}
 						}
+                        eval.setDuration(duration);						
 																	
 					} catch (Exception e) {
 						success = false;

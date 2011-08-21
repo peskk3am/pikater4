@@ -1,5 +1,6 @@
 package pikater.ontology.messages;
 
+import pikater.gui.java.MyWekaOption.dataType;
 import jade.content.Concept;
 import jade.util.leap.List;
 
@@ -139,4 +140,58 @@ public class Option implements Concept {
 		_number_of_values_to_try = number_of_values_to_try;
 	}
 
+	public Option(){		
+	
+	}
+	
+	public Option(String name, String data_type,
+			float numArgsMin, float numArgsMax,
+			String range, float rangeMin, float rangeMax, List set,
+			String default_value, String description){		
+
+		_mutable = false;
+		
+		_name = name;
+		_data_type = data_type;
+
+		_number_of_args = new Interval();
+		_number_of_args.setMin((float)numArgsMin);
+		_number_of_args.setMax((float)numArgsMax);
+			
+		if (range.equals("r")) {
+			_range = new Interval();
+			_range.setMin(rangeMin);
+			_range.setMax(rangeMax);
+			_is_a_set = false;
+		}
+		if (range.equals("s")) {
+			_is_a_set = true;
+			_set = set; 
+		}
+		
+		_description = description;
+		
+		
+		_value = default_value;
+		_default_value = default_value;
+	}
+	
+	public Option copyOption(){
+		Option opt = new Option();
+		opt.setMutable(_mutable);
+		opt.setRange(_range);
+		opt.setSet(_set);
+		opt.setIs_a_set(_is_a_set);
+		opt.setNumber_of_args(_number_of_args);
+		opt.setData_type(_data_type);
+		opt.setDescription(_description);
+		opt.setName(_name);
+		opt.setSynopsis(_synopsis);
+		opt.setValue(_value.substring(0)); // when immutable, contains the default value
+		opt.setDefault_value(_default_value);
+		opt.setUser_value(_user_value.substring(0));
+		opt.setNumber_of_values_to_try(_number_of_values_to_try);
+	    opt.setNumberOfOptions(numberOfOptions);
+	    return opt;
+	}
 }

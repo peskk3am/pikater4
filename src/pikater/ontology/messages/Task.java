@@ -14,12 +14,13 @@ public class Task implements Concept {
 	private Agent _agent;
 	private Data _data;
 	
-	private String _save_mode = "message";  // if not null -> save the agent
+	private String _save_mode = "file";  // if not null -> save the agent
 								//    message (agent is sent in the message with the results)
 								//    file (agent is stored in the file by agentManager) --> TODO database
 
 	private String _get_results;
 	private String _gui_agent;
+	private boolean _save_results;
 	
 	private int userID;
 	private String start;
@@ -71,22 +72,6 @@ public class Task implements Concept {
 		return userID;
 	}
 
-	public void setStart(String start) {
-		this.start = start;
-	}
-
-	public String getStart() {
-		return start;
-	}
-
-	public void setFinish(String finish) {
-		this.finish = finish;
-	}
-
-	public String getFinish() {
-		return finish;
-	}
-
 	public void setSave_mode(String _save_mode) {
 		this._save_mode = _save_mode;
 	}
@@ -105,6 +90,24 @@ public class Task implements Concept {
 	}
 	public String getGui_agent() {
 		return _gui_agent;
+	}
+	public void setSave_results(boolean _save_results) {
+		this._save_results = _save_results;
+	}
+	public boolean getSave_results() {
+		return _save_results;
+	}
+	public void setStart(String start) {
+		this.start = start;
+	}
+	public String getStart() {
+		return start;
+	}
+	public void setFinish(String finish) {
+		this.finish = finish;
+	}
+	public String getFinish() {
+		return finish;
 	}
 
 }
