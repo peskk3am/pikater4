@@ -132,17 +132,17 @@ public abstract class Agent_Search extends Agent {
 						range = null;						
 					}
 					else{
-						numArgsMin = Float.parseFloat(params[2]);
-						numArgsMax = Float.parseFloat(params[3]);
-						range = params[4];
+						numArgsMin = Float.parseFloat(params[3]);
+						numArgsMax = Float.parseFloat(params[4]);
+						range = params[5];
 
 						if (range.equals("r")){
-							rangeMin = Float.parseFloat(params[5]);
-							rangeMax = Float.parseFloat(params[6]);
+							rangeMin = Float.parseFloat(params[6]);
+							rangeMax = Float.parseFloat(params[7]);
 						}
 						if (range.equals("s")){
 							set = new ArrayList();
-							String[] s = params[5].split("[ ]+");
+							String[] s = params[6].split("[ ]+");
 							for (int i=0; i<s.length; i++){
 								set.add(s[i]);
 							}

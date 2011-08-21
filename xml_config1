@@ -1,7 +1,7 @@
 <experiments>
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
 
-		<method name="Random">
+		<method name="RandomSearch">
 			<parameter name="E" value="0.001" />
         	<parameter name="M" value="5" />
         </method>
