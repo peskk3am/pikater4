@@ -236,8 +236,15 @@ public abstract class Agent_GUI extends GuiAgent {
 				msg_ca.addReceiver(new AID("agentManager", false));
 				msg_ca.setLanguage(codec.getName());
 				msg_ca.setOntology(ontology.getName());
+				
 				CreateAgent ca = new CreateAgent();
 				ca.setType(agentType);
+				ca.setName(newName);
+				if (agentOptions.get(agentType) != null){
+					List args = new ArrayList();								
+					args.add(agentOptions.get(agentType));
+					ca.setArguments(args);
+				}				
 										
 				Action a = new Action();
 				a.setAction(ca);
@@ -1373,6 +1380,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 
 	} // end setup
 

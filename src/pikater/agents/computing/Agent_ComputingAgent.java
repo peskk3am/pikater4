@@ -226,9 +226,6 @@ public abstract class Agent_ComputingAgent extends Agent {
 		}
 		newAgent = false;
 		
-		System.out.println(getAgentType() + " " + getLocalName()
-				+ " is alive...");
-
 		args = getArguments();
 
 		if (args != null && args.length > 0) {
@@ -253,6 +250,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 		}		
 		//some important initializations before registering
 		getParameters();
+		
+		System.out.println(getAgentType() + " " + getLocalName()
+				+ " is alive...");
 		
 		registerWithDF();
 

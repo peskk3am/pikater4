@@ -101,7 +101,7 @@ public abstract class Agent_Search extends Agent {
 
 				// parse the line
 				String delims = "[ ]+";
-				String[] params = line.split(delims, 10);
+				String[] params = line.split(delims, 11);
 
 				if (params[0].equals("$")) {
 					
@@ -152,7 +152,9 @@ public abstract class Agent_Search extends Agent {
 					Option o = new Option(params[1], dt,
 							numArgsMin, numArgsMax,
 							range, rangeMin, rangeMax, set,
-							params[params.length-2], params[params.length-1]);
+							params[params.length-3],
+							params[params.length-2],
+							params[params.length-1]);
 					
 					_options.add(o);
 					
