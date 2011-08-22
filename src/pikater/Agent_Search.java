@@ -101,7 +101,7 @@ public abstract class Agent_Search extends Agent {
 
 				// parse the line
 				String delims = "[ ]+";
-				String[] params = line.split(delims, 9);
+				String[] params = line.split(delims, 10);
 
 				if (params[0].equals("$")) {
 					
