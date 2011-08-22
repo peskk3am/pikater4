@@ -23,6 +23,8 @@ public class Agent_RandomSearch extends Agent_Search {
 
 	@Override
 	protected void loadSearchOptions(){
+		final_error_rate = (float) 0.1;
+		maximum_tries = 10;
 		List search_options = getSearch_options();
 		// find maximum tries in Options
 		Iterator itr = search_options.iterator();
