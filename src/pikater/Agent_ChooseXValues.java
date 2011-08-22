@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
+import pikater.ontology.messages.Options;
 
 public class Agent_ChooseXValues extends Agent_Search {
 	/**
@@ -323,8 +324,11 @@ public class Agent_ChooseXValues extends Agent_Search {
 				}
 			}
 		}
+		
 		//Options = newOptions;
-		return newOptions;
+		List options_list = new ArrayList();
+		options_list.add(new Options(newOptions));
+		return options_list;
 	}
 
 	@Override
