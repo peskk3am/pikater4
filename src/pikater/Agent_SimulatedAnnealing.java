@@ -76,7 +76,7 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		if (best_error_rate < final_error_rate){
 			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -120,10 +120,13 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 			best_error_rate = new_evaluation;
 		}
 		//Acceptance of new options
-		if (rnd_gen.nextDouble()<acceptanceProb(new_evaluation-evaluation,temperature)){
+		double acc;
+		//System.out.print("<OK:> Temp:"+temperature+", e0: "+evaluation);
+		if (rnd_gen.nextDouble()<(acc=acceptanceProb(new_evaluation-evaluation,temperature))){
 			solution = new_solution;
 			evaluation = new_evaluation;
 		}
+		//System.out.println(", e1:"+ new_evaluation+", acceptance: "+ acc+" ,.5->1:"+ acceptanceProb(1-0.5,temperature)+" ,1->.5:"+ acceptanceProb(0.5-1,temperature));
 		//Decrease temperature
 		Cooling();
 	}
