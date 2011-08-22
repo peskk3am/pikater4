@@ -202,10 +202,19 @@ public abstract class Agent_Search extends Agent {
 	} // end getParameters
 	
 	protected List getOptions() {
-		return options;
+		if(options != null){
+			return options;
+		}else{
+			return new ArrayList();
+		}
+		
 	}
 	protected List getSearch_options() {
-		return search_options;
+		if(search_options!=null){
+			return search_options;
+		}else{
+			return new ArrayList();
+		}
 	}
 	
 	protected boolean registerWithDF() {
