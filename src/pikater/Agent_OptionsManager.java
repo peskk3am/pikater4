@@ -28,6 +28,7 @@ import jade.proto.IteratedAchieveREInitiator;
 import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
+import jade.util.leap.LinkedList;
 import jade.util.leap.List;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
@@ -527,6 +528,9 @@ public class Agent_OptionsManager extends Agent {
 	
 	private List addMutableOptions(List newOptions){
 		// copy Options
+
+                if (newOptions == null)
+                    newOptions = new LinkedList();
 		List _Options = new ArrayList();
 		Iterator itr = Options.iterator();
 		while (itr.hasNext()) {
