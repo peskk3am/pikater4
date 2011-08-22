@@ -241,10 +241,10 @@ public abstract class Agent_GUI extends GuiAgent {
 				ca.setType(agentType);
 				ca.setName(newName);
 				if (agentOptions.get(agentType) != null){
-					List args = new ArrayList();								
+					List args = new ArrayList();
 					args.add(agentOptions.get(agentType));
 					ca.setArguments(args);
-				}				
+				}
 										
 				Action a = new Action();
 				a.setAction(ca);

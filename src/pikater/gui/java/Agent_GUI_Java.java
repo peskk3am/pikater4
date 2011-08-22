@@ -468,6 +468,8 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 String agentType = (String)ev.getParameter(0);
 
+                System.err.println(agentType);
+
                 try {
                     List options = getOptions(agentType);
 
@@ -511,7 +513,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                 List optManagerOptions = (List) ev.getParameter(1);
                 ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(2);
                 ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(3);
-                int tasks = (Integer)ev.getParameter(3);
+                int tasks = (Integer)ev.getParameter(4);
             
                 int problemID = createNewProblem("10000", "after_each_task", "no");
                 // createNewProblem (
