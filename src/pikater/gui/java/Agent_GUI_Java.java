@@ -112,7 +112,7 @@ public class Agent_GUI_Java extends Agent_GUI {
 
         String finTot = " (" + finished + "/" + total + ")";
 
-        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + (problemID + 1) + finTot);
+        myGUI.showInfo(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("GOT_RESULTS") + (problemID + 1));
         
         String testInternalFilename = t.getData().getTest_file_name();
                 String trainInternalFilename = t.getData().getTrain_file_name();
@@ -473,6 +473,9 @@ public class Agent_GUI_Java extends Agent_GUI {
                 try {
                     List options = getOptions(agentType);
 
+                    if (options == null)
+                        options = new LinkedList();
+                    
                     for (int i = options.size() - 1; i >= 0; i--) {
                         Option o = (Option)options.get(i);
                         System.err.println(agentType + "-" + o.getName());

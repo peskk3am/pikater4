@@ -775,8 +775,8 @@ public class MessagesOntology extends Ontology {
                         as = (AgentActionSchema)getSchema(DELETE_TEMP_FILES);
 
             as = (AgentActionSchema) getSchema(GET_NEXT_PARAMETERS);                       
-            as.add(GET_NEXT_PARAMETERS_OPTIONS, (ConceptSchema) getSchema(OPTION), 1, ObjectSchema.UNLIMITED);
-            as.add(GET_NEXT_PARAMETERS_SEARCH_OPTIONS, (ConceptSchema) getSchema(OPTION), 1, ObjectSchema.UNLIMITED);
+            as.add(GET_NEXT_PARAMETERS_OPTIONS, (ConceptSchema) getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
+            as.add(GET_NEXT_PARAMETERS_SEARCH_OPTIONS, (ConceptSchema) getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
             as = (AgentActionSchema) getSchema(CREATE_AGENT);                       
             as.add(CREATE_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING));
             as.add(CREATE_AGENT_NAME, (PrimitiveSchema)getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);

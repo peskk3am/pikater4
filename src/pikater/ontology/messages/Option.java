@@ -170,7 +170,7 @@ public class Option implements Concept {
 		}
 		
 		_description = description;
-		_synopsis  = "-"+name+" <"+synopsis+">";
+		_synopsis  = synopsis;
 		
 		_value = default_value;
 		_default_value = default_value;

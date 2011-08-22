@@ -230,44 +230,44 @@ public abstract class Agent_GUI extends GuiAgent {
 				}
 				
 				System.out.println("Creating agent " + newName + ", type: "+ agentType);
-				
-				// send message to AgentManager to create an agent
-				ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-				msg_ca.addReceiver(new AID("agentManager", false));
-				msg_ca.setLanguage(codec.getName());
-				msg_ca.setOntology(ontology.getName());
-				
-				CreateAgent ca = new CreateAgent();
-				ca.setType(agentType);
-				ca.setName(newName);
+
 				if (agentOptions.get(agentType) != null){
-					List args = new ArrayList();
-					args.add(agentOptions.get(agentType));
-					ca.setArguments(args);
+					aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
+					doWait(100);
 				}
-										
-				Action a = new Action();
-				a.setAction(ca);
-				a.setActor(this.getAID());
-						
-				String search_agent_name = null;
-				try {
-					getContentManager().fillContent(msg_ca, a);	
-					ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-					search_agent_name = msg_name.getContent();
-				} catch (FIPAException e) {
-					System.err.println("Exception while adding agent"
-							+ agentType + ": " + e);		
-				} catch (CodecException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (OntologyException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				// aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
-				// doWait(100);
+				else{
+					// TODO - predelat, aby se vsichni vytvareli pomoci agentmanagera
+					// send message to AgentManager to create an agent
+					ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+					msg_ca.addReceiver(new AID("agentManager", false));
+					msg_ca.setLanguage(codec.getName());
+					msg_ca.setOntology(ontology.getName());
+					
+					CreateAgent ca = new CreateAgent();
+					ca.setType(agentType);
+					ca.setName(newName);
+											
+					Action a = new Action();
+					a.setAction(ca);
+					a.setActor(this.getAID());
+							
+					String agent_name = null;
+					try {
+						getContentManager().fillContent(msg_ca, a);	
+						ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+						agent_name = msg_name.getContent();
+						aid = new AID(agent_name, AID.ISLOCALNAME);
+					} catch (FIPAException e) {
+						System.err.println("Exception while adding agent"
+								+ agentType + ": " + e);		
+					} catch (CodecException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (OntologyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}				
 			}
 		}
 		if (aid == null) {
@@ -1369,7 +1369,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		
 		// test getOptions
 		try {
-			System.out.println(getOptions("RandomSearch").toString());
+			System.out.println("Test of getOptions:"+getOptions("RBFNetwork").toString());
 		} catch (CodecException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

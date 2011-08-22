@@ -102,8 +102,9 @@ public class Agent_Manager extends Agent {
 			e.printStackTrace();
 		}
 
-		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
-		agentTypes.put("Random", "RandomSearch");
+		agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
+                agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
+		agentTypes.put("RandomSearch", "pikater.RandomSearch");
 		
 	}
 	

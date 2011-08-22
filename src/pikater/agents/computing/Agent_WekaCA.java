@@ -206,10 +206,6 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	protected void getParameters() {
 		//set the Agent type according to the arguments
 
-                for (String s : OPTIONS_ARGS) {
-                    System.err.println(s);
-                }
-
 		if(OPTIONS_ARGS==null || OPTIONS_ARGS.length!=1 ){
 			System.err.println("Wrong arguments of WekaCA");
 			return;//TODO: error
