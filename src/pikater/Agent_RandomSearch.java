@@ -42,7 +42,7 @@ public class Agent_RandomSearch extends Agent_Search {
 	
 	@Override
 	protected String getAgentType() {
-		return "Random";
+		return "RandomSearch";
 	}
 
 	@Override

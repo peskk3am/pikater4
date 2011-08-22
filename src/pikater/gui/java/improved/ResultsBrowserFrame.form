@@ -63,7 +63,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="844" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -293,11 +293,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="loadCurrentResultsButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="showDetailsButton" linkSize="2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="saveResultsButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelDataButton" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="157" max="32767" attributes="0"/>
+                              <Component id="loadCurrentResultsButton" linkSize="2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="currentResultsExportButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="saveResultsButton" linkSize="2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="currentResultsExportButton" linkSize="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane3" alignment="0" pref="815" max="32767" attributes="0"/>
                       </Group>
@@ -315,6 +319,8 @@
                           <Component id="loadCurrentResultsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="saveResultsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="currentResultsExportButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="showDetailsButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="labelDataButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -380,6 +386,26 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadCurrentResultsButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="showDetailsButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="pikater/gui/java/improved/Strings.properties" key="DETAILS" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showDetailsButtonActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="labelDataButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="pikater/gui/java/improved/Strings.properties" key="LABEL_DATA" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="labelDataButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

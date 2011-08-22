@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>Metodika - kosatce</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+
+<h1>Kosatce - Základy data miningu</h1>
+
+<h2>Aktivita v kostce</h2>
+
+<p>
+Učitel a žáci se seznámí s analýzou dat metodami umělé inteligence. Ukáží si princip data miningu a často používané modely řešící problém učení s učitelem, vícevrstvé perceptronové sítě a radiální sítě. Učení probíhá na standardní datové sadě IRIS (kosatce). Studenti vytvoří model dat pomocí programu BANG a sledují vliv volby modelu a parametrů na jeho úspěšnost. Data z biologie umožňují i krátkou  diskusi na téma sběru kvantitativních biologických dat, multidisciplinárního přístupu i ochrany přírody.
+</p>
+
+<h2>Cíle aktivity</h2>
+
+<p>
+Cílem aktivity je komplexní pochopení metodologie data miningu a proniknutí do metod tvorby modelů z dat. Student se naučí práci s programem pro učení modelu a pochopí řešení jednoho ze základních problémů data miningu – učení s učitelem. Dále se prostřednictvím závěrečné diskuse zabrousí do oblasti sběru kvantitativních biologických dat, ochrany přírody apod.
+</p>
+
+<h2>Časová náročnost</h2>
+
+<b>příprava učitele</b>: cca 1 hod na seznámení s programem BANG<br>
+<b>práce při vyučování</b>: 45 min<br>
+<b>domácí příprava studentů</b>: 0 min<br>
+
+<h2>Aplikace</h2>
+
+Program BANG
+
+<h3>Popis aplikace</h3>
+<p>
+Program je dostupný v českém a anglickém jazyce pro platformy MS Windows a Linux. Ovládání je poměrně jednoduché, součástí aplikace je dokumentace včetně tutoriálu, a připravené datové soubory pro experimenty. 
+</p>
+
+<h3>Technické požadavky</h3>
+
+<p>
+Program je distribuován jako samostatná aplikace, která ke své práci potřebuje nainstalované runtime prostředí Java. Byl testován v prostředích MS Windows a Ubuntu Linux.
+</p>
+
+<h2>Popis aktivity</h2>
+
+<p>
+Žáci se seznámí s tím, jak využít program BANG pro vytvoření modelu na základě dat. Následně se na problému klasifikace kosatců postupně vyzkouší učení a testování tří různých modelů. Prvním modelem je perceptronová síť s jednou vrstvou, dále perceptronová síť se dvěma vrstvami a nakonec radiální síť. Každý experiment má tři části:
+<ol>
+<li>Nastavení parametrů metody – začněte defaultním nastavením, pak případně zkuste změnit jeden parametr a sledovat, zda se výsledek zlepšil či zhoršil. Praktický význam má hlavně velikost modelu, tj. počet použitých jednotek v síti.</li>
+<li>Spuštění učení – proces učení je poměrně složitý a trvá podle velikosti dat a rychlosti počítače několik vteřin až minut. Záleží také na nastavení koncové podmínky, například cílové velikosti chyby modelu.</li>
+<li>Prohlédnutí protokolu o experimentu. Kromě údajů popisujících výsledek experimentu jako celku (tj. typ modelu, tréninková a testovací data, chyby modelu) je důležité zjistit i ohodnocení jednotlivých dat a zhodnotit úspěšnost metody.</li>
+</ol>
+Experimenty jsou navrženy tak, aby demonstrovaly úspěšnost jednotlivých metod v posloupnosti od jednoduššího jednovrstvého perceptronu, který má typicky problém rozlišit všechny tři kategorie kosatců, až po dvě sofistikovanější metody, které by obě měly úlohu zvládnout při správném nastavení parametrů. 
+</p>
+
+<div style="background:#CCFF33; padding:5px; border:1px solid #000">
+<b>Data mining</b> - metoda získávání informace z rozsáhlého souboru dat<br>
+<b>Učení s učitelem</b> - metoda data miningu, která se snaží minimalizovat chybu modelu na tréninkové množině dat<br>
+<b>Vícevrstvá perceptronová síť</b> - síť, kterou tvoří modely neuronu. Každý modelový neuron má několik vstupů, kterým jsou přiřazeny váhy, které vstup zesilují nebo zeslabují, a jeden výstup. Jednovrstvá perceptronová síť umí vyřešit pouze lineárně-separabilní úlohy, na složitější data je třeba zkombinovat několik vrstev perceptronů a použít  vhodnou metodu učení.<br>
+<b>Radiální síť</b> - síť tvoří jednotky částečně podobné perceptronům, ale způsob, kterým počítají výstup, je zásadně odlišný – místo lineární kombinace vstupů s váhami se tu počítá euklidovská vzdálenost, a také místo sigmoidální funkce počítáme Gaussovu funkci.<br>
+<b>Tréninková data</b> - data, která se používají k učení modelu. Máme-li k dispozici jeden soubor dat, bývá zvykem rozdělit ho na data tréninková (80-90%) a data testovací (10-20%).<br>
+<b>Testovací data</b> - data, která použijeme k ověření správné funkce modelu<br>
+</div>
+
+<h2>Motivace</h2>
+<p>
+Data mining je důležitou součástí informatiky, protože v počítačových sítích se ukládají ohromná množství dat. Umělá inteligence a její metody jsou jednou z možností, jak z dat extrahovat zajímavé informace. I když teorie za fungováním modelů perceptronových či radiálních sítí je složitá, jejich použití zvládne i poučený středoškolák. Navíc, pohled na data jako příklady funkčních závislostí, které lze modelovat, posiluje formální myšlení a přístup k řešení problémů.
+</p>
+<h2>Postup při zadávání</h2>
+<p>
+Učitel se seznámí s programem BANG, přečte si tutorial a datamining_uvodni_text.doc. Následně vyloží žákům teorii data miningu a stručně jim představí základní metody analýzy dat, perceptronovu a radiální síť. Vhodným souborem dat, na kterém si vlastnosti zmiňovaných metod mohou ověřit, jsou data o kosatcích. Cílem aktivity bude nalézt vhodnou metodu učení, která pak na základě údajů o velikostech okvětních lístků dokáže kosatec zařadit do jednoho ze tří druhů. Doporučujeme využít vizualizaci z datamining_uvodni_text.doc
+</p>
+<p>
+Poté se spustí program BANG. 
+</p>
+<p>
+Studenti si dle pokynů v programu vytvoří model s jednovrstvým perceptronem a zhodnotí jeho úspěšnost. Dále zkusí změnit nastavení počtu jednotek, např. na polovinu a dvojnásobek defaultní hodnoty.
+</p>
+<p>
+Dále studenti pokračují stejným způsobem s experimentem s vícevrstvým perceptronem a nakonec s radiální sítí. U vícevrstvého perceptronu jsou defaultně nastavené dvě skryté vrstvy, u kterých lze opět měnit počty jednotek. Případně zkuste zvětšit počet vrstev na 3. Takové sítě se v praxi používají na řešení obtížných úloh. U RBF sítě opět měníme parametr počtu jednotek v (jediné) vrstvě. Důležité je po každém experimentu prozkoumat protokol a zjistit úspěšnost metody. Během experimentů by studenti měli zjistit i odlišnosti v čase běhu jednotlivých algoritmů v závislosti na metodě a počtu jednotek.
+</p>
+
+<h2>Náměty na diskusi</h2>
+
+<ul>
+<li>Vede více jednotek k lepšímu modelu?</li>
+<li>Stačilo defaultní nastavení ke stoprocentnímu naučení modelu?</li>
+<li>Pomůže snížení cílové chyby?</li>
+<li>Jak dlouho se jednotlivé modely učí a proč tomu tak asi je?</li>
+<li>Které parametry mají vliv na délku učení?</li>
+</ul>
+
+<h2>Metodické poznámky</h2>
+<p>
+První ukázku použití programu BANG doporučujeme provést ve třídě na učitelském počítači. Žáci se budou dívat a poslouchat výklad, poté si práci v programem vyzkouší sami. Též je možno celý výklad provést na učitelském počítači a seznámení s programem BANG zadat žákům za domácí úkol.
+</p>
+<p>
+Aby pro studenty nebyla práce jen mechanickým prováděním činností podle návodu, je nutné, aby se dobře obeznámili s tím, jak data o kosatcích vypadají a co je vlastně cílem modelování těchto dat.
+</p>
+<p>
+Stejně tak je dobré věnovat čas seznámení s použitými metodami data miningu. I když hlubší vhled do problematiky neuronových sítí bude v lepším případě jen záležitostí pro nadšené studenty, je dobré použít výše uvedené materiály se základy modelů pro motivaci.
+</p>
+
+<h2>Varianty aktivity</h2>
+<p>
+Popsaná aktivita se věnuje základům data miningu; pokud ji studenti zvládnou a mají zájem, lze ji snadno rozšířit na další data (kolekce typických úloh je součástí instalace BANGu). V navazující aktivitě se studenti naučí pracovat s vlastnoručně nasbíranými daty.
+</p>
+<p>
+Další možností experimentů je vyzkoušet jiné metody, které jsou opět součástí softwaru BANG, ale které zde podrobněji nepopisujeme (popis je v dokumentaci k programu). Některé z nich budou na problém kosatců velmi vhodné, některé naopak ne.
+</p>
+<p>
+Program umožňuje automatické hledání nastavení parametrů modelu. To se hodí hlavně při experimentování s dalšími daty než jsou kosatce. 
+</p>
+<p>
+Aktivitu lze rozšířit o domácí práci, kdy studenti sami hledají co nejlepší model a jeho nastavení. Je možné použít libovolnou z dalších datových množin, které jsou součástí instalace.
+</p>
+</body>
+</html>

@@ -52,6 +52,11 @@ public class BooleanOptionPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    public BooleanOptionPanel(boolean hideAuto) {
+        initComponents();
+        setByOptManRadio.setVisible(!hideAuto);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

@@ -121,8 +121,8 @@ public class Agent_OptionsManager_old extends Agent {
 					testFileName = computation.getData().getTest_file_name();
 					receiver = computation.getAgent().getName();
 					computation_id = computation.getId();
-					error_rate = computation.getMethod().getError_rate();
-					maximum_tries = computation.getMethod().getMaximum_tries();
+//					error_rate = computation.getMethod().getError_rate();
+//					maximum_tries = computation.getMethod().getMaximum_tries();
 					problem_id = computation.getProblem_id();
 					start = getDateTime();
 					if (timeout < 0) {
@@ -367,9 +367,9 @@ public class Agent_OptionsManager_old extends Agent {
 					request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 					
 					GetNextParameters gp = new GetNextParameters();
-					gp.setError_rate(error_rate);
-					gp.setEvaluation(evaluation);
-					gp.setMaximum_tries(maximum_tries);
+//					gp.setError_rate(error_rate);
+//					gp.setEvaluation(evaluation);
+//					gp.setMaximum_tries(maximum_tries);
 					gp.setOptions(getMutableOptions(Options));  
 										
 					Action a = new Action();

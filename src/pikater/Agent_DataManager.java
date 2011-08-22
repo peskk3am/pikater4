@@ -94,15 +94,15 @@ public class Agent_DataManager extends Agent {
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
         
-        try {
-    		loadMetadataFromFile("metadata");
-    	} catch (IOException e1) {
-    		// TODO Auto-generated catch block
-    		e1.printStackTrace();
-    	} catch (SQLException e1) {
-    		// TODO Auto-generated catch block
-    		e1.printStackTrace();
-    	}	
+//        try {
+//    		loadMetadataFromFile("metadata");
+//    	} catch (IOException e1) {
+//    		// TODO Auto-generated catch block
+//    		e1.printStackTrace();
+//    	} catch (SQLException e1) {
+//    		// TODO Auto-generated catch block
+//    		e1.printStackTrace();
+//    	}
 
         
         LinkedList<String> tableNames = new LinkedList<String>();

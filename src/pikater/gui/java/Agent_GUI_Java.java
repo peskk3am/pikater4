@@ -468,6 +468,8 @@ public class Agent_GUI_Java extends Agent_GUI {
 
                 String agentType = (String)ev.getParameter(0);
 
+                System.err.println(agentType);
+
                 try {
                     List options = getOptions(agentType);
 
@@ -507,10 +509,11 @@ public class Agent_GUI_Java extends Agent_GUI {
 
             case GuiConstants.START_EXPERIMENT:
 
-                LinkedList optionManager = (LinkedList) ev.getParameter(0);
-                ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(1);
-                ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(2);
-                int tasks = (Integer)ev.getParameter(3);
+                String optManagerType = (String) ev.getParameter(0);
+                List optManagerOptions = (List) ev.getParameter(1);
+                ArrayList<Agent> agents = (ArrayList<Agent>) ev.getParameter(2);
+                ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(3);
+                int tasks = (Integer)ev.getParameter(4);
             
                 int problemID = createNewProblem("10000", "after_each_task", "no");
                 // createNewProblem (
@@ -521,14 +524,11 @@ public class Agent_GUI_Java extends Agent_GUI {
                 experimentTasks.put(problemID, tasks);
                 finishedTasks.put(problemID, 0);
 
-                if (optionManager.get(0).equals("Random")) {
-                    addMethodToProblem(problemID, optionManager.get(0).toString(),
-                            optionManager.get(1).toString(), optionManager.get(2).toString(), null);
-                }
+                addMethodToProblem(problemID, optManagerType);
 
-                if (optionManager.get(0).equals("ChooseXValues")) {
-                    addMethodToProblem(problemID, optionManager.get(0).toString(), null, null, optionManager.get(1).toString());
-                    // setDefault_number_of_values_to_try((Integer)optionManager.get(1));
+                for (int i = 0; i < optManagerOptions.size(); i++) {
+                    Option o = (Option)optManagerOptions.get(i);
+                    addSearchOption(problemID, o.getName(), o.getValue());
                 }
 
                 for (int i = 0; i < files.size(); i++) {
@@ -702,6 +702,7 @@ public class Agent_GUI_Java extends Agent_GUI {
 
         if (inform.getPerformative() != ACLMessage.INFORM) {
             myGUI.showError(ResourceBundle.getBundle("pikater/gui/java/improved/Strings").getString("TASK_FAILURE") + inform.getContent());
+            return;
         }
 
         try {

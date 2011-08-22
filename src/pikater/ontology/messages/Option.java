@@ -147,7 +147,7 @@ public class Option implements Concept {
 	public Option(String name, String data_type,
 			float numArgsMin, float numArgsMax,
 			String range, float rangeMin, float rangeMax, List set,
-			String default_value, String description){		
+			String default_value, String synopsis, String description){		
 
 		_mutable = false;
 		
@@ -170,7 +170,7 @@ public class Option implements Concept {
 		}
 		
 		_description = description;
-		
+		_synopsis  = "-"+name+" <"+synopsis+">";
 		
 		_value = default_value;
 		_default_value = default_value;

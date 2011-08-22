@@ -5,3 +5,14 @@ MultilayerPerceptron-N
 MultilayerPerceptron-H
 Perceptron-N
 Perceptron-L
+GASearch-S
+GASearch-P
+GASearch-X
+GASearch-M
+GASearch-E
+RandomSearch-M
+RandomSearch-E
+SimulatedAnnealing-S
+SimulatedAnnealing-T
+SimulatedAnnealing-M
+SimulatedAnnealing-E

@@ -121,8 +121,8 @@ public abstract class Agent_OptionsManagerOld extends Agent {
 					testFileName = computation.getData().getTest_file_name();
 					receiver = computation.getAgent().getName();
 					computation_id = computation.getId();
-					error_rate = computation.getMethod().getError_rate();
-					maximum_tries = computation.getMethod().getMaximum_tries();
+//					error_rate = computation.getMethod().getError_rate();
+//					maximum_tries = computation.getMethod().getMaximum_tries();
 					problem_id = computation.getProblem_id();
 					start = getDateTime();
 					if (timeout < 0) {

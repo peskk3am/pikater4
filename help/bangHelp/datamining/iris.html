@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<head>
+  <title>Klasifikace kosatců</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+
+<h1>Klasifikace kostatců</h1>
+
+<p>
+Jedním z nejznámějších problémů v oblasti data mininigu je problém klasifikace kosatců. Jde o poměrně malý a jednoduchý problém, u kterého jsou navíc velmi dobře prozkoumány vlastnosti dat, takže se často používá pro testování metod data miningu. Je zajímavé zmínit, že jde o data prezentovaná již sirem R.A. Fisherem v roce 1936. Jak data vypadají? Jde o celkem 150 dat, která odpovídají třem různým druhům kosatců (<i>Iris setosa</i>, <i>Iris virginica</i> a <i>Iris versicolor</i>). Každý z kosatců je zastoupen 50 daty. Data odpovídají měřením okvětních lístků jednotlivých rostlin. Okvětí kosatců se dělí na tři vnější  a tři vnitřní lístky okvětní, u kterých se měří délka a šířka v centimetrech. Data uložená v souboru IRIS.ARFF tedy vypadají takto:<br>
+</p>
+
+<center>
+<table border=1>
+<tr><th>Sepal Length</th><th>Sepal Width</th><th>Petal Length</th><th>Petal Width</th><th>Species</th></tr>
+<tr><td>5,1</td><td>3,5</td><td>1,4</td><td>0,2</td><td>Iris setosa</td></tr>
+<tr><td>4,9</td><td>3</td><td>1,4</td><td>0,2</td><td>Iris virginica</td></tr>
+<tr><td>5,9</td><td>3</td><td>5,1</td><td>1,8</td><td>Iris virginica</td></tr>
+</table>
+</center>
+
+<p>
+Cílem data miningu je v tomto případě vytvořit model, který je schopen na základě čtyř naměřených údajů rozlišit, o který ze tří druhů kosatců jde. O složitosti či snadnosti úlohy si můžeme vytvořit představu z následujícího obrázku.
+</p>
+
+<center>
+<img width="600" height="600" src="../images/irisScatter.png"><br>
+Grafické 2D znázornění dat kosatců (převzato z Wikipedie).
+</center>
+
+<p>
+Z obrázku je vidět, že Iris setosa tvoří kategorii, která je poměrně dobře oddělitelná od ostatních dvou druhů. Je dokonce lineárně separabilní. Iris virginica a Iris versicolor jsou naopak v některých osách poměrně těžko oddělitelné.
+</p>
+
+</body>
+</html>

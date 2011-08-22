@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<head>
+  <title>Vícevrstvá perceptronová síť</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+
+<h1>Vícevrstvá perceptronová síť</h1>
+<p>
+Vícevrstvý perceptron je v současnosti asi nejpopulárnějším modelem umělé neuronové sítě, který se používá k řešení praktických problémů. Jeho návrh pochází z 50.let dvacátého století, kdy se Franku Rosenblattovi podařilo využít předchozích prací o tom, jak matematicky modelovat jednu nervovou buňku, neuron. Model neuronu má více <i>vstupů</i> a jeden <i>výstup</i>. Každý vstup má přiřazenou hodnotu tzv. <i>synaptické váhy</i>, která daný vstupní signál buď zesiluje nebo zeslabuje. Váženou sumu vstupů a vah pak nazýváme <i>potenciálem</i> neuronu. Je zajímavé, že výstupní signál neuronu je pro malé hodnoty potenciálu nulový, ale jakmile hodnota potenciálu přesáhne určitou hodnotu, říkáme jí práh, je výstup roven 1. Matematicky se celá věc popíše jednoduše pomocí tzv sigmoidální funkce. Nejčastějšími příklady sigmoidálních funkcí je hyperbolický tangens nebo tzv. logistická sigmoida.
+</p>
+<p>
+Rosenblatt propojil matematické modely neuronů do jedné vrstvy, která má několik jednotek propojených se vstupy a výstupy úlohy. Vznikla tak <i>jednovrstvá</i> perceptronová síť. Důležité bylo, že Rosenblatt přišel i s <i>učícím algoritmem</i>, který na základě kvadratické chyby (popsané v předchozí části) měnil parametry sítě. Učení je v tomto případě vlastně změna hodnot vah a prahů umělých neuronů.
+</p>
+<p>
+Jednovrstvý perceptron byl populární a poměrně jednoduchou metodou analýzy dat. Vědci odvodili, že je schopen řešit jen tzv. lineárně-separabilní úlohy, to znamená klasifikace, kde množiny jednotlivých kategorií oddělíme lineární funkcí (přímkou pro D=2, rovinou pro D=3, atd.). Je ale jasné, že spousta dat není lineárně-separabilní, takže jednovrstvý perceptron nedokáže vytvořit jejich věrný model.
+</p>
+<p>
+Proto vznikl model vícevrstvé perceptronové sítě, který propojil více vrstev perceptronů mezi sebou. Trvalo ale celých třicet let, než se pro tuto složitější síť nalezl správný učící algoritmus. Byl objeven v roce 1986 a nazývá se <i>metoda zpětného šíření chyby</i> (<i>error back propagation</i>). Tato metoda využívá derivace chyby v prostoru vah sítě, takže se pohybuje v prostorech s dimenzí několika stovek až desetitisíců. Chyba sítě se vyjadřuje jako chybová funkce závislá na vahách sítě. Naším cílem při učení je dosáhnout minima chyby. Postupujeme iterativně: začneme v nějakém náhodně zvoleném bodě a snažíme se zjistit největší spád, po kterém sestoupíme o určitý malý krok dolů a tak znovu a znovu. Největší spád lze určit pomocí derivací chyby podle vah. Poznamenejme nakonec, že velká dimenze problému často způsobí, že po spádnici dojedeme do nějakého lokálního minima, které ale není dostatečně dobré pro naučení celého modelu. Pak nezbývá než zkusit postup znovu z jiného náhodného místa, anebo experimentovat s nastavením parametrů učení, jako je například hodnota kroku iterace.
+
+<table>
+<tr><td><img width="300" height="200" src="../images/percSchema.png"></td><td><img width="300" height="200" src="../images/mlpSchema.png"></td></tr>
+<tr><td>Schéma perceptronové jednotky s logistickou sigmoidou</td><td>Perceptronová síť se dvěma vrstvami perceptronových jednotek</td></tr>
+</table>
+
+</body>
+</html>

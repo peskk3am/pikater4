@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>Metodika - kosatce</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+
+<h1>Míry, váhy a známka z tělocviku</h1>
+
+<h2>Aktivita v kostce</h2>
+
+<p>
+Učitel a žáci se seznámí s programem BANG, například pomocí aktivity Kosatce - Základy data miningu. Poté vytvoří vlastní testovací sadu, která bude obsahovat jejich tělesné míry a známku z tělocviku. Vytvoří model dat pomocí programu BANG a poté jej otestují na mírách jiných osob (třeba učitelů, finalistek miss nebo poslanců). Kromě seznámení se s principy sběru statistických dat a jejich vyhodnocování by měla následovat i krátká diskuse na téma fyzické kondice.
+</p>
+
+<h2>Cíle aktivity</h2>
+
+<p>
+Cílem aktivity je komplexní pochopení sběru statistických dat a jejich vyhodnocování a následné použití takovéhoto souboru k testování a predikci. Student se naučí metodické práci (měření) a zápisu dat a pochopí řešení jednoho ze základních problémů data miningu – učení s učitelem. Dále se prostřednictvím závěrečné diskuse zabrousí do oblasti společenské, probere se téma předsudků, tolerance, prevence obezity apod.
+</p>
+
+<h2>Časová náročnost</h2>
+
+<b>příprava učitele</b>: cca 20 min <br>
+<b>práce při vyučování</b>: 45 min. (předpokládá se, že v jiné hodině se již žáci i učitel s programem BANG seznámili)<br>
+<b>domácí příprava studentů</b>: 0 min<br>
+
+<h2>Aplikace</h2>
+
+<p>
+Program BANG.<br>
+Open Office SpreadSheet nebo Microsoft Office Excel pro přípravu tabulky dat
+</p>
+
+<h3>Popis aplikace</h3>
+
+<p>
+Program je dostupný v českém a anglickém jazyce pro platformy MS Windows a Linux. Ovládání je poměrně jednoduché, součástí aplikace je dokumentace včetně tutoriálu, a připravené datové soubory pro experimenty. 
+</p>
+
+<h3>Technické požadavky</h3>
+
+<p>
+Program je distribuován jako samostatná aplikace, která ke své práci potřebuje nainstalované runtime prostředí Java. Byl testován v prostředích MS Windows a Ubuntu Linux.
+</p>
+
+<h2>Pomůcky</h2>
+
+<p>
+Počítač, elektřina, několik krejčovských metrů, váha, ev. papíry na poznámky a tužky
+</p>
+
+<h2>Popis aktivity</h2>
+
+<p>
+Pokud se žáci ještě neseznámili s programem BANG, učitel tak provede například pomocí aktivity Kosatce - Základy data miningu. Nyní zadá žákům úkol vytvořit vlastní testovací sadu. Žáci ve skupinkách změří svoje tělesné rozměry (výška, váha, obvod hrudi, pasu a boků) a data převedou do tabulky. Z 20% získaných dat si vytvoří testovací sadu, zbytek použijí jako tréninkovou sadu pro naučení programu BANG. Zde se uplatní zkušenosti získané v aktivitě Kosatce - Základy data miningu. Jakmile je program naučen a otestován, žáci s jeho pomocí zjišťují, jakou známku z tělocviku by mohli mít lidé, jejichž rozměry zadají. Následuje diskuse.
+</p>
+
+<div style="background:#CCFF33; padding:5px; border:1px solid #000">
+<b>Data mining</b> - metoda získávání informace z rozsáhlého souboru dat<br>
+<b>Učení s učitelem</b> - metoda data miningu, která se snaží minimalizovat chybu modelu na tréninkové množině dat<br>
+<b>Vícevrstvá perceptronová síť</b> - síť, kterou tvoří modely neuronu. Každý modelový neuron má několik vstupů, kterým jsou přiřazeny váhy, které vstup zesilují nebo zeslabují, a jeden výstup. Jednovrstvá perceptronová síť umí vyřešit pouze lineárně-separabilní úlohy, na složitější data je třeba zkombinovat několik vrstev perceptronů a použít  vhodnou metodu učení.<br>
+<b>Radiální síť</b> - síť tvoří jednotky částečně podobné perceptronům, ale způsob, kterým počítají výstup, je zásadně odlišný – místo lineární kombinace vstupů s váhami se tu počítá euklidovská vzdálenost, a také místo sigmoidální funkce počítáme Gaussovu funkci.<br>
+<b>Tréninková data</b> - data, která se používají k učení modelu. Máme-li k dispozici jeden soubor dat, bývá zvykem rozdělit ho na data tréninková (80-90%) a data testovací (10-20%).<br>
+<b>Testovací data</b> - data, která použijeme k ověření správné funkce modelu<br>
+</div>
+
+<h2>Motivace</h2>
+
+<p>
+(může proběhnout po seznámení se s programem BANG) 
+Tento program nemusí být jenom užitečný při rozpoznávání motýla podle dvaceti různých znaků, ale může třeba na základě vaší postavy říct, jakou budete mít známku z tělocviku. Nevěříte? Tak si to pojďme zkusit. Teď je z vás vědecký tým, který dostal za úkol právě něco takového zjistit! Pokud uspějete, získáte nástroj, který vám prozradí známku z tělocviku kohokoliv na světě (jehož tělesné rozměry získáte). Tak s chutí do toho!
+</p>
+
+<h2>Postup při zadávání</h2>
+
+<p>
+Nejprve proběhne seznámení s programem BANG a principy data miningu. Následně učitel přednese motivační řeč a rozdělí žáky do skupinek. Počet skupinek se řídí počtem dostupných krejčovských metrů (žáci buď dostali za úkol je přinést nebo učitel obstaral vlastní). Ve skupince se žáci navzájem změří a získaná data (zatím neanonymní) zapíší do excelové tabulky. Měříme výšku, obvod boků, pasu a hrudi. Dále se žáci zváží (pokud učitel donesl váhu) nebo do tabulky pravdivě nahlásí svou hmotnost. Jako poslední bod všichni dodají svou známku z tělocviku. 
+</p>
+<p>
+Nyní učitel vysvětlí, že stejně jako opravdoví statistici, si 20% dat schováme na ověření, že náš program funguje a zbylá použijeme jako trénovací sadu. Jeden žák (pokud možno schopný rychlé práce s excelem, případně sám učitel) převede získaná data do jedné tabulky, exportuje do tvaru CSV a doplní hlavičku souboru podle vzoru existující tabulky (viz Tutoriál v dokumentaci BANGu). Pro vytvoření modelu těchto dat je nejvhodnější použít RBF síť s počtem jednotek například mezi 5 a 20, a vícevrstvý perceptron se dvěma vrstvami opět o několika jednotkách (5-10 v každé vrstvě). Následuje proces učení, který probíhá na jednom počítači. Ostatní žáci pozorují a radí, jaké nastavit parametry, aby byla chyba co nejmenší - zde se uplatní zkušenosti získané v aktivitě Kosatce - Základy data miningu. 
+</p>
+<p>
+Jakmile je program naučen a otestován, můžeme přistoupit k třetí části a začít zjišťovat, jaké známky z tělocviku mají jiní lidé. Můžeme využít předpřipravený seznam (příloha1) nebo si vytvořit vlastní (třeba míry a váhy učitelského sboru, podle fotografie odhadnout míry a váhy politiků, oblíbených herců atp.). Tento soubor necháme ohodnotit naučeným modelem. Následuje diskuse o získaných výsledcích.
+</p>
+
+<h2>Náměty na diskusi:</h2>
+
+<ul>
+<li>Mohou spolu tělesné míry a známka z tělocviku výrazně souviset? </li>
+<li>Proč má program tak velkou chybovost, zatímco u kosatců ji měl daleko menší?</li>
+<li>Dokázal by program objevit souvislost mezi výškou a známkou z českého jazyka?</li>
+</ul>
+
+<h2>Metodické poznámky</h2>
+
+<ul>
+<li>na předcházející hodině upozorněte studenty, že budete tuto aktivitu provádět a požádejte je, aby si z domova přinesli krejčovské metry a aby se každý zvážil. Zvážení všech studentů v rámci hodiny je poněkud zdlouhavé. </li>
+<li>během měření nechte zpočátku pracovat žáky samostatně a nechte je, aby si sami určili metodiku měření a dohodli se mezi sebou na jednotném zápisu výsledků, v případě nutnosti je však potřeba zakročit a jednotlivým skupinkám pomoci. Čas, za který by mělo být měření hotovo, se pohybuje kolem 10 minut.</li>
+<li>učitel může dopředu požádat své kolegy o poskytnutí měr, které by pak žáci analyzovali</li>
+<li>nedoporučujeme tuto aktivitu provádět ve třídě, kde nepanují dobré kamarádské vztahy nebo kde je dokonce podezření na šikanu. Údaje o tělesných mírách a fyzické zdatnosti mohou být žáky zneužity k šikaně.</li>
+</ul>
+
+<h2>Varianty aktivity</h2>
+
+<ul>
+<li>pokud mají skoro všichni žáci z tělocviku stejnou známku, můžete zvolit alternativní data. Důležité je, aby výsledkem bylo několik (3-5) kategorií. Např. zjistěte, kolik udělá každý dřepů za minutu a počet rozdělte na kategorie „hodně“ „akorát“ „málo“ - program potřebuje zařadit data do jedné z kategorií. Podobně lze například měřit, jak moc se zadýcháme při běhu na 100 metrů („hodně“ „akorát“ „málo“ „vůbec“), případně můžete zkusit, jestli program dokáže rozpoznat muže od ženy (v tom případě budou rozpoznávané kategorie „muž“ a „žena“)</li>
+<li>program je úspěšnější, čím větší je trénovací množina dat. Můžete zkusit uspořádat měření celého ročníku a spojit to se „dny pohybu“ a „dny prevence proti obezitě“ a získaná data třeba ještě dále použít při výuce statistiky</li>
+</ul>
+
+</body>
+</html>

@@ -157,8 +157,7 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public IntegerOptionPanel(int lower, int upper, int tries, int defaultValue) {
-
+    public IntegerOptionPanel(int lower, int upper, int tries, int defaultValue, boolean hideAuto) {
         dataType = "INT";
 
         initComponents();
@@ -170,9 +169,20 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         jPanel1.setVisible(false);
         jPanel2.setVisible(false);
         setTextField.setInputVerifier(new IntegerSetInputVerifier(this));
+
+        if (hideAuto) {
+            valueSetByOptMan.setVisible(false);
+        }
+
     }
 
-    public IntegerOptionPanel(double lower, double upper, int tries, double defaultValue) {
+    public IntegerOptionPanel(int lower, int upper, int tries, int defaultValue) {
+
+        this(lower, upper, tries, defaultValue, false);
+    }
+
+
+    public IntegerOptionPanel(double lower, double upper, int tries, double defaultValue, boolean hideAuto) {
 
         dataType = "FLOAT";
 
@@ -185,6 +195,16 @@ public class IntegerOptionPanel extends javax.swing.JPanel {
         jPanel1.setVisible(false);
         jPanel2.setVisible(false);
         setTextField.setInputVerifier(new FloatSetInputVerifier((this)));
+
+        if (hideAuto) {
+            valueSetByOptMan.setVisible(false);
+        }
+
+    }
+
+    public IntegerOptionPanel(double lower, double upper, int tries, double defaultValue) {
+
+        this(lower, upper, tries, defaultValue, false);
     }
 
     /** This method is called from within the constructor to

@@ -101,7 +101,7 @@ public abstract class Agent_Search extends Agent {
 
 				// parse the line
 				String delims = "[ ]+";
-				String[] params = line.split(delims, 9);
+				String[] params = line.split(delims, 11);
 
 				if (params[0].equals("$")) {
 					
@@ -132,17 +132,17 @@ public abstract class Agent_Search extends Agent {
 						range = null;						
 					}
 					else{
-						numArgsMin = Float.parseFloat(params[2]);
-						numArgsMax = Float.parseFloat(params[3]);
-						range = params[4];
+						numArgsMin = Float.parseFloat(params[3]);
+						numArgsMax = Float.parseFloat(params[4]);
+						range = params[5];
 
 						if (range.equals("r")){
-							rangeMin = Float.parseFloat(params[5]);
-							rangeMax = Float.parseFloat(params[6]);
+							rangeMin = Float.parseFloat(params[6]);
+							rangeMax = Float.parseFloat(params[7]);
 						}
 						if (range.equals("s")){
 							set = new ArrayList();
-							String[] s = params[5].split("[ ]+");
+							String[] s = params[6].split("[ ]+");
 							for (int i=0; i<s.length; i++){
 								set.add(s[i]);
 							}
@@ -152,7 +152,9 @@ public abstract class Agent_Search extends Agent {
 					Option o = new Option(params[1], dt,
 							numArgsMin, numArgsMax,
 							range, rangeMin, rangeMax, set,
-							params[params.length-2], params[params.length-1]);
+							params[params.length-3],
+							params[params.length-2],
+							params[params.length-1]);
 					
 					_options.add(o);
 					
