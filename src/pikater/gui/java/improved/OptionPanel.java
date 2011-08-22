@@ -13,6 +13,7 @@ package pikater.gui.java.improved;
 
 import jade.util.leap.LinkedList;
 import jade.util.leap.List;
+import java.util.MissingResourceException;
 import javax.swing.JPanel;
 import pikater.ontology.messages.Interval;
 import pikater.ontology.messages.Option;
@@ -152,17 +153,32 @@ public class OptionPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public OptionPanel(Option o, String agentName) {
+    public OptionPanel(Option o, String agentName, boolean hideAuto) {
+
         initComponents();
         agentType = agentName;
         this.o = o;
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("pikater/gui/java/improved/AgentStrings");
-        String synopsis = bundle.getString(agentType + "-" + o.getName() + "-S");
+
+        String synopsis = "";
+        try {
+        bundle.getString(agentType + "-" + o.getName() + "-S");
         synopsis = synopsis.replaceAll("<", "&lt;");
         synopsis = synopsis.replaceAll(">", "&gt;");
+        }
+        catch (MissingResourceException mre) {
+            synopsis = o.getSynopsis();
+        }
 
-        String description = bundle.getString(agentType + "-" + o.getName() + "-D");
+        String description = null;
+        try {
+            description = bundle.getString(agentType + "-" + o.getName() + "-D");
+        }
+        catch (MissingResourceException mre) {
+            description = o.getDescription();
+        }
+
 
         optionDescription.setText("<html><b>"+synopsis+"</b><br>"+description+"</html>");
 
@@ -172,7 +188,7 @@ public class OptionPanel extends javax.swing.JPanel {
 
             optionPanel = new BooleanOptionPanel();
 
-            optionsPanel.add(optionPanel);
+            optionsPanel.add(optionPanel, hideAuto);
         }
 
         if (o.getData_type().equals("INT")) {
@@ -193,7 +209,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue, hideAuto);
             optionsPanel.add(optionPanel);
         }
 
@@ -215,7 +231,7 @@ public class OptionPanel extends javax.swing.JPanel {
                 defaultValue = lower;
             }
 
-            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue);
+            optionPanel = new IntegerOptionPanel(lower, upper, 5, defaultValue, hideAuto);
             optionsPanel.add(optionPanel);
         }
 
@@ -223,6 +239,11 @@ public class OptionPanel extends javax.swing.JPanel {
             optionPanel = new MixedOptionPanel(o);
             optionsPanel.add(optionPanel);
         }
+
+    }
+
+    public OptionPanel(Option o, String agentName) {
+        this(o, agentName, false);
     }
 
     /** This method is called from within the constructor to

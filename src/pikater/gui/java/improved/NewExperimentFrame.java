@@ -41,7 +41,7 @@ import pikater.ontology.messages.Option;
 public class NewExperimentFrame extends javax.swing.JDialog {
 
 
-    public static final String[] searches = {"RandomSearch", "ChooseXValues", "GASearch", "SimulatedAnnealing"};
+    public static final String[] searches = {"RandomSearch", "GASearch", "SimulatedAnnealing"};
     java.util.ArrayList<String> files = new java.util.ArrayList<String>();
     java.util.ArrayList<AgentOptionsDialog> agentDialogs = new java.util.ArrayList<AgentOptionsDialog>();
     AgentsListModel agentList = new AgentsListModel();
@@ -49,6 +49,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
     String[] agentTypes;
     GuiAgent myAgent;
     AgentOptionsDialog aod;
+    Agent searchAgent = new Agent();
 
 
     class AgentsListModel extends DefaultListModel {
@@ -168,11 +169,13 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
         initComponents();
 
-
-        aod = new AgentOptionsDialog((Frame)this.getParent(), true, searches, myAgent, true);
+        aod = new AgentOptionsDialog((Frame)this.getParent(), true, searches, myAgent, true, true);
         this.myAgent = myAgent;
 
-        optManagerLabel.setText(aod.getAgentType() + aod.getAgentOptions());
+
+        searchAgent.setType(aod.getAgentType());
+        searchAgent.setOptions(aod.getAgentOptions());
+        optManagerLabel.setText(searchAgent.getType() + " " + searchAgent.toGuiString());
 
         GuiEvent ge = new GuiEvent(this, GuiConstants.GET_AGENT_TYPES);
         myAgent.postGuiEvent(ge);
@@ -184,7 +187,6 @@ public class NewExperimentFrame extends javax.swing.JDialog {
             this.remove(jPanel1);
             this.pack();
         }
-
 
         ge = new GuiEvent((this), GuiConstants.GET_FILES_INFO);
         ge.addParameter(gfi);
@@ -558,7 +560,7 @@ public class NewExperimentFrame extends javax.swing.JDialog {
                     }*/
                 }
 
-                optManagerLabel.setText(aod.getAgentType());
+                optManagerLabel.setText(searchAgent.getType() + " " + searchAgent.toGuiString());
 
                 java.util.List dataset = next_problem.getChildren("dataset");
                 java.util.Iterator ds_itr = dataset.iterator();
@@ -687,8 +689,11 @@ public class NewExperimentFrame extends javax.swing.JDialog {
 
         aod.setVisible(true);
 
-        optManagerLabel.setText(aod.getAgentType());
 
+        searchAgent.setType(aod.getAgentType());
+        searchAgent.setOptions(aod.getAgentOptions());
+        optManagerLabel.setText(searchAgent.getType() + " " + searchAgent.toGuiString());
+        
     }//GEN-LAST:event_editOptionManagerButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

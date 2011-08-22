@@ -30,6 +30,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
     private LinkedList<OptionPanel> optionPanels;
     private List options;
     private boolean agentTypeChangedEnabled;
+    private boolean hideAuto = false;
 
     /** Creates new form AgentOptionsDialog */
     public AgentOptionsDialog(java.awt.Frame parent, boolean modal) {
@@ -41,8 +42,9 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         this(parent, modal, agentTypes, myAgent, true);
     }
 
-    public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent, boolean agentTypeChangedEnabled) {
+    public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent, boolean agentTypeChangedEnabled, boolean hideAuto) {
         super(parent, modal);
+        this.hideAuto = hideAuto;
         this.agentTypeChangedEnabled = agentTypeChangedEnabled;
         this.agentTypes = agentTypes;
         this.myAgent = myAgent;
@@ -50,6 +52,10 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         initComponents();
         options = new jade.util.leap.LinkedList();
         jComboBox1.setSelectedIndex(1);
+    }
+
+    public AgentOptionsDialog(java.awt.Frame parent, boolean modal, String[] agentTypes, GuiAgent myAgent, boolean agentTypeChangedEnabled) {
+        this(parent, modal, agentTypes, myAgent, agentTypeChangedEnabled, false);
     }
 
     public void setAgentTypeChangedEventEnabled(boolean state) {
@@ -190,7 +196,7 @@ public class AgentOptionsDialog extends javax.swing.JDialog {
         optionPanels.clear();
 
         for (int i = 0; i < options.size(); i++) {
-            OptionPanel op = new OptionPanel((Option)options.get(i), getAgentType());
+            OptionPanel op = new OptionPanel((Option)options.get(i), getAgentType(), hideAuto);
             optionPanels.add(op);
             optionsPanel.add(((Option)options.get(i)).getName(), op);
         }
