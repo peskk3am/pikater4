@@ -9,11 +9,10 @@ public abstract class Agent_MutationSearch extends Agent_Search {
 	 * 
 	 */
 	private static final long serialVersionUID = -401141068045485111L;
-
+	Random rnd_gen = new Random(1);
 
 	//Create random option value
 	protected String randomOptValue(Option next_opt){
-		Random rnd_gen = new Random();
 		String[] values = next_opt.getUser_value().split(",");
 		float range = next_opt.getRange().getMax() - next_opt.getRange().getMin();
 		int numArgs = values.length;
