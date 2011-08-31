@@ -32,7 +32,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	 * -S int
 	 * Size of tournament in selection (default 2)
 	 */
-	private Random rnd_gen = null;
+	private Random rnd_gen =  new Random(1);
 	private ArrayList population;
 	//fitness is the error rate - the lower, the better!
 	float fitnesses[];
@@ -56,7 +56,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 		ArrayList new_population = new ArrayList(pop_size);
 		if(evaluations==null){
 			//create new population
-			rnd_gen = new Random();
+			
 			number_of_generations = 0;
 			best_error_rate = Double.MAX_VALUE;
 			fitnesses = new float[pop_size];
@@ -69,6 +69,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 				//pairs
 				Options ind1 = cloneOpts(selectIndividual());
 				Options ind2 = cloneOpts(selectIndividual());
+				
 				if(rnd_gen.nextDouble()<xover_prob){
 					xoverIndividuals(ind1, ind2);
 				}
@@ -230,7 +231,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	//Clone options
 	private Options cloneOpts(Options opts){
 		List new_options = new ArrayList();
-		Iterator itr = getOptions().iterator();
+		Iterator itr = opts.getList().iterator();
 		while (itr.hasNext()) {
 			Option o = (Option) itr.next();
 			new_options.add(o.copyOption());
