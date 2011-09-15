@@ -396,7 +396,6 @@ public class Agent_GUI_Java extends Agent_GUI {
                 NewExperimentFrame nef = (NewExperimentFrame) ev.getSource();
 
                 Vector<String> typesBF = offerAgentTypes();
-                typesBF.add(0, "?");
                 Vector<String> types = new Vector<String>();
                 if (filterAgents.size() > 0){
                     
@@ -405,6 +404,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                             types.add(s);
                     }
                 }
+                
                 String[] agentTypes = new String[types.size()];
 
                 for (int i = 0; i < agentTypes.length; i++) {
@@ -518,7 +518,7 @@ public class Agent_GUI_Java extends Agent_GUI {
                 ArrayList<FileGroup> files = (ArrayList<FileGroup>) ev.getParameter(3);
                 int tasks = (Integer)ev.getParameter(4);
             
-                int problemID = createNewProblem("10000", "after_each_task", "no");
+                int problemID = createNewProblem("10000", "after_each_task", "yes");
                 // createNewProblem (
                 // 		timeout,
                 //		get_results - "after_each_task", "after_each_computation",

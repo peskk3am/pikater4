@@ -23,18 +23,16 @@ public class Agent_RandomSearch extends Agent_Search {
 
 	@Override
 	protected void loadSearchOptions(){
-		final_error_rate = (float) 0.1;
-		maximum_tries = 10;
 		List search_options = getSearch_options();
 		// find maximum tries in Options
 		Iterator itr = search_options.iterator();
 		while (itr.hasNext()) {
 			Option next = (Option) itr.next();
 			if (next.getName().equals("E")){
-				final_error_rate = Float.parseFloat(next.getValue()); 
+				final_error_rate = Float.parseFloat(next.getValue());
 			}
 			if (next.getName().equals("M")){
-				maximum_tries = Integer.parseInt(next.getValue()); 
+				maximum_tries = Integer.parseInt(next.getValue());				
 			}
 		}
 		System.out.println(getLocalName()+" parameters are: ");
@@ -55,7 +53,7 @@ public class Agent_RandomSearch extends Agent_Search {
 			return true;
 		}
 
-		if (error_rate < final_error_rate) {
+		if (error_rate <= final_error_rate) {
 			return true;
 		}
 		return false;

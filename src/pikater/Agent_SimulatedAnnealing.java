@@ -26,7 +26,6 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	 * Stability of generation of new option - probability of keeping of option (default 0.5)
 	 */
 	private static final long serialVersionUID = -5087231723984887596L;
-	private Random rnd_gen = null;
 	private Options solution = null;
 	private Options new_solution = null;
 	private float evaluation = Float.MAX_VALUE;
@@ -47,7 +46,7 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		temperature = 1.0;//?
 		maximum_tries = 50;
 		stability = 0.5;
-		final_error_rate = 0.1;
+		final_error_rate = 0.01;
 		List search_options = getSearch_options();
 		Iterator itr = search_options.iterator();
 		while (itr.hasNext()) {
@@ -73,7 +72,7 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		if (number_of_tries >= maximum_tries) {
 			return true;
 		}
-		if (best_error_rate < final_error_rate){
+		if (best_error_rate <= final_error_rate){
 			return true;
 		}
 		return false;
@@ -81,8 +80,6 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	
 	@Override
 	protected List generateNewOptions(List options, List evaluations) {
-		if(rnd_gen == null)
-			rnd_gen = new Random();
 		
 		if(evaluations == null){
 			//inicializace

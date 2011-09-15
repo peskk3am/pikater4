@@ -173,7 +173,7 @@ public class Agent_OptionsManager extends Agent {
 								evaluations.add(ev);
 								task.setResult(ev);
 								task.setFinish(getDateTime());
-								results.add(task);
+								// results.add(task);
 							}
 						}
 					} catch (UngroundedException e) {
