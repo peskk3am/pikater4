@@ -47,8 +47,6 @@ public class Agent_RandomSearch extends Agent_Search {
 
 	@Override
 	protected boolean finished() {
-		System.out.println("finished() error_rate: "+ error_rate + " final_error_rate: "+ final_error_rate);
-
 		if (number_of_tries >= maximum_tries) {
 			return true;
 		}
@@ -65,8 +63,7 @@ public class Agent_RandomSearch extends Agent_Search {
 			error_rate = 1;
 		}
 		else{
-			error_rate = ((Evaluation)(evaluations.get(0))).getError_rate();
-			System.out.println("changing error_rate to: " + error_rate);
+			error_rate = ((Evaluation)(evaluations.get(0))).getError_rate();			
 		}
 	}
 		

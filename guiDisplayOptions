@@ -3,6 +3,7 @@ RBFNetwork-W
 MultilayerPerceptron-L
 MultilayerPerceptron-N
 MultilayerPerceptron-H
+MultilayerPerceptron-M
 Perceptron-N
 Perceptron-L
 GASearch-S
@@ -12,7 +13,6 @@ GASearch-M
 GASearch-E
 RandomSearch-M
 RandomSearch-E
-SimulatedAnnealing-S
 SimulatedAnnealing-T
 SimulatedAnnealing-M
 SimulatedAnnealing-E

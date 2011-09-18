@@ -1,11 +1,11 @@
 # minimum error rate (default 0.1)
-$ E float 1 1 r 0 1 0.1 error_rate Error rate
+$ E float 1 1 r 0 1 0.1 error_rate Error rate stopping criterion (default 0.1)
 
 # maximal number of steps (default 50)
-$ M int 1 1 r 1 1000 50 steps Steps
+$ M int 1 1 r 1 1000 50 steps Steps (default 50)
 
 # Initial temperature (default 1.0)
-$ T float 1 1 r 0 100 1 temperature Initial temperature
+$ T float 1 1 r 0 100 1 temperature Initial temperature (default 1.0)
 
 # Stability of generation of new option - probability of keeping of option (default 0.5)
-$ S float 1 1 r 0 1 0.5 stability Stability
+$ S float 1 1 r 0 1 0.5 stability Stability - The probability of keeping an option value (default 0.5)

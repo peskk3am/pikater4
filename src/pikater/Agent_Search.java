@@ -245,7 +245,7 @@ public abstract class Agent_Search extends Agent {
 
 		description.addServices(servicedesc);
 
-		// add "OptionsManager agent service"
+		// add "Search agent service"
 		ServiceDescription servicedesc_g = new ServiceDescription();
 
 		servicedesc_g.setName(getLocalName());
