@@ -1,8 +1,9 @@
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.Concept;
 
-public class Compute implements Concept {
+public class Compute implements AgentAction {
 	/**
 	 * 
 	 */

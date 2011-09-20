@@ -1,8 +1,9 @@
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 
-public class SaveResults extends Action {
+public class SaveResults implements AgentAction {
 
 	private static final long serialVersionUID = -7028457864866356063L;
 	private Task task;

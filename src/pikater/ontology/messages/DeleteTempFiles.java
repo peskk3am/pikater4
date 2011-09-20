@@ -5,12 +5,13 @@
 
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 
 /**
  *
  * @author martin
  */
-public class DeleteTempFiles extends Action {
+public class DeleteTempFiles implements AgentAction{
 
 }

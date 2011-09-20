@@ -1,8 +1,9 @@
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 
-public class GetData extends Action {
+public class GetData implements AgentAction {
 	/**
 	 * 
 	 */

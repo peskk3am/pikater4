@@ -166,7 +166,7 @@ public class Agent_AgentManager extends Agent {
 
 					if (a.getAction() instanceof LoadAgent) {
 						LoadAgent la = (LoadAgent) a.getAction();
-							Action fa = la.getFirst_action();
+							Execute fa = la.getFirst_action();
 							
 							Agent newAgent = null;
 							
