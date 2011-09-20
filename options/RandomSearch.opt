@@ -3,6 +3,6 @@
 # s ... set  (example: s 1, 2, 3, 4, 5, 6, 7, 8)
 
 # error-rate; predposledni = synopsis, druhy od konce = default value
-$ E float 1 1 r 0 1 0.1 error_rate Error rate
+$ E float 1 1 r 0 1 0.01 error_rate Error rate stopping criterion (default = 0.01)
 
-$ M int 1 1 r 1 100000 10 maximum_number_of_tries Maximum number of tries 
+$ M int 1 1 r 1 100000 10 maximum_number_of_tries Maximum number of tries (default = 10) 

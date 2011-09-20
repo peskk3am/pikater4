@@ -14,7 +14,7 @@ public class Task implements Concept {
 	private Agent _agent;
 	private Data _data;
 	
-	private String _save_mode = "file";  // if not null -> save the agent
+	private String _save_mode = "message";  // if not null -> save the agent
 								//    message (agent is sent in the message with the results)
 								//    file (agent is stored in the file by agentManager) --> TODO database
 

@@ -236,7 +236,6 @@ public abstract class Agent_GUI extends GuiAgent {
 					doWait(100);
 				}
 				else{
-					// TODO - predelat, aby se vsichni vytvareli pomoci agentmanagera
 					// send message to AgentManager to create an agent
 					ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
 					msg_ca.addReceiver(new AID("agentManager", false));
@@ -969,7 +968,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 
 	protected void addMethodToProblem(int problem_id, String name) {
-		// get the problem
+		// get the problem	
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (Integer.parseInt(next_problem.getGui_id()) == problem_id
@@ -980,6 +979,20 @@ public abstract class Agent_GUI extends GuiAgent {
 				method.setOptions(new ArrayList());
 
 				next_problem.setMethod(method);
+				
+				try {
+					method.setOptions(getOptions(name));
+				} catch (CodecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OntologyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FIPAException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 		}
 	}
@@ -1060,6 +1073,12 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 						} // end if getType != null
 					} // end while - iterate over agents
+					System.out.println("xxxx: "+next_problem.getMethod().getType()+" "+agent.getType());
+					if (next_problem.getMethod().getType() != null){
+						if (next_problem.getMethod().getType().equals(agent.getType())){
+							next_problem.getMethod().setOptions(_refreshOptions(next_problem.getMethod(), agent, next_problem));
+						}
+					}
 				} // end if performative = inform
 
 				else {
@@ -1214,6 +1233,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		
 		Vector<String> agents = new Vector<String>();
 		agents.addAll(agentTypes.keySet());
+		agents.add("?");
 		return agents;
 	}
 
