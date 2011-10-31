@@ -1,23 +1,11 @@
 package pikater;
 
 import java.io.*;
-import java.util.Vector;
-
-import pikater.gui.java.MyWekaOption;
-import pikater.ontology.messages.Computation;
-import pikater.ontology.messages.Compute;
-import pikater.ontology.messages.Evaluation;
-import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetNextParameters;
 import pikater.ontology.messages.GetOptions;
-import pikater.ontology.messages.Interval;
-import pikater.ontology.messages.Options;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Results;
-import pikater.ontology.messages.Solve;
-import pikater.ontology.messages.Task;
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
@@ -27,9 +15,7 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -39,15 +25,9 @@ import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
-import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
-import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import jade.wrapper.ControllerException;
-import jade.wrapper.PlatformController;
-import jade.wrapper.StaleProxyException;
 
 public abstract class Agent_Search extends Agent {	
 
@@ -56,10 +36,10 @@ public abstract class Agent_Search extends Agent {
 	private Ontology ontology = MessagesOntology.getInstance();
 
 	private List search_options = null;
-	private List options = null;
+	private List schema = null;
 	
 	protected abstract String getAgentType();
-	protected abstract List generateNewOptions(List options, List evaluations); //returns List of Options
+	protected abstract List generateNewSolutions(List solutions, List evaluations); //returns List of Options
 	protected abstract boolean finished();
 	protected abstract void updateFinished(List evaluations);
 	protected abstract void loadSearchOptions(); // load the appropriate options before sending the first parameters
@@ -204,17 +184,17 @@ public abstract class Agent_Search extends Agent {
 	//Run the search protocol
 	protected ACLMessage runSearchProtocol(ACLMessage request, GetNextParameters gnp) {
 		search_options = gnp.getSearch_options();
-		options = gnp.getOptions();														
+		schema = gnp.getSchema();														
 		loadSearchOptions();
 		
-		List options_new = null;
+		List solutions_new = null;
 		List evaluations = null;
 		ACLMessage reply = request.createReply();
 		try{
 			while (!finished()){
 				ExecuteParameters ep = new ExecuteParameters();
-				options_new = generateNewOptions(options_new, evaluations);
-				ep.setParameters(options_new); // List of Lists of Options
+				solutions_new = generateNewSolutions(solutions_new, evaluations);
+				ep.setSolutions(solutions_new); // List of Lists of Options
 
 				Action a = new Action();
 				a.setAction(ep);
@@ -234,7 +214,7 @@ public abstract class Agent_Search extends Agent {
 				if (content instanceof Result) {
 					Result result = (Result) content;
 					evaluations = (List)((List)result.getValue()).get(1);
-					options_new = (List)((List)result.getValue()).get(0);
+					solutions_new = (List)((List)result.getValue()).get(0);
 				}
 				updateFinished(evaluations);							
 			}
@@ -258,9 +238,9 @@ public abstract class Agent_Search extends Agent {
 
 	}
 	
-	protected List getOptions() {
-		if(options != null){
-			return options;
+	protected List getSchema() {
+		if(schema != null){
+			return schema;
 		}else{
 			return new ArrayList();
 		}

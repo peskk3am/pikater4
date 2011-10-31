@@ -4,14 +4,15 @@ import java.util.Random;
 
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
+import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SearchSolution;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
-public class Agent_GASearch extends Agent_MutationSearch {
+public class Agent_GASearch extends Agent_Search {
 	/*
-	 * Implementation of Genetic algorithm option search
+	 * Implementation of Genetic algorithm search
 	 * Half uniform crossover, tournament selection
 	 * Options:
 	 * -E float
@@ -32,7 +33,6 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	 * -S int
 	 * Size of tournament in selection (default 2)
 	 */
-	private Random rnd_gen =  new Random(1);
 	private ArrayList population;
 	//fitness is the error rate - the lower, the better!
 	float fitnesses[];
@@ -45,6 +45,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	private int maximum_generations;
 	private double final_error_rate;
 	int tournament_size = 2;
+	protected Random rnd_gen = new Random(1);
 
 	/**
 	 * 
@@ -52,7 +53,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	private static final long serialVersionUID = -387458001824777077L;
 	
 	@Override
-	protected List generateNewOptions(List options, List evaluations) {
+	protected List generateNewSolutions(List solutions, List evaluations) {
 		ArrayList new_population = new ArrayList(pop_size);
 		if(evaluations==null){
 			//create new population
@@ -67,8 +68,8 @@ public class Agent_GASearch extends Agent_MutationSearch {
 			//population from the old one
 			for(int i = 0; i < (pop_size/2);i++){
 				//pairs
-				Options ind1 = cloneOpts(selectIndividual());
-				Options ind2 = cloneOpts(selectIndividual());
+				SearchSolution ind1 = cloneSol(selectIndividual());
+				SearchSolution ind2 = cloneSol(selectIndividual());
 				
 				if(rnd_gen.nextDouble()<xover_prob){
 					xoverIndividuals(ind1, ind2);
@@ -80,7 +81,7 @@ public class Agent_GASearch extends Agent_MutationSearch {
 			}
 			if((pop_size%2)==1){
 				//one more, not in pair, if the pop is odd
-				Options ind = cloneOpts(selectIndividual());
+				SearchSolution ind = cloneSol(selectIndividual());
 				mutateIndividual(ind);
 				new_population.add(ind);
 			}
@@ -166,21 +167,21 @@ public class Agent_GASearch extends Agent_MutationSearch {
 	}
 
 	//new random options
-	private Options randomIndividual(){
-		List new_options = new ArrayList();
-		Iterator itr = getOptions().iterator();
+	private SearchSolution randomIndividual(){
+		List new_solution = new ArrayList();
+		Iterator itr = getSchema().iterator();
 		while (itr.hasNext()) {
-			Option opt = ((Option) itr.next()).copyOption();
-			String opt_val = randomOptValue(opt);
-			opt.setValue(opt_val);
-			new_options.add(opt);
+			SearchItem si = ((SearchItem) itr.next());
+			String val = si.randomValue(rnd_gen);
+			new_solution.add(val);
 		}		
-		
-		return new Options(new_options);
+		SearchSolution res_sol = new SearchSolution();
+		res_sol.setValues(new_solution);
+		return res_sol;
 	}
 	
 	//tournament selection (minimization)
-	private Options selectIndividual(){
+	private SearchSolution selectIndividual(){
 		float best_fit = Float.MAX_VALUE;
 		int best_index = -1;
 		for(int i = 0; i < tournament_size; i++){
@@ -191,52 +192,54 @@ public class Agent_GASearch extends Agent_MutationSearch {
 				best_index = ind;
 			}
 		}
-		return (Options) population.get(best_index);
+		return (SearchSolution) population.get(best_index);
 	}
 	
 	//Half uniform crossover
-	private void xoverIndividuals(Options opts1, Options opts2){
-		List new_options1 = new ArrayList();
-		List new_options2 = new ArrayList();
-		Iterator itr1 = opts1.getList().iterator();
-		Iterator itr2 = opts2.getList().iterator();
+	private void xoverIndividuals(SearchSolution sol1, SearchSolution sol2){
+		List new_solution1 = new ArrayList();
+		List new_solution2 = new ArrayList();
+		Iterator itr1 = sol1.getValues().iterator();
+		Iterator itr2 = sol2.getValues().iterator();
 		while (itr1.hasNext()) {
-			Option opt1 = (Option) itr1.next();
-			Option opt2 = (Option) itr2.next();
+			String val1 = (String) itr1.next();
+			String val2 = (String) itr2.next();
 			if(rnd_gen.nextBoolean()){
 				//The same...
-				new_options1.add(opt1);
-				new_options2.add(opt2);
+				new_solution1.add(val1);
+				new_solution2.add(val2);
 			}else{
 				//Gene exchange
-				new_options1.add(opt2);
-				new_options2.add(opt1);
+				new_solution1.add(val2);
+				new_solution2.add(val1);
 			}
 		}
-		opts1.setList(new_options1);
-		opts2.setList(new_options2);
+		sol1.setValues(new_solution1);
+		sol2.setValues(new_solution2);
 	}
 	
 	//mutation of the option
-	private void mutateIndividual(Options opts){
-		Iterator itr = opts.getList().iterator();
-		while (itr.hasNext()) {
-			Option opt = ((Option) itr.next());
-			String opt_val = mutateOptValue(opt, mut_prob);
-			opt.setValue(opt_val);
-		}		
+	private void mutateIndividual(SearchSolution sol){
+		List new_sol = new ArrayList();
+		Iterator sol_itr = sol.getValues().iterator();
+		Iterator sch_itr = getSchema().iterator();
+		while (sol_itr.hasNext()) {
+			SearchItem si = (SearchItem) sch_itr.next();
+			String val = ((String) sol_itr.next());
+			if(rnd_gen.nextDouble()<mut_prob)
+				val= si.randomValue(rnd_gen);
+			new_sol.add(val);
+		}
+		sol.setValues(new_sol);
 	}
 	
 	
 	//Clone options
-	private Options cloneOpts(Options opts){
-		List new_options = new ArrayList();
-		Iterator itr = opts.getList().iterator();
-		while (itr.hasNext()) {
-			Option o = (Option) itr.next();
-			new_options.add(o.copyOption());
-		}
-		return new Options(new_options);
+	private SearchSolution cloneSol(SearchSolution sol){
+		List new_solution = sol.getValues();
+		SearchSolution res_sol = new SearchSolution();
+		res_sol.setValues(new_solution);
+		return res_sol;
 	}
 	
 

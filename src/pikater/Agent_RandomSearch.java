@@ -1,14 +1,17 @@
 package pikater;
 
+import java.util.Random;
+
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
+import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SearchSolution;
 
-public class Agent_RandomSearch extends Agent_MutationSearch {
+public class Agent_RandomSearch extends Agent_Search {
 
 	private static final long serialVersionUID = 2777277001533605329L;
 
@@ -17,6 +20,7 @@ public class Agent_RandomSearch extends Agent_MutationSearch {
 	
 	private int maximum_tries;
 	private float final_error_rate;
+	protected Random rnd_gen = new Random(1);
 
 	@Override
 	protected void loadSearchOptions(){
@@ -65,21 +69,23 @@ public class Agent_RandomSearch extends Agent_MutationSearch {
 	}
 		
 	@Override
-	protected List generateNewOptions(List options, List evaluations) {
-		// go through the Options Vector, generate random values
-		List new_options = new ArrayList();
-		Iterator itr = getOptions().iterator();
+	protected List generateNewSolutions(List solutions, List evaluations) {
+		// go through the solutions Vector, generate random values
+		List new_solution = new ArrayList();
+		Iterator itr = getSchema().iterator();
 		while (itr.hasNext()) {
-			Option opt = ((Option) itr.next()).copyOption();
-			opt.setValue(randomOptValue(opt));
-			new_options.add(opt);
+			SearchItem si = (SearchItem) itr.next();
+			//opt.setValue(randomOptValue(opt));
+			new_solution.add(si.randomValue(rnd_gen));
 		}		
 		
 		number_of_tries++;
 		
-		List options_list = new ArrayList();
-		options_list.add(new Options(new_options));
-		return options_list;
+		List solutions_list = new ArrayList();
+		SearchSolution sol = new SearchSolution();
+		sol.setValues(new_solution);
+		solutions_list.add(sol);
+		return solutions_list;
 	}
 
 }
