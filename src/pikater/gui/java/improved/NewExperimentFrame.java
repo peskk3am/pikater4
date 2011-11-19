@@ -41,7 +41,7 @@ import pikater.ontology.messages.Option;
 public class NewExperimentFrame extends javax.swing.JDialog {
 
 
-    public static final String[] searches = {"ChooseXValues", "RandomSearch", "SimulatedAnnealing"};
+    public static final String[] searches = {"ChooseXValues", "RandomSearch", "SimulatedAnnealing", "GASearch"};
     java.util.ArrayList<String> files = new java.util.ArrayList<String>();
     java.util.ArrayList<AgentOptionsDialog> agentDialogs = new java.util.ArrayList<AgentOptionsDialog>();
     AgentsListModel agentList = new AgentsListModel();
