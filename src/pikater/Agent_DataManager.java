@@ -407,8 +407,7 @@ public class Agent_DataManager extends Agent {
                         SaveResults sr = (SaveResults) a.getAction();
                         Task res = sr.getTask();
 
-                        if (!(new File("studentMode").exists()) 
-                        		&& res.getSave_results() ) {
+                        if (!(new File("studentMode").exists()) ) {
 
                             Statement stmt = db.createStatement();
 

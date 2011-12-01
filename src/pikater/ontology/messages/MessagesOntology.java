@@ -274,7 +274,7 @@ public class MessagesOntology extends Ontology {
         public static final String GET_NEXT_PARAMETERS_OPTIONS = "options";
         public static final String GET_NEXT_PARAMETERS_SEARCH_OPTIONS = "search_options";
         
-        public static final String CREATE_AGENT = "create_agent";
+        public static final String CREATE_AGENT = "CREATE_AGENT";
         public static final String CREATE_AGENT_TYPE = "type";
         public static final String CREATE_AGENT_NAME = "name";        
         public static final String CREATE_AGENT_ARGUMENTS = "arguments";   
