@@ -1,23 +1,11 @@
 package pikater;
 
 import java.io.*;
-import java.util.Vector;
-
-import pikater.gui.java.MyWekaOption;
-import pikater.ontology.messages.Computation;
-import pikater.ontology.messages.Compute;
-import pikater.ontology.messages.Evaluation;
-import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetNextParameters;
 import pikater.ontology.messages.GetOptions;
-import pikater.ontology.messages.Interval;
-import pikater.ontology.messages.Options;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Results;
-import pikater.ontology.messages.Solve;
-import pikater.ontology.messages.Task;
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
@@ -27,9 +15,7 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -39,15 +25,9 @@ import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
-import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
-import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import jade.wrapper.ControllerException;
-import jade.wrapper.PlatformController;
-import jade.wrapper.StaleProxyException;
 
 public abstract class Agent_Search extends Agent {	
 
@@ -56,10 +36,10 @@ public abstract class Agent_Search extends Agent {
 	private Ontology ontology = MessagesOntology.getInstance();
 
 	private List search_options = null;
-	private List options = null;
+	private List schema = null;
 	
 	protected abstract String getAgentType();
-	protected abstract List generateNewOptions(List options, List evaluations); //returns List of Options
+	protected abstract List generateNewSolutions(List solutions, List evaluations); //returns List of Options
 	protected abstract boolean finished();
 	protected abstract void updateFinished(List evaluations);
 	protected abstract void loadSearchOptions(); // load the appropriate options before sending the first parameters
@@ -201,9 +181,66 @@ public abstract class Agent_Search extends Agent {
 		return reply;
 	} // end getParameters
 	
-	protected List getOptions() {
-		if(options != null){
-			return options;
+	//Run the search protocol
+	protected ACLMessage runSearchProtocol(ACLMessage request, GetNextParameters gnp) {
+		search_options = gnp.getSearch_options();
+		schema = gnp.getSchema();														
+		loadSearchOptions();
+		
+		List solutions_new = null;
+		List evaluations = null;
+		ACLMessage reply = request.createReply();
+		try{
+			while (!finished()){
+				ExecuteParameters ep = new ExecuteParameters();
+				solutions_new = generateNewSolutions(solutions_new, evaluations);
+				ep.setSolutions(solutions_new); // List of Lists of Options
+
+				Action a = new Action();
+				a.setAction(ep);
+				a.setActor(getAID());
+
+				ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+				req.addReceiver(request.getSender());
+				req.setLanguage(codec.getName());
+				req.setOntology(ontology.getName());
+				req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+				getContentManager().fillContent(req, a);
+
+				ACLMessage get_next_parameters_results = FIPAService.doFipaRequestClient(this, req);
+				// extract List of Evaluations from response
+				ContentElement content = getContentManager().extractContent(get_next_parameters_results);
+				if (content instanceof Result) {
+					Result result = (Result) content;
+					evaluations = (List)((List)result.getValue()).get(1);
+					solutions_new = (List)((List)result.getValue()).get(0);
+				}
+				updateFinished(evaluations);							
+			}
+			reply.setPerformative(ACLMessage.INFORM);
+			reply.setContent("finished");
+		} catch (FIPAException e) {
+			e.printStackTrace();
+			reply.setContent(e.getMessage());
+			reply.setPerformative(ACLMessage.FAILURE);
+		} catch (CodecException e) {
+			e.printStackTrace();
+			reply.setContent(e.getMessage());
+			reply.setPerformative(ACLMessage.FAILURE);
+		} catch (OntologyException e) {
+			e.printStackTrace();
+			reply.setContent(e.getMessage());
+			reply.setPerformative(ACLMessage.FAILURE);
+		}
+		
+		return reply;
+
+	}
+	
+	protected List getSchema() {
+		if(schema != null){
+			return schema;
 		}else{
 			return new ArrayList();
 		}
@@ -269,98 +306,62 @@ public abstract class Agent_Search extends Agent {
 		}
 	} // end registerWithDF
 	
-	protected class RequestServer extends CyclicBehaviour {
-		/**
-			 * 
-			 */
-		private static final long serialVersionUID = 1074564968341084444L;
-		private MessageTemplate resMsgTemplate = MessageTemplate
-				.and(
-						MessageTemplate
-								.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-						MessageTemplate.and(MessageTemplate
-								.MatchPerformative(ACLMessage.REQUEST),
-								MessageTemplate.and(MessageTemplate
-										.MatchLanguage(codec.getName()),
-										MessageTemplate.MatchOntology(ontology
-												.getName()))));
-
-		public RequestServer(Agent agent) {			
-			super(agent);
+	private class RequestServer extends AchieveREResponder {
+		private static final long serialVersionUID = 6214306716273574418L;
+		GetOptions get_option_action;
+		GetNextParameters get_next_parameters_action;
+		public RequestServer(Agent a) {
+			super(a, MessageTemplate
+					.and(	MessageTemplate
+									.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+							MessageTemplate.and(MessageTemplate
+									.MatchPerformative(ACLMessage.REQUEST),
+									MessageTemplate.and(MessageTemplate
+											.MatchLanguage(codec.getName()),
+											MessageTemplate.MatchOntology(ontology
+													.getName())))));
 		}
+		
+		@Override
+		protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException{
+			get_option_action = null;
+			get_next_parameters_action = null;
+			ContentElement content;
+			try {
+				content = getContentManager().extractContent(request);
 
-		@Override 
-		public void action() {
-			
-			ACLMessage request = receive(resMsgTemplate);
-			if (request != null) {
-				try {
-					ContentElement content = getContentManager().extractContent(request);
-					if (((Action) content).getAction() instanceof GetOptions) {
-						ACLMessage result_msg = getParameters(request);
-						send(result_msg);
-						return;
-					}
-					if (((Action) content).getAction() instanceof GetNextParameters) {											
-						GetNextParameters gnp = (GetNextParameters) (((Action) content).getAction());
-						search_options = gnp.getSearch_options();
-						options = gnp.getOptions();														
-						loadSearchOptions();
-						
-						List options_new = null;
-						List evaluations = null;
-						
-						while (!finished()){
-			                ExecuteParameters ep = new ExecuteParameters();
-			                options_new = generateNewOptions(options_new, evaluations);
-			                ep.setParameters(options_new); // List of Lists of Options
-							
-							Action a = new Action();
-			                a.setAction(ep);
-			                a.setActor(myAgent.getAID());
-
-			                ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-			                req.addReceiver(request.getSender());
-			                req.setLanguage(codec.getName());
-			                req.setOntology(ontology.getName());
-			                req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-
-			                getContentManager().fillContent(req, a);
-							
-							ACLMessage get_next_parameters_results = FIPAService.doFipaRequestClient(myAgent, req);
-							// extract List of Evaluations from response
-							content = getContentManager().extractContent(get_next_parameters_results);
-							if (content instanceof Result) {
-								Result result = (Result) content;
-								evaluations = (List)((List)result.getValue()).get(1);
-								options_new = (List)((List)result.getValue()).get(0);
-							}
-							updateFinished(evaluations);							
-						}
-						
-						ACLMessage reply = request.createReply();
-						reply.setPerformative(ACLMessage.INFORM);
-						reply.setContent("finished");
-						
-						send(reply);
-						return;
-					}
-				} catch (CodecException ce) {
-					ce.printStackTrace();
-				} catch (OntologyException oe) {
-					oe.printStackTrace();
-				} catch (FIPAException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (((Action) content).getAction() instanceof GetOptions) {
+					get_option_action = (GetOptions) ((Action) content).getAction();
+					return null;
+				} else if (((Action) content).getAction() instanceof GetNextParameters){
+					get_next_parameters_action = (GetNextParameters) ((Action) content).getAction();
+					/*ACLMessage agree = request.createReply();
+					agree.setPerformative(ACLMessage.AGREE);
+					return agree;*/ //or REFUSE, sometimes
+					return null;
 				}
-				ACLMessage result_msg = request.createReply();
-				result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-				send(result_msg);
-				return;
-			} else {
-				block();
+			} catch (UngroundedException e) {
+				e.printStackTrace();
+			} catch (CodecException e) {
+				e.printStackTrace();
+			} catch (OntologyException e) {
+				e.printStackTrace();
 			}
+			throw new NotUnderstoodException("Not understood");
 		}
+		
+		@Override
+		protected ACLMessage prepareResultNotification(ACLMessage request,
+				ACLMessage response) {
+			if(get_option_action != null){
+				return getParameters(request);
+			}
+			if(get_next_parameters_action!=null){
+				return runSearchProtocol(request, get_next_parameters_action);
+			}
+			return null;
+		}
+
 	}
 		
 	protected void setup() {

@@ -1,17 +1,17 @@
 # minimum error rate (default 0.1)
-$ E float 1 1 r 0 1 0.1 Error rate
+$ E float 1 1 r 0 1 0.1 error_rate Error rate
  
 # maximal number of generations (default 10)
-$ M int 1 1 r 1 1000 10 Genrations
+$ M int 1 1 r 1 1000 10 generations Generations
 
 # Mutation rate (default 0.2)
-$ T float 1 1 r 0 1 0.2 Mutation rate
+$ T float 1 1 r 0 1 0.2 mutation_rate Mutation rate
 
 # Crossover probability (default 0.5)
-$ X float 1 1 r 0 1  0.5 Xover rate
+$ X float 1 1 r 0 1  0.5 xover_rate Xover rate
 
 # population size (default 5)
-$ P int 1 1 r 1 100 5 Population
+$ P int 1 1 r 1 100 5 pop_size Population
  
 # Size of tournament in selection (default 2)
-$ S int 1 1 r 1 100 2 Tournament size
+$ S int 1 1 r 1 100 2 tournament_size Tournament size

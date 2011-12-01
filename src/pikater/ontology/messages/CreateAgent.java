@@ -1,9 +1,10 @@
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 import jade.util.leap.List;
 
-public class CreateAgent extends Action{
+public class CreateAgent implements AgentAction{
 
 	private static final long serialVersionUID = -5584350622664317441L;
 	

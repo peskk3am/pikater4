@@ -189,7 +189,8 @@ public class Option implements Concept {
 		opt.setSynopsis(_synopsis);
 		opt.setValue(_value.substring(0)); // when immutable, contains the default value
 		opt.setDefault_value(_default_value);
-		opt.setUser_value(_user_value.substring(0));
+		if(_user_value!=null)
+			opt.setUser_value(_user_value.substring(0));
 		opt.setNumber_of_values_to_try(_number_of_values_to_try);
 	    opt.setNumberOfOptions(numberOfOptions);
 	    return opt;

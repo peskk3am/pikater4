@@ -1,15 +1,15 @@
 package pikater;
 
+import java.util.Random;
+
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
-import java.util.Random;
-
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
-import pikater.ontology.messages.Task;
+import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SearchSolution;
 
 public class Agent_RandomSearch extends Agent_Search {
 
@@ -20,6 +20,7 @@ public class Agent_RandomSearch extends Agent_Search {
 	
 	private int maximum_tries;
 	private float final_error_rate;
+	protected Random rnd_gen = new Random(1);
 
 	@Override
 	protected void loadSearchOptions(){
@@ -68,107 +69,23 @@ public class Agent_RandomSearch extends Agent_Search {
 	}
 		
 	@Override
-	protected List generateNewOptions(List options, List evaluations) {
-		// go through the Options Vector, generate random values
-		Random generator = new Random();
-		List new_options = new ArrayList();
-		Iterator itr = getOptions().iterator();
+	protected List generateNewSolutions(List solutions, List evaluations) {
+		// go through the solutions Vector, generate random values
+		List new_solution = new ArrayList();
+		Iterator itr = getSchema().iterator();
 		while (itr.hasNext()) {
-			new_options.add(itr.next());
+			SearchItem si = (SearchItem) itr.next();
+			//opt.setValue(randomOptValue(opt));
+			new_solution.add(si.randomValue(rnd_gen));
 		}		
 		
-		itr = new_options.iterator();
-		while (itr.hasNext()) {
-			Option next = (Option) itr.next();
-
-			String[] values = next.getUser_value().split(",");
-			int numArgs = values.length;
-
-			if (!next.getIs_a_set()) {
-				if (next.getData_type().equals("INT") || next.getData_type().equals("MIXED")) {
-					String si = "";
-					for (int i = 1; i < numArgs; i++) {
-						if (values[i - 1].equals("?")) {
-							int rInt = (int) (next.getRange().getMin() + generator
-									.nextInt((int) (next.getRange().getMax() - next
-											.getRange().getMin())));
-							si += Integer.toString(rInt) + ",";
-						}
-						else {
-							si += values[i - 1] + ",";
-						}							
-					}
-					if (values[numArgs - 1].equals("?")) {
-						int rInt = (int) (next.getRange().getMin() + generator
-								.nextInt((int) (next.getRange().getMax() - next
-										.getRange().getMin())));
-						si += Integer.toString(rInt);
-					}
-					else {
-						si += values[numArgs - 1] + ",";
-					}							
-					
-					next.setValue(si);
-				}
-				if (next.getData_type().equals("FLOAT")) {
-					String sf = "";
-					for (int i = 1; i < numArgs; i++) {
-						if (values[i - 1].equals("?")) {							
-							float rFloat = next.getRange().getMin()
-									+ (float) (generator.nextDouble())
-									* (next.getRange().getMax() - next
-											.getRange().getMin());
-							sf += Float.toString(rFloat) + ",";
-						}
-						else {
-							sf += values[i - 1] + ",";
-						}
-					}
-					if (values[numArgs - 1].equals("?")) {
-						float rFloat = next.getRange().getMin()
-								+ (float) (generator.nextDouble())
-								* (next.getRange().getMax() - next.getRange()
-										.getMin());
-						sf += Float.toString(rFloat);
-					}
-					else {
-						sf += values[numArgs - 1];
-					}
-					next.setValue(sf);
-				}
-				if (next.getData_type().equals("BOOLEAN")) {
-					int rInt2 = generator.nextInt(2);
-					if (rInt2 == 1) {
-						next.setValue("True");
-					} else {
-						next.setValue("False");
-					}
-				}
-			} else {
-				String s = "";
-				for (int i = 1; i < numArgs; i++) {
-					if (values[i - 1].equals("?")) {
-						int index = generator.nextInt(next.getSet().size());
-						s += next.getSet().get(index) + ",";
-					} else {
-						s += values[i - 1] + ",";
-					}
-
-				}
-				if (values[numArgs - 1].equals("?")) {
-					int index = generator.nextInt(next.getSet().size());
-					s += next.getSet().get(index);
-				} else {
-					s += values[numArgs - 1];
-				}
-				next.setValue(s);
-			}
-		}
 		number_of_tries++;
 		
-		List options_list = new ArrayList();
-		options_list.add(new Options(new_options));
-		return options_list;
+		List solutions_list = new ArrayList();
+		SearchSolution sol = new SearchSolution();
+		sol.setValues(new_solution);
+		solutions_list.add(sol);
+		return solutions_list;
 	}
 
 }

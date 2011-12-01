@@ -17,43 +17,34 @@ import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
-import jade.proto.IteratedAchieveREInitiator;
-import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.LinkedList;
 import jade.util.leap.List;
-import jade.wrapper.AgentController;
-import jade.wrapper.ControllerException;
-import jade.wrapper.PlatformController;
-import jade.wrapper.StaleProxyException;
-
 import java.util.Date;
-import java.util.Vector;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 
+import pikater.ontology.messages.BoolSItem;
 import pikater.ontology.messages.Computation;
 import pikater.ontology.messages.Compute;
 import pikater.ontology.messages.CreateAgent;
-import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
+import pikater.ontology.messages.FloatSItem;
 import pikater.ontology.messages.GetNextParameters;
-import pikater.ontology.messages.GetOptions;
+import pikater.ontology.messages.IntSItem;
 import pikater.ontology.messages.Options;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Results;
-import pikater.ontology.messages.Solve;
+import pikater.ontology.messages.SearchSolution;
+import pikater.ontology.messages.SetSItem;
 import pikater.ontology.messages.Task;
 
 public class Agent_OptionsManager extends Agent {
@@ -61,20 +52,20 @@ public class Agent_OptionsManager extends Agent {
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 	
-	private String search_agent_name;
+	//private String search_agent_name;
 	private Computation computation;
 	
-	private String trainFileName;
-	private String testFileName;
+	//private String trainFileName;
+	//private String testFileName;
 
-	private Computation receivedComputation;
+	//private Computation receivedComputation;
 
-	private String receiver;
-	private String problem_id;
-	private String start;
+	//private String receiver;
+	//private String problem_id;
+	//private String start;
 
 	private List evaluations = new ArrayList();
-	private List options = new ArrayList();		
+	//private List options = new ArrayList();		
 	
 	private List results = new ArrayList();
 	
@@ -83,7 +74,7 @@ public class Agent_OptionsManager extends Agent {
 
 	private int task_i = 0; // task number
 
-	private long timeout = -1;
+	//private long timeout = -1;
 
 	boolean working = false;
 	boolean finished = false;
@@ -93,8 +84,8 @@ public class Agent_OptionsManager extends Agent {
 
 	private ACLMessage original_request;
 
-	private ACLMessage msgPrev = new ACLMessage(ACLMessage.FAILURE);
-	private boolean sendAgain = false;
+	//private ACLMessage msgPrev = new ACLMessage(ACLMessage.FAILURE);
+//	private boolean sendAgain = false;
 	private boolean use_search_agent = true;
 
 	protected String getAgentType() {
@@ -103,7 +94,7 @@ public class Agent_OptionsManager extends Agent {
 
 	protected void executeTasks(List next_options_list){
 		evaluations = new ArrayList();  // premazani Listu, kdyz prijde vic pozadavku najednou (coz by se zatim nemelo dit)
-		options = new ArrayList();
+		//options = new ArrayList();
 		
 		Iterator itr = next_options_list.iterator();
 		while (itr.hasNext()) {
@@ -280,7 +271,9 @@ public class Agent_OptionsManager extends Agent {
 							msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 	
 							GetNextParameters gnp = new GetNextParameters();
-							gnp.setOptions(getMutableOptions(computation.getAgent().getOptions()));						
+							List schema = convertOptionsToSchema(computation.getAgent().getOptions());
+							gnp.setSchema(schema);
+							//gnp.setOptions(getMutableOptions(computation.getAgent().getOptions()));						
 							gnp.setSearch_options(computation.getMethod().getOptions());
 							
 							a = new Action();
@@ -306,7 +299,14 @@ public class Agent_OptionsManager extends Agent {
 						
 						ExecuteParameters ep = (ExecuteParameters) (((Action) content).getAction());		             
 						// go through list of Options, merge it with the immutable Options						
-						List next_options_list = ep.getParameters(); // 2d list
+						//List next_options_list = ep.getParameters(); // 2d list
+						List solutions = ep.getSolutions();
+						List next_options_list = new ArrayList();
+						Iterator itr = solutions.iterator();
+						while(itr.hasNext()){
+							SearchSolution solution = (SearchSolution)itr.next();
+							next_options_list.add(fillOptionsWithSolution(Options,solution));
+						}
 
 						executeTasks(next_options_list);
 						
@@ -314,7 +314,7 @@ public class Agent_OptionsManager extends Agent {
 						ACLMessage eval_msg = request.createReply();
 						eval_msg.setPerformative(ACLMessage.INFORM);
 						List l = new ArrayList();
-						l.add(options);
+						l.add(next_options_list);
 						l.add(evaluations); // ! evaluations je prazdnej list TODO
 						// System.out.println("EEE2"+ evaluations);
 						Result result = new Result((Action) content, l);								
@@ -340,7 +340,7 @@ public class Agent_OptionsManager extends Agent {
 		}
 	}
 	
-	private class SendExecuteTask extends AchieveREInitiator {
+	/*private class SendExecuteTask extends AchieveREInitiator {
 		
 		public SendExecuteTask(Agent a, ACLMessage request, Options opt) {
 			super(a, request);
@@ -388,7 +388,7 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleFailure(ACLMessage failure) {
 		}
 
-	};
+	};*/
 
 	private class StartGettingParameters extends AchieveREInitiator {
 		/**
@@ -523,7 +523,7 @@ public class Agent_OptionsManager extends Agent {
 			}			
 	}
 
-	private String getImmutableOptions() {
+	/*private String getImmutableOptions() {
 		String str = "";
 		Iterator itr = Options.iterator();
 		while (itr.hasNext()) {
@@ -539,7 +539,7 @@ public class Agent_OptionsManager extends Agent {
 			}
 		}
 		return str;
-	}
+	}*/
 	
 	private List getMutableOptions(List Options){
 		List mutable = new ArrayList();
@@ -578,6 +578,102 @@ public class Agent_OptionsManager extends Agent {
 			}
 		}
 		return _Options;
+	}
+	
+	
+	//Create new options from solution with filled ? values (convert solution->options) 
+	private Options fillOptionsWithSolution(List options, SearchSolution solution){
+		Options res_options = new Options();
+		List options_list = new ArrayList();
+		if(options==null){
+			return res_options;
+		}
+		//if no solution values to fill - return the option
+		if(solution.getValues() == null){
+			res_options.setList(options);
+			return res_options;
+		}
+		Iterator sol_itr = solution.getValues().iterator();
+		Iterator opt_itr = options.iterator();
+		while (opt_itr.hasNext()) {
+			Option opt = (Option) opt_itr.next();
+			Option new_opt = opt.copyOption();
+			if(opt.getMutable())
+				new_opt.setValue(fillOptWithSolution(opt, sol_itr));
+			options_list.add(new_opt);
+		}
+		res_options.setList(options_list);
+		return res_options;
+	}
+
+	//Fill an option's ? with values in iterator
+	private String fillOptWithSolution(Option opt, Iterator solution_itr){
+		String res_values = "";
+		String[] values = opt.getUser_value().split(",");
+		int numArgs = values.length;
+		for (int i = 0; i < numArgs; i++) {
+			if (values[i].equals("?")) {
+				res_values+=(String)solution_itr.next();
+			}else{
+				res_values+=values[i];
+			}
+		}
+		return res_values;
+	}
+	
+	//Create schema of solutions from options (Convert options->schema)
+	private List convertOptionsToSchema(List options){
+		List new_schema = new ArrayList();
+		if(options==null)
+			return new_schema;
+		Iterator itr = options.iterator();
+		while (itr.hasNext()) {
+			Option opt = (Option) itr.next();
+			if(opt.getMutable())
+				addOptionToSchema(opt, new_schema);
+		}
+		return new_schema;
+	}
+	
+	private void addOptionToSchema(Option opt, List schema){
+		String[] values = opt.getUser_value().split(",");
+		int numArgs = values.length;
+		if (!opt.getIs_a_set()) {
+			if (opt.getData_type().equals("INT") || opt.getData_type().equals("MIXED")) {
+				for (int i = 0; i < numArgs; i++) {
+					if (values[i].equals("?")) {
+						IntSItem itm = new IntSItem();
+						itm.setNumber_of_values_to_try(opt.getNumber_of_values_to_try());
+						itm.setMin(opt.getRange().getMin().intValue());
+						itm.setMax(opt.getRange().getMax().intValue());
+						schema.add(itm);
+					}
+				}
+			}else if (opt.getData_type().equals("FLOAT")) {
+				for (int i = 0; i < numArgs; i++) {
+					if (values[i].equals("?")) {
+						FloatSItem itm = new FloatSItem();
+						itm.setNumber_of_values_to_try(opt.getNumber_of_values_to_try());
+						itm.setMin(opt.getRange().getMin());
+						itm.setMax(opt.getRange().getMax());
+						schema.add(itm);
+					}
+				}
+			}else if (opt.getData_type().equals("BOOLEAN")) {
+				BoolSItem itm = new BoolSItem();
+				itm.setNumber_of_values_to_try(opt.getNumber_of_values_to_try());
+				schema.add(itm);
+			}
+		}else{
+			for (int i = 0; i < numArgs; i++) {
+				if (values[i].equals("?")) {
+					SetSItem itm = new SetSItem();
+					itm.setNumber_of_values_to_try(opt.getNumber_of_values_to_try());
+					itm.setSet(opt.getSet());
+					schema.add(itm);
+				}
+			}
+		}
 	}
 
     private String getDateTime() {

@@ -4,13 +4,10 @@ import jade.content.onto.BasicOntology;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.schema.AgentActionSchema;
-import jade.content.schema.AggregateSchema;
 import jade.content.schema.ConceptSchema;
-import jade.content.schema.ContentElementSchema;
 import jade.content.schema.ObjectSchema;
 import jade.content.schema.PredicateSchema;
 import jade.content.schema.PrimitiveSchema;
-import jade.util.leap.List;
 
 public class MessagesOntology extends Ontology {
 
@@ -120,6 +117,26 @@ public class MessagesOntology extends Ontology {
 	public static final String OPTION_DEFAULT_VALUE = "default_value";
 	public static final String OPTION_USER_VALUE = "user_value";
 	public static final String OPTION_NUMBER_OF_VALUES_TO_TRY = "number_of_values_to_try";
+	
+	public static final String SEARCHITEM = "SEARCH-ITEM";
+	public static final String SEARCHITEM_NUMBER_OF_VALUES_TO_TRY = "number_of_values_to_try";
+	
+	public static final String BOOLSITEM = "BOOL-SEARCH-ITEM";
+	
+	public static final String INTSITEM = "INT-SEARCH-ITEM";
+	public static final String INTSITEM_MIN = "min";
+	public static final String INTSITEM_MAX = "max";
+	
+	
+	public static final String FLOATSITEM = "FLOAT-SEARCH-ITEM";
+	public static final String FLOATSITEM_MIN = "min";
+	public static final String FLOATSITEM_MAX = "max";
+	
+	public static final String SETSITEM = "SET-SEARCH-ITEM";
+	public static final String SETSITEM_SET = "set"; 
+	
+	public static final String SEARCHSOLUTION = "SEARCH-SOLUTION";
+	public static final String SEARCHSOLUTION_VALUES = "values";
 
 	public static final String AGENT = "AGENT";
 	public static final String AGENT_NAME = "name";
@@ -271,7 +288,7 @@ public class MessagesOntology extends Ontology {
         public static final String DELETE_TEMP_FILES = "DELETE-TEMP-FILES";
         
         public static final String GET_NEXT_PARAMETERS = "GET_NEXT_PARAMETERS";
-        public static final String GET_NEXT_PARAMETERS_OPTIONS = "options";
+        public static final String GET_NEXT_PARAMETERS_SCHEMA = "schema";
         public static final String GET_NEXT_PARAMETERS_SEARCH_OPTIONS = "search_options";
         
         public static final String CREATE_AGENT = "CREATE_AGENT";
@@ -280,7 +297,7 @@ public class MessagesOntology extends Ontology {
         public static final String CREATE_AGENT_ARGUMENTS = "arguments";   
         
         public static final String EXECUTE_PARAMETERS = "EXECUTE_PARAMETERS";
-        public static final String EXECUTE_PARAMETERS_PARAMETERS = "parameters";
+        public static final String EXECUTE_PARAMETERS_SOLUTIONS = "solutions";
 
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
@@ -309,6 +326,15 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(DATA), Data.class);
 			add(new ConceptSchema(COMPUTATION), Computation.class);
 			add(new ConceptSchema(OPTION), Option.class);
+			
+			add(new ConceptSchema(SEARCHITEM), SearchItem.class);
+			add(new ConceptSchema(BOOLSITEM), BoolSItem.class);
+			add(new ConceptSchema(INTSITEM), IntSItem.class);
+			add(new ConceptSchema(FLOATSITEM), FloatSItem.class);
+			add(new ConceptSchema(SETSITEM), SetSItem.class);
+			
+			add(new ConceptSchema(SEARCHSOLUTION), SearchSolution.class);
+			
 			add(new ConceptSchema(INTERVAL), Interval.class);
 			add(new ConceptSchema(AGENT), Agent.class);
 			add(new ConceptSchema(PROBLEM), Problem.class);
@@ -492,7 +518,40 @@ public class MessagesOntology extends Ontology {
 					ObjectSchema.OPTIONAL);
 			cs.add(OPTION_NUMBER_OF_VALUES_TO_TRY,
 					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
-
+			
+			ConceptSchema si_schema = (ConceptSchema)getSchema(SEARCHITEM);
+			si_schema.add(SEARCHITEM_NUMBER_OF_VALUES_TO_TRY,
+					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
+			
+			cs = (ConceptSchema) getSchema(BOOLSITEM);
+			cs.addSuperSchema(si_schema);
+			
+			cs = (ConceptSchema) getSchema(INTSITEM);
+			cs.addSuperSchema(si_schema);
+			cs.add(INTSITEM_MIN,
+					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
+			cs.add(INTSITEM_MAX,
+					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));
+			
+			cs = (ConceptSchema) getSchema(FLOATSITEM);
+			cs.addSuperSchema(si_schema);
+			cs.add(FLOATSITEM_MIN,
+					(PrimitiveSchema) getSchema(BasicOntology.FLOAT));
+			cs.add(FLOATSITEM_MAX,
+					(PrimitiveSchema) getSchema(BasicOntology.FLOAT));
+			
+			cs = (ConceptSchema) getSchema(SETSITEM);
+			cs.addSuperSchema(si_schema);
+			cs.add(SETSITEM_SET,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), 0,
+					ObjectSchema.UNLIMITED);
+			
+			cs = (ConceptSchema) getSchema(SEARCHSOLUTION);
+			cs.add(SEARCHSOLUTION_VALUES,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), 0,
+					ObjectSchema.UNLIMITED);
+			
+			
 			cs = (ConceptSchema) getSchema(EVALUATION);
 			cs.add(EVALUATION_ERROR_RATE,
 					(PrimitiveSchema) getSchema(BasicOntology.FLOAT));
@@ -778,7 +837,7 @@ public class MessagesOntology extends Ontology {
                         as = (AgentActionSchema)getSchema(DELETE_TEMP_FILES);
 
             as = (AgentActionSchema) getSchema(GET_NEXT_PARAMETERS);                       
-            as.add(GET_NEXT_PARAMETERS_OPTIONS, (ConceptSchema) getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
+            as.add(GET_NEXT_PARAMETERS_SCHEMA, (ConceptSchema) getSchema(SEARCHITEM), 0, ObjectSchema.UNLIMITED);
             as.add(GET_NEXT_PARAMETERS_SEARCH_OPTIONS, (ConceptSchema) getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
             as = (AgentActionSchema) getSchema(CREATE_AGENT);                       
             as.add(CREATE_AGENT_TYPE, (PrimitiveSchema)getSchema(BasicOntology.STRING));
@@ -786,7 +845,7 @@ public class MessagesOntology extends Ontology {
             as.add(CREATE_AGENT_ARGUMENTS, (PrimitiveSchema)getSchema(BasicOntology.STRING), 0, ObjectSchema.UNLIMITED);
 
             as = (AgentActionSchema) getSchema(EXECUTE_PARAMETERS);                       
-            as.add(EXECUTE_PARAMETERS_PARAMETERS, (ConceptSchema) getSchema(OPTIONS), 0, ObjectSchema.UNLIMITED);
+            as.add(EXECUTE_PARAMETERS_SOLUTIONS, (ConceptSchema) getSchema(SEARCHSOLUTION), 0, ObjectSchema.UNLIMITED);
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

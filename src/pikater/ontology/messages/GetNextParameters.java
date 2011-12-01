@@ -1,20 +1,20 @@
 package pikater.ontology.messages;
 
-import jade.content.onto.basic.Action;
+import jade.content.AgentAction;
 import jade.util.leap.List;
 
-public class GetNextParameters extends Action{
+public class GetNextParameters implements AgentAction{
 
 	private static final long serialVersionUID = -4554163588726699351L;
 	
-	private List options; // List of Options
+	private List schema; // List of Options
 	private List search_options;
 	
-	public List getOptions() {
-		return options;
+	public List getSchema() {
+		return schema;
 	}
-	public void setOptions(List options) {
-		this.options = options;
+	public void setSchema(List schema) {
+		this.schema = schema;
 	}
 	public List getSearch_options() {
 		return search_options;

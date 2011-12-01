@@ -1,21 +1,21 @@
 package pikater.ontology.messages;
 
-import jade.content.onto.basic.Action;
+import jade.content.AgentAction;
 import jade.util.leap.List;
 
-public class ExecuteParameters extends Action{
+public class ExecuteParameters implements AgentAction{
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7419779148077301449L;
-	
-	private List parameters; // list of lists of Options
+	private static final long serialVersionUID = 599262534378620154L;
+	private List solutions; // list of lists of Options
 
-	public void setParameters(List parameters) {
-		this.parameters = parameters;
+	public void setSolutions(List solutions) {
+		this.solutions = solutions;
 	}
 
-	public List getParameters() {
-		return parameters;
+	public List getSolutions() {
+		return solutions;
 	}
 }

@@ -6,6 +6,8 @@
 package pikater.ontology.messages;
 
 import com.jgoodies.forms.layout.FormLayout.Measure;
+
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 
 /**
@@ -16,7 +18,7 @@ import jade.content.onto.basic.Action;
  *
  * @author Martin Pilat
  */
-public class LoadResults extends Action {
+public class LoadResults implements AgentAction {
 
 
     int userID;

@@ -4,14 +4,15 @@ import java.util.Random;
 
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
+import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SearchSolution;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
-public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
+public class Agent_SimulatedAnnealing extends Agent_Search {
 	/*
-	 * Implementation of Simulated Annealing option search
+	 * Implementation of Simulated Annealing search
 	 * Options:
 	 * -E float
 	 * minimum error rate (default 0.1)
@@ -26,8 +27,8 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	 * Stability of generation of new option - probability of keeping of option (default 0.5)
 	 */
 	private static final long serialVersionUID = -5087231723984887596L;
-	private Options solution = null;
-	private Options new_solution = null;
+	private SearchSolution solution = null;
+	private SearchSolution new_solution = null;
 	private float evaluation = Float.MAX_VALUE;
 	private double temperature = 0.0;
 	private double stability = 0.5;
@@ -36,6 +37,7 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	private double best_error_rate = 1;
 	private double final_error_rate = 0.1;
 	private boolean minimization = true;
+	protected Random rnd_gen = new Random(1);
 	@Override
 	protected String getAgentType() {
 		return "SimulatedAnnealing";
@@ -79,7 +81,7 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 	}
 	
 	@Override
-	protected List generateNewOptions(List options, List evaluations) {
+	protected List generateNewSolutions(List solutions, List evaluations) {
 		
 		if(evaluations == null){
 			//inicializace
@@ -95,10 +97,10 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		
 		number_of_tries++;
 		
-		//List of options to send
-		List options_list = new ArrayList();
-		options_list.add(new_solution);
-		return options_list;
+		//List of solutions to send
+		List solutions_list = new ArrayList();
+		solutions_list.add(new_solution);
+		return solutions_list;
 	}
 	
 	@Override
@@ -116,10 +118,9 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		if(new_evaluation < best_error_rate){
 			best_error_rate = new_evaluation;
 		}
-		//Acceptance of new options
-		double acc;
+		//Acceptance of new solutions
 		//System.out.print("<OK:> Temp:"+temperature+", e0: "+evaluation);
-		if (rnd_gen.nextDouble()<(acc=acceptanceProb(new_evaluation-evaluation,temperature))){
+		if (rnd_gen.nextDouble()<(acceptanceProb(new_evaluation-evaluation,temperature))){
 			solution = new_solution;
 			evaluation = new_evaluation;
 		}
@@ -128,31 +129,34 @@ public class Agent_SimulatedAnnealing extends Agent_MutationSearch {
 		Cooling();
 	}
 	
-	//Neighbor function: Random options in case of beginning, or mutation of existing
-	private Options Neighbor(Options sol){
-		List new_options = new ArrayList();
-		if(solution == null){
+	//Neighbor function: Random solutions in case of beginning, or mutation of existing
+	private SearchSolution Neighbor(SearchSolution sol){
+		List new_solution = new ArrayList();
+		if(sol == null){
 			//Completely new solution
-			Iterator itr = getOptions().iterator();
+			Iterator itr = getSchema().iterator();
 			while (itr.hasNext()) {
-				//dont want to change old options
-				Option opt = ((Option) itr.next()).copyOption();
-				opt.setValue(randomOptValue(opt));
-				new_options.add(opt);
+				//dont want to change old solutions
+				SearchItem si  = (SearchItem) itr.next();
+				new_solution.add(si.randomValue(rnd_gen));
 			}
 		}else{
 			//Neighbor function
-			Iterator itr = sol.getList().iterator();
-			while (itr.hasNext()) {
-				Option opt = ((Option) itr.next()).copyOption();
-				opt.setValue(mutateOptValue(opt, 1-stability));
-				new_options.add(opt);
+			Iterator sol_itr = sol.getValues().iterator();
+			Iterator schema_itr = getSchema().iterator();
+			while (sol_itr.hasNext()) {
+				String val = ((String) sol_itr.next());
+				if(rnd_gen.nextDouble() > stability)
+					val = ((SearchItem)schema_itr.next()).randomValue(rnd_gen);
+				new_solution.add(val);
 			}
 		}
-		return new Options(new_options);
+		SearchSolution res_sol = new SearchSolution();
+		res_sol.setValues(new_solution);
+		return res_sol;
 	}
 	
-	/*Acceptance probability of annealed options: 
+	/*Acceptance probability of annealed solutions: 
 	  -the better values are accepted
 	  -the worse with probability exp((e-e_new)/temperature)
 	*/

@@ -1,8 +1,9 @@
 package pikater.ontology.messages;
 
+import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 
-public class TranslateFilename extends Action {
+public class TranslateFilename implements AgentAction {
 
 	private static final long serialVersionUID = 2577019954868509113L;
 
