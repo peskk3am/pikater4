@@ -146,8 +146,9 @@ public class Agent_SimulatedAnnealing extends Agent_Search {
 			Iterator schema_itr = getSchema().iterator();
 			while (sol_itr.hasNext()) {
 				String val = ((String) sol_itr.next());
+				SearchItem si = (SearchItem) schema_itr.next();
 				if(rnd_gen.nextDouble() > stability)
-					val = ((SearchItem)schema_itr.next()).randomValue(rnd_gen);
+					val = si.randomValue(rnd_gen);
 				new_solution.add(val);
 			}
 		}
