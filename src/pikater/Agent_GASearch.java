@@ -118,7 +118,7 @@ public class Agent_GASearch extends Agent_Search {
 			return true;
 		}
 
-		if (best_error_rate < final_error_rate) {
+		if (best_error_rate <= final_error_rate) {
 			return true;
 		}
 		return false;
