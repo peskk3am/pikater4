@@ -183,10 +183,9 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 	@Override
 	protected void mySetup() {
-		setDefault_number_of_values_to_try(3);
 		setDefault_error_rate(0.01);
 
-		doWait(1000);
+		doWait(10000);
 		/* test of getOptions method
 		/*try {
 			System.out.println("J48 options: "+getOptions("J48"));
@@ -216,7 +215,8 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 		configFileName = getConfigFileName();
 		try {
-			System.out.println("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+
+			System.out.println(
+					//"file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+
 					System.getProperty("user.dir")+ System.getProperty("file.separator") + configFileName);
 			getProblemsFromXMLFile(configFileName);
 		}

@@ -108,8 +108,8 @@ public class Agent_AgentManager extends Agent {
 	public Agent_AgentManager() {
 		super();
 		try {
-			db = DriverManager.getConnection(
-					"jdbc:hsqldb:file:data/db/pikaterdb", "", "");
+			//db = DriverManager.getConnection(
+			//		"jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
 			Logger.getRootLogger()
 					.addAppender(
@@ -119,11 +119,10 @@ public class Agent_AgentManager extends Agent {
 			log = Logger.getLogger(Agent_AgentManager.class);
 			log.setLevel(Level.TRACE);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	
 		File data = new File("saved");
         if (!data.exists()) {
             log.info("Creating directory saved");
@@ -133,6 +132,7 @@ public class Agent_AgentManager extends Agent {
                 log.error("Error creating directory saved");
             }
         }
+        
 		
 	}
 

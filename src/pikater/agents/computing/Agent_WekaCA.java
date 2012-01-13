@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Vector;
 
 import pikater.gui.java.MyWekaOption;
@@ -101,7 +103,8 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;
 		eval = new Evaluation(train);
-		eval.evaluateModel(cls, test);
+		//eval.evaluateModel(cls, test);
+		eval.crossValidateModel(cls, test, 5, new Random(1));
 		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
 				+ "\nResults\n=======\n", false));
 
@@ -226,7 +229,6 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		try {
 			/* Sets up a file reader to read the options file */
 			FileReader input = new FileReader(optPath);
-			System.out.println("OK:"+optPath);
 			/*
 			 * Filter FileReader through a Buffered read to read a line at a
 			 * time
@@ -267,13 +269,14 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 						dt = MyWekaOption.dataType.MIXED;
 					}
 
-					String[] default_options = ((Classifier)getModelObject()).getOptions();
-
+					String[] default_options = ((Classifier)getModelObject()).getOptions();					 
+					System.out.println("Default options: "+Arrays.deepToString(default_options));
+										
 					Enumeration en = ((Classifier)getModelObject()).listOptions();
 					while (en.hasMoreElements()) {
 
 						Option next = (weka.core.Option) en.nextElement();
-						String default_value = "False";
+						String default_value = null; 
 						for (int i = 0; i < default_options.length; i++) {
 							if (default_options[i].equals("-" + next.name())) {
 								if (default_options[i].startsWith("-")) {

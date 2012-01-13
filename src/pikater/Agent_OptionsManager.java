@@ -87,21 +87,32 @@ public class Agent_OptionsManager extends Agent {
 	//private ACLMessage msgPrev = new ACLMessage(ACLMessage.FAILURE);
 //	private boolean sendAgain = false;
 	private boolean use_search_agent = true;
-
+	private int generation_number = 0;
+	
 	protected String getAgentType() {
 		return "Option Manager";
 	}
 
 	protected void executeTasks(List next_options_list){
+		generation_number += 1;
+		
 		evaluations = new ArrayList();  // premazani Listu, kdyz prijde vic pozadavku najednou (coz by se zatim nemelo dit)
 		//options = new ArrayList();
 		
 		Iterator itr = next_options_list.iterator();
 		while (itr.hasNext()) {
-			List next_options = ((Options) itr.next()).getList();
-			next_options = addMutableOptions(next_options);
+			List _next_options = ((Options) itr.next()).getList();
+			_next_options = addMutableOptions(_next_options);
+			
+			List next_options = new ArrayList();
+			Iterator no_itr = _next_options.iterator();
+			while (no_itr.hasNext()) {
+				Option next = (Option) no_itr.next();				
+				next_options.add(next.copyOption());							
+			}
+						
 			System.out.println("Next options for agent " + computation.getAgent().getName() + " received:");
-			Iterator no_itr = next_options.iterator();
+			no_itr = next_options.iterator();
 			while (no_itr.hasNext()) {
 				Option next = (Option) no_itr.next();
 				System.out.println("   " + next.getName() + ": " + next.getValue());							
@@ -117,9 +128,9 @@ public class Agent_OptionsManager extends Agent {
 			Execute execute = new Execute();
 			Task task = new Task();
 			// change options
-			pikater.ontology.messages.Agent agent = computation.getAgent();
+			pikater.ontology.messages.Agent agent = (pikater.ontology.messages.Agent)(computation.getAgent()).clone();
 			agent.setOptions(next_options);
-			task.setAgent(agent);
+			task.setAgent(agent);		
 			
 			String id = computation.getId() + "_" + task_i;
 			task_i++;
@@ -131,6 +142,8 @@ public class Agent_OptionsManager extends Agent {
 			task.setGui_agent(computation.getGui_agent());
 			task.setSave_results(computation.getSave_results());
 			task.setStart(getDateTime());
+			task.setProblem_name(computation.getProblem_name());
+			task.setNote(Integer.toString(generation_number));
 			
 			execute.setTask(task);
 			
@@ -151,23 +164,29 @@ public class Agent_OptionsManager extends Agent {
 			ACLMessage reply = null;
 			try {
 				reply = FIPAService.doFipaRequestClient(this, msg);
-			} catch (FIPAException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			}
+			catch (FIPAException e1) {
+				reply = e1.getACLMessage();				
+				System.err.println("Agent " + this.getLocalName() + ": "
+						+ task.getAgent().getName() + ": a task failed.");
+				// e1.printStackTrace();				
 			}		
-			if (reply != null && reply.getPerformative() == ACLMessage.INFORM){
-				if (reply != null) {
+			
+			if (reply != null) {
+				if (reply.getPerformative() == ACLMessage.INFORM || 
+					reply.getPerformative() == ACLMessage.FAILURE){
 					ContentElement content;
 					try {
 						content = getContentManager().extractContent(reply);
 						if (content instanceof Result) {
 							Result result = (Result) content;
 							if (result.getValue() instanceof pikater.ontology.messages.Evaluation) {														
-								Evaluation ev = (pikater.ontology.messages.Evaluation) result.getValue();
+								Evaluation ev = (pikater.ontology.messages.Evaluation) result.getValue();								
 								evaluations.add(ev);
 								task.setResult(ev);
 								task.setFinish(getDateTime());
-								// results.add(task);
+								//results.add((Task)task.clone());
+								results.add(task);								
 							}
 						}
 					} catch (UngroundedException e) {
@@ -180,12 +199,18 @@ public class Agent_OptionsManager extends Agent {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}	
+				}
+				else{
+					// TODO 
+					System.err.println("Agent " + this.getLocalName() + ": computing agent "
+							+ task.getAgent().getName() + " didn't execute the task.");
+					evaluations.add(null);						
+				}				
 			}
 			else{
 				// TODO 
 				System.err.println("Agent " + this.getLocalName() + ": computing agent "
-						+ reply.getSender().getLocalName() + "didn't execute the task.");
+						+ task.getAgent().getName() + " didn't execute the task. (reply == null)");
 				evaluations.add(null);
 			}
 		}
@@ -316,9 +341,15 @@ public class Agent_OptionsManager extends Agent {
 						List l = new ArrayList();
 						l.add(next_options_list);
 						l.add(evaluations); // ! evaluations je prazdnej list TODO
-						// System.out.println("EEE2"+ evaluations);
-						Result result = new Result((Action) content, l);								
+
+						// Iterator no_itr = l.iterator();
+						// while (no_itr.hasNext()) {
+						// 	ArrayList next = (ArrayList) no_itr.next();
+						//	System.out.println("   " + next);							
+						//}												
 						
+						Result result = new Result((Action) content, l);								
+												
 						getContentManager().fillContent(eval_msg, result);
 						send(eval_msg);
 						

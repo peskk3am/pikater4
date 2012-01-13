@@ -1,5 +1,7 @@
 package pikater;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import pikater.ontology.messages.Evaluation;
@@ -56,8 +58,7 @@ public class Agent_GASearch extends Agent_Search {
 	protected List generateNewSolutions(List solutions, List evaluations) {
 		ArrayList new_population = new ArrayList(pop_size);
 		if(evaluations==null){
-			//create new population
-			
+			//create new population			
 			number_of_generations = 0;
 			best_error_rate = Double.MAX_VALUE;
 			fitnesses = new float[pop_size];
@@ -93,15 +94,15 @@ public class Agent_GASearch extends Agent_Search {
 
 	@Override
 	protected void updateFinished(List evaluations) {
-		//assign evaluations to the population as fitnesses
+		//assign evaluations to the population as fitnesses		
 		if(evaluations == null){
 			for(int i = 0; i < pop_size; i++){
 				fitnesses[i]=1;
 			}
 		}else{
-			for(int i = 0; i < evaluations.size(); i++){
+			for(int i = 0; i < evaluations.size(); i++){				
 				//fitness
-				fitnesses[i]=((Evaluation)(evaluations.get(i))).getError_rate();
+				fitnesses[i]=((Evaluation)(evaluations.get(i))).getError_rate();				
 				//actualize best_error_rate
 				if(fitnesses[i]<best_error_rate){
 					best_error_rate = fitnesses[i];
@@ -118,7 +119,7 @@ public class Agent_GASearch extends Agent_Search {
 			return true;
 		}
 
-		if (best_error_rate <= final_error_rate) {
+		if (best_error_rate <= final_error_rate) {			
 			return true;
 		}
 		return false;
@@ -187,7 +188,7 @@ public class Agent_GASearch extends Agent_Search {
 		for(int i = 0; i < tournament_size; i++){
 			int ind= rnd_gen.nextInt(fitnesses.length);
 			//MINIMIZATION!!!
-			if(fitnesses[ind] < best_fit){
+			if(fitnesses[ind] <= best_fit){
 				best_fit = fitnesses[ind];
 				best_index = ind;
 			}

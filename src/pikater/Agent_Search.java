@@ -210,8 +210,8 @@ public abstract class Agent_Search extends Agent {
 
 				ACLMessage get_next_parameters_results = FIPAService.doFipaRequestClient(this, req);
 				// extract List of Evaluations from response
-				ContentElement content = getContentManager().extractContent(get_next_parameters_results);
-				if (content instanceof Result) {
+				ContentElement content = getContentManager().extractContent(get_next_parameters_results);				
+				if (content instanceof Result) {					
 					Result result = (Result) content;
 					evaluations = (List)((List)result.getValue()).get(1);
 					solutions_new = (List)((List)result.getValue()).get(0);

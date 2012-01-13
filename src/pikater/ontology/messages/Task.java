@@ -2,7 +2,7 @@ package pikater.ontology.messages;
 
 import jade.content.Concept;
 
-public class Task implements Concept {
+public class Task implements Concept, Cloneable {
 	/**
 	 * 
 	 */
@@ -14,7 +14,7 @@ public class Task implements Concept {
 	private Agent _agent;
 	private Data _data;
 	
-	private String _save_mode = "message";  // if not null -> save the agent
+	private String _save_mode = null;  // if not null -> save the agent
 								//    message (agent is sent in the message with the results)
 								//    file (agent is stored in the file by agentManager) --> TODO database
 
@@ -26,7 +26,9 @@ public class Task implements Concept {
 	private String start;
 	private String finish;
 
-	
+	private String _problem_name;
+	private String _note;
+
 	public void setAgent(Agent agent) {
 		_agent=agent;
 	}
@@ -109,5 +111,41 @@ public class Task implements Concept {
 	public String getFinish() {
 		return finish;
 	}
+	
+	public void setProblem_name(String _problem_name) {
+		this._problem_name = _problem_name;
+	}
+
+	public String getProblem_name() {
+		return _problem_name;
+	}
+
+	public void setNote(String _note) {
+		this._note = _note;
+	}
+
+	public String getNote() {
+		return _note;
+	}
+	
+    public Object clone() {
+        
+        Task task = new Task();
+    	task.setId(this._id);
+    	task.setComputation_id(this._computation_id);
+    	task.setProblem_id(this._problem_id);
+    	task.setResult(this._result);
+    	task.setAgent(this._agent);
+    	task.setData(this._data);    	
+    	task.setSave_mode(this._save_mode);
+    	task.setGet_results(this._get_results);
+    	task.setGui_agent(this._gui_agent);
+    	task.setSave_results(this._save_results);
+    	task.setUserID(this.userID);
+    	task.setStart(this.start);
+    	task.setFinish(this.finish);
+
+        return task;
+    }
 
 }

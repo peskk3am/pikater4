@@ -37,6 +37,8 @@ public class MessagesOntology extends Ontology {
 	public static final String TASK_GET_RESULTS = "get_results";	
 	public static final String TASK_SAVE_RESULTS = "save_results";	
 	public static final String TASK_GUI_AGENT = "gui_agent";	
+	public static final String TASK_PROBLEM_NAME = "problem_name";	
+	public static final String TASK_NOTE = "note";
 	
 	public static final String DATA = "data";
 	public static final String DATA_TRAIN_FILE_NAME = "train_file_name";
@@ -59,6 +61,7 @@ public class MessagesOntology extends Ontology {
 	public static final String COMPUTATION_GET_RESULTS = "get_results";
 	public static final String COMPUTATION_SAVE_RESULTS = "save_results";	
 	public static final String COMPUTATION_GUI_AGENT = "gui_agent";	
+	public static final String COMPUTATION_PROBLEM_NAME = "problem_name";	
 
 	public static final String PROBLEM = "PROBLEM";
 	public static final String PROBLEM_ID = "id";
@@ -71,7 +74,8 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM_START = "start";
 	public static final String PROBLEM_GET_RESULTS = "get_results";
 	public static final String PROBLEM_SAVE_RESULTS = "save_results";	
-	public static final String PROBLEM_GUI_AGENT = "gui_agent";	
+	public static final String PROBLEM_GUI_AGENT = "gui_agent";
+	public static final String PROBLEM_NAME = "name";	
 	
 	public static final String METHOD = "METHOD";
 	public static final String METHOD_OPTIONS = "options";
@@ -389,6 +393,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(COMPUTATION_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(COMPUTATION_PROBLEM_NAME,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 
 			cs = (ConceptSchema) getSchema(PROBLEM);
 			cs.add(PROBLEM_ID,
@@ -414,6 +420,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(PROBLEM_GUI_AGENT,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+			cs.add(PROBLEM_NAME,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			
 			cs = (ConceptSchema) getSchema(METHOD);
 			cs.add(METHOD_NAME,
@@ -451,6 +459,10 @@ public class MessagesOntology extends Ontology {
 			cs.add(TASK_START,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_FINISH,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			cs.add(TASK_PROBLEM_NAME,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			cs.add(TASK_NOTE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			
 			cs = (ConceptSchema) getSchema(DATA);

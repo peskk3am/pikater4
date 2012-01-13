@@ -90,7 +90,6 @@ public abstract class Agent_GUI extends GuiAgent {
 	
 	private HashMap<String, String> agentTypes;
 	private HashMap<String, Object[]> agentOptions;
-	private int default_number_of_values_to_try = 10;
 	private float default_error_rate = (float) 0.3;
 	protected String default_method = "Random";
 	private int default_maximum_tries = 10;
@@ -164,14 +163,6 @@ public abstract class Agent_GUI extends GuiAgent {
 			String agentName, String optionName, String errorMessage);
 
 	/* This method should handle missing value of the agent option */
-
-	protected void setDefault_number_of_values_to_try(int number) {
-		/*
-		 * default_number_of_values_to_try - when ChooseXValues method is
-		 * selected; should be set in GUI agent setup
-		 */
-		default_number_of_values_to_try = number;
-	}
 
 	protected void setDefault_error_rate(double value) {
 		default_error_rate = (float) value;
@@ -590,14 +581,17 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 	
 	protected int createNewProblem(String timeout, String get_results,
-			String save_results) {
+			String save_results, String name) {
 		int _timeout;
 		String _get_results;
 		boolean _save_results;
 		Problem problem = new Problem();
-		problem.setGui_id(Integer.toString(problem_id)); // agent manager
-															// changes the id
-															// afterwards
+		problem.setGui_id(Integer.toString(problem_id)); 
+		// agent manager changes the id afterwards		
+		if (name != null){
+			problem.setName(name);
+			System.out.println("experiment name: "+ name);
+		}
 		if (timeout == null) {
 			_timeout = default_timeout;
 		} else {
@@ -776,12 +770,6 @@ public abstract class Agent_GUI extends GuiAgent {
 						List options = agent.stringToOptions(optString);
 						Iterator it = options.iterator();
 
-						while (it.hasNext()) {
-							Option opt = (Option) it.next();
-							opt
-									.setNumber_of_values_to_try(default_number_of_values_to_try);
-						}
-
 						agent.setOptions(options);
 
 					}
@@ -841,14 +829,9 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 							option.setValue(option_value);
 
-							if (next_problem.getMethod().getType().equals(
-									"ChooseXValues")) {
-								if (number_of_values_to_try == null) {
-									option
-											.setNumber_of_values_to_try(default_number_of_values_to_try);
-								} else {
-									option.setNumber_of_values_to_try(Integer
-											.parseInt(number_of_values_to_try));
+							if (next_problem.getMethod().getType().equals("ChooseXValues")) {
+								if (number_of_values_to_try != null){	
+									option.setNumber_of_values_to_try(Integer.parseInt(number_of_values_to_try));								
 								}
 							}
 
@@ -1457,7 +1440,13 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println("GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// tohle fungje na linuxu: - funguje vsude
+		Document doc = builder.build("file:"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// tohle mi funguje na win:
+		//Document doc = builder.build("file:\\"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// a tohle snad vsude: NE Document doc = builder.build("file:"+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+				
 		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
@@ -1472,7 +1461,8 @@ public abstract class Agent_GUI extends GuiAgent {
 
 			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
 					next_problem.getAttributeValue("get_results"),
-					next_problem.getAttributeValue("save_results"));
+					next_problem.getAttributeValue("save_results"),
+					next_problem.getAttributeValue("name"));
 
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();

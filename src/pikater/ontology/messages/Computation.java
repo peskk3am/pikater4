@@ -17,6 +17,7 @@ public class Computation implements Concept {
 	private String _get_results;
 	private String _gui_agent;
 	private boolean _save_results;
+	private String _problem_name;
 	
 	// Methods required to use this class to represent the TASK role
 	public void setAgent(Agent agent) {
@@ -89,5 +90,13 @@ public class Computation implements Concept {
 
 	public boolean getSave_results() {
 		return _save_results;
+	}
+	
+	public void setProblem_name(String _problem_name) {
+		this._problem_name = _problem_name;
+	}
+
+	public String getProblem_name() {
+		return _problem_name;
 	}
 }
