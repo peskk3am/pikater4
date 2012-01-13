@@ -67,7 +67,20 @@ public class Agent_GASearch extends Agent_Search {
 			}
 		} else{
 			//population from the old one
-			for(int i = 0; i < (pop_size/2);i++){
+			//Elitism
+			//1. find the best
+			float best_fit = Float.MAX_VALUE;
+			int best_index = -1;
+			for(int i = 0; i < pop_size; i++){
+				if(fitnesses[i] < best_fit){
+					best_fit = fitnesses[i];
+					best_index = i;
+				}
+			}
+			SearchSolution elite_ind = cloneSol((SearchSolution) population.get(best_index)); //To cloneSol by tu (asi) nemuselo byt...
+			//2. put into new population
+			new_population.add(elite_ind);
+			for(int i = 0; i < ((pop_size-1)/2);i++){
 				//pairs
 				SearchSolution ind1 = cloneSol(selectIndividual());
 				SearchSolution ind2 = cloneSol(selectIndividual());
@@ -80,7 +93,7 @@ public class Agent_GASearch extends Agent_Search {
 				new_population.add(ind1);
 				new_population.add(ind2);
 			}
-			if((pop_size%2)==1){
+			if(((pop_size-1)%2)==1){
 				//one more, not in pair, if the pop is odd
 				SearchSolution ind = cloneSol(selectIndividual());
 				mutateIndividual(ind);
