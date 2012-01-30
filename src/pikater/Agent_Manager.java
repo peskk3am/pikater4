@@ -588,6 +588,7 @@ public class Agent_Manager extends Agent {
 							computation.setSave_results(problem.getSave_results());
 							computation.setGui_agent(problem.getGui_agent());
 							computation.setProblem_name(problem.getName());
+							computation.setEvaluation_method(problem.getEvaluation_method());
 							computation_i++;
 
 							msgVector.add(Compute(computation));

@@ -39,6 +39,7 @@ public class MessagesOntology extends Ontology {
 	public static final String TASK_GUI_AGENT = "gui_agent";	
 	public static final String TASK_PROBLEM_NAME = "problem_name";	
 	public static final String TASK_NOTE = "note";
+	public static final String TASK_EVALUATION_METHOD ="evaluation_method";
 	
 	public static final String DATA = "data";
 	public static final String DATA_TRAIN_FILE_NAME = "train_file_name";
@@ -62,7 +63,8 @@ public class MessagesOntology extends Ontology {
 	public static final String COMPUTATION_SAVE_RESULTS = "save_results";	
 	public static final String COMPUTATION_GUI_AGENT = "gui_agent";	
 	public static final String COMPUTATION_PROBLEM_NAME = "problem_name";	
-
+	public static final String COMPUTATION_EVALUATION_METHOD ="evaluation_method";
+	
 	public static final String PROBLEM = "PROBLEM";
 	public static final String PROBLEM_ID = "id";
 	public static final String PROBLEM_GUI_ID = "gui_id";
@@ -75,7 +77,8 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM_GET_RESULTS = "get_results";
 	public static final String PROBLEM_SAVE_RESULTS = "save_results";	
 	public static final String PROBLEM_GUI_AGENT = "gui_agent";
-	public static final String PROBLEM_NAME = "name";	
+	public static final String PROBLEM_NAME = "name";
+	public static final String PROBLEM_EVALUATION_METHOD ="evaluation_method";	
 	
 	public static final String METHOD = "METHOD";
 	public static final String METHOD_OPTIONS = "options";
@@ -83,6 +86,10 @@ public class MessagesOntology extends Ontology {
 	public static final String METHOD_ERROR_RATE = "error_rate";
 	public static final String METHOD_MAXIMUM_TRIES = "maximum_tries";
 
+	public static final String EVALUATION_METHOD = "METHOD";
+	public static final String EVALUATION_METHOD_OPTIONS = "options";
+	public static final String EVALUATION_METHOD_NAME = "name";
+	
 	public static final String EVALUATION = "EVALUATION";
 	public static final String EVALUATION_ERROR_RATE = "error_rate";
 	public static final String EVALUATION_KAPPA_STATISTIC = "kappa_statistic";
@@ -343,6 +350,7 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(AGENT), Agent.class);
 			add(new ConceptSchema(PROBLEM), Problem.class);
 			add(new ConceptSchema(METHOD), Method.class);
+			add(new ConceptSchema(EVALUATION_METHOD), EvaluationMethod.class);
 			add(new ConceptSchema(EVALUATION), Evaluation.class);
 			add(new ConceptSchema(RESULTS), Results.class);
 			add(new ConceptSchema(DATA_INSTANCES), DataInstances.class);
@@ -395,7 +403,9 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(COMPUTATION_PROBLEM_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
-
+			cs.add(COMPUTATION_EVALUATION_METHOD,
+					(ConceptSchema) getSchema(EVALUATION_METHOD));
+			
 			cs = (ConceptSchema) getSchema(PROBLEM);
 			cs.add(PROBLEM_ID,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
@@ -422,17 +432,12 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(PROBLEM_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			cs.add(PROBLEM_EVALUATION_METHOD,
+					(ConceptSchema) getSchema(EVALUATION_METHOD));
 			
 			cs = (ConceptSchema) getSchema(METHOD);
 			cs.add(METHOD_NAME,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
-			
-			/*cs.add(METHOD_ERROR_RATE,
-					(PrimitiveSchema) getSchema(BasicOntology.FLOAT),
-					ObjectSchema.OPTIONAL);
-			cs.add(METHOD_MAXIMUM_TRIES,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER),
-					ObjectSchema.OPTIONAL);*/
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));			
 			cs.add(METHOD_OPTIONS, (ConceptSchema) getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
 
 			cs = (ConceptSchema) getSchema(TASK);
@@ -464,6 +469,8 @@ public class MessagesOntology extends Ontology {
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_NOTE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			cs.add(TASK_EVALUATION_METHOD,
+					(ConceptSchema) getSchema(EVALUATION_METHOD));
 			
 			cs = (ConceptSchema) getSchema(DATA);
 			cs.add(DATA_TRAIN_FILE_NAME,

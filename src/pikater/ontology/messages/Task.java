@@ -28,6 +28,7 @@ public class Task implements Concept, Cloneable {
 
 	private String _problem_name;
 	private String _note;
+	private EvaluationMethod _evaluation_method;
 
 	public void setAgent(Agent agent) {
 		_agent=agent;
@@ -128,6 +129,14 @@ public class Task implements Concept, Cloneable {
 		return _note;
 	}
 	
+	public void setEvaluation_method(EvaluationMethod _evaluation_method) {
+		this._evaluation_method = _evaluation_method;
+	}
+	
+	public EvaluationMethod getEvaluation_method() {
+		return _evaluation_method;
+	}
+	
     public Object clone() {
         
         Task task = new Task();
@@ -144,6 +153,7 @@ public class Task implements Concept, Cloneable {
     	task.setUserID(this.userID);
     	task.setStart(this.start);
     	task.setFinish(this.finish);
+    	task.setEvaluation_method(this._evaluation_method);
 
         return task;
     }

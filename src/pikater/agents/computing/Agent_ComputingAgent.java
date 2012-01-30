@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Evaluation;
+import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
@@ -98,8 +99,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 	protected abstract void train() throws Exception;
 
-	protected abstract pikater.ontology.messages.Evaluation evaluateCA()
-			throws Exception;
+	protected abstract pikater.ontology.messages.Evaluation evaluateCA(
+			EvaluationMethod evaluation_method) throws Exception;
 
 	protected abstract DataInstances getPredictions(Instances test,
 			DataInstances onto_test);
@@ -564,7 +565,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					Data data = execute_action.getTask().getData();
 					output = data.getOutput();
 					mode = data.getMode();
-
+					
 					train_fn = data.getTrain_file_name();
 					AchieveREInitiator get_train_behaviour = (AchieveREInitiator) ((ProcessAction) parent).getState(GETTRAINDATA_STATE);
 					if (!train_fn.equals(trainFileName)) {
@@ -731,7 +732,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 						int duration = (int) (end.getTime() - start.getTime());
 
 						if (state == states.TRAINED) {
-							eval = evaluateCA();
+							EvaluationMethod evaluation_method = execute_action.getTask().getEvaluation_method();
+							eval = evaluateCA(evaluation_method);
 							if (output.equals("predictions")) {
 								DataInstances di = new DataInstances();
 								di.fillWekaInstances(test);

@@ -52,6 +52,8 @@ import org.jdom.input.SAXBuilder;
 
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
+import pikater.ontology.messages.Evaluation;
+import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
@@ -871,6 +873,46 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 	
+	private void addEvaluationMethodToProblem(int problem_id, String name) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (!next_problem.getSent()) {
+				if (Integer.parseInt(next_problem.getGui_id()) == problem_id) {
+					
+					EvaluationMethod evaluation_method = new EvaluationMethod();
+					evaluation_method.setName(name);
+					evaluation_method.setOptions(new ArrayList());
+					next_problem.setEvaluation_method(evaluation_method);
+				}
+			}
+		}		
+	}
+	
+	protected void addEvaluationMethodOption(int _problem_id, String option_name, String option_value) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (!next_problem.getSent()) {
+				
+				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
+						EvaluationMethod evaluation_method = next_problem.getEvaluation_method();
+
+						Option option = new Option();
+						option.setName(option_name);
+
+						if (option_value == null) {
+							option_value = "True";
+						}
+						option.setUser_value(option_value);
+						option.setValue(option_value);						
+
+						List options = evaluation_method.getOptions();
+						options.add(option);
+						evaluation_method.setOptions(options);
+				}							
+			}
+		}
+	}	
+	
 	protected int addDatasetToProblem(int _problem_id, String _train,
 			String _test, String _label, String _output, String _mode) {
 		// get the problem
@@ -1056,7 +1098,6 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 						} // end if getType != null
 					} // end while - iterate over agents
-					System.out.println("xxxx: "+next_problem.getMethod().getType()+" "+agent.getType());
 					if (next_problem.getMethod().getType() != null){
 						if (next_problem.getMethod().getType().equals(agent.getType())){
 							next_problem.getMethod().setOptions(_refreshOptions(next_problem.getMethod(), agent, next_problem));
@@ -1464,13 +1505,33 @@ public abstract class Agent_GUI extends GuiAgent {
 					next_problem.getAttributeValue("save_results"),
 					next_problem.getAttributeValue("name"));
 
+			java.util.List evaluation_method = next_problem.getChildren("evaluation");
+			if (evaluation_method.size() == 0){
+				throw new JDOMException("evaluation tag missing.");
+			}
+			if (evaluation_method.size() > 1) {
+				throw new JDOMException("more than one evaluation tags found.");
+			}
+
+			java.util.Iterator em_itr = evaluation_method.iterator();
+			Element next_evaluation_method = (Element) em_itr.next();
+			addEvaluationMethodToProblem(p_id, next_evaluation_method.getAttributeValue("name"));
+			
+			java.util.List _evaluation_method_options = next_evaluation_method.getChildren("parameter");
+			java.util.Iterator emo_itr = _evaluation_method_options.iterator();
+			while (emo_itr.hasNext()) {
+				Element next_option = (Element) emo_itr.next();
+				addEvaluationMethodOption(p_id, next_option.getAttributeValue("name"),
+						next_option.getAttributeValue("value"));
+			}
+			
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();
 			if (method.size() == 0) {
-				// TODO select default
+				throw new JDOMException("method tag missing.");
 			}
 			if (method.size() > 1) {
-				// TODO error
+				throw new JDOMException("more than one method tags found.");
 			}
 			Element next_method = (Element) m_itr.next();
 			addMethodToProblem(p_id, next_method.getAttributeValue("name"));

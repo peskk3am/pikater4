@@ -21,6 +21,7 @@ public class Problem implements Concept {
 	private String _gui_agent;
 	private boolean _save_results;
 	private String _name;
+	private EvaluationMethod _evaluation_method;
 
 	public void setAgents(List agents) {
 		_agents = agents;
@@ -118,4 +119,11 @@ public class Problem implements Concept {
 		return _name;
 	}
 	
+	public void setEvaluation_method(EvaluationMethod _evaluation_method) {
+		this._evaluation_method = _evaluation_method;
+	}
+	
+	public EvaluationMethod getEvaluation_method() {
+		return _evaluation_method;
+	}	
 }

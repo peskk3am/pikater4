@@ -522,8 +522,12 @@ public class Agent_DataManager extends Agent {
                         List allMetadata = new ArrayList();
 
                         ResultSet rs = stmt.executeQuery(query);
+
+                        Statement stmt1 = db.createStatement();
+
                         while (rs.next()) {
-                            Metadata m = new Metadata();
+                            System.out.println("aaa");
+                        	Metadata m = new Metadata();
                             m.setAttribute_type(rs.getString("attributeType"));
                             m.setDefault_task(rs.getString("defaultTask"));
                             m.setExternal_name(rs.getString("externalFilename"));
@@ -536,7 +540,7 @@ public class Agent_DataManager extends Agent {
                             // set in the db
                             query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
                             System.out.println(query);
-                            ResultSet rs_number = stmt.executeQuery(query);
+                            ResultSet rs_number = stmt1.executeQuery(query);
                             rs_number.next();
 
                             m.setNumber_of_tasks_in_db(rs_number.getInt("n"));

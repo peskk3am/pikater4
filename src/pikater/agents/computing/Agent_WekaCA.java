@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import pikater.gui.java.MyWekaOption;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.Interval;
 import weka.classifiers.Classifier;
@@ -96,15 +97,38 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		return "/options/"+getAgentType() +".opt";
 	}
 
-	protected Evaluation test() throws Exception{
+	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
 		System.out.println("Agent " + getLocalName() + ": Testing...");
 
 		// evaluate classifier and print some statistics
-		Evaluation eval = null;
+		Evaluation eval = null;				
 		eval = new Evaluation(train);
-		//eval.evaluateModel(cls, test);
-		eval.crossValidateModel(cls, test, 5, new Random(1));
+
+		System.out.println("Evaluation method: ");
+		System.out.print("\t");		
+		
+		if (evaluation_method.getName().equals("CrossValidation") ){
+			int folds = -1; 
+			Iterator itr = evaluation_method.getOptions().iterator();
+			while (itr.hasNext()) {
+				pikater.ontology.messages.Option next = (pikater.ontology.messages.Option) itr.next();
+				if (next.getName().equals("F")){
+					folds = Integer.parseInt(next.getValue());
+				}
+			}
+			if (folds == -1){
+					folds = 5;
+				  // TODO read default value from file (if necessary)
+			}
+			System.out.println(folds + "-fold cross validation.");
+			eval.crossValidateModel(cls, test, folds, new Random(1));
+		}
+		else{ // name = Standard
+			System.out.println("standard weka evaluation.");
+			eval.evaluateModel(cls, test);
+		}
+				
 		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
 				+ "\nResults\n=======\n", false));
 
@@ -113,9 +137,9 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected pikater.ontology.messages.Evaluation evaluateCA() throws Exception{
+	protected pikater.ontology.messages.Evaluation evaluateCA(EvaluationMethod evaluation_method) throws Exception{
 		float defaultValue = (float) Integer.MAX_VALUE;
-		Evaluation eval = test();
+		Evaluation eval = test(evaluation_method);
 
 		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();
 		result.setError_rate((float) eval.errorRate());

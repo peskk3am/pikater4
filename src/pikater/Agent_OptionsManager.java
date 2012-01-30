@@ -144,6 +144,7 @@ public class Agent_OptionsManager extends Agent {
 			task.setStart(getDateTime());
 			task.setProblem_name(computation.getProblem_name());
 			task.setNote(Integer.toString(generation_number));
+			task.setEvaluation_method(computation.getEvaluation_method());
 			
 			execute.setTask(task);
 			
