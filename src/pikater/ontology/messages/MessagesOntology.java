@@ -180,7 +180,7 @@ public class MessagesOntology extends Ontology {
 	
 	public static final String FITNESS = "FITNESS";
 	public static final String FITNESS_SOLUTION = "solution";
-	public static final String FITNESS_FITNESS_VALUES = "fitness_values";
+	public static final String FITNESS_FITNESS_VALUES = "fitnessValues";
 	
 	// Predicates
 	public static final String PARTIALRESULTS = "PARTIALRESULTS";
