@@ -187,7 +187,11 @@ public class MessagesOntology extends Ontology {
 	public static final String METADATA_NUMBER_OF_TASKS_IN_DB = "number_of_tasks_in_db";
 	
 	public static final String OPTIONS = "OPTIONS";
-	public static final String OPTIONS_LIST = "list";	
+	public static final String OPTIONS_LIST = "list";
+	
+	public static final String FITNESS = "FITNESS";
+	public static final String FITNESS_SOLUTION = "solution";
+	public static final String FITNESS_FITNESS_VALUES = "fitnessValues";
 	
 	// Predicates
 	public static final String PARTIALRESULTS = "PARTIALRESULTS";
@@ -359,7 +363,8 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(METADATA), Metadata.class);
                         add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
             add(new ConceptSchema(OPTIONS), Options.class);
-			add(new PredicateSchema(PARTIALRESULTS), PartialResults.class);
+			add(new ConceptSchema(FITNESS), Options.class);
+            add(new PredicateSchema(PARTIALRESULTS), PartialResults.class);
 			add(new AgentActionSchema(COMPUTE), Compute.class);
 			add(new AgentActionSchema(GET_OPTIONS), GetOptions.class);
 			add(new AgentActionSchema(EXECUTE), Execute.class);
@@ -718,6 +723,12 @@ public class MessagesOntology extends Ontology {
                        
             cs = (ConceptSchema)getSchema(OPTIONS);
             cs.add(OPTIONS_LIST, (ConceptSchema)getSchema(OPTION), 0, ObjectSchema.UNLIMITED);
+            
+            cs = (ConceptSchema)getSchema(FITNESS);
+            cs.add(FITNESS_SOLUTION,
+            		(ConceptSchema) getSchema(SEARCHSOLUTION),
+					ObjectSchema.OPTIONAL);
+            cs.add(FITNESS_FITNESS_VALUES, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), 1, ObjectSchema.UNLIMITED);
             
 			PredicateSchema ps = (PredicateSchema) getSchema(PARTIALRESULTS);
 			ps.add(PARTIALRESULTS_TASK, (ConceptSchema) getSchema(TASK),
