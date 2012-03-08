@@ -1619,8 +1619,8 @@ public abstract class Agent_GUI extends GuiAgent {
 		// find problem with gui_id
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (next_problem.getGui_id() == guiId) {
-				next_problem.setId(new Id(id));
+			if (next_problem.getGui_id().equals(guiId)) {
+				next_problem.setId(new Id(Integer.toString(id)));
 			}
 		}
 	}

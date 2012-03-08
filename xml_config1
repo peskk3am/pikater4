@@ -12,7 +12,7 @@
 		<dataset train="iris.arff" test="iris.arff" />
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="L" value="0.2" />
+        	<parameter name="L" value="0.1" />
         </agent>
         	
    </experiment>

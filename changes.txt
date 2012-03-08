@@ -1,0 +1,37 @@
+Most important changes:
+
+*Ontology*
+ - Computation and Compute ontology classes no longer exist,
+   Task is used instead
+ - new ontology class Id created
+
+*Manager*
+ - if there is ? in the options, creates Options manager agent,
+   else sends Task directly to Computing agent (debugged - ok)
+ - in both cases manager uses Contract Net Initiator behaviour,
+   sends the same Execute as the content of both CFP and ACCEPT-PROPOSAL messages
+
+ TODO
+ - manager chooses just one OptionsManager / Computing Agent
+ - improve management of computing agents (recently if n computing agents is
+   requested by Option Manager, n computing agents is assiged,
+   these agent are held in BusyAgents list)
+
+*Computing Agent*
+ - responds to Contract Net protocol, sends lenght of its Task queue as proposal
+ - always returns Task list (with Evaluations filled in) in an INFORM message
+ - uses new Evaluation with list of Evals
+
+ TODO
+ - use of the search agent for training (Bob part is missing, see dirty_picture.pdf)
+ - saving results to database directly by computing agent
+
+*Options Manager*
+ - understands CFPs from manager
+ - returns list of Tasks
+ - sends GET-AGENTS request to manager, receives list of AIDs
+ - uses Contract Net Initiator behaviour when communicating with computing agents
+
+ TODO
+ - debugged until sending REQUEST message to Search agent
+ - always sends "0" as proposal to CFP from manager

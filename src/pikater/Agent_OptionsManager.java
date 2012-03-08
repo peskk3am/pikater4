@@ -227,7 +227,7 @@ public class Agent_OptionsManager extends Agent {
 			Execute ex = new Execute();
 			
 			// add task id
-			Id id = new Id(task_number);
+			Id id = new Id(Integer.toString(task_number));
 			Id rtid = received_task.getId();
 			rtid.setSubid(id);
 			received_task.setId(rtid);
@@ -382,6 +382,7 @@ public class Agent_OptionsManager extends Agent {
 						msg_received = true;
 						
 						ACLMessage propose = CFPproposal.createReply();
+						propose.setPerformative(ACLMessage.PROPOSE);
 						propose.setContent(Integer.toString(0)); // TODO
 						send(propose);						
 						return;

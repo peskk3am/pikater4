@@ -146,7 +146,7 @@ public class Agent_Manager extends Agent {
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	private String[] type;
 	
-	Map<Integer, Integer> receivedProblemsID = new HashMap<Integer, Integer>();			
+	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
 	
 	protected class ExecuteTask extends ContractNetInitiator{
@@ -157,11 +157,11 @@ public class Agent_Manager extends Agent {
 		int nResponders = 0;
 		int nTasks;
 		ACLMessage request;
-		int problemID;
+		String problemID;
 		ACLMessage cfp;
 		
 		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage _request,
-				int _nTasks, int _problemID) {
+				int _nTasks, String _problemID) {
 			super(a, cfp);
 			
 			Iterator itr = cfp.getAllReceiver(); 
@@ -278,7 +278,7 @@ public class Agent_Manager extends Agent {
 			}
 										
 			// get task_id
-			int task_id = -1;
+			String task_id = null;
 			ContentElement content;
 			try {
 				content = getContentManager().extractContent(inform);
@@ -294,7 +294,7 @@ public class Agent_Manager extends Agent {
 				Iterator ba_itr = busyAgents.iterator();
 				while (ba_itr.hasNext()) {
 					BusyAgent ba = (BusyAgent) ba_itr.next();
-					if (ba.getTask_id() == task_id){
+					if (ba.getTask_id().equals(task_id)){
 						ba_itr.remove();
 					}
 				}
@@ -509,9 +509,9 @@ public class Agent_Manager extends Agent {
 						ACLMessage agree = request.createReply();
 						agree.setPerformative(ACLMessage.AGREE);
 	
-						int problemID = generateProblemID();
+						String problemID = generateProblemID();
 						
-						agree.setContent(Integer.toString(problemID));
+						agree.setContent(problemID);
 						
 						send(agree);
 	
@@ -535,7 +535,7 @@ public class Agent_Manager extends Agent {
 											
 						String agentType = ga.getAgent().getType();
 						int n = ga.getNumber();
-						int task_id = ga.getTask_id().getIdentificator();
+						String task_id = ga.getTask_id().getIdentificator();
 											
 						agents = getAgentsByType(agentType, n, task_id);
 	
@@ -589,7 +589,7 @@ public class Agent_Manager extends Agent {
 	}
 
 	
-	protected List prepareTaskMessages(ACLMessage request, int problemId) {		
+	protected List prepareTaskMessages(ACLMessage request, String problemId) {		
 
 		List msgList = new ArrayList();
 		// System.out.println("Agent "+getLocalName()+" failure :"+failure);
@@ -673,7 +673,7 @@ public class Agent_Manager extends Agent {
 							task.setAgent(a_next_copy);
 							task.setData(next_data);
 							task.setProblem_id(new Id(problemId));
-							task.setId(new Id(task_i));							
+							task.setId(new Id(Integer.toString(task_i)));							
 							task.setStart(getDateTime()); // if sent to options manager, overwritten							
 							task.setGet_results(problem.getGet_results());
 							task.setSave_results(problem.getSave_results());
@@ -785,7 +785,7 @@ public class Agent_Manager extends Agent {
 	}
 
 	
-	public List getAgentsByType(String agentType, int n, int task_id) {
+	public List getAgentsByType(String agentType, int n, String task_id) {
 		// returns list of AIDs (n agents that are not busy)
 		
 		List Agents = new ArrayList(); // List of AIDs
@@ -931,7 +931,7 @@ public class Agent_Manager extends Agent {
 
 
 	
-	protected List findCFPmessageReceivers(Execute ex, int problemID) {
+	protected List findCFPmessageReceivers(Execute ex, String problemID) {
 		// creates an Option Manager or finds/creates a computing agent
 		// and creates a cfp message
 		// TODO !!! so far only ONE agent is selected
@@ -954,7 +954,7 @@ public class Agent_Manager extends Agent {
 		}
 		else{
 			// create an Option Manager agent
-			String optionsManagerName = Integer.toString(ex.getTask().getId().getIdentificator()); 
+			String optionsManagerName = "OptionsManager"+ex.getTask().getId().getIdentificator(); 
 			ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
 			msg_ca.addReceiver(new AID("agentManager", false));
 			msg_ca.setLanguage(codec.getName());
@@ -987,11 +987,11 @@ public class Agent_Manager extends Agent {
 		return receivers;
 	}
 
-	protected ACLMessage createCFPmessage(Execute ex, int problemID, List receivers) {
+	protected ACLMessage createCFPmessage(Execute ex, String problemID, List receivers) {
 
 		// create CFP message for the Option Manager or Computing Agent							  		
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-		cfp.setConversationId(Integer.toString(problemID));
+		cfp.setConversationId(problemID);
 		cfp.setLanguage(codec.getName());
 		cfp.setOntology(ontology.getName());
 
@@ -1021,7 +1021,7 @@ public class Agent_Manager extends Agent {
 
 	} // end createCFPmessage()
 
-	protected Results prepareTaskResults(ACLMessage resultmsg, int problemID) {
+	protected Results prepareTaskResults(ACLMessage resultmsg, String problemID) {
 		Results results = new Results();
 
 		ContentElement content;
@@ -1031,7 +1031,7 @@ public class Agent_Manager extends Agent {
 				Result result = (Result) content;
 				
 				List listOfResults = result.getItems();
-				results.setProblem_id(Integer.toString(problemID));
+				results.setProblem_id(problemID);
 				results.setResults(listOfResults);				
 				
 				float sumError_rate = 0;
@@ -1415,10 +1415,10 @@ public class Agent_Manager extends Agent {
 		return 1;
 	}
 
-	protected int generateProblemID() {		
+	protected String generateProblemID() {		
 		// Date date = new Date();
 		//String problem_id = Long.toString(date.getTime()) + "_" + problem_i;
-		return problem_i++;
+		return Integer.toString(problem_i++);
 	}
 	
     private String getDateTime() {
