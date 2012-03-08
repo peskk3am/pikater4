@@ -26,6 +26,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
 import jade.util.leap.ArrayList;
+import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
 import java.io.ByteArrayOutputStream;
@@ -37,14 +38,17 @@ import java.util.LinkedList;
 
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.MessagesOntology;
+import pikater.ontology.messages.Option;
 import pikater.ontology.messages.PartialResults;
 import pikater.ontology.messages.Task;
+import pikater.ontology.messages.Id;
 import weka.core.Instances;
 
 public abstract class Agent_ComputingAgent extends Agent {
@@ -370,7 +374,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		PartialResults content = new PartialResults();
 		content.setResults(_evaluations);
-		content.setTask_id(_task.getId());
+		// content.setTask_id(_task.getId());
 		if (first_time) {
 			content.setTask(_task);
 		}
@@ -388,18 +392,27 @@ public abstract class Agent_ComputingAgent extends Agent {
 	protected class RequestServer extends CyclicBehaviour {
 		/**
 			 * 
-			 */
+			 */		
 		private static final long serialVersionUID = 1074564968341084444L;
-		private MessageTemplate resMsgTemplate = MessageTemplate
-				.and(MessageTemplate
-						.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-						MessageTemplate.and(MessageTemplate
-								.MatchPerformative(ACLMessage.REQUEST),
-								MessageTemplate.and(MessageTemplate
-										.MatchLanguage(codec.getName()),
-										MessageTemplate.MatchOntology(ontology
-												.getName()))));
+		
+		private MessageTemplate CFPproposalMsgTemplate = MessageTemplate.and(
+			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
+			MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+			MessageTemplate.MatchOntology(ontology.getName()))));
 
+		private MessageTemplate CFPreqMsgTemplate = MessageTemplate.and(
+			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
+			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
+			MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+			MessageTemplate.MatchOntology(ontology.getName()))));
+		
+		private MessageTemplate reqMsgTemplate = MessageTemplate.and(
+			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+			MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+			MessageTemplate.MatchOntology(ontology.getName()))));
+		
 		public RequestServer(Agent agent) {
 			super(agent);
 		}
@@ -426,33 +439,59 @@ public abstract class Agent_ComputingAgent extends Agent {
 		}
 
 		@Override
-		public void action() {
-
-			ACLMessage req = receive(resMsgTemplate);
-			if (req != null) {
-				try {
-					ContentElement content = getContentManager()
-							.extractContent(req);
-					if (((Action) content).getAction() instanceof GetOptions) {
+		public void action() {			
+			ACLMessage req = receive(reqMsgTemplate);
+			ACLMessage CFPreq = receive(CFPreqMsgTemplate);
+			ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
+			boolean msg_received = false;
+			
+			ContentElement content;
+			try {				
+				
+				if (req != null) {
+					msg_received = true;
+					content = getContentManager().extractContent(req);					
+					if (((Action) content).getAction() instanceof GetOptions) {						
 						ACLMessage result_msg = sendOptions(req);
 						send(result_msg);
 						return;
 					}
-					if (((Action) content).getAction() instanceof Execute) {
-						send(processExecute(req));
-						// refuse/accept
+	
+					ACLMessage result_msg = req.createReply();
+					result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
+					send(result_msg);
+					return;
+				}
+				
+				if (CFPproposal != null){
+					msg_received = true;
+					content = getContentManager().extractContent(CFPproposal);
+					if (((Action) content).getAction() instanceof Execute) {						
+						ACLMessage propose = CFPproposal.createReply();
+						propose.setPerformative(ACLMessage.PROPOSE);
+						propose.setContent(Integer.toString(taskFIFO.size()));
+						send(propose);
 						return;
 					}
-				} catch (CodecException ce) {
-					ce.printStackTrace();
-				} catch (OntologyException oe) {
-					oe.printStackTrace();
 				}
-				ACLMessage result_msg = req.createReply();
-				result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-				send(result_msg);
-				return;
-			} else {
+				
+				if (CFPreq != null){
+					msg_received = true;
+					System.out.println("zprava:"+CFPreq);
+					content = getContentManager().extractContent(CFPreq);
+					if (((Action) content).getAction() instanceof Execute) {												
+						send(processExecute(CFPreq));
+					}
+					// TODO create search agent here						
+					return;					
+				}
+			} catch (CodecException ce) {
+				ce.printStackTrace();
+			} catch (OntologyException oe) {
+				oe.printStackTrace();
+			}
+			
+			if (! msg_received){
 				block();
 			}
 		}
@@ -485,10 +524,17 @@ public abstract class Agent_ComputingAgent extends Agent {
 		/* Resulting message: FAILURE */
 
 		void failureMsg(String desc) {
-			result_msg = incoming_request.createReply();
-			result_msg.setPerformative(ACLMessage.FAILURE);
-			// result_msg.setContent(desc);
-			eval.setError_rate(Float.MAX_VALUE);
+			
+			Eval ev = new Eval();
+			ev.setName("error_rate");
+			ev.setValue(Float.MAX_VALUE);
+			
+			List evaluations = new ArrayList();
+			evaluations.add(ev);
+			
+			eval.setEvaluations(evaluations);
+			evaluations.add(ev);
+						
 			eval.setStatus(desc);
 		}
 
@@ -803,8 +849,6 @@ public abstract class Agent_ComputingAgent extends Agent {
 							}
 						}
 
-						// eval.setDuration(duration);
-
 						if ((current_task.getSave_mode() != null && current_task
 								.getSave_mode().equals("message"))) {
 							try {
@@ -814,65 +858,40 @@ public abstract class Agent_ComputingAgent extends Agent {
 								e1.printStackTrace();
 							}
 						}
-						result_msg = incoming_request.createReply();
-						result_msg.setPerformative(ACLMessage.INFORM);
 					}
-
 					
-					
+					result_msg = incoming_request.createReply();
+					result_msg.setPerformative(ACLMessage.INFORM);
+										
+					ContentElement content;
 					try {
-						// Prepare the content - Result with Evaluation
-						// instead of MyWekaEvaluation is sent!!!
-						ContentElement content = getContentManager()
-								.extractContent(incoming_request);
-
-						if (resurrected)
-							eval.setObject(null);
-
-						Result result = new Result((Action) content, eval);
-						getContentManager().fillContent(result_msg, result);
-
+						content = getContentManager().extractContent(incoming_request);
+						
+						// Prepare the content: Result with current task & filled in evaluaton
+						if (resurrected) { eval.setObject(null); };
+						current_task.setResult(eval);
+						
+						List results = new ArrayList();
+						results.add(current_task);
+						Result result = new Result((Action) content, results);
+						getContentManager().fillContent(result_msg, result);												
+						
 					} catch (UngroundedException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (CodecException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (OntologyException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-
+			
+					if (current_task.getGet_results().equals("after_each_task")) {								
+						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));
+					}			
+				
 					send(result_msg);
-
-					if (current_task.getGet_results().equals("after_each_task")) {
-						current_task.setResult(eval);
-						ContentElement content;
-						try {
-							content = getContentManager().extractContent(
-									incoming_request);
-							if (resurrected)
-								eval.setObject(null);
-
-							Result result = new Result((Action) content,
-									current_task);
-							getContentManager().fillContent(result_msg, result);
-
-						} catch (UngroundedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (CodecException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (OntologyException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						result_msg.clearAllReceiver();
-						result_msg.addReceiver(new AID(current_task
-								.getGui_agent(), false));
-						result_msg.setConversationId("result_after_task");
-						send(result_msg);
-					}
 
 				}
 			}, SENDRESULTS_STATE);

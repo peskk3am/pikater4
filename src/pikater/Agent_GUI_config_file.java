@@ -21,6 +21,7 @@ import org.jdom.JDOMException;
 import pikater.ontology.messages.Agent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.Problem;
@@ -50,12 +51,21 @@ public class Agent_GUI_config_file extends Agent_GUI {
 						Iterator itr = tasks.iterator();
 						while (itr.hasNext()) {
 							Task task = (Task) itr.next();
+							
+							Float error_rate = null;
+							Iterator ev_itr = task.getResult().getEvaluations().iterator();							
+							while (ev_itr.hasNext()) {
+								Eval next_eval = (Eval) ev_itr.next();
+								if (next_eval.getName().equals("error_rate")){ 
+									error_rate = next_eval.getValue();
+								}
+							}
 							System.out.println("Agent " + getLocalName()
 									+ ": options for agent "
 									+ task.getAgent().getName() + " were "
 									+ task.getAgent().optionsToString()
 									+ " error_rate: "
-									+ task.getResult().getError_rate());
+									+ error_rate);
 						}
 					} else {
 						System.out.println("Agent " + getLocalName()
@@ -87,10 +97,19 @@ public class Agent_GUI_config_file extends Agent_GUI {
 				if (result.getValue() instanceof Evaluation) {					
 					Evaluation eval = ((Evaluation) result.getValue());
 				
+					Float error_rate = null;
+					Iterator ev_itr = eval.getEvaluations().iterator();							
+					while (ev_itr.hasNext()) {
+						Eval next_eval = (Eval) ev_itr.next();
+						if (next_eval.getName().equals("error_rate")){ 
+							error_rate = next_eval.getValue();
+						}
+					}
+					
 					System.out.println("Agent " + getLocalName()
 									+ ": "
 									+ " error_rate: "
-									+ eval.getError_rate());
+									+ error_rate);
 					
 					List dataList = eval.getLabeled_data();
 					Iterator itr = dataList.iterator();
@@ -132,12 +151,21 @@ public class Agent_GUI_config_file extends Agent_GUI {
 				if (result.getValue() instanceof Task) {					
 					Task task = ((Task) result.getValue());
 				
+					Float error_rate = null;
+					Iterator ev_itr = task.getResult().getEvaluations().iterator();							
+					while (ev_itr.hasNext()) {
+						Eval next_eval = (Eval) ev_itr.next();
+						if (next_eval.getName().equals("error_rate")){ 
+							error_rate = next_eval.getValue();
+						}
+					}
+					
 					System.out.println("Agent " + getLocalName()
 							+ ": options for agent "
 							+ task.getAgent().getName() + " were "
 							+ task.getAgent().optionsToString()
 							+ " error_rate: "
-							+ task.getResult().getError_rate());
+							+ error_rate);
 				}
 				
 			}

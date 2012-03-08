@@ -23,6 +23,7 @@ import jade.gui.GuiAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
+import jade.proto.ContractNetInitiator;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
@@ -55,8 +56,10 @@ import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
+import pikater.ontology.messages.Id;
 import pikater.ontology.messages.Interval;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
@@ -424,6 +427,54 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end getAgentOptions
 
+	protected class SendProblem extends AchieveREInitiator{
+
+		private static final long serialVersionUID = 8923548223375000884L;
+
+		String gui_id;
+		
+		public SendProblem(Agent a, ACLMessage msg, String gui_id) {
+			super(a, msg);
+			this.gui_id = gui_id;			
+		}
+
+		protected void handleAgree(ACLMessage agree) {
+			System.out.println(getLocalName() + ": Agent "
+					+ agree.getSender().getName() + " agreed.");
+			
+			updateProblemId(gui_id, Integer.parseInt(agree.getContent()));
+		}
+
+		protected void handleInform(ACLMessage inform) {
+			System.out.println(getLocalName() + ": Agent "
+					+ inform.getSender().getName() + " replied.");
+
+			// remove problem from problems vector
+			// problems.remove(problem);
+
+		}
+
+		protected void handleRefuse(ACLMessage refuse) {
+			System.out.println(getLocalName() + ": Agent "
+					+ refuse.getSender().getName()
+					+ " refused to perform the requested action");
+			displayResult(refuse);
+		}
+
+		protected void handleFailure(ACLMessage failure) {
+			if (failure.getSender().equals(myAgent.getAMS())) {
+				// FAILURE notification from the JADE runtime: the receiver
+				// does not exist
+				System.out.println("Responder does not exist");
+			} else {
+				System.out.println("Agent " + failure.getSender().getName()
+						+ " failed to perform the requested action");
+			}
+			displayResult(failure);
+		}
+
+	}
+	
 	protected void sendProblem(int _problem_id) throws Exception {
 		// find the problem according to a _problem_id
 		Problem problem = null;
@@ -479,46 +530,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			oe.printStackTrace();
 		}
 
-		AchieveREInitiator send_problem = new AchieveREInitiator(this, msg) {
-			// send a problem
-
-			protected void handleAgree(ACLMessage agree) {
-				System.out.println(getLocalName() + ": Agent "
-						+ agree.getSender().getName() + " agreed.");
-				updateProblemId(agree.getContent());
-			}
-
-			protected void handleInform(ACLMessage inform) {
-				System.out.println(getLocalName() + ": Agent "
-						+ inform.getSender().getName() + " replied.");
-
-				// remove problem from problems vector
-				// problems.remove(problem);
-
-			}
-
-			protected void handleRefuse(ACLMessage refuse) {
-				System.out.println(getLocalName() + ": Agent "
-						+ refuse.getSender().getName()
-						+ " refused to perform the requested action");
-				displayResult(refuse);
-			}
-
-			protected void handleFailure(ACLMessage failure) {
-				if (failure.getSender().equals(myAgent.getAMS())) {
-					// FAILURE notification from the JADE runtime: the receiver
-					// does not exist
-					System.out.println("Responder does not exist");
-				} else {
-					System.out.println("Agent " + failure.getSender().getName()
-							+ " failed to perform the requested action");
-				}
-				displayResult(failure);
-			}
-
-		};
-
-		addBehaviour(send_problem);
+		addBehaviour(new SendProblem(this, msg, problem.getGui_id()));
 
 		problem.setSent(true);
 
@@ -1602,15 +1614,13 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	} // end _test_getProblemsFromXMLFile
 
-	private void updateProblemId(String ids) {
-		String[] ID = ids.split(" ");
-		String guiId = ID[0];
-		String id = ID[1];
+	private void updateProblemId(String guiId, int id) {
+
 		// find problem with gui_id
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (next_problem.getGui_id().equals(guiId)) {
-				next_problem.setId(id);
+			if (next_problem.getGui_id() == guiId) {
+				next_problem.setId(new Id(id));
 			}
 		}
 	}

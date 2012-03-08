@@ -5,12 +5,14 @@
         	<parameter name="M" value="100" />
         </method>
         
+        <evaluation name="CrossValidation">
+          <parameter name="F" value="8" />        
+        </evaluation>
+        
 		<dataset train="iris.arff" test="iris.arff" />
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="L" value="?" />
-        <!--	<parameter name="N" lower="1" upper="2000" /> -->
-        	<parameter name="H" value="?" />
+        	<parameter name="L" value="0.2" />
         </agent>
         	
    </experiment>

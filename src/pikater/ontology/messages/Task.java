@@ -7,9 +7,8 @@ public class Task implements Concept, Cloneable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8242598855481511427L;
-	private String _id;
-	private String _computation_id;
-	private String _problem_id;
+	private Id _id;
+	private Id _problem_id;
 	private Evaluation _result;
 	private Agent _agent;
 	private Data _data;
@@ -28,7 +27,7 @@ public class Task implements Concept, Cloneable {
 
 	private String _problem_name;
 	private String _note;
-	private EvaluationMethod _evaluation_method;
+	private EvaluationMethod _evaluation_method; // e.g. cross validation
 
 	public void setAgent(Agent agent) {
 		_agent=agent;
@@ -42,22 +41,16 @@ public class Task implements Concept, Cloneable {
 	public Data getData() {
 		return _data;
 	}
-	public void setId(String id) {
+	public void setId(Id id) {
 		_id=id;
 	}
-	public String getId() {
+	public Id getId() {
 		return _id;
 	}
-	public void setComputation_id(String computation_id) {
-		_computation_id=computation_id;
-	}
-	public String getComputation_id() {
-		return _computation_id;
-	}
-	public void setProblem_id(String problem_id) {
+	public void setProblem_id(Id problem_id) {
 		_problem_id=problem_id;
 	}
-	public String getProblem_id() {
+	public Id getProblem_id() {
 		return _problem_id;
 	}
 	public void setResult(Evaluation result) {
@@ -141,7 +134,6 @@ public class Task implements Concept, Cloneable {
         
         Task task = new Task();
     	task.setId(this._id);
-    	task.setComputation_id(this._computation_id);
     	task.setProblem_id(this._problem_id);
     	task.setResult(this._result);
     	task.setAgent(this._agent);

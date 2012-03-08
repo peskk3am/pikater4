@@ -12,7 +12,7 @@ public class Results implements Concept {
 	
 	private static final long serialVersionUID = -3411423409276645995L;
 	private String _problem_id;
-	private String _computation_id;
+	private Id _task_id;
 
 	private float _avg_error_rate = -1;
 	private float _avg_kappa_statistic = -1;
@@ -31,12 +31,12 @@ public class Results implements Concept {
 		return _problem_id;
 	}
 
-	public void setComputation_id(String computation_id) {
-		_computation_id = computation_id;
+	public void setTask_id(Id task_id) {
+		_task_id = task_id;
 	}
 
-	public String getComputation_id() {
-		return _computation_id;
+	public Id getTask_id() {
+		return _task_id;
 	}
 
 	public void setResults(List results) {

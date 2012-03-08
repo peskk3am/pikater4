@@ -14,6 +14,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.util.leap.ArrayList;
+import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -44,6 +45,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import pikater.ontology.messages.DeleteTempFiles;
 
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
@@ -52,6 +54,7 @@ import pikater.ontology.messages.ImportFile;
 import pikater.ontology.messages.LoadResults;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
+import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SaveMetadata;
 import pikater.ontology.messages.SaveResults;
 import pikater.ontology.messages.SavedResult;
@@ -446,25 +449,62 @@ public class Agent_DataManager extends Agent {
                             query += "\'" + res.getAgent().optionsToString() + "\',";
                             query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
                             query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-                            query += res.getResult().getError_rate() + ",";
-                            query += res.getResult().getKappa_statistic() + ",";
-                            query += res.getResult().getMean_absolute_error() + ",";
-                            query += res.getResult().getRoot_mean_squared_error() + ",";
-                            query += res.getResult().getRelative_absolute_error() + ",";
-                            query += res.getResult().getRoot_relative_squared_error();                            
+                                                        
+            				float Error_rate = Float.MAX_VALUE;
+            				float Kappa_statistic = Float.MAX_VALUE;
+            				float Mean_absolute_error = Float.MAX_VALUE;
+            				float Root_mean_squared_error = Float.MAX_VALUE;
+            				float Relative_absolute_error = Float.MAX_VALUE; // percent
+            				float Root_relative_squared_error = Float.MAX_VALUE; // percent
 
-                                                    Timestamp currentTimestamp =
-                                                            new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+                    		Iterator itr = res.getResult().getEvaluations().iterator();
+                    		while (itr.hasNext()) {
+    							Eval next_eval = (Eval) itr.next();
+    							if (next_eval.getName().equals("error_rate")){ 
+    								Error_rate = next_eval.getValue();
+    							}
+    							
+    							if (next_eval.getName().equals("kappa_statistic")){ 
+    								Kappa_statistic = next_eval.getValue();
+    							}
 
-                                                            query += ",";
-                                                            query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
-                                                            query += "\'" + java.sql.Timestamp.valueOf(res.getFinish()) + "\',";
-                                                            
-                                                            // query += "\'" + currentTimestamp + "\',";
-                                                            query += "\'" + res.getResult().getDuration() + "\',";
+    							if (next_eval.getName().equals("mean_absolute_error")){ 
+    								Mean_absolute_error = next_eval.getValue();
+    							}
+    							
+    							if (next_eval.getName().equals("root_mean_squared_error")){ 
+    								Root_mean_squared_error = next_eval.getValue();
+    							}
+    							
+    							if (next_eval.getName().equals("relative_absolute_error")){ 
+    								Relative_absolute_error = next_eval.getValue();
+    							}
+    							
+    							if (next_eval.getName().equals("root_relative_squared_error")){ 
+    								Root_relative_squared_error = next_eval.getValue();
+    							}
+                    		}
+                    		
+                            query += Error_rate + ",";
+                            query += Kappa_statistic + ",";
+                            query += Mean_absolute_error + ",";
+                            query += Root_mean_squared_error + ",";
+                            query += Relative_absolute_error + ",";
+                            query += Root_relative_squared_error;                            
+							
+                            
+                    		Timestamp currentTimestamp =
+                            new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 
-                                                            query += "\'" + res.getResult().getObject_filename() + "\', ";
-                            query += "\'" + res.getComputation_id() + "\',";  // TODO - pozor - neni jednoznacne, pouze pro jednoho managera
+                            query += ",";
+                            query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
+                            query += "\'" + java.sql.Timestamp.valueOf(res.getFinish()) + "\',";
+                            
+                            // query += "\'" + currentTimestamp + "\',";
+                            query += "\'" + res.getResult().getDuration() + "\',";
+
+                            query += "\'" + res.getResult().getObject_filename() + "\', ";
+                            query += "\'" + res.getId().getIdentificator() + "\',";  // TODO - pozor - neni jednoznacne, pouze pro jednoho managera
                             query += "\'" + res.getProblem_name() + "\',";
                             query += "\'" + res.getNote() + "\'";
                             query += ")";

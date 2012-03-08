@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import pikater.gui.java.MyWekaOption;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.Interval;
@@ -114,7 +115,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			while (itr.hasNext()) {
 				pikater.ontology.messages.Option next = (pikater.ontology.messages.Option) itr.next();
 				if (next.getName().equals("F")){
-					folds = Integer.parseInt(next.getValue());
+					folds = Integer.parseInt( (String)next.getValue() );
 				}
 			}
 			if (folds == -1){
@@ -138,31 +139,64 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	@Override
 	protected pikater.ontology.messages.Evaluation evaluateCA(EvaluationMethod evaluation_method) throws Exception{
-		float defaultValue = (float) Integer.MAX_VALUE;
+		float default_value = Float.MAX_VALUE;
 		Evaluation eval = test(evaluation_method);
 
-		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();
-		result.setError_rate((float) eval.errorRate());
-
+		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();				
+		
+		List evaluations = new ArrayList();
+		Eval ev = new Eval();
+		ev.setName("error_rate");
+		ev.setValue((float) eval.errorRate());
+		evaluations.add(ev);
+		
+		ev = new Eval();
+		ev.setName("kappa_statistic");
 		try {
-			result.setKappa_statistic((float) eval.kappa());
+			ev.setValue((float) eval.kappa());
 		} catch (Exception e) {
-			result.setKappa_statistic(defaultValue);
+			ev.setValue(default_value);
 		}
+		evaluations.add(ev);
 
-		result.setMean_absolute_error((float) eval.meanAbsoluteError());
-
+		ev = new Eval();
+		ev.setName("mean_absolute_error");
 		try {
-			result.setRelative_absolute_error((float) eval
-					.relativeAbsoluteError());
+			ev.setValue((float) eval.meanAbsoluteError());
 		} catch (Exception e) {
-			result.setRelative_absolute_error(defaultValue);
+			ev.setValue(default_value);
 		}
+		evaluations.add(ev);
 
-		result.setRoot_mean_squared_error((float) eval.rootMeanSquaredError());
-		result.setRoot_relative_squared_error((float) eval
-				.rootRelativeSquaredError());
+		ev = new Eval();
+		ev.setName("relative_absolute_error");
+		try {
+			ev.setValue((float) eval.relativeAbsoluteError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
+		
+		ev = new Eval();
+		ev.setName("root_mean_squared_error");
+		try {
+			ev.setValue((float) eval.rootMeanSquaredError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
 
+		ev = new Eval();
+		ev.setName("root_relative_squared_error");
+		try {
+			ev.setValue((float) eval.rootRelativeSquaredError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
+
+		result.setEvaluations(evaluations);
+		
 		return result;
 	}
 
