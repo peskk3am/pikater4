@@ -2,7 +2,7 @@ package pikater;
 
 import java.io.*;
 import pikater.ontology.messages.ExecuteParameters;
-import pikater.ontology.messages.GetNextParameters;
+import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
@@ -182,7 +182,7 @@ public abstract class Agent_Search extends Agent {
 	} // end getParameters
 	
 	//Run the search protocol
-	protected ACLMessage runSearchProtocol(ACLMessage request, GetNextParameters gnp) {
+	protected ACLMessage runSearchProtocol(ACLMessage request, GetParameters gnp) {
 		search_options = gnp.getSearch_options();
 		schema = gnp.getSchema();														
 		loadSearchOptions();
@@ -210,8 +210,8 @@ public abstract class Agent_Search extends Agent {
 
 				ACLMessage get_next_parameters_results = FIPAService.doFipaRequestClient(this, req);
 				// extract List of Evaluations from response
-				ContentElement content = getContentManager().extractContent(get_next_parameters_results);
-				if (content instanceof Result) {
+				ContentElement content = getContentManager().extractContent(get_next_parameters_results);				
+				if (content instanceof Result) {					
 					Result result = (Result) content;
 					evaluations = (List)((List)result.getValue()).get(1);
 					solutions_new = (List)((List)result.getValue()).get(0);
@@ -309,7 +309,7 @@ public abstract class Agent_Search extends Agent {
 	private class RequestServer extends AchieveREResponder {
 		private static final long serialVersionUID = 6214306716273574418L;
 		GetOptions get_option_action;
-		GetNextParameters get_next_parameters_action;
+		GetParameters get_next_parameters_action;
 		public RequestServer(Agent a) {
 			super(a, MessageTemplate
 					.and(	MessageTemplate
@@ -333,8 +333,8 @@ public abstract class Agent_Search extends Agent {
 				if (((Action) content).getAction() instanceof GetOptions) {
 					get_option_action = (GetOptions) ((Action) content).getAction();
 					return null;
-				} else if (((Action) content).getAction() instanceof GetNextParameters){
-					get_next_parameters_action = (GetNextParameters) ((Action) content).getAction();
+				} else if (((Action) content).getAction() instanceof GetParameters){
+					get_next_parameters_action = (GetParameters) ((Action) content).getAction();
 					/*ACLMessage agree = request.createReply();
 					agree.setPerformative(ACLMessage.AGREE);
 					return agree;*/ //or REFUSE, sometimes

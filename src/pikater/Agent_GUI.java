@@ -23,6 +23,7 @@ import jade.gui.GuiAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
+import jade.proto.ContractNetInitiator;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
@@ -52,9 +53,13 @@ import org.jdom.input.SAXBuilder;
 
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
+import pikater.ontology.messages.Evaluation;
+import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
+import pikater.ontology.messages.Id;
 import pikater.ontology.messages.Interval;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
@@ -90,7 +95,6 @@ public abstract class Agent_GUI extends GuiAgent {
 	
 	private HashMap<String, String> agentTypes;
 	private HashMap<String, Object[]> agentOptions;
-	private int default_number_of_values_to_try = 10;
 	private float default_error_rate = (float) 0.3;
 	protected String default_method = "Random";
 	private int default_maximum_tries = 10;
@@ -164,14 +168,6 @@ public abstract class Agent_GUI extends GuiAgent {
 			String agentName, String optionName, String errorMessage);
 
 	/* This method should handle missing value of the agent option */
-
-	protected void setDefault_number_of_values_to_try(int number) {
-		/*
-		 * default_number_of_values_to_try - when ChooseXValues method is
-		 * selected; should be set in GUI agent setup
-		 */
-		default_number_of_values_to_try = number;
-	}
 
 	protected void setDefault_error_rate(double value) {
 		default_error_rate = (float) value;
@@ -431,6 +427,54 @@ public abstract class Agent_GUI extends GuiAgent {
 
 	} // end getAgentOptions
 
+	protected class SendProblem extends AchieveREInitiator{
+
+		private static final long serialVersionUID = 8923548223375000884L;
+
+		String gui_id;
+		
+		public SendProblem(Agent a, ACLMessage msg, String gui_id) {
+			super(a, msg);
+			this.gui_id = gui_id;			
+		}
+
+		protected void handleAgree(ACLMessage agree) {
+			System.out.println(getLocalName() + ": Agent "
+					+ agree.getSender().getName() + " agreed.");
+			
+			updateProblemId(gui_id, Integer.parseInt(agree.getContent()));
+		}
+
+		protected void handleInform(ACLMessage inform) {
+			System.out.println(getLocalName() + ": Agent "
+					+ inform.getSender().getName() + " replied.");
+
+			// remove problem from problems vector
+			// problems.remove(problem);
+
+		}
+
+		protected void handleRefuse(ACLMessage refuse) {
+			System.out.println(getLocalName() + ": Agent "
+					+ refuse.getSender().getName()
+					+ " refused to perform the requested action");
+			displayResult(refuse);
+		}
+
+		protected void handleFailure(ACLMessage failure) {
+			if (failure.getSender().equals(myAgent.getAMS())) {
+				// FAILURE notification from the JADE runtime: the receiver
+				// does not exist
+				System.out.println("Responder does not exist");
+			} else {
+				System.out.println("Agent " + failure.getSender().getName()
+						+ " failed to perform the requested action");
+			}
+			displayResult(failure);
+		}
+
+	}
+	
 	protected void sendProblem(int _problem_id) throws Exception {
 		// find the problem according to a _problem_id
 		Problem problem = null;
@@ -486,46 +530,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			oe.printStackTrace();
 		}
 
-		AchieveREInitiator send_problem = new AchieveREInitiator(this, msg) {
-			// send a problem
-
-			protected void handleAgree(ACLMessage agree) {
-				System.out.println(getLocalName() + ": Agent "
-						+ agree.getSender().getName() + " agreed.");
-				updateProblemId(agree.getContent());
-			}
-
-			protected void handleInform(ACLMessage inform) {
-				System.out.println(getLocalName() + ": Agent "
-						+ inform.getSender().getName() + " replied.");
-
-				// remove problem from problems vector
-				// problems.remove(problem);
-
-			}
-
-			protected void handleRefuse(ACLMessage refuse) {
-				System.out.println(getLocalName() + ": Agent "
-						+ refuse.getSender().getName()
-						+ " refused to perform the requested action");
-				displayResult(refuse);
-			}
-
-			protected void handleFailure(ACLMessage failure) {
-				if (failure.getSender().equals(myAgent.getAMS())) {
-					// FAILURE notification from the JADE runtime: the receiver
-					// does not exist
-					System.out.println("Responder does not exist");
-				} else {
-					System.out.println("Agent " + failure.getSender().getName()
-							+ " failed to perform the requested action");
-				}
-				displayResult(failure);
-			}
-
-		};
-
-		addBehaviour(send_problem);
+		addBehaviour(new SendProblem(this, msg, problem.getGui_id()));
 
 		problem.setSent(true);
 
@@ -590,14 +595,17 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 	
 	protected int createNewProblem(String timeout, String get_results,
-			String save_results) {
+			String save_results, String name) {
 		int _timeout;
 		String _get_results;
 		boolean _save_results;
 		Problem problem = new Problem();
-		problem.setGui_id(Integer.toString(problem_id)); // agent manager
-															// changes the id
-															// afterwards
+		problem.setGui_id(Integer.toString(problem_id)); 
+		// agent manager changes the id afterwards		
+		if (name != null){
+			problem.setName(name);
+			System.out.println("experiment name: "+ name);
+		}
 		if (timeout == null) {
 			_timeout = default_timeout;
 		} else {
@@ -776,12 +784,6 @@ public abstract class Agent_GUI extends GuiAgent {
 						List options = agent.stringToOptions(optString);
 						Iterator it = options.iterator();
 
-						while (it.hasNext()) {
-							Option opt = (Option) it.next();
-							opt
-									.setNumber_of_values_to_try(default_number_of_values_to_try);
-						}
-
 						agent.setOptions(options);
 
 					}
@@ -841,14 +843,9 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 							option.setValue(option_value);
 
-							if (next_problem.getMethod().getType().equals(
-									"ChooseXValues")) {
-								if (number_of_values_to_try == null) {
-									option
-											.setNumber_of_values_to_try(default_number_of_values_to_try);
-								} else {
-									option.setNumber_of_values_to_try(Integer
-											.parseInt(number_of_values_to_try));
+							if (next_problem.getMethod().getType().equals("ChooseXValues")) {
+								if (number_of_values_to_try != null){	
+									option.setNumber_of_values_to_try(Integer.parseInt(number_of_values_to_try));								
 								}
 							}
 
@@ -887,6 +884,46 @@ public abstract class Agent_GUI extends GuiAgent {
 			}
 		}
 	}
+	
+	private void addEvaluationMethodToProblem(int problem_id, String name) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (!next_problem.getSent()) {
+				if (Integer.parseInt(next_problem.getGui_id()) == problem_id) {
+					
+					EvaluationMethod evaluation_method = new EvaluationMethod();
+					evaluation_method.setName(name);
+					evaluation_method.setOptions(new ArrayList());
+					next_problem.setEvaluation_method(evaluation_method);
+				}
+			}
+		}		
+	}
+	
+	protected void addEvaluationMethodOption(int _problem_id, String option_name, String option_value) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (!next_problem.getSent()) {
+				
+				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
+						EvaluationMethod evaluation_method = next_problem.getEvaluation_method();
+
+						Option option = new Option();
+						option.setName(option_name);
+
+						if (option_value == null) {
+							option_value = "True";
+						}
+						option.setUser_value(option_value);
+						option.setValue(option_value);						
+
+						List options = evaluation_method.getOptions();
+						options.add(option);
+						evaluation_method.setOptions(options);
+				}							
+			}
+		}
+	}	
 	
 	protected int addDatasetToProblem(int _problem_id, String _train,
 			String _test, String _label, String _output, String _mode) {
@@ -1073,7 +1110,6 @@ public abstract class Agent_GUI extends GuiAgent {
 							}
 						} // end if getType != null
 					} // end while - iterate over agents
-					System.out.println("xxxx: "+next_problem.getMethod().getType()+" "+agent.getType());
 					if (next_problem.getMethod().getType() != null){
 						if (next_problem.getMethod().getType().equals(agent.getType())){
 							next_problem.getMethod().setOptions(_refreshOptions(next_problem.getMethod(), agent, next_problem));
@@ -1457,7 +1493,13 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		Document doc = builder.build("file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println("GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// tohle fungje na linuxu: - funguje vsude
+		Document doc = builder.build("file:"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// tohle mi funguje na win:
+		//Document doc = builder.build("file:\\"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// a tohle snad vsude: NE Document doc = builder.build("file:"+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+				
 		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
@@ -1472,15 +1514,36 @@ public abstract class Agent_GUI extends GuiAgent {
 
 			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
 					next_problem.getAttributeValue("get_results"),
-					next_problem.getAttributeValue("save_results"));
+					next_problem.getAttributeValue("save_results"),
+					next_problem.getAttributeValue("name"));
 
+			java.util.List evaluation_method = next_problem.getChildren("evaluation");
+			if (evaluation_method.size() == 0){
+				throw new JDOMException("evaluation tag missing.");
+			}
+			if (evaluation_method.size() > 1) {
+				throw new JDOMException("more than one evaluation tags found.");
+			}
+
+			java.util.Iterator em_itr = evaluation_method.iterator();
+			Element next_evaluation_method = (Element) em_itr.next();
+			addEvaluationMethodToProblem(p_id, next_evaluation_method.getAttributeValue("name"));
+			
+			java.util.List _evaluation_method_options = next_evaluation_method.getChildren("parameter");
+			java.util.Iterator emo_itr = _evaluation_method_options.iterator();
+			while (emo_itr.hasNext()) {
+				Element next_option = (Element) emo_itr.next();
+				addEvaluationMethodOption(p_id, next_option.getAttributeValue("name"),
+						next_option.getAttributeValue("value"));
+			}
+			
 			java.util.List method = next_problem.getChildren("method");
 			java.util.Iterator m_itr = method.iterator();
 			if (method.size() == 0) {
-				// TODO select default
+				throw new JDOMException("method tag missing.");
 			}
 			if (method.size() > 1) {
-				// TODO error
+				throw new JDOMException("more than one method tags found.");
 			}
 			Element next_method = (Element) m_itr.next();
 			addMethodToProblem(p_id, next_method.getAttributeValue("name"));
@@ -1551,15 +1614,13 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	} // end _test_getProblemsFromXMLFile
 
-	private void updateProblemId(String ids) {
-		String[] ID = ids.split(" ");
-		String guiId = ID[0];
-		String id = ID[1];
+	private void updateProblemId(String guiId, int id) {
+
 		// find problem with gui_id
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (next_problem.getGui_id().equals(guiId)) {
-				next_problem.setId(id);
+				next_problem.setId(new Id(Integer.toString(id)));
 			}
 		}
 	}

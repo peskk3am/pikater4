@@ -345,6 +345,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
         nef = new NewExperimentFrame(this, true, myAgent);
+        System.out.println("xml file: "+jfc.getSelectedFile());
         nef.loadXML(jfc.getSelectedFile());
         nef.setVisible(true);
 

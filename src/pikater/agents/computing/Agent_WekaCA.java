@@ -10,11 +10,15 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Random;
 import java.util.Vector;
 
 import pikater.gui.java.MyWekaOption;
 import pikater.ontology.messages.DataInstances;
+import pikater.ontology.messages.Eval;
+import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Instance;
 import pikater.ontology.messages.Interval;
 import weka.classifiers.Classifier;
@@ -94,14 +98,38 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		return "/options/"+getAgentType() +".opt";
 	}
 
-	protected Evaluation test() throws Exception{
+	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
 		System.out.println("Agent " + getLocalName() + ": Testing...");
 
 		// evaluate classifier and print some statistics
-		Evaluation eval = null;
+		Evaluation eval = null;				
 		eval = new Evaluation(train);
-		eval.evaluateModel(cls, test);
+
+		System.out.println("Evaluation method: ");
+		System.out.print("\t");		
+		
+		if (evaluation_method.getName().equals("CrossValidation") ){
+			int folds = -1; 
+			Iterator itr = evaluation_method.getOptions().iterator();
+			while (itr.hasNext()) {
+				pikater.ontology.messages.Option next = (pikater.ontology.messages.Option) itr.next();
+				if (next.getName().equals("F")){
+					folds = Integer.parseInt( (String)next.getValue() );
+				}
+			}
+			if (folds == -1){
+					folds = 5;
+				  // TODO read default value from file (if necessary)
+			}
+			System.out.println(folds + "-fold cross validation.");
+			eval.crossValidateModel(cls, test, folds, new Random(1));
+		}
+		else{ // name = Standard
+			System.out.println("standard weka evaluation.");
+			eval.evaluateModel(cls, test);
+		}
+				
 		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
 				+ "\nResults\n=======\n", false));
 
@@ -110,32 +138,65 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected pikater.ontology.messages.Evaluation evaluateCA() throws Exception{
-		float defaultValue = (float) Integer.MAX_VALUE;
-		Evaluation eval = test();
+	protected pikater.ontology.messages.Evaluation evaluateCA(EvaluationMethod evaluation_method) throws Exception{
+		float default_value = Float.MAX_VALUE;
+		Evaluation eval = test(evaluation_method);
 
-		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();
-		result.setError_rate((float) eval.errorRate());
-
+		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();				
+		
+		List evaluations = new ArrayList();
+		Eval ev = new Eval();
+		ev.setName("error_rate");
+		ev.setValue((float) eval.errorRate());
+		evaluations.add(ev);
+		
+		ev = new Eval();
+		ev.setName("kappa_statistic");
 		try {
-			result.setKappa_statistic((float) eval.kappa());
+			ev.setValue((float) eval.kappa());
 		} catch (Exception e) {
-			result.setKappa_statistic(defaultValue);
+			ev.setValue(default_value);
 		}
+		evaluations.add(ev);
 
-		result.setMean_absolute_error((float) eval.meanAbsoluteError());
-
+		ev = new Eval();
+		ev.setName("mean_absolute_error");
 		try {
-			result.setRelative_absolute_error((float) eval
-					.relativeAbsoluteError());
+			ev.setValue((float) eval.meanAbsoluteError());
 		} catch (Exception e) {
-			result.setRelative_absolute_error(defaultValue);
+			ev.setValue(default_value);
 		}
+		evaluations.add(ev);
 
-		result.setRoot_mean_squared_error((float) eval.rootMeanSquaredError());
-		result.setRoot_relative_squared_error((float) eval
-				.rootRelativeSquaredError());
+		ev = new Eval();
+		ev.setName("relative_absolute_error");
+		try {
+			ev.setValue((float) eval.relativeAbsoluteError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
+		
+		ev = new Eval();
+		ev.setName("root_mean_squared_error");
+		try {
+			ev.setValue((float) eval.rootMeanSquaredError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
 
+		ev = new Eval();
+		ev.setName("root_relative_squared_error");
+		try {
+			ev.setValue((float) eval.rootRelativeSquaredError());
+		} catch (Exception e) {
+			ev.setValue(default_value);
+		}
+		evaluations.add(ev);
+
+		result.setEvaluations(evaluations);
+		
 		return result;
 	}
 
@@ -226,7 +287,6 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		try {
 			/* Sets up a file reader to read the options file */
 			FileReader input = new FileReader(optPath);
-			System.out.println("OK:"+optPath);
 			/*
 			 * Filter FileReader through a Buffered read to read a line at a
 			 * time
@@ -267,13 +327,14 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 						dt = MyWekaOption.dataType.MIXED;
 					}
 
-					String[] default_options = ((Classifier)getModelObject()).getOptions();
-
+					String[] default_options = ((Classifier)getModelObject()).getOptions();					 
+					System.out.println("Default options: "+Arrays.deepToString(default_options));
+										
 					Enumeration en = ((Classifier)getModelObject()).listOptions();
 					while (en.hasMoreElements()) {
 
 						Option next = (weka.core.Option) en.nextElement();
-						String default_value = "False";
+						String default_value = null; 
 						for (int i = 0; i < default_options.length; i++) {
 							if (default_options[i].equals("-" + next.name())) {
 								if (default_options[i].startsWith("-")) {

@@ -9,7 +9,7 @@ public class Problem implements Concept {
 	 * 
 	 */
 	private static final long serialVersionUID = 7185046750972524624L;
-	private String _id;
+	private Id _id;
 	private String _gui_id;
 	private boolean _sent;
 	private List _agents;
@@ -20,6 +20,8 @@ public class Problem implements Concept {
 	private String _get_results; // after_each_computation, after_each_task
 	private String _gui_agent;
 	private boolean _save_results;
+	private String _name;
+	private EvaluationMethod _evaluation_method;
 
 	public void setAgents(List agents) {
 		_agents = agents;
@@ -37,11 +39,11 @@ public class Problem implements Concept {
 		return _data;
 	}
 
-	public void setId(String id) {
+	public void setId(Id id) {
 		_id = id;
 	}
 
-	public String getId() {
+	public Id getId() {
 		return _id;
 	}
 
@@ -108,4 +110,20 @@ public class Problem implements Concept {
 	public boolean getSave_results() {
 		return _save_results;
 	}
+
+	public void setName(String _name) {
+		this._name = _name;
+	}
+
+	public String getName() {
+		return _name;
+	}
+	
+	public void setEvaluation_method(EvaluationMethod _evaluation_method) {
+		this._evaluation_method = _evaluation_method;
+	}
+	
+	public EvaluationMethod getEvaluation_method() {
+		return _evaluation_method;
+	}	
 }

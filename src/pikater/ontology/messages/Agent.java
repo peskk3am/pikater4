@@ -5,7 +5,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
-public class Agent implements Concept {
+public class Agent implements Concept, Cloneable {
 	/**
 	 * 
 	 */
@@ -106,15 +106,19 @@ public class Agent implements Concept {
 		}
 		Iterator itr = _options.iterator();
 		while (itr.hasNext()) {
-			pikater.ontology.messages.Option next_opt = (pikater.ontology.messages.Option) itr
-					.next();
-			if (next_opt.getData_type().equals("BOOLEAN")) {
-				if (next_opt.getValue().equals("True")) {
-					str += "-" + next_opt.getName() + " ";
+			pikater.ontology.messages.Option next_opt = (pikater.ontology.messages.Option) itr.next();
+			if (next_opt.getValue() == null || next_opt.getValue().equals("null")){
+				// don't include this option to the string
+			}
+			else{
+				if (next_opt.getData_type().equals("BOOLEAN")) {
+					if (next_opt.getValue().equals("True")) {
+						str += "-" + next_opt.getName() + " ";
+					}
+				} else {
+					str += "-" + next_opt.getName() + " " + next_opt.getValue()
+							+ " ";
 				}
-			} else {
-				str += "-" + next_opt.getName() + " " + next_opt.getValue()
-						+ " ";
 			}
 		}
 		return str;
@@ -169,6 +173,18 @@ public class Agent implements Concept {
                         }
 		}
 		return str;
+        }
+        
+        public Object clone() {
+            
+            Agent agent = new Agent();
+            agent.setGui_id(_gui_id);
+            agent.setName(_name);
+            agent.setObject(object);
+            agent.setOptions(_options);
+            agent.setType(_type);
+            
+            return agent;
         }
 
 }

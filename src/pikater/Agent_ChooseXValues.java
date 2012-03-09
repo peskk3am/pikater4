@@ -4,6 +4,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
+import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SearchItem;
 import pikater.ontology.messages.SearchSolution;
 
@@ -14,6 +15,7 @@ public class Agent_ChooseXValues extends Agent_Search {
 	private static final long serialVersionUID = 838429530327268572L;
 	private int n = Integer.MAX_VALUE;
 	private int ni = 0;
+	private int default_number_of_values_to_try = 5;
 
 	private List solutions_list ;
 	//private Vector<String> sub_options_vector ;
@@ -58,7 +60,10 @@ public class Agent_ChooseXValues extends Agent_Search {
 		List possible_solutions = new ArrayList();
 		Iterator itr = Schema.iterator();
 		while (itr.hasNext()) {
-			SearchItem next = (SearchItem) itr.next();
+			SearchItem next = (SearchItem) itr.next();			
+			if (next.getNumber_of_values_to_try() == 0){
+				next.setNumber_of_values_to_try(default_number_of_values_to_try);
+			}
 			possible_solutions.add(next.possibleValues());
 		}
 		generate(new ArrayList(), possible_solutions,0);
@@ -85,13 +90,15 @@ public class Agent_ChooseXValues extends Agent_Search {
 
 	@Override
 	protected void loadSearchOptions() {
-		/*List search_options = getSearch_options();
+		List search_options = getSearch_options();
 		Iterator itr = search_options.iterator();
 		while (itr.hasNext()) {
 			Option next = (Option) itr.next();
 			
-			if (next.getName().equals("X"))...
-		}*/
+			if (next.getName().equals("N")){
+				default_number_of_values_to_try = Integer.parseInt(next.getValue());
+			}
+		}
 		
 	}
 

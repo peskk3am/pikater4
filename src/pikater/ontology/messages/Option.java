@@ -19,9 +19,9 @@ public class Option implements Concept {
 	private String _description;
 	private String _name;
 	private String _synopsis;
-	private String _value; // when immutable, contains the default value
-	private String _default_value;
-	private String _user_value;
+	private Object _value; // when immutable, contains the default value
+	private Object _default_value;
+	private Object _user_value;
 	private int _number_of_values_to_try;
         private int numberOfOptions;
 
@@ -108,27 +108,27 @@ public class Option implements Concept {
 		return _synopsis;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		_value = value;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return _value;
 	}
 
-	public void setDefault_value(String default_value) {
+	public void setDefault_value(Object default_value) {
 		_default_value = default_value;
 	}
 
-	public String getDefault_value() {
+	public Object getDefault_value() {
 		return _default_value;
 	}
 
-	public void setUser_value(String user_value) {
+	public void setUser_value(Object user_value) {
 		_user_value = user_value;
 	}
 
-	public String getUser_value() {
+	public Object getUser_value() {
 		return _user_value;
 	}
 
@@ -187,10 +187,11 @@ public class Option implements Concept {
 		opt.setDescription(_description);
 		opt.setName(_name);
 		opt.setSynopsis(_synopsis);
-		opt.setValue(_value.substring(0)); // when immutable, contains the default value
+		// opt.setValue(_value.substring(0)); // when immutable, contains the default value
+		opt.setValue(_value); // when immutable, contains the default value
 		opt.setDefault_value(_default_value);
 		if(_user_value!=null)
-			opt.setUser_value(_user_value.substring(0));
+			opt.setUser_value(_user_value);
 		opt.setNumber_of_values_to_try(_number_of_values_to_try);
 	    opt.setNumberOfOptions(numberOfOptions);
 	    return opt;

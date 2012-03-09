@@ -3,7 +3,7 @@ package pikater.ontology.messages;
 import jade.content.AgentAction;
 import jade.util.leap.List;
 
-public class GetNextParameters implements AgentAction{
+public class GetParameters implements AgentAction{
 
 	private static final long serialVersionUID = -4554163588726699351L;
 	

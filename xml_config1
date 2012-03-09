@@ -1,15 +1,18 @@
 <experiments>
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
-
-		<method name="RandomSearch">
-			<parameter name="E" value="0.001" />
-        	<parameter name="M" value="5" />
+		<method name="GASearch">
+			<parameter name="E" value="0" />
+        	<parameter name="M" value="100" />
         </method>
-		
+        
+        <evaluation name="CrossValidation">
+          <parameter name="F" value="8" />        
+        </evaluation>
+        
 		<dataset train="iris.arff" test="iris.arff" />
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="L" value="?" />
+        	<parameter name="L" value="0.1" />
         </agent>
         	
    </experiment>

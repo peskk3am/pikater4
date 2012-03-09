@@ -1,0 +1,30 @@
+<experiments>
+<experiment name="test_method" get_results="after_each_computation" save_results="yes">        
+        <method name="ChooseXValues">
+          <parameter name="N" value="2" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+          <parameter name="F" value="8" />        
+        </evaluation>               
+<!--
+        <dataset train="iris.arff" test="iris.arff" />
+        <dataset train="tic-tac-toe.arff" test="tic-tac-toe.arff" />
+        <dataset train="weather.arff" test="weather.arff" />
+        <dataset train="car.arff" test="car.arff" />                
+        <dataset train="wine.arff" test="wine.arff" />
+        <dataset train="breast-w.arff" test="breast-w.arff" />
+-->
+        <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
+        
+                
+        <agent type="RBFNetwork">
+        	<parameter name="B" value="?" />
+        	<parameter name="W" value="?" />
+        	<parameter name="R" value="?" />
+        	<parameter name="M" value="?" />
+    		</agent>
+
+</experiment>     
+
+</experiments>

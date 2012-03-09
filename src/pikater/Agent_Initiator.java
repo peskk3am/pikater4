@@ -8,6 +8,7 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAService;
@@ -22,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import pikater.ontology.messages.MessagesOntology;
 
@@ -105,6 +108,18 @@ public class Agent_Initiator extends Agent {
 			// If another exception is generated, print a stack trace
 			e.printStackTrace();
 		}
+		
+		addBehaviour(new TickerBehaviour(this, 10000) {
+			
+		  Calendar cal;
+		  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			  
+		  protected void onTick() {
+			  cal = Calendar.getInstance();
+			  System.out.println("Agent "+myAgent.getLocalName()+": tick="+getTickCount()+" time="+sdf.format(cal.getTime()));
+		  } 
+		  
+		});
 
 	}
 

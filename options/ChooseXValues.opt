@@ -1,0 +1,2 @@
+# default number of values to try for each option (default 5)
+$ N int 1 1 r 1 2000 5 number_of_values_to_try Default number of values to try for each option
