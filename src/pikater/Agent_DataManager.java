@@ -456,6 +456,7 @@ public class Agent_DataManager extends Agent {
             				float Root_mean_squared_error = Float.MAX_VALUE;
             				float Relative_absolute_error = Float.MAX_VALUE; // percent
             				float Root_relative_squared_error = Float.MAX_VALUE; // percent
+            				int duration = Integer.MAX_VALUE; // miliseconds
 
                     		Iterator itr = res.getResult().getEvaluations().iterator();
                     		while (itr.hasNext()) {
@@ -483,6 +484,10 @@ public class Agent_DataManager extends Agent {
     							if (next_eval.getName().equals("root_relative_squared_error")){ 
     								Root_relative_squared_error = next_eval.getValue();
     							}
+    							
+    							if (next_eval.getName().equals("duration")){ 
+    								duration = (int)next_eval.getValue();
+    							}
                     		}
                     		
                             query += Error_rate + ",";
@@ -501,7 +506,7 @@ public class Agent_DataManager extends Agent {
                             query += "\'" + java.sql.Timestamp.valueOf(res.getFinish()) + "\',";
                             
                             // query += "\'" + currentTimestamp + "\',";
-                            query += "\'" + res.getResult().getDuration() + "\',";
+                            query += "\'" + duration + "\',";
 
                             query += "\'" + res.getResult().getObject_filename() + "\', ";
                             query += "\'" + res.getId().getIdentificator() + "\',";  // TODO - pozor - neni jednoznacne, pouze pro jednoho managera

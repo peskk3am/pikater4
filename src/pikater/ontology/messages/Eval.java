@@ -22,10 +22,10 @@ public class Eval implements Concept {
 		this.name = name;
 	}
 	
-	public Float getValue() {
+	public float getValue() {
 		return value;
 	}
-	public void setValue(Float value) {
+	public void setValue(float value) {
 		if (Float.isNaN(value)){
 			this.value = maxValue;
 		}

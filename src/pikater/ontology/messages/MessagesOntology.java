@@ -84,7 +84,6 @@ public class MessagesOntology extends Ontology {
 	public static final String EVALUATION_EVALUATIONS = "evaluations";
 	public static final String EVALUATION_LABELED_DATA = "labeled_data";
 	public static final String EVALUATION_STATUS = "status"; 
-	public static final String EVALUATION_DURATION = "duration";
 	public static final String EVALUATION_OBJECT_FILENAME = "object_filename";
 	public static final String EVALUATION_OBJECT = "object";
 	public static final String EVALUATION_DATA_TABLE = "data_table";
@@ -565,8 +564,6 @@ public class MessagesOntology extends Ontology {
 			cs.add(EVALUATION_STATUS,
 					(PrimitiveSchema)getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-			cs.add(EVALUATION_DURATION,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
 			cs.add(EVALUATION_OBJECT_FILENAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);			
 			cs.add(EVALUATION_OBJECT,
