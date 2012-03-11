@@ -164,7 +164,7 @@ public class Agent_OptionsManager extends Agent {
 						// send evaluation to search agent
 						ACLMessage reply = query.createReply();
 						
-						Result reply_result = new Result((Action) content, ev);
+						Result reply_result = new Result((Action) content, ev.getEvaluations());
 						getContentManager().fillContent(reply, reply_result);
 						
 						send(reply);

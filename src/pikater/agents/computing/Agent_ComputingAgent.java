@@ -792,7 +792,14 @@ public abstract class Agent_ComputingAgent extends Agent {
 								eval.setLabeled_data(labeledData);
 							}
 						}
-						eval.setDuration(duration);
+						Eval ev = new Eval();
+						ev.setName("duration");
+						ev.setValue((float)duration);
+						
+						// add eval to eval list
+						List evaluations = eval.getEvaluations();
+						evaluations.add(ev);
+						eval.setEvaluations(evaluations);
 
 					} catch (Exception e) {
 						success = false;
