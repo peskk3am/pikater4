@@ -55,7 +55,7 @@ public class Agent_GASearch extends Agent_Search {
 	private static final long serialVersionUID = -387458001824777077L;
 	
 	@Override
-	protected List generateNewSolutions(List solutions, List evaluations) {
+	protected List generateNewSolutions(List solutions, float[][] evaluations) {
 		ArrayList new_population = new ArrayList(pop_size);
 		if(evaluations==null){
 			//create new population			
@@ -106,16 +106,16 @@ public class Agent_GASearch extends Agent_Search {
 	}
 
 	@Override
-	protected void updateFinished(List evaluations) {
+	protected void updateFinished(float[][] evaluations) {
 		//assign evaluations to the population as fitnesses		
 		if(evaluations == null){
 			for(int i = 0; i < pop_size; i++){
 				fitnesses[i]=1;
 			}
 		}else{
-			for(int i = 0; i < evaluations.size(); i++){				
+			for(int i = 0; i < evaluations.length; i++){				
 				//fitness
-				fitnesses[i]=((Evaluation)(evaluations.get(i))).getError_rate();				
+				fitnesses[i]=evaluations[i][0];//((Evaluation)(evaluations.get(i))).getError_rate();				
 				//actualize best_error_rate
 				if(fitnesses[i]<best_error_rate){
 					best_error_rate = fitnesses[i];

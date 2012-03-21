@@ -59,17 +59,17 @@ public class Agent_RandomSearch extends Agent_Search {
 	}
 
 	@Override
-	protected void updateFinished(List evaluations) {
+	protected void updateFinished(float[][] evaluations) {
 		if (evaluations == null){
 			error_rate = 1;
 		}
 		else{
-			error_rate = ((Evaluation)(evaluations.get(0))).getError_rate();			
+			error_rate = evaluations[0][0];//((Evaluation)(evaluations.get(0))).getError_rate();			
 		}
 	}
 		
 	@Override
-	protected List generateNewSolutions(List solutions, List evaluations) {
+	protected List generateNewSolutions(List solutions, float[][] evaluations) {
 		// go through the solutions Vector, generate random values
 		List new_solution = new ArrayList();
 		Iterator itr = getSchema().iterator();

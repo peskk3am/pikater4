@@ -19,9 +19,9 @@ public class Option implements Concept {
 	private String _description;
 	private String _name;
 	private String _synopsis;
-	private Object _value; // when immutable, contains the default value
-	private Object _default_value;
-	private Object _user_value;
+	private String _value; // when immutable, contains the default value
+	private String _default_value;
+	private String _user_value;
 	private int _number_of_values_to_try;
         private int numberOfOptions;
 
@@ -108,27 +108,27 @@ public class Option implements Concept {
 		return _synopsis;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		_value = value;
 	}
 
-	public Object getValue() {
+	public String getValue() {
 		return _value;
 	}
 
-	public void setDefault_value(Object default_value) {
+	public void setDefault_value(String default_value) {
 		_default_value = default_value;
 	}
 
-	public Object getDefault_value() {
+	public String getDefault_value() {
 		return _default_value;
 	}
 
-	public void setUser_value(Object user_value) {
+	public void setUser_value(String user_value) {
 		_user_value = user_value;
 	}
 
-	public Object getUser_value() {
+	public String getUser_value() {
 		return _user_value;
 	}
 

@@ -163,6 +163,8 @@ public class Agent_OptionsManager extends Agent {
 						
 						// send evaluation to search agent
 						ACLMessage reply = query.createReply();
+						//Ondrej: musi byt INFORM, ale co kdyz selze vypocet!???
+						reply.setPerformative(ACLMessage.INFORM);
 						
 						Result reply_result = new Result((Action) content, ev.getEvaluations());
 						getContentManager().fillContent(reply, reply_result);

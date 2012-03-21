@@ -1,6 +1,10 @@
 package pikater;
 
 import java.io.*;
+
+import org.hsqldb.lib.Iterator;
+
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.GetOptions;
@@ -16,6 +20,7 @@ import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -39,9 +44,9 @@ public abstract class Agent_Search extends Agent {
 	private List schema = null;
 	
 	protected abstract String getAgentType();
-	protected abstract List generateNewSolutions(List solutions, List evaluations); //returns List of Options
+	protected abstract List generateNewSolutions(List solutions, float[][] evaluations); //returns List of Options
 	protected abstract boolean finished();
-	protected abstract void updateFinished(List evaluations);
+	protected abstract void updateFinished(float[][] evaluations);
 	protected abstract void loadSearchOptions(); // load the appropriate options before sending the first parameters
 	
 	protected ACLMessage getParameters(ACLMessage request) {
@@ -182,7 +187,7 @@ public abstract class Agent_Search extends Agent {
 	} // end getParameters
 	
 	//Run the search protocol
-	protected ACLMessage runSearchProtocol(ACLMessage request, GetParameters gnp) {
+	/*protected ACLMessage runSearchProtocol(ACLMessage request, GetParameters gnp) {
 		search_options = gnp.getSearch_options();
 		schema = gnp.getSchema();														
 		loadSearchOptions();
@@ -236,7 +241,7 @@ public abstract class Agent_Search extends Agent {
 		
 		return reply;
 
-	}
+	}*/
 	
 	protected List getSchema() {
 		if(schema != null){
@@ -252,6 +257,18 @@ public abstract class Agent_Search extends Agent {
 		}else{
 			return new ArrayList();
 		}
+	}
+	
+	/*Converts List of Evals to an array of values - at the moment only error_rate*/
+	private float[] namedEvalsToFitness(List named_evals) {
+		float[] res = new float[1];//named_evals.size...
+		jade.util.leap.Iterator itr = named_evals.iterator();
+		while(itr.hasNext()){
+			Eval e = (Eval)itr.next();
+			if(e.getName().compareTo("error_rate")==0)
+				res[0]=e.getValue();
+		}
+		return res;
 	}
 	
 	protected boolean registerWithDF() {
@@ -320,6 +337,124 @@ public abstract class Agent_Search extends Agent {
 											.MatchLanguage(codec.getName()),
 											MessageTemplate.MatchOntology(ontology
 													.getName())))));
+			this.registerPrepareResultNotification(new Behaviour(a) {
+				boolean cont;
+				List solutions_new = null;
+				float evaluations[][] = null;
+				int queriesToProcess = 0;
+				@Override
+				public void action() {
+					cont = false;
+					if(get_option_action != null){
+						ACLMessage reply = getParameters((ACLMessage)getDataStore().get(REQUEST_KEY));
+						getDataStore().put(RESPONSE_KEY, reply);
+					}
+					if(get_next_parameters_action!=null){
+						cont = true;
+						ACLMessage requestMsg = (ACLMessage)getDataStore().get(REQUEST_KEY);
+						if(queriesToProcess == 0){//skoncili jsme nebo zacali jeden cyklus query
+							
+							if(solutions_new == null){
+								//zacatek - nastavani optionu
+								search_options = get_next_parameters_action.getSearch_options();
+								schema = get_next_parameters_action.getSchema();														
+								loadSearchOptions();
+							}else{
+								//postprocess
+								updateFinished(evaluations);
+							}
+							
+							if (finished()) {
+								//konec vsech evaluaci
+								solutions_new = null; 
+								evaluations = null; 
+								cont = false;
+								ACLMessage reply = ((ACLMessage)getDataStore().get(REQUEST_KEY)).createReply();
+								reply.setPerformative(ACLMessage.INFORM);
+								//TODO: co se posila zpet?
+								reply.setContent("finished");
+								
+								getDataStore().put(RESPONSE_KEY, reply);
+							}else{
+								//nova vlna evaluaci - generovani query
+								solutions_new = generateNewSolutions(solutions_new, evaluations);
+								if(solutions_new!= null)
+									evaluations = new float[solutions_new.size()][];
+								queriesToProcess = solutions_new.size();
+								for(int i = 0; i < solutions_new.size(); i++){
+									//posli queries
+									ExecuteParameters ep = new ExecuteParameters();
+									//TODO zmena ExecuteParameters na jeden prvek
+									List solution_list = new ArrayList(1);
+									solution_list.add(solutions_new.get(i));
+									ep.setSolutions(solution_list);
+
+									Action action = new Action();
+									action.setAction(ep);
+									action.setActor(getAID());
+
+									//nedalo by se to klonovat?
+									ACLMessage query = new ACLMessage(ACLMessage.QUERY_REF);
+									query.addReceiver(requestMsg.getSender());
+									query.setLanguage(codec.getName());
+									query.setOntology(ontology.getName());
+									query.setProtocol(FIPANames.InteractionProtocol.FIPA_QUERY);
+									//identifikace query a jeho odpovedi!!!
+									query.setConversationId(Integer.toString(i));
+									try {
+										getContentManager().fillContent(query, action);
+									} catch (CodecException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (OntologyException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									myAgent.send(query);
+
+								}
+							}
+							
+						}else{//Cekame na vypocty - odpovedi na QUERY
+							//TODO: FAILURE
+							//and protocol FIPANames.InteractionProtocol.FIPA_QUERY???
+							ACLMessage response = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+							if(response == null)
+								block();//elseif zadna zprava inform - cekej
+							else{
+								//prisla evaluace - odpoved na QUERY
+								//prirad inform ke spravnemu query
+								int id = Integer.parseInt(response.getConversationId());
+								Result res;
+								try {
+									res = (Result)getContentManager().extractContent(response);
+									List named_evals = (List)res.getValue();
+									evaluations[id]=namedEvalsToFitness(named_evals);
+								} catch (UngroundedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (CodecException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (OntologyException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+								queriesToProcess--;
+							}
+						}
+					}
+					//handle informs as query results
+				}
+
+
+				@Override
+				public boolean done() {
+					return !cont;
+				}
+				
+			});
 		}
 		
 		@Override
@@ -349,7 +484,7 @@ public abstract class Agent_Search extends Agent {
 			}
 			throw new NotUnderstoodException("Not understood");
 		}
-		
+		/*
 		@Override
 		protected ACLMessage prepareResultNotification(ACLMessage request,
 				ACLMessage response) {
@@ -360,7 +495,7 @@ public abstract class Agent_Search extends Agent {
 				return runSearchProtocol(request, get_next_parameters_action);
 			}
 			return null;
-		}
+		}*/
 
 	}
 		

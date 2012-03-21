@@ -81,7 +81,7 @@ public class Agent_SimulatedAnnealing extends Agent_Search {
 	}
 	
 	@Override
-	protected List generateNewSolutions(List solutions, List evaluations) {
+	protected List generateNewSolutions(List solutions, float[][] evaluations) {
 		
 		if(evaluations == null){
 			//inicializace
@@ -104,14 +104,14 @@ public class Agent_SimulatedAnnealing extends Agent_Search {
 	}
 	
 	@Override
-	protected void updateFinished(List evaluations) {
+	protected void updateFinished(float[][] evaluations) {
 		float new_evaluation;
 		
 		if (evaluations == null){
 			new_evaluation = Float.MAX_VALUE;
 		}
 		else{
-			new_evaluation = ((Evaluation)(evaluations.get(0))).getError_rate();
+			new_evaluation = evaluations[0][0];//((Evaluation)(evaluations.get(0))).getError_rate();
 		}
 		
 		//Actualize best evaluation

@@ -71,7 +71,7 @@ public class Agent_ChooseXValues extends Agent_Search {
 	}
 
 	@Override
-	protected List generateNewSolutions(List solutions, List evaluations) {
+	protected List generateNewSolutions(List solutions, float[][] evaluations) {
 		List Schema =getSchema();
 		if(evaluations == null){
 			n = Integer.MAX_VALUE;
@@ -103,7 +103,7 @@ public class Agent_ChooseXValues extends Agent_Search {
 	}
 
 	@Override
-	protected void updateFinished(List evaluations) {
+	protected void updateFinished(float[][] evaluations) {
 		//???
 	}
 }
