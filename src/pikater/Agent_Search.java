@@ -39,6 +39,8 @@ public abstract class Agent_Search extends Agent {
 	private static final long serialVersionUID = 8637677510056974015L;
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
+	
+	protected int query_block_size = 1;
 
 	private List search_options = null;
 	private List schema = null;
@@ -476,10 +478,11 @@ public abstract class Agent_Search extends Agent {
 					return null;
 				} else if (((Action) content).getAction() instanceof GetParameters){
 					get_next_parameters_action = (GetParameters) ((Action) content).getAction();
-					/*ACLMessage agree = request.createReply();
+					ACLMessage agree = request.createReply();
 					agree.setPerformative(ACLMessage.AGREE);
-					return agree;*/ //or REFUSE, sometimes
-					return null;
+					agree.setContent(Integer.toString(query_block_size));
+					return agree; //or REFUSE, sometimes
+					//return null;
 				}
 			} catch (UngroundedException e) {
 				e.printStackTrace();
