@@ -459,14 +459,17 @@ public abstract class Agent_Search extends Agent {
 		
 		@Override
 		protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException{
+			System.out.println("request:" + request);
+
 			get_option_action = null;
 			get_next_parameters_action = null;
 			ContentElement content;
 			try {
 				content = getContentManager().extractContent(request);
 
-				if (((Action) content).getAction() instanceof GetOptions) {
+				if (((Action) content).getAction() instanceof GetOptions) {			
 					get_option_action = (GetOptions) ((Action) content).getAction();
+					System.out.println("get_option_action" + get_option_action);
 					return null;
 				} else if (((Action) content).getAction() instanceof GetParameters){
 					get_next_parameters_action = (GetParameters) ((Action) content).getAction();
