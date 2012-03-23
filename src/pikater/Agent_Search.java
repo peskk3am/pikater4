@@ -346,8 +346,9 @@ public abstract class Agent_Search extends Agent {
 				public void action() {
 					cont = false;
 					if(get_option_action != null){
+						System.out.println("OK: GetOptions");
 						ACLMessage reply = getParameters((ACLMessage)getDataStore().get(REQUEST_KEY));
-						getDataStore().put(RESPONSE_KEY, reply);
+						getDataStore().put(RESULT_NOTIFICATION_KEY, reply);
 					}
 					if(get_next_parameters_action!=null){
 						cont = true;
@@ -355,17 +356,20 @@ public abstract class Agent_Search extends Agent {
 						if(queriesToProcess == 0){//skoncili jsme nebo zacali jeden cyklus query
 							
 							if(solutions_new == null){
+								System.out.println("OK: Pars - Nove solutiony vygenerovat");
 								//zacatek - nastavani optionu
 								search_options = get_next_parameters_action.getSearch_options();
 								schema = get_next_parameters_action.getSchema();														
 								loadSearchOptions();
 							}else{
 								//postprocess
+								System.out.println("OK: Pars - Update");
 								updateFinished(evaluations);
 							}
 							
 							if (finished()) {
 								//konec vsech evaluaci
+								System.out.println("OK: Pars - Ukoncovani");
 								solutions_new = null; 
 								evaluations = null; 
 								cont = false;
@@ -374,9 +378,10 @@ public abstract class Agent_Search extends Agent {
 								//TODO: co se posila zpet?
 								reply.setContent("finished");
 								
-								getDataStore().put(RESPONSE_KEY, reply);
+								getDataStore().put(RESULT_NOTIFICATION_KEY, reply);
 							}else{
 								//nova vlna evaluaci - generovani query
+								System.out.println("OK: Pars - nove solutiony poslat");
 								solutions_new = generateNewSolutions(solutions_new, evaluations);
 								if(solutions_new!= null)
 									evaluations = new float[solutions_new.size()][];
@@ -422,6 +427,7 @@ public abstract class Agent_Search extends Agent {
 							if(response == null)
 								block();//elseif zadna zprava inform - cekej
 							else{
+								System.out.println("!OK: Pars - Prisla evaluace");
 								//prisla evaluace - odpoved na QUERY
 								//prirad inform ke spravnemu query
 								int id = Integer.parseInt(response.getConversationId());
