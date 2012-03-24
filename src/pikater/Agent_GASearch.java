@@ -177,6 +177,7 @@ public class Agent_GASearch extends Agent_Search {
 				tournament_size = Integer.parseInt(next.getValue()); 
 			}
 		}
+		query_block_size = pop_size;
 
 	}
 
