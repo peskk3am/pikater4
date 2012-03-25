@@ -40,7 +40,7 @@ public abstract class Agent_Search extends Agent {
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 	
-	protected int query_block_size = 3;
+	protected int query_block_size = 1;
 
 	private List search_options = null;
 	private List schema = null;
@@ -359,10 +359,6 @@ public abstract class Agent_Search extends Agent {
 							
 							if(solutions_new == null){
 								System.out.println("OK: Pars - Nove solutiony vygenerovat");
-								//zacatek - nastavani optionu
-								search_options = get_next_parameters_action.getSearch_options();
-								schema = get_next_parameters_action.getSchema();														
-								loadSearchOptions();
 							}else{
 								//postprocess
 								System.out.println("OK: Pars - Update");
@@ -481,6 +477,11 @@ public abstract class Agent_Search extends Agent {
 					return null;
 				} else if (((Action) content).getAction() instanceof GetParameters){
 					get_next_parameters_action = (GetParameters) ((Action) content).getAction();
+					//zacatek - nastavani optionu
+					search_options = get_next_parameters_action.getSearch_options();
+					schema = get_next_parameters_action.getSchema();														
+					loadSearchOptions();
+					
 					ACLMessage agree = request.createReply();
 					agree.setPerformative(ACLMessage.AGREE);
 					agree.setContent(Integer.toString(query_block_size));
