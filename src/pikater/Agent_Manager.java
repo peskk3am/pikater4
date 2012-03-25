@@ -535,19 +535,25 @@ public class Agent_Manager extends Agent {
 											
 						String agentType = ga.getAgent().getType();
 						int n = ga.getNumber();
+						
+						System.out.println(getLocalName()+": agent " 
+								+ request.getSender().getName() + " requested "
+								+ n + " agents.");
+						
 						String task_id = ga.getTask_id().getIdentificator();
 											
 						agents = getAgentsByType(agentType, n, task_id);
-	
+						
+						ACLMessage reply = request.createReply();
+						
 						if (agents.size() == 0) {
-								ACLMessage msg = new ACLMessage(
-										ACLMessage.FAILURE);
-								msg.setContent(agentType
-										+ " agent could not be created.");
-								// behav.sendSubscription(msg);
+							reply.setPerformative(ACLMessage.FAILURE);
+							reply.setContent(agentType + " agent could not be created.");
+							// TODO send message to GUI agent
+							// behav.sendSubscription(msg);
 						} else {
 							// send agents to options manager
-							ACLMessage reply = request.createReply();						
+							reply.setPerformative(ACLMessage.INFORM);
 							Result result = new Result((Action) content, agents);						
 							try {
 								getContentManager().fillContent(reply, result);
@@ -557,10 +563,10 @@ public class Agent_Manager extends Agent {
 							} catch (OntologyException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							}
-							send(reply);
+							}							
 						}
-	
+						send(reply);
+						
 						return;
 					}
 				} catch (UngroundedException e1) {
@@ -914,6 +920,7 @@ public class Agent_Manager extends Agent {
 	}
 
 	public AID createAgent(String type, String name, Object[] options) {
+		// TODO use agentManager instead
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 
@@ -921,6 +928,7 @@ public class Agent_Manager extends Agent {
 			AgentController agent = container.createNewAgent(name, type,
 					options);
 			agent.start();
+			doWait(300);
 			return new AID((String) name, AID.ISLOCALNAME);
 		} catch (ControllerException e) {
 			 System.err.println( "Exception while adding agent: " + e );

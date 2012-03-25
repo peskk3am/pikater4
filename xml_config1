@@ -2,7 +2,7 @@
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
 		<method name="GASearch">
 			<parameter name="E" value="0" />
-        	<parameter name="M" value="100" />
+        	<parameter name="M" value="2" />
         </method>
         
         <evaluation name="CrossValidation">

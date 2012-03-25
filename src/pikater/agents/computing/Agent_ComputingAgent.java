@@ -476,8 +476,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 				}
 				
 				if (CFPreq != null){
-					msg_received = true;
-					System.out.println("zprava:"+CFPreq);
+					msg_received = true;					
 					content = getContentManager().extractContent(CFPreq);
 					if (((Action) content).getAction() instanceof Execute) {												
 						send(processExecute(CFPreq));

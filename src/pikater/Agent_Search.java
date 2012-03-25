@@ -40,7 +40,7 @@ public abstract class Agent_Search extends Agent {
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 	
-	protected int query_block_size = 1;
+	protected int query_block_size = 3;
 
 	private List search_options = null;
 	private List schema = null;

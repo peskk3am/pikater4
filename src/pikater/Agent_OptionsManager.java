@@ -62,9 +62,6 @@ public class Agent_OptionsManager extends Agent {
 	protected List Options;
 	protected pikater.ontology.messages.Agent Agent;
 
-	private ACLMessage original_request;
-
-	private boolean use_search_agent = true;
 	private int task_number = 0;
 	private int max_number_of_tasks;
 	private List query_queue = new ArrayList();
@@ -83,11 +80,13 @@ public class Agent_OptionsManager extends Agent {
 
 		int nResponders;
 		ACLMessage query;
+		ACLMessage cfp;
 		
 		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage _query) {
 			super(a, cfp);
 			nResponders = computing_agents.size();
 			query = _query;
+			this.cfp = cfp;
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
@@ -138,6 +137,28 @@ public class Agent_OptionsManager extends Agent {
 			// Accept the proposal of the best proposer
 			if (accept != null) {
 				System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+								
+				try {
+					ContentElement content = getContentManager().extractContent(cfp);
+					
+					Execute execute = (Execute) (((Action) content).getAction());
+
+					Action a = new Action();
+					a.setAction(execute);
+					a.setActor(myAgent.getAID());
+												
+					getContentManager().fillContent(accept, a);
+				} catch (UngroundedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (CodecException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (OntologyException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);				
 			}						
 			// TODO - if there is no best proposer, return options to the queue
@@ -147,30 +168,29 @@ public class Agent_OptionsManager extends Agent {
 			System.out.println(myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
 			// send result to the search agent:
 			
-			// extract evaluation from the task in the inform message			
+			// extract evaluation from the task in the inform message
 			ContentElement content;
 			try {
 				content = getContentManager().extractContent(inform);
-				
+				ContentElement query_content = getContentManager().extractContent(query);
 				if (content instanceof Result) {
-					Result result = (Result) content;
-					if (result.getValue() instanceof Task) {									
-						// get the original task from the query
-						Task t = (Task)result.getValue();
-						Evaluation ev = t.getResult();	
-						t.setFinish(getDateTime());
-						results.add(t);
-						
-						// send evaluation to search agent
-						ACLMessage reply = query.createReply();
-						//Ondrej: musi byt INFORM, ale co kdyz selze vypocet!???
-						reply.setPerformative(ACLMessage.INFORM);
-						
-						Result reply_result = new Result((Action) content, ev.getEvaluations());
-						getContentManager().fillContent(reply, reply_result);
-						
-						send(reply);
-					}								
+					Result result = (Result) content;					
+					// get the original task from the query
+					List tasks = (List)result.getValue();
+					Task t = (Task) tasks.get(0);						
+					Evaluation ev = t.getResult();	
+					t.setFinish(getDateTime());
+					results.add(t);
+					
+					// send evaluation to search agent
+					ACLMessage reply = query.createReply();
+					//Ondrej: musi byt INFORM, ale co kdyz selze vypocet!???
+					reply.setPerformative(ACLMessage.INFORM);
+					
+					Result reply_result = new Result((Action) query_content, ev.getEvaluations());
+					getContentManager().fillContent(reply, reply_result);
+					
+					send(reply);													
 				}			
 			} catch (UngroundedException e) {
 				// TODO Auto-generated catch block
@@ -183,19 +203,9 @@ public class Agent_OptionsManager extends Agent {
 				e.printStackTrace();
 			}			
 			
-			// send new CFP:			
-			if (query_queue.size() > 0){
-				// get the first query from the queue
-				ACLMessage next_query = (ACLMessage) query_queue.get(0);
-				// remove it
-				query_queue.remove(0);
-				// create CFP message					  		
-				ACLMessage next_cfp = createCFPmsg(next_query);
-																				
-				// create new contract net protocol
-				addBehaviour(new ExecuteTask(myAgent, next_cfp, next_query));
-			}
-			else{
+			// send new CFP:
+			boolean next_query_processes = ProcessNextQuery();
+			if (!next_query_processes){				
 				number_of_current_tasks--;
 			}
 		}
@@ -220,7 +230,7 @@ public class Agent_OptionsManager extends Agent {
 			cfp.setOntology(ontology.getName());
 
 			for (int i = 0; i < computing_agents.size(); ++i) {
-				cfp.addReceiver(new AID((String) computing_agents.get(i), AID.ISLOCALNAME));
+				cfp.addReceiver((AID)computing_agents.get(i));
 			}
 			
 			cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
@@ -240,7 +250,7 @@ public class Agent_OptionsManager extends Agent {
 			
 			// add the new options to the task
 			pikater.ontology.messages.Agent ag = received_task.getAgent();							
-			ag.setOptions((List)opt);							
+			ag.setOptions(opt.getList());							
 			received_task.setAgent(ag);
 			ex.setTask(received_task);		
 										
@@ -263,6 +273,26 @@ public class Agent_OptionsManager extends Agent {
 	}
 	
 	
+	private boolean ProcessNextQuery(){
+				
+		if (computing_agents != null){
+			if (number_of_current_tasks < computing_agents.size()
+					&& query_queue.size() > 0){
+				
+				ACLMessage query = (ACLMessage)query_queue.get(0);
+				query_queue.remove(0);
+	
+				ACLMessage cfp = createCFPmsg(query);																			
+				
+				// create new contract net protocol
+				addBehaviour(new ExecuteTask(this, cfp, query));	
+				return true;
+			}
+		}
+		return false;
+	
+	} // end ProcessNextQuery
+	
 	protected class RequestServer extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 1902726126096385876L;
@@ -273,7 +303,7 @@ public class Agent_OptionsManager extends Agent {
 				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
 				MessageTemplate.MatchOntology(ontology.getName()))));
 
-			private MessageTemplate CFPreqMsgTemplate = MessageTemplate.and(
+		private MessageTemplate CFPreqMsgTemplate = MessageTemplate.and(
 				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 				MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
 				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
@@ -285,18 +315,26 @@ public class Agent_OptionsManager extends Agent {
 								MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
 										MessageTemplate.MatchOntology(ontology.getName()))));
 
+		private MessageTemplate agreeMsgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+				MessageTemplate.and(
+						MessageTemplate.MatchPerformative(ACLMessage.AGREE),
+				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+				MessageTemplate.MatchOntology(ontology.getName()))));
+		
 		public RequestServer(Agent agent) {			
 			super(agent);
 		}
-
+		
 		@Override 
 		public void action() {
 			
 			ACLMessage CFPreq = receive(CFPreqMsgTemplate);
 			ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);			
 			ACLMessage query = receive(queryMsgTemplate);
-			boolean msg_received = false;
-			
+			ACLMessage agree = receive(agreeMsgTemplate);
+			boolean msg_received = false;			
+
 			ContentElement content;
 			try {				
 				if (CFPreq != null){
@@ -398,20 +436,58 @@ public class Agent_OptionsManager extends Agent {
 					if (((Action) content).getAction() instanceof ExecuteParameters) {					
 						// options manager received options to execute					
 						
-						if ((number_of_current_tasks <= max_number_of_tasks)
-								&& (number_of_current_tasks < computing_agents.size()) ){
-
-							// process the query right away								
-							ACLMessage cfp = createCFPmsg(query);
-																							
-							// create new contract net protocol
-							addBehaviour(new ExecuteTask(myAgent, cfp, query));							
-						}
-						else{
-							query_queue.add(query);
-						}
-																
+						query_queue.add(query);
+						ProcessNextQuery();
 					}
+				}
+
+				if (agree != null) {
+					msg_received = true;
+					// get max number of tasks
+					System.out.println("agree received");
+					max_number_of_tasks = Integer.parseInt(agree.getContent());						
+					
+					// if the agent name is not filled in
+					// TODO task.agent - it can be a list
+					if (received_task.getAgent().getName() == null){
+						// ask agent manager for computing agents
+						ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+						req.setLanguage(codec.getName());
+						req.setOntology(ontology.getName());
+						req.addReceiver(received_request.getSender());
+						req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+						
+						pikater.ontology.messages.Agent ag = new pikater.ontology.messages.Agent();
+					    ag.setType(received_task.getAgent().getType());
+					    
+						GetAgents ga = new GetAgents();					    					    
+					    ga.setAgent(ag);
+					    ga.setNumber(max_number_of_tasks);
+					    ga.setTask_id(received_task.getId());
+					    
+						Action a = new Action();
+						a.setAction(ga);
+						a.setActor(myAgent.getAID());
+			
+						try {
+							getContentManager().fillContent(req, a);
+							ACLMessage reply = FIPAService.doFipaRequestClient(myAgent, req);
+							
+							ContentElement content1 = getContentManager().extractContent(reply);
+							if (content1 instanceof Result) {
+								Result result = (Result) content1;
+								// get computing agents list
+								computing_agents = (List)result.getValue();	// list of AIDs							
+							}
+
+							// start processing the queries
+							ProcessNextQuery();
+							
+						} catch (FIPAException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}																									
 				}
 			} catch (CodecException ce) {
 				ce.printStackTrace();
@@ -453,52 +529,7 @@ public class Agent_OptionsManager extends Agent {
 			// sending of Options have been finished -> send message to Manager
 			sendResultsToManager();			
 		}
-		
-		protected void handleResponse(ACLMessage response){
-			if (response.getPerformative() == ACLMessage.AGREE){
-				// get max number of tasks
-				max_number_of_tasks = Integer.parseInt(response.getContent());
 				
-				// if the agent name is not filled in
-				// TODO task.agent - it can be a list
-				if (received_task.getAgent().getName() == null){
-					// ask agent manager for computing agents
-					ACLMessage req = new ACLMessage(ACLMessage.REQUEST); 
-					req.addReceiver(received_request.getSender());
-				    GetAgents ga = new GetAgents();
-				    ga.setAgent(received_task.getAgent());
-				    ga.setNumber(max_number_of_tasks);
-				    ga.setTask_id(received_task.getId());
-				    
-					Action a = new Action();
-					a.setAction(ga);
-					a.setActor(myAgent.getAID());
-	
-					try {
-						getContentManager().fillContent(req, a);
-						ACLMessage reply = FIPAService.doFipaRequestClient(myAgent, req);
-						
-						ContentElement content = getContentManager().extractContent(reply);
-						if (content instanceof Result) {
-							Result result = (Result) content;
-							// get computing agents list
-							computing_agents = (List)result.getValue();	// list of AIDs							
-						}
-					} catch (CodecException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					} catch (OntologyException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					} catch (FIPAException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}				
-		}
-
-		
 		protected void handleRefuse(ACLMessage refuse) {
 			System.out.println(getLocalName() + ": Agent "
 					+ refuse.getSender().getName()
@@ -583,14 +614,14 @@ public class Agent_OptionsManager extends Agent {
 	
 	private void sendResultsToManager(){
 
-		ACLMessage msgOut = original_request.createReply();
+		ACLMessage msgOut = received_request.createReply();
 		msgOut.setPerformative(ACLMessage.INFORM);
 		
 		// prepare the outgoing message content:
 				
 		ContentElement content;
 			try {
-				content = getContentManager().extractContent(original_request);
+				content = getContentManager().extractContent(received_request);
 				Result result = new Result((Action) content, results);
 				getContentManager().fillContent(msgOut, result);
 				
