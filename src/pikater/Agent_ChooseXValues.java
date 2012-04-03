@@ -34,6 +34,7 @@ public class Agent_ChooseXValues extends Agent_Search {
 		return "ChooseXValues";
 	}
 	
+	//TODO: Something less recursive
 	private void generate(List cur_solution_part, List possible_solution_values, int beg_ind) {
 		if (possible_solution_values.size()-beg_ind < 1) {//if we are at the end
 			SearchSolution s= new SearchSolution();//then solution part is whole solution
@@ -72,19 +73,14 @@ public class Agent_ChooseXValues extends Agent_Search {
 
 	@Override
 	protected List generateNewSolutions(List solutions, float[][] evaluations) {
-		List Schema =getSchema();
-		if(evaluations == null){
-			n = Integer.MAX_VALUE;
-			ni = 0;
-			solutions_list = new ArrayList();
-			generateSolutions_list(Schema);
-		}
+		
 		if (n == 0)
 			return null;
-		SearchSolution new_solution = (SearchSolution)solutions_list.get(ni++);
-		List res_solutions = new ArrayList();
-		res_solutions.add(new_solution);
-		return res_solutions;
+		/*SearchSolution new_solution = (SearchSolution)solutions_list.get(ni++);
+		new ArrayList();
+		res_solutions.add(new_solution);*/
+		ni+=n;
+		return solutions_list;
 	}
 
 
@@ -99,7 +95,12 @@ public class Agent_ChooseXValues extends Agent_Search {
 				default_number_of_values_to_try = Integer.parseInt(next.getValue());
 			}
 		}
-		
+		List Schema =getSchema();
+		n = Integer.MAX_VALUE;
+		ni = 0;
+		solutions_list = new ArrayList();
+		generateSolutions_list(Schema);
+		query_block_size = n;
 	}
 
 	@Override
