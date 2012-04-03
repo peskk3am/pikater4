@@ -446,6 +446,7 @@ public class Agent_OptionsManager extends Agent {
 					// get max number of tasks
 					System.out.println("agree received");
 					max_number_of_tasks = Integer.parseInt(agree.getContent());						
+					System.out.println("max_number_of_tasks: " + max_number_of_tasks);
 					
 					// if the agent name is not filled in
 					// TODO task.agent - it can be a list
@@ -526,6 +527,10 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleInform(ACLMessage inform) {
 			System.out.println(getLocalName() + ": Agent "
 					+ inform.getSender().getName() + ": sending of Options have been finished.");
+			
+			// throw away the rest of the queries
+			query_queue = new ArrayList();
+			
 			// sending of Options have been finished -> send message to Manager
 			sendResultsToManager();			
 		}
@@ -678,7 +683,7 @@ public class Agent_OptionsManager extends Agent {
 	}
 
 	//Fill an option's ? with values in iterator
-	private String fillOptWithSolution(Option opt, Iterator solution_itr){
+	private String fillOptWithSolution(Option opt, Iterator solution_itr){		
 		String res_values = "";
 		String[] values = ((String)opt.getUser_value()).split(",");
 		int numArgs = values.length;
@@ -688,7 +693,11 @@ public class Agent_OptionsManager extends Agent {
 			}else{
 				res_values+=values[i];
 			}
+			if (i < numArgs-1){
+				res_values+=",";
+			}
 		}
+		
 		return res_values;
 	}
 	

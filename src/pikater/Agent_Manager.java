@@ -144,7 +144,8 @@ public class Agent_Manager extends Agent {
 	double maxInstances = Integer.MIN_VALUE;
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
-	private String[] type;
+	
+	private int max_number_of_CAs = 10;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
@@ -540,8 +541,13 @@ public class Agent_Manager extends Agent {
 								+ request.getSender().getName() + " requested "
 								+ n + " agents.");
 						
+						n = n <= max_number_of_CAs ? n : max_number_of_CAs;
+						
+						System.out.println(n + " agents assigned."); 
+								
 						String task_id = ga.getTask_id().getIdentificator();
-											
+						
+						
 						agents = getAgentsByType(agentType, n, task_id);
 						
 						ACLMessage reply = request.createReply();

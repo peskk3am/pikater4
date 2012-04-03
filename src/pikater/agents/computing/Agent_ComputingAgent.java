@@ -605,6 +605,12 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}
 					// Set options
 					setOptions(execute_action.getTask());
+					
+					// set agent name in Task
+					pikater.ontology.messages.Agent agent = current_task.getAgent();
+					agent.setName(getLocalName());
+					current_task.setAgent(agent);
+					
 					eval = new Evaluation();
 					success = true;
 					Data data = execute_action.getTask().getData();
