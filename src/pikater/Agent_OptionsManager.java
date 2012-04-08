@@ -33,6 +33,7 @@ import java.text.DateFormat;
 
 import pikater.ontology.messages.BoolSItem;
 import pikater.ontology.messages.CreateAgent;
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
@@ -177,9 +178,31 @@ public class Agent_OptionsManager extends Agent {
 					Result result = (Result) content;					
 					// get the original task from the query
 					List tasks = (List)result.getValue();
-					Task t = (Task) tasks.get(0);						
-					Evaluation ev = t.getResult();	
+					Task t = (Task) tasks.get(0);
 					t.setFinish(getDateTime());
+					Evaluation ev = t.getResult();
+					List ev_evaluations = ev.getEvaluations();
+					
+					// get duration					
+					int duration = 0;
+					Iterator itr = ev_evaluations.iterator();
+					while (itr.hasNext()) {
+						Eval eval = (Eval) itr.next();
+						if (eval.getName().equals("duration")){
+							duration = (int) eval.getValue();
+						}
+					}
+		
+					// set LR duration
+					int LRDuration = DurationService.getDuration(myAgent, duration);
+					Eval eval = new Eval();
+					eval.setName("LR_duration");
+					eval.setValue(LRDuration);
+					
+					ev_evaluations.add(eval);
+					ev.setEvaluations(ev_evaluations);					
+					t.setResult(ev);
+					
 					results.add(t);
 					
 					// send evaluation to search agent

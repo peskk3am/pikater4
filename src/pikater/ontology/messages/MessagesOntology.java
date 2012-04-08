@@ -306,6 +306,9 @@ public class MessagesOntology extends Ontology {
         public static final String GET_AGENTS_NUMBER = "number";        
         public static final String GET_AGENTS_TASK_ID = "task_id";        
 
+        public static final String GET_DURATION = "GET_DURATION";
+        public static final String GET_DURATION_DURATION = "duration";        
+        
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
 
@@ -383,7 +386,8 @@ public class MessagesOntology extends Ontology {
             add(new AgentActionSchema(CREATE_AGENT), CreateAgent.class);
             add(new AgentActionSchema(EXECUTE_PARAMETERS), ExecuteParameters.class);            
             add(new AgentActionSchema(GET_AGENTS), GetAgents.class);
-
+            add(new AgentActionSchema(GET_DURATION), GetDuration.class);
+            
 			ConceptSchema cs = (ConceptSchema) getSchema(ID);
 			cs.add(ID_IDENTIFICATOR, (PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(ID_SUBID, (ConceptSchema) getSchema(ID), ObjectSchema.OPTIONAL);
@@ -423,7 +427,7 @@ public class MessagesOntology extends Ontology {
 
 			cs = (ConceptSchema) getSchema(TASK);
 			cs.add(TASK_ID, (ConceptSchema) getSchema(ID));
-			cs.add(TASK_PROBLEM_ID, (ConceptSchema) getSchema(ID));
+			cs.add(TASK_PROBLEM_ID, (ConceptSchema) getSchema(ID), ObjectSchema.OPTIONAL);
 			cs.add(TASK_AGENT, (ConceptSchema) getSchema(AGENT));
 			cs.add(TASK_DATA, (ConceptSchema) getSchema(DATA));
 			cs.add(TASK_RESULT, (ConceptSchema) getSchema(EVALUATION),
@@ -435,10 +439,10 @@ public class MessagesOntology extends Ontology {
 			cs.add(TASK_SAVE_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(TASK_GUI_AGENT,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 
 			cs.add(TASK_USERID,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));			
+					(PrimitiveSchema) getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);			
 			cs.add(TASK_START,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_FINISH,
@@ -841,6 +845,9 @@ public class MessagesOntology extends Ontology {
 
             as = (AgentActionSchema) getSchema(EXECUTE_PARAMETERS);                       
             as.add(EXECUTE_PARAMETERS_SOLUTIONS, (ConceptSchema) getSchema(SEARCHSOLUTION), 0, ObjectSchema.UNLIMITED);
+
+            as = (AgentActionSchema) getSchema(GET_DURATION);                       
+            as.add(GET_DURATION_DURATION, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), 1);
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

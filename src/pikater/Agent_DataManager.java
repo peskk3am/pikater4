@@ -8,6 +8,7 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.Agent;
+import jade.core.Profile;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
@@ -18,6 +19,7 @@ import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +36,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import java.util.LinkedList;
 import java.util.regex.Pattern;
@@ -70,18 +74,62 @@ public class Agent_DataManager extends Agent {
     Codec codec = new SLCodec();
     Ontology ontology = MessagesOntology.getInstance();
     
+    String db_url;
+    String db_user;
+    String db_password;
     
-    public Agent_DataManager() {
-        super();
-        try {
+    private void openDBConnection() throws SQLException{
+    	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
+    	db = DriverManager.getConnection(db_url, db_user, db_password);    	
+    }
+    
+    @Override
+    protected void setup() {
+        
+    	try {
             //db = DriverManager.getConnection(
             //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
-        	openDBConnection();
+        	Object[] args = getArguments();
+        	System.out.println(args);
+    		if (args != null && args.length > 0) {
+    			int i = 0;
+    			while (i < args.length){
+    				System.out.println(args[i]);
+    				if (args[i].equals("url")){
+    					db_url = (String)args[i+1];    					
+    				}
+    				if (args[i].equals("user")){
+    					db_user = (String)args[i+1];    					
+    				}
+    				if (args[i].equals("password")){
+    					db_password = (String)args[i+1];    					
+    				}
+    				i++;
+    			}
+    			if (db_user == null){
+					db_user = "";    					
+				}
+    			if (db_password == null){
+					db_password = "";    					
+				}			
+    		}
+    		else{
+    		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
+    		    db_user = "marp_pikater";
+    		    db_password = "pikater";
+    		}
         	
+    		System.out.println("Connecting to " + db_url + ".");
+    		System.out.println("user " + db_user);
+    		System.out.println("password " + db_password);
+    		openDBConnection();
+        	
+    		String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
+    		
             Logger.getRootLogger().addAppender(
                     new FileAppender(new PatternLayout(
-                    "%r [%t] %-5p %c - %m%n"), "log"));
+                    "%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
             log = Logger.getLogger(Agent_DataManager.class);
             log.setLevel(Level.TRACE);
@@ -91,16 +139,7 @@ public class Agent_DataManager extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void openDBConnection() throws SQLException{
-    	db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-    }
-    
-    @Override
-    protected void setup() {
-        super.setup();
-
+    	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
         

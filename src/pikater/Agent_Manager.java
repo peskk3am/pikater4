@@ -332,6 +332,7 @@ public class Agent_Manager extends Agent {
 			if (results != null) {
 
 				// write results to the database
+				/* 
 				Iterator resIterator = results.getResults().iterator();
 				while (resIterator.hasNext()) {
 					Task t = (Task) resIterator.next();
@@ -342,6 +343,7 @@ public class Agent_Manager extends Agent {
 						DataManagerService.saveResult(myAgent, t);
 					}					
 				}
+				*/
 
 				writeXMLResults(results);
 

@@ -33,9 +33,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+import pikater.DataManagerService;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Eval;
@@ -701,6 +704,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						testFileName = test_fn;
 						onto_test = _test;
 						test = onto_test.toWekaInstances();
+						if (test == null){ System.out.println("CA: bacha, test je null"); }
 						test.setClassIndex(test.numAttributes() - 1);
 
 						next = NEXT_JMP;
@@ -902,8 +906,14 @@ public abstract class Agent_ComputingAgent extends Agent {
 					if (current_task.getGet_results().equals("after_each_task")) {								
 						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));
 					}			
-				
+					current_task.setFinish(getDateTime());
+					
 					send(result_msg);
+					
+					// save results to the database
+					if (current_task.getSave_results()){						
+						DataManagerService.saveResult(myAgent, current_task);
+					}
 
 				}
 			}, SENDRESULTS_STATE);
@@ -979,5 +989,11 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		return objectFilename;
 	}
+	
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
 };

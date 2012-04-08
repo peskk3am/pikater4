@@ -69,6 +69,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.AgentContainer;
 import jade.core.LifeCycle;
+import jade.core.Profile;
 import jade.domain.AMSService;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -105,16 +106,18 @@ public class Agent_AgentManager extends Agent {
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
 	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();	
 
-	public Agent_AgentManager() {
-		super();
+	@Override
+	protected void setup() {
 		try {
 			//db = DriverManager.getConnection(
 			//		"jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
+			String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
+			
 			Logger.getRootLogger()
 					.addAppender(
 							new FileAppender(new PatternLayout(
-									"%r [%t] %-5p %c - %m%n"), "log"));
+									"%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
 			log = Logger.getLogger(Agent_AgentManager.class);
 			log.setLevel(Level.TRACE);
@@ -133,12 +136,6 @@ public class Agent_AgentManager extends Agent {
             }
         }
         
-		
-	}
-
-	@Override
-	protected void setup() {
-		super.setup();
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);

@@ -105,7 +105,12 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;				
 		eval = new Evaluation(train);
-
+		if (train == null){ System.out.println("bacha, train je null"); }
+		if (eval == null){ System.out.println("bacha, eval je null"); }
+		if (cls == null){ System.out.println("bacha, cls je null"); }
+		if (test == null){ System.out.println("bacha, test je null"); }
+		// doWait(10);
+		
 		System.out.println("Evaluation method: ");
 		System.out.print("\t");		
 		
@@ -122,8 +127,11 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					folds = 5;
 				  // TODO read default value from file (if necessary)
 			}
-			System.out.println(folds + "-fold cross validation.");
-			eval.crossValidateModel(cls, test, folds, new Random(1));
+			System.out.println(folds + "-fold cross validation.");						
+			eval.crossValidateModel(
+					cls,
+					test,
+					folds, new Random(1));
 		}
 		else{ // name = Standard
 			System.out.println("standard weka evaluation.");

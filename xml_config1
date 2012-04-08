@@ -1,7 +1,7 @@
 <experiments>
     <experiment name="test" timeout="10000" get_results="after_each_computation" save_results="yes">        
 		<!-- <method name="ChooseXValues">
-			<parameter name="N" value="2" />
+			<parameter name="N" value="4" />
         </method>
         -->
         <method name="RandomSearch">
@@ -16,7 +16,7 @@
 		<dataset train="iris.arff" test="iris.arff" />
 		
         <agent type="MultilayerPerceptron">
-s        	<parameter name="H" value="3" />        	
+        	<parameter name="H" value="?" />        	
         </agent>
         	
    </experiment>
