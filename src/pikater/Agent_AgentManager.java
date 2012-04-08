@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -446,15 +447,30 @@ public class Agent_AgentManager extends Agent {
     
 	private void createAgent(String type, String name, List args) throws ControllerException {
 		// get a container controller for creating new agents
-		PlatformController container = getContainerController();
+		PlatformController container = getContainerController();				
 		
-		Object[] Args;
-		if (args == null){
-			Args = new Object[0];
+		Object[] Args1 = new Object[0];
+		Object[] Args2 = new Object[0];
+
+		if (agentOptions.get(type) != null){
+			Args1 = agentOptions.get(type);						
 		}
-		else{
-			Args = args.toArray();
+		
+		if (args != null){
+			Args2 = args.toArray();
 		}
+		
+		int size = Args1.length + Args2.length;
+		Object[] Args = new Object[size];	    
+		int i = 0;
+		for (Object o: Args1){
+			Args[i] = o;
+			i++;
+		}
+		for (Object o: Args2){
+			Args[i] = o;
+			i++;
+		}			
 		
 		/*
 		System.out.println("name: "+name);

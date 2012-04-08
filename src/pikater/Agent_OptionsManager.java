@@ -194,14 +194,19 @@ public class Agent_OptionsManager extends Agent {
 					}
 		
 					// set LR duration
-					int LRDuration = DurationService.getDuration(myAgent, duration);
+					float durationLR = DurationService.getDuration(myAgent, duration);
 					Eval eval = new Eval();
-					eval.setName("LR_duration");
-					eval.setValue(LRDuration);
+					eval.setName("durationLR");
+					eval.setValue(durationLR);
 					
 					ev_evaluations.add(eval);
 					ev.setEvaluations(ev_evaluations);					
 					t.setResult(ev);
+					
+					// save results to the database
+					if (t.getSave_results()){						
+						DataManagerService.saveResult(myAgent, t);
+					}
 					
 					results.add(t);
 					

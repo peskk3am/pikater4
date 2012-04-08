@@ -235,6 +235,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		newAgent = false;
 
 		args = getArguments();
+		System.out.println("ARGS: " + args.toString());
 
 		if (args != null && args.length > 0) {
 			OPTIONS_ARGS = new String[args.length];
@@ -788,25 +789,35 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 						if (state == states.TRAINED) {
 							EvaluationMethod evaluation_method = execute_action.getTask().getEvaluation_method();
-							eval = evaluateCA(evaluation_method);
-							if (output.equals("predictions")) {
-								DataInstances di = new DataInstances();
-								di.fillWekaInstances(test);
-								labeledData.add(getPredictions(test, di));
-								if (!labelFileName.equals("")) {
-									di = new DataInstances();
-									di.fillWekaInstances(label);
-									labeledData.add(getPredictions(label, di));
+							
+							if (!mode.equals("train_only")) {
+								eval = evaluateCA(evaluation_method);							
+							
+								if (output.equals("predictions")) {
+									DataInstances di = new DataInstances();
+									di.fillWekaInstances(test);
+									labeledData.add(getPredictions(test, di));
+									if (!labelFileName.equals("")) {
+										di = new DataInstances();
+										di.fillWekaInstances(label);
+										labeledData.add(getPredictions(label, di));
+									}
+									eval.setLabeled_data(labeledData);
 								}
-								eval.setLabeled_data(labeledData);
+							}							
+							else{
+								eval = new Evaluation();
+								eval.setEvaluations(new ArrayList());								
 							}
 						}
+						
 						Eval ev = new Eval();
 						ev.setName("duration");
 						ev.setValue((float)duration);
+						System.out.println(getLocalName()+": duration: " + duration);
 						
 						// add eval to eval list
-						List evaluations = eval.getEvaluations();
+						List evaluations = eval.getEvaluations();						
 						evaluations.add(ev);
 						eval.setEvaluations(evaluations);
 
@@ -908,12 +919,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}			
 					current_task.setFinish(getDateTime());
 					
-					send(result_msg);
-					
-					// save results to the database
-					if (current_task.getSave_results()){						
-						DataManagerService.saveResult(myAgent, current_task);
-					}
+					send(result_msg);					
 
 				}
 			}, SENDRESULTS_STATE);

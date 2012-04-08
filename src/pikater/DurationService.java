@@ -16,6 +16,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.List;
 import pikater.ontology.messages.DeleteTempFiles;
 import pikater.ontology.messages.GetAllMetadata;
+import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
 import pikater.ontology.messages.GetTheBestAgent;
@@ -32,8 +33,36 @@ public class DurationService extends FIPAService {
 
 	static final Codec codec = new SLCodec();
 
-	public static int getDuration(Agent agent, int duration) {
-        return getDuration(agent, duration);
-	}
-	
+	public static float getDuration(Agent agent, int duration) {            
+
+		GetDuration gd = new GetDuration();
+		gd.setDuration(duration);
+
+		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+		request.addReceiver(new AID("duration", false));
+		request.setOntology(MessagesOntology.getInstance().getName());
+		request.setLanguage(codec.getName());
+		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+		Action a = new Action();
+		a.setActor(agent.getAID());
+		a.setAction(gd);
+
+		try {
+			agent.getContentManager().fillContent(request, a);
+		} catch (CodecException e1) {
+			e1.printStackTrace();
+		} catch (OntologyException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			return Float.parseFloat((FIPAService.doFipaRequestClient(agent, request).getContent()));
+			
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
+        }
 }

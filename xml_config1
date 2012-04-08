@@ -16,7 +16,7 @@
 		<dataset train="iris.arff" test="iris.arff" />
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="H" value="?" />        	
+        	<parameter name="H" value="?,?" />        	
         </agent>
         	
    </experiment>

@@ -121,8 +121,8 @@ public class Agent_DataManager extends Agent {
     		}
         	
     		System.out.println("Connecting to " + db_url + ".");
-    		System.out.println("user " + db_user);
-    		System.out.println("password " + db_password);
+    		// System.out.println("user " + db_user);
+    		// System.out.println("password " + db_password);
     		openDBConnection();
         	
     		String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
@@ -240,6 +240,7 @@ public class Agent_DataManager extends Agent {
 								+ "start TIMESTAMP, "
 								+ "finish TIMESTAMP, " 
 								+ "duration INTEGER, "
+								+ "durationLR DOUBLE, "
 								+ "experimentID VARCHAR (256), "
 								+ "experimentName VARCHAR (256), "
 								+ "note VARCHAR (256) "
@@ -482,7 +483,7 @@ public class Agent_DataManager extends Agent {
 
                             String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
                                     + "errorRate, kappaStatistic, meanAbsoluteError, rootMeanSquaredError, relativeAbsoluteError,"
-                                    + "rootRelativeSquaredError, start, finish, duration, objectFilename, experimentID, experimentName, note) VALUES ( 1, ";
+                                    + "rootRelativeSquaredError, start, finish, duration, durationLR, objectFilename, experimentID, experimentName, note) VALUES ( 1, ";
                             query += "\'" + res.getAgent().getName() + "\',";
                             query += "\'" + res.getAgent().getType() + "\',";
                             query += "\'" + res.getAgent().optionsToString() + "\',";
@@ -496,6 +497,7 @@ public class Agent_DataManager extends Agent {
             				float Relative_absolute_error = Float.MAX_VALUE; // percent
             				float Root_relative_squared_error = Float.MAX_VALUE; // percent
             				int duration = Integer.MAX_VALUE; // miliseconds
+            				float durationLR = Float.MAX_VALUE;
 
                     		Iterator itr = res.getResult().getEvaluations().iterator();
                     		while (itr.hasNext()) {
@@ -527,6 +529,9 @@ public class Agent_DataManager extends Agent {
     							if (next_eval.getName().equals("duration")){ 
     								duration = (int)next_eval.getValue();
     							}
+    							if (next_eval.getName().equals("durationLR")){ 
+    								durationLR = (float)next_eval.getValue();
+    							}
                     		}
                     		
                             query += Error_rate + ",";
@@ -546,7 +551,8 @@ public class Agent_DataManager extends Agent {
                             
                             // query += "\'" + currentTimestamp + "\',";
                             query += "\'" + duration + "\',";
-
+                            query += "\'" + durationLR + "\',";
+                            
                             query += "\'" + res.getResult().getObject_filename() + "\', ";
                             query += "\'" + res.getId().getIdentificator() + "\',";  // TODO - pozor - neni jednoznacne, pouze pro jednoho managera
                             query += "\'" + res.getProblem_name() + "\',";

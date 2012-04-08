@@ -99,9 +99,6 @@ public class Agent_Duration extends Agent {
     
     List durations = new ArrayList();
     
-    String test_file_name = "";
-    String train_file_name = "";
-    
     int t = 10000; //ms
     AID aid = null;
     int id = 0;
@@ -122,7 +119,10 @@ public class Agent_Duration extends Agent {
 		CreateAgent ca = new CreateAgent();
 		ca.setType("LinearRegression");
 		ca.setName("DurationServiceRegression");
-								
+//		List args = new ArrayList();
+//		args.add("weka.classifiers.functions.LinearRegression");
+//		ca.setArguments(args);				
+		
 		Action a = new Action();
 		a.setAction(ca);
 		a.setActor(this.getAID());
@@ -166,9 +166,9 @@ public class Agent_Duration extends Agent {
                         
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
-
-                        Result r = new Result(gd, countDuration(duration));
-                        getContentManager().fillContent(reply, r);
+                        
+                        reply.setContent(Float.toString(countDuration(duration)));
+                        // Result r = new Result(gd, countDuration(duration));                        
 
                         return reply;
                     }
@@ -185,20 +185,28 @@ public class Agent_Duration extends Agent {
         });
     }    
     
-    private int countDuration(int duration){
-    	int n_last_items = (duration / t);
-    	int number_of_LRs = 0; 
-
-    	// take n last durations from the list    	
-    	while (n_last_items >= 0){
-    		number_of_LRs += (Integer)durations.get(durations.size()-n_last_items);    		
-    		n_last_items--;
+    private float countDuration(int duration){    	
+    	float number_of_LRs = 0; 
+    	
+    	int i = 1;
+    	while (duration > 0){
+    		float d;
+    		if (duration < t){
+    			d = duration;
+    		}
+    		else {
+    			d = t;
+    		}
+    		
+    		number_of_LRs += d / (Float)durations.get(durations.size()-i);
+    		duration = duration - t;
+    		
+    		i++;    		
     	}
-    	number_of_LRs *= 10;
-
+    			
     	System.out.println("duration:" + duration
-    			+ ", n_last_items: " + n_last_items
-    			+ ", number_of_LRs: " + number_of_LRs);
+    			+ ", number_of_LRs: " + number_of_LRs
+    			+ ", i: " + i);
     	    	
     	return number_of_LRs;
     }
@@ -230,7 +238,7 @@ public class Agent_Duration extends Agent {
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
@@ -270,7 +278,7 @@ public class Agent_Duration extends Agent {
 			}
 			// Accept the proposal of the best proposer
 			if (accept != null) {
-				System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+				// System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
 				
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -306,16 +314,20 @@ public class Agent_Duration extends Agent {
 					List tasks = (List)result.getValue();
 					Task t = (Task) tasks.get(0);
 					
+					if (durations.size() > 100000) { // over 27 hours
+						durations.remove(0);
+					}
+					
 					// save the duration of the computation to the list
 					List ev = ((Evaluation)t.getResult()).getEvaluations();
 					Iterator itr = ev.iterator();
 					while (itr.hasNext()) {
 						Eval eval = (Eval) itr.next();
 						if(eval.getName().equals("duration")){
-							durations.add(eval.getValue());		
+							durations.add(eval.getValue());
 						}							
 					}							  			
-				}				
+				}												
 			} catch (UngroundedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -347,8 +359,11 @@ public class Agent_Duration extends Agent {
 		ag.setOptions(new ArrayList());
 
 		Data d = new Data();
-		d.setTest_file_name(test_file_name);
-		d.setTrain_file_name(train_file_name);		
+		d.setTest_file_name("data/files/94f32ef94a24c904fbd42b419f9794f0");
+		d.setTrain_file_name("data/files/94f32ef94a24c904fbd42b419f9794f0");
+		d.setExternal_test_file_name("machine.arff");
+		d.setExternal_train_file_name("machine.arff");
+		d.setMode("train_only");
 		
 		Task t = new Task();
 		Id _id = new Id();
@@ -366,6 +381,7 @@ public class Agent_Duration extends Agent {
 		
 		t.setGet_results("after_each_computation");
 		t.setSave_results(false);
+
 		Execute ex = new Execute();
 		ex.setTask(t);
 		
