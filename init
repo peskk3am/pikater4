@@ -16,4 +16,4 @@ $a pikater.Agent_Duration duration
 
 # $a pikater.Agent_GUI_config_file UI test.xml
 $a pikater.Agent_GUI_config_file very_simple_GUI xml_config1
-$a jade.tools.sniffer.Sniffer sniffer01 OptionsManager0
+$a jade.tools.sniffer.Sniffer sniffer01 very_simple_GUI

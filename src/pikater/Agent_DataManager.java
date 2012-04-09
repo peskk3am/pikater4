@@ -970,11 +970,11 @@ public class Agent_DataManager extends Agent {
 	    log.info("Executing query " + query1);
 	    
 	    ResultSet rs = stmt.executeQuery(query);
-	    ResultSet rs1 = stmt.executeQuery(query1);
-		
 	    rs.next();
-	    rs1.next();
 	    int isInMetadata = rs.getInt("number");
+	    
+	    ResultSet rs1 = stmt.executeQuery(query1);
+		rs1.next();	    
 	    int isInFileMapping = rs1.getInt("number");
 	
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
@@ -985,7 +985,7 @@ public class Agent_DataManager extends Agent {
 	        				"null, 0, 0, false)";
 	        stmt.executeUpdate(query);       
 	    }	        
-        stmt.close();
+        // stmt.close();
         db.close();
 	}
     

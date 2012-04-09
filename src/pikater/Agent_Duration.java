@@ -359,10 +359,10 @@ public class Agent_Duration extends Agent {
 		ag.setOptions(new ArrayList());
 
 		Data d = new Data();
-		d.setTest_file_name("data/files/94f32ef94a24c904fbd42b419f9794f0");
-		d.setTrain_file_name("data/files/94f32ef94a24c904fbd42b419f9794f0");
-		d.setExternal_test_file_name("machine.arff");
-		d.setExternal_train_file_name("machine.arff");
+		d.setTest_file_name("data/files/ffc587f1abf9cee29f011640d577ef22");
+		d.setTrain_file_name("data/files/ffc587f1abf9cee29f011640d577ef22");
+		d.setExternal_test_file_name("lineardata.arff");
+		d.setExternal_train_file_name("lineardata.arff");
 		d.setMode("train_only");
 		
 		Task t = new Task();
