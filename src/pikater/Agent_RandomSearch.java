@@ -27,15 +27,19 @@ public class Agent_RandomSearch extends Agent_Search {
 		List search_options = getSearch_options();
 		// find maximum tries in Options
 		Iterator itr = search_options.iterator();
+		final_error_rate = (float) 0.01;
+		maximum_tries= 10;
 		while (itr.hasNext()) {
 			Option next = (Option) itr.next();
 			if (next.getName().equals("E")){
 				final_error_rate = Float.parseFloat(next.getValue());
 			}
 			if (next.getName().equals("M")){
-				maximum_tries = Integer.parseInt(next.getValue());				
+				maximum_tries = Integer.parseInt(next.getValue());
 			}
 		}
+		query_block_size=maximum_tries;
+		//query_block_size = maximum_tries;
 		System.out.println(getLocalName()+" parameters are: ");
 		System.out.println("   final_error_rate: " + final_error_rate);
 		System.out.println("   maximum_tries: " + maximum_tries);		
@@ -64,12 +68,16 @@ public class Agent_RandomSearch extends Agent_Search {
 			error_rate = 1;
 		}
 		else{
-			error_rate = evaluations[0][0];//((Evaluation)(evaluations.get(0))).getError_rate();			
+			float best_err = evaluations[0][0];
+			for(int i = 0; i < evaluations.length; i++){
+				if(evaluations[i][0]<best_err)
+					best_err = evaluations[i][0];
+			}
+			error_rate = best_err;//((Evaluation)(evaluations.get(0))).getError_rate();			
 		}
 	}
-		
-	@Override
-	protected List generateNewSolutions(List solutions, float[][] evaluations) {
+	
+	private SearchSolution genRandomSolution(){
 		// go through the solutions Vector, generate random values
 		List new_solution = new ArrayList();
 		Iterator itr = getSchema().iterator();
@@ -77,14 +85,21 @@ public class Agent_RandomSearch extends Agent_Search {
 			SearchItem si = (SearchItem) itr.next();
 			//opt.setValue(randomOptValue(opt));
 			new_solution.add(si.randomValue(rnd_gen));
-		}		
+		}
+		SearchSolution sol = new SearchSolution();
+		sol.setValues(new_solution);
+		return sol;
+	}
 		
+	@Override
+	protected List generateNewSolutions(List solutions, float[][] evaluations) {
 		number_of_tries++;
 		
 		List solutions_list = new ArrayList();
-		SearchSolution sol = new SearchSolution();
-		sol.setValues(new_solution);
-		solutions_list.add(sol);
+		//generate sequence of random solutions
+		for(int i = 0; i < query_block_size; i++){
+			solutions_list.add(genRandomSolution());
+		}
 		return solutions_list;
 	}
 
