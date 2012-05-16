@@ -266,6 +266,9 @@ public class Agent_Manager extends Agent {
 			}
 			receivedProblemsID.put(problemID, n+1);
 			
+			// send subscription to gui agent after each received task
+			sendSubscription(inform);
+			
 			// when all tasks' results are sent, send reply-inform to gui agent
 			if (lastTask()){
 			
@@ -273,6 +276,7 @@ public class Agent_Manager extends Agent {
 							+ ": all results sent.");
 				
 				ACLMessage msgOut = request.createReply();
+				msgOut.setPerformative(ACLMessage.INFORM);
 				msgOut.setContent("Finished");
 
 				send(msgOut);
@@ -308,10 +312,7 @@ public class Agent_Manager extends Agent {
 			} catch (OntologyException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-			// send subscription to gui agent after each received task
-			sendSubscription(inform);
+			}			
 
 			// killAgent(inform.getSender().getName());	
 		}		

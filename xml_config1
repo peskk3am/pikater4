@@ -1,24 +1,37 @@
 <experiments>
-    <experiment name="test" timeout="10000" get_results="after_each_computation" save_results="yes">        
-		<!-- <method name="ChooseXValues">
+    <experiment name="test_GA" timeout="10000" get_results="after_each_computation" save_results="yes">        
+       <!-- <method name="GASearch">
+          <parameter name="M" value="10" />
+          <parameter name="P" value="10" />
+          <parameter name="E" value="0" />
+        </method> 
+		
+		<method name="ChooseXValues">
 			<parameter name="N" value="4" />
         </method>
         -->
+				        
         <method name="RandomSearch">
 			<parameter name="M" value="3" />
 			<parameter name="E" value="0" />
         </method>
+
+        <evaluation name="Standard">
+        </evaluation>
         
+        <!--
         <evaluation name="CrossValidation">
           <parameter name="F" value="8" />        
         </evaluation>
-        
-		<dataset train="iris.arff" test="iris.arff" />
+        -->
+	<dataset train="iris.arff" test="iris.arff" />		
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="H" value="?,?" />        	
+        	<parameter name="H" value="?" set="5" />
         </agent>
         	
    </experiment>
-       
+
+   <hasta_la_vista_baby />
+                              
 </experiments>

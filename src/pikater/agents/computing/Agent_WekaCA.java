@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
@@ -73,7 +74,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void train() throws Exception {
+	protected Date train(pikater.ontology.messages.Evaluation evaluation) throws Exception {
 		working = true;
 		System.out.println("Agent " + getLocalName() + ": Training...");
 
@@ -84,7 +85,27 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		if (OPTIONS.length > 0) {
 			cls.setOptions(OPTIONS);
 		}
+		
+		long start = System.currentTimeMillis();
 		cls.buildClassifier(train);
+		long end = System.currentTimeMillis();
+		long duration = end - start;
+		if (duration < 1) { duration = 1; } 
+		
+		List evals = new ArrayList();
+		
+		Eval s = new Eval();
+		s.setName("start");
+		s.setValue(start);
+		evals.add(s);
+		
+		Eval d = new Eval();
+		d.setName("duration");
+		d.setValue(duration);
+		evals.add(d);
+
+		System.out.println(getLocalName()+ " start: " + start + " : duration: " + duration);
+		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
 
@@ -92,6 +113,19 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		System.out.println(getLocalName() + " " + getOptions());
 
 		working = false;
+		
+		// add evals to Evaluation
+		List evaluations_new = evaluation.getEvaluations();
+		
+		Iterator itr = evals.iterator();
+		while (itr.hasNext()) {
+			Eval eval = (Eval) itr.next();
+			evaluations_new.add(eval);
+		}
+		
+		evaluation.setEvaluations(evaluations_new);
+		
+		return new Date(start);
 	}
 
 	protected String getOptFileName(){
@@ -146,11 +180,11 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected pikater.ontology.messages.Evaluation evaluateCA(EvaluationMethod evaluation_method) throws Exception{
+	protected void evaluateCA(EvaluationMethod evaluation_method,
+			pikater.ontology.messages.Evaluation evaluation) throws Exception{
+		
 		float default_value = Float.MAX_VALUE;
 		Evaluation eval = test(evaluation_method);
-
-		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();				
 		
 		List evaluations = new ArrayList();
 		Eval ev = new Eval();
@@ -202,10 +236,17 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			ev.setValue(default_value);
 		}
 		evaluations.add(ev);
-
-		result.setEvaluations(evaluations);
 		
-		return result;
+		
+		List evaluations_new = evaluation.getEvaluations();
+		
+		Iterator itr = evaluations.iterator();
+		while (itr.hasNext()) {
+			Eval _ev = (Eval) itr.next();
+			evaluations_new.add(_ev);
+		}
+		
+		evaluation.setEvaluations(evaluations_new);		
 	}
 
 	@Override

@@ -37,6 +37,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -66,6 +67,7 @@ import pikater.ontology.messages.DeleteTempFiles;
 
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
+import pikater.ontology.messages.Duration;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.EvaluationMethod;
@@ -97,15 +99,26 @@ public class Agent_Duration extends Agent {
 	Codec codec = new SLCodec();
     Ontology ontology = MessagesOntology.getInstance();
     
-    List durations = new ArrayList();
+    List durations = new ArrayList();  // list of Durations
     
     int t = 10000; //ms
     AID aid = null;
     int id = 0;
     
+    String file_name = "LRDurations";
+    
     @Override
     protected void setup() {
-            	
+    	
+		File file = new File(file_name);
+		try {
+			file.createNewFile();			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+
+    	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
         
@@ -117,7 +130,8 @@ public class Agent_Duration extends Agent {
 		msg_ca.setOntology(ontology.getName());
 		
 		CreateAgent ca = new CreateAgent();
-		ca.setType("LinearRegression");
+		// ca.setType("LinearRegression");
+		ca.setType("RBFNetwork");
 		ca.setName("DurationServiceRegression");
 //		List args = new ArrayList();
 //		args.add("weka.classifiers.functions.LinearRegression");
@@ -143,7 +157,11 @@ public class Agent_Duration extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}					
-        
+        		
+		// compute one LR (as the first one is usually longer) 
+		addBehaviour(new ExecuteTask(this, createCFPmessage(aid, "89b6f38e6384843c1d92534a9fe75b90")));
+		doWait(2000);
+		
         addBehaviour(new Test(this, t));			  
         
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchOntology(ontology.getName()), MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
@@ -161,14 +179,16 @@ public class Agent_Duration extends Agent {
 
                     if (a.getAction() instanceof GetDuration) {
                         GetDuration gd = (GetDuration) a.getAction();
-
-                        int duration = gd.getDuration();                       
+                        Duration duration = gd.getDuration();
                         
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
-                        
-                        reply.setContent(Float.toString(countDuration(duration)));
-                        // Result r = new Result(gd, countDuration(duration));                        
+                                                
+                        duration.setLR_duration(
+                        		countDuration(duration.getStart(), duration.getDuration()));
+                        		
+                        Result r = new Result(gd, duration);                        
+						getContentManager().fillContent(reply, r);												
 
                         return reply;
                     }
@@ -185,28 +205,48 @@ public class Agent_Duration extends Agent {
         });
     }    
     
-    private float countDuration(int duration){    	
+    private float countDuration(Date _start, int duration){    	
     	float number_of_LRs = 0; 
+    	long start = _start.getTime();
     	
-    	int i = 1;
+    	// find the duration right before the start
+    	int i_d = durations.size()-1;
+    	while (start < ((Duration)durations.get(i_d)).getStart().getTime()){    		
+    		i_d--;
+    	}
+    	
+    	// nepouzivat t, ale skutecny cas mezi vypocty
+    	int i = 0;
     	while (duration > 0){
-    		float d;
-    		if (duration < t){
+    		long t1 = ((Duration)durations.get(i_d + i)).getStart().getTime();
+    		long t2;
+    		if (i_d + i + 1 > durations.size()-1){ 
+    			// after last LR
+        		t2 = t1 + t; // expected time    		
+    		}
+    		else {
+    			t2 = ((Duration)durations.get(i_d + i + 1)).getStart().getTime();
+    		}
+    		long time_between_LRs = t2 - t1;
+    		
+    		long d;    		    		
+    		// if (duration < t){
+    		if (duration < time_between_LRs){
     			d = duration;
     		}
     		else {
-    			d = t;
+    		// 	d = t;
+    			d = Math.min(t2 - start, time_between_LRs); // osetreni prvniho useku        		
     		}
     		
-    		number_of_LRs += d / (Float)durations.get(durations.size()-i);
-    		duration = duration - t;
+    		System.out.println("d: " + d + " LR dur: " + ((Duration)durations.get(i_d + i)).getDuration());
+    		number_of_LRs += (float)d / (float)((Duration)durations.get(i_d + i)).getDuration();
+    		duration = duration - (int)d;
     		
     		i++;    		
     	}
     			
-    	System.out.println("duration:" + duration
-    			+ ", number_of_LRs: " + number_of_LRs
-    			+ ", i: " + i);
+    	// System.out.println("number_of_LRs: " + number_of_LRs + ", i: " + i);
     	    	
     	return number_of_LRs;
     }
@@ -222,7 +262,10 @@ public class Agent_Duration extends Agent {
 
 		protected void onTick() {
 			  // compute linear regression on random (but the same) dataset
-			  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid)));  			    			  
+			  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "89b6f38e6384843c1d92534a9fe75b90")));
+			  // addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "dc7ce6dea5a75110486760cfac1051a5")));
+			  //  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "ffc587f1abf9cee29f011640d577ef22")));
+			  
 		} 
     }
     
@@ -314,20 +357,38 @@ public class Agent_Duration extends Agent {
 					List tasks = (List)result.getValue();
 					Task t = (Task) tasks.get(0);
 					
-					if (durations.size() > 100000) { // over 27 hours
+					if (durations.size() > 1000000) { // over 270 hours
 						durations.remove(0);
 					}
 					
 					// save the duration of the computation to the list
-					List ev = ((Evaluation)t.getResult()).getEvaluations();
-					Iterator itr = ev.iterator();
+					Evaluation evaluation = (Evaluation)t.getResult();
+					List ev = evaluation.getEvaluations();
+					
+					Duration d = new Duration();
+					Iterator itr = ev.iterator();					
 					while (itr.hasNext()) {
-						Eval eval = (Eval) itr.next();
+						Eval eval = (Eval) itr.next();						
 						if(eval.getName().equals("duration")){
-							durations.add(eval.getValue());
-						}							
-					}							  			
-				}												
+							d.setDuration((int)eval.getValue());
+						}
+					}
+					d.setStart(evaluation.getStart());
+					durations.add(d);
+					
+					// write duration into a file:
+					try {
+						FileWriter fstream = new FileWriter(file_name,true);
+						BufferedWriter out = new BufferedWriter(fstream);
+						out.write(d.getStart() + " - " + d.getDuration() + "\n");
+						out.close();
+				
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}											
+					
+				}				
 			} catch (UngroundedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -342,7 +403,7 @@ public class Agent_Duration extends Agent {
 	} // end of call for proposal bahavior
 
         
-    protected ACLMessage createCFPmessage(AID aid) {
+    protected ACLMessage createCFPmessage(AID aid, String filename) {
 
 		// create CFP message for Linear Regression Computing Agent							  		
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
@@ -359,10 +420,10 @@ public class Agent_Duration extends Agent {
 		ag.setOptions(new ArrayList());
 
 		Data d = new Data();
-		d.setTest_file_name("data/files/ffc587f1abf9cee29f011640d577ef22");
-		d.setTrain_file_name("data/files/ffc587f1abf9cee29f011640d577ef22");
-		d.setExternal_test_file_name("lineardata.arff");
-		d.setExternal_train_file_name("lineardata.arff");
+		d.setTest_file_name("data/files/xxx");
+		d.setTrain_file_name("data/files/"+filename);
+		d.setExternal_test_file_name("xxx");
+		d.setExternal_train_file_name("xxx");
 		d.setMode("train_only");
 		
 		Task t = new Task();

@@ -104,10 +104,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 	private boolean newAgent = true;
 	private boolean resurrected = false;
 
-	protected abstract void train() throws Exception;
+	protected abstract Date train(Evaluation evaluation) throws Exception;
 
-	protected abstract pikater.ontology.messages.Evaluation evaluateCA(
-			EvaluationMethod evaluation_method) throws Exception;
+	protected abstract void evaluateCA(EvaluationMethod evaluation_method,
+			Evaluation evaluation) throws Exception;
 
 	protected abstract DataInstances getPredictions(Instances test,
 			DataInstances onto_test);
@@ -623,23 +623,29 @@ public abstract class Agent_ComputingAgent extends Agent {
 					
 					train_fn = data.getTrain_file_name();
 					AchieveREInitiator get_train_behaviour = (AchieveREInitiator) ((ProcessAction) parent).getState(GETTRAINDATA_STATE);
+					
+					// get_train_behaviour.reset(sendGetDataReq(train_fn));
+										
 					if (!train_fn.equals(trainFileName)) {
 						get_train_behaviour.reset(sendGetDataReq(train_fn));
 					} else {
 						// We have already the right data
 						get_train_behaviour.reset(null);
 					}
+					
 
-					test_fn = data.getTest_file_name();
-					AchieveREInitiator get_test_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
-							.getState(GETTESTDATA_STATE);
-					if (!test_fn.equals(testFileName)) {
-						get_test_behaviour.reset(sendGetDataReq(test_fn));
-					} else {
-						// We have already the right data
-						get_test_behaviour.reset(null);
+					if (!mode.equals("train_only")) {
+						test_fn = data.getTest_file_name();
+						AchieveREInitiator get_test_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
+								.getState(GETTESTDATA_STATE);
+						if (!test_fn.equals(testFileName)) {
+							get_test_behaviour.reset(sendGetDataReq(test_fn));
+						} else {
+							// We have already the right data
+							get_test_behaviour.reset(null);
+						}
 					}
-
+					
 					if (data.getLabel_file_name() != null) {
 						label_fn = data.getLabel_file_name();
 						AchieveREInitiator get_label_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
@@ -775,23 +781,30 @@ public abstract class Agent_ComputingAgent extends Agent {
 					try {
 
 						List labeledData = new ArrayList();
-
-						Date start = new Date();
+						
+						eval = new Evaluation();
+						
+						eval.setEvaluations(new ArrayList());
+						// Date start = new Date();
+						Date start = null;
 						if (state != states.TRAINED) {
-							train();
+							start = train(eval);
 						} else if (!resurrected) {
 							if (!mode.equals("test_only")) {
-								train();
+								start = train(eval);
 							}
 						}
-						Date end = new Date();
-						int duration = (int) (end.getTime() - start.getTime());
-
+						eval.setStart(start);
+						// Date end = new Date();
+						// int duration = (int) (end.getTime() - start.getTime());
+						
+						
+						List test_evals = new ArrayList();
 						if (state == states.TRAINED) {
 							EvaluationMethod evaluation_method = execute_action.getTask().getEvaluation_method();
 							
 							if (!mode.equals("train_only")) {
-								eval = evaluateCA(evaluation_method);							
+								evaluateCA(evaluation_method, eval);							
 							
 								if (output.equals("predictions")) {
 									DataInstances di = new DataInstances();
@@ -804,22 +817,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 									}
 									eval.setLabeled_data(labeledData);
 								}
-							}							
-							else{
-								eval = new Evaluation();
-								eval.setEvaluations(new ArrayList());								
-							}
+							}														
 						}
-						
-						Eval ev = new Eval();
-						ev.setName("duration");
-						ev.setValue((float)duration);
-						System.out.println(getLocalName()+": duration: " + duration);
-						
-						// add eval to eval list
-						List evaluations = eval.getEvaluations();						
-						evaluations.add(ev);
-						eval.setEvaluations(evaluations);
 
 					} catch (Exception e) {
 						success = false;

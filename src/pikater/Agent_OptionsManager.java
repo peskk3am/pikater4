@@ -33,12 +33,14 @@ import java.text.DateFormat;
 
 import pikater.ontology.messages.BoolSItem;
 import pikater.ontology.messages.CreateAgent;
+import pikater.ontology.messages.Duration;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.FloatSItem;
 import pikater.ontology.messages.GetAgents;
+import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.IntSItem;
@@ -183,8 +185,9 @@ public class Agent_OptionsManager extends Agent {
 					Evaluation ev = t.getResult();
 					List ev_evaluations = ev.getEvaluations();
 					
-					// get duration					
+					// get start and end
 					int duration = 0;
+					
 					Iterator itr = ev_evaluations.iterator();
 					while (itr.hasNext()) {
 						Eval eval = (Eval) itr.next();
@@ -193,11 +196,21 @@ public class Agent_OptionsManager extends Agent {
 						}
 					}
 		
+					GetDuration gd = new GetDuration();
+					Duration d = new Duration();
+					d.setStart(ev.getStart());
+					d.setDuration(duration);
+					gd.setDuration(d);
+					
 					// set LR duration
-					float durationLR = DurationService.getDuration(myAgent, duration);
+					Duration durationLR = DurationService.getDuration(myAgent, gd);
+					
+					System.out.println("opt.man.: durationLR: " + durationLR.getLR_duration() 
+										+ " duration: "+ durationLR.getDuration());
+					
 					Eval eval = new Eval();
 					eval.setName("durationLR");
-					eval.setValue(durationLR);
+					eval.setValue(durationLR.getLR_duration());
 					
 					ev_evaluations.add(eval);
 					ev.setEvaluations(ev_evaluations);					

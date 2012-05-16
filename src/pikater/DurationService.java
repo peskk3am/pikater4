@@ -1,9 +1,11 @@
 package pikater;
 
+import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.OntologyException;
+import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
@@ -15,6 +17,8 @@ import jade.lang.acl.ACLMessage;
 import jade.util.leap.ArrayList;
 import jade.util.leap.List;
 import pikater.ontology.messages.DeleteTempFiles;
+import pikater.ontology.messages.Duration;
+import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.GetFileInfo;
@@ -33,10 +37,7 @@ public class DurationService extends FIPAService {
 
 	static final Codec codec = new SLCodec();
 
-	public static float getDuration(Agent agent, int duration) {            
-
-		GetDuration gd = new GetDuration();
-		gd.setDuration(duration);
+	public static Duration getDuration(Agent agent, GetDuration gd) {            
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("duration", false));
@@ -56,13 +57,29 @@ public class DurationService extends FIPAService {
 			e1.printStackTrace();
 		}
 
-		try {
-			return Float.parseFloat((FIPAService.doFipaRequestClient(agent, request).getContent()));
+		Duration duration = gd.getDuration();
+		duration.setLR_duration(-1);
+		try {						
+			ACLMessage reply = FIPAService.doFipaRequestClient(agent, request);
+			
+			// get Duration from the received message			
+			ContentElement content = agent.getContentManager().extractContent(reply);
+							
+			duration = (Duration)(((Result) content).getValue());									
 			
 		} catch (FIPAException e) {
 			e.printStackTrace();
+		} catch (UngroundedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return -1;
+		return duration;
         }
 }
