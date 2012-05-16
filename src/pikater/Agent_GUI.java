@@ -1534,7 +1534,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			}
 		}
 		
-		if (finished){
+		if (finished && end_pikater_when_finished){
 			terminatePikater();
 		}
 	}

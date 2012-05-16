@@ -38,7 +38,7 @@ public class Agent_RandomSearch extends Agent_Search {
 				maximum_tries = Integer.parseInt(next.getValue());
 			}
 		}
-		query_block_size=maximum_tries;
+		query_block_size = 1;
 		//query_block_size = maximum_tries;
 		System.out.println(getLocalName()+" parameters are: ");
 		System.out.println("   final_error_rate: " + final_error_rate);

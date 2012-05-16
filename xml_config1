@@ -12,7 +12,7 @@
         -->
 				        
         <method name="RandomSearch">
-			<parameter name="M" value="3" />
+			<parameter name="M" value="2" />
 			<parameter name="E" value="0" />
         </method>
 
@@ -27,11 +27,11 @@
 	<dataset train="iris.arff" test="iris.arff" />		
 		
         <agent type="MultilayerPerceptron">
-        	<parameter name="H" value="?" set="5" />
+        	<parameter name="H" value="?" />
         </agent>
         	
    </experiment>
 
-   <hasta_la_vista_baby />
+   <!-- <hasta_la_vista_baby />  -->
                               
 </experiments>
