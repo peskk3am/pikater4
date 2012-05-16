@@ -93,7 +93,7 @@ public class Agent_RandomSearch extends Agent_Search {
 		
 	@Override
 	protected List generateNewSolutions(List solutions, float[][] evaluations) {
-		number_of_tries++;
+		number_of_tries+=query_block_size;
 		
 		List solutions_list = new ArrayList();
 		//generate sequence of random solutions
