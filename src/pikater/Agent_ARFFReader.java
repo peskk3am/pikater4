@@ -45,7 +45,6 @@ public class Agent_ARFFReader extends Agent {
 	// data read from file
 	protected Instances data;
 	// path to the file
-	// private String path = "D:/diplomka/eclipse/diplomka/";
 	private String path = System.getProperty("user.dir")
 			+ System.getProperty("file.separator");
 	private boolean working = false;
@@ -61,17 +60,17 @@ public class Agent_ARFFReader extends Agent {
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println("Reading of data from file " + fileName
-					+ " failed.");
+			System.out.println(getLocalName() + ": "+
+					"Reading of data from file " + fileName + " failed.");
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("Reading of data from file " + fileName
-					+ " failed.");
+			System.out.println(getLocalName() + ": "+ 
+					"Reading of data from file " + fileName + " failed.");
 			return false;
 		}
-		System.out.println("Reading of data from file " + fileName
-				+ " succesful.");
+		System.out.println(getLocalName() + ": "+
+				"Reading of data from file " + fileName + " succesful.");
 		return true;
 	}
 
@@ -101,7 +100,7 @@ public class Agent_ARFFReader extends Agent {
 		MessageTemplate template = MessageTemplate
 				.MatchPerformative(ACLMessage.REQUEST);
 		addBehaviour(new GetDataResponder(this, template));
-		System.out.println("Agent " + getLocalName() + " is ready!");
+		System.out.println(getLocalName() + ": "+ "Agent " + getLocalName() + " is ready!");
 
 	} // end Setup
 
@@ -140,7 +139,7 @@ public class Agent_ARFFReader extends Agent {
                             if (i != (data.classIndex() >= 0 ? data.classIndex() : data.numAttributes() - 1)) {
                                 if (!types.contains(a.type())) {
                                     types.add(a.type());
-                                    System.err.println(a.type());
+                                    // System.err.println(a.type());
                                 }
                             }
                         }
@@ -166,7 +165,7 @@ public class Agent_ARFFReader extends Agent {
                             m.setInternal_name(file_name);
                             m.setMissing_values(missing);
                             int ninst = instances.getInstances().size();
-                            System.err.println("Reader: " + ninst);
+                            // System.err.println("Reader: " + ninst);
 
                             if (ninst > 0) {
                                     m.setNumber_of_attributes(((Instance) instances.getInstances()

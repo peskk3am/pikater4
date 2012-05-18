@@ -192,18 +192,18 @@ public abstract class Agent_GUI extends GuiAgent {
 		template.addServices(CAsd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following agents:");
+			// System.out.println("Found the following agents:");
 			ComputingAgents = new String[result.length];
 
 			for (int i = 0; i < result.length; ++i) {
 				ComputingAgents[i] = result[i].getName().getLocalName();
-				System.out.println(ComputingAgents[i]);
+				// System.out.println(ComputingAgents[i]);
 			}
 
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
 		} catch (ArrayIndexOutOfBoundsException ae) {
-			System.out.println("No " + type + " found.");
+			System.out.println(getLocalName() + ": No " + type + " found.");
 		}
 		return ComputingAgents;
 
@@ -229,7 +229,7 @@ public abstract class Agent_GUI extends GuiAgent {
 					createAgentTypesHashMap();
 				}
 				
-				System.out.println("Creating agent " + newName + ", type: "+ agentType);
+				System.out.println(getLocalName() + ": Creating agent " + newName + ", type: "+ agentType);
 
 				if (agentOptions.get(agentType) != null){
 					aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
@@ -257,7 +257,7 @@ public abstract class Agent_GUI extends GuiAgent {
 						agent_name = msg_name.getContent();
 						aid = new AID(agent_name, AID.ISLOCALNAME);
 					} catch (FIPAException e) {
-						System.err.println("Exception while adding agent"
+						System.err.println(getLocalName() + ": Exception while adding agent"
 								+ agentType + ": " + e);		
 					} catch (CodecException e) {
 						// TODO Auto-generated catch block
@@ -353,7 +353,7 @@ public abstract class Agent_GUI extends GuiAgent {
 						+ inform.getSender().getName() + " replied.");
 				// we've just received the Options in an inform message
 
-				System.out.println("Conversation id:" + inform.getConversationId());
+				// System.out.println("Conversation id:" + inform.getConversationId());
 				
 				ContentElement content;
 				try {
@@ -412,10 +412,10 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (failure.getSender().equals(myAgent.getAMS())) {
 					// FAILURE notification from the JADE runtime: the receiver
 					// does not exist
-					System.out.println("Agent " + myAgent.getLocalName()
+					System.out.println(myAgent.getLocalName()
 							+ "Responder " + agentName + " does not exist.");
 				} else {
-					System.out.println("Agent " + myAgent.getLocalName()
+					System.out.println(myAgent.getLocalName()
 							+ ": Agent " + agentName
 							+ " failed to perform the requested action");
 				}
@@ -473,9 +473,9 @@ public abstract class Agent_GUI extends GuiAgent {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(getLocalName() + ": Responder does not exist");
 			} else {
-				System.out.println("Agent " + failure.getSender().getName()
+				System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 						+ " failed to perform the requested action");
 			}
 			displayResult(failure);
@@ -576,9 +576,9 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (failure.getSender().equals(myAgent.getAMS())) {
 					// FAILURE notification from the JADE runtime: the receiver
 					// does not exist
-					System.out.println("Responder does not exist");
+					System.out.println(getLocalName() + ": Responder does not exist");
 				} else {
-					System.out.println("Agent " + failure.getSender().getName()
+					System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 							+ " failed to perform the requested action");
 				}
 				displayResult(failure);
@@ -614,7 +614,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		// agent manager changes the id afterwards		
 		if (name != null){
 			problem.setName(name);
-			System.out.println("experiment name: "+ name);
+			System.out.println(getLocalName() + ": experiment " + name + " received.");
 		}
 		if (timeout == null) {
 			_timeout = default_timeout;
@@ -1309,12 +1309,12 @@ public abstract class Agent_GUI extends GuiAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following " + agentType + " agents:");
+			// System.out.println("Found the following " + agentType + " agents:");
 			Agents = new AID[result.length];
 
 			for (int i = 0; i < result.length; ++i) {
 				Agents[i] = result[i].getName();
-				System.out.println(Agents[i].getName());
+				// System.out.println(Agents[i].getName());
 			}
 
 			if (Agents.length > 0) {
@@ -1391,7 +1391,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     DFAgentDescription readers[] = DFService.search(this, dfd);
 
                     if (readers.length == 0) {
-                        System.err.println("No readers found");
+                        System.err.println(getLocalName() + ": No readers found");
                         break;
                     }
 
@@ -1416,7 +1416,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     ACLMessage response = FIPAService.doFipaRequestClient(this, req);
 
                     if (response.getPerformative() != ACLMessage.INFORM) {
-                        System.err.println("Error reading file");
+                        System.err.println(getLocalName() + ": Error reading file");
                     }
 
                 } catch (CodecException ce) {
@@ -1431,12 +1431,13 @@ public abstract class Agent_GUI extends GuiAgent {
             }
                displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
 
-		System.out.println("GUI agent " + getLocalName()
+		System.out.println(getLocalName() + ": GUI agent " + getLocalName()
 				+ " is alive and waiting...");
 
 		mySetup();
 		
 		// test getOptions
+		/* 
 		try {
 			System.out.println("Test of getOptions:"+getOptions("RBFNetwork").toString());
 		} catch (CodecException e) {
@@ -1449,6 +1450,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 
 	} // end setup
@@ -1540,7 +1542,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 		
 	private void terminatePikater(){
-		System.out.println("Shutting down...");
+		System.out.println(getLocalName() + ": Shutting down Pikater...");
 		doWait(100);
 
 		getContentManager().registerOntology(JADEManagementOntology.getInstance());
@@ -1577,14 +1579,14 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		System.out.println("GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println(getLocalName() + ": GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// tohle fungje na linuxu: - funguje vsude
 		Document doc = builder.build("file:"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// tohle mi funguje na win:
 		//Document doc = builder.build("file:\\"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// a tohle snad vsude: NE Document doc = builder.build("file:"+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 				
-		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
 		java.util.List _end_pikater_when_finished = root_element.getChildren("hasta_la_vista_baby");
@@ -1680,7 +1682,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				try {
 					a_id = addAgentToProblem(p_id, agent_name, agent_type, null);
 				} catch (FailureException e) {
-					System.err.println(e.getLocalizedMessage());
+					System.err.println(getLocalName() + ": " + e.getLocalizedMessage());
 					// e.printStackTrace();
 				}
 

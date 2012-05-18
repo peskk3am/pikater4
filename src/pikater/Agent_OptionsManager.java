@@ -93,18 +93,18 @@ public class Agent_OptionsManager extends Agent {
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused");
+			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused.");
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(getLocalName() + ": Responder does not exist");
 			}
 			else {
 				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
@@ -205,7 +205,7 @@ public class Agent_OptionsManager extends Agent {
 					// set LR duration
 					Duration durationLR = DurationService.getDuration(myAgent, gd);
 					
-					System.out.println("opt.man.: durationLR: " + durationLR.getLR_duration() 
+					System.out.println(getLocalName() + ": durationLR: " + durationLR.getLR_duration() 
 										+ " duration: "+ durationLR.getDuration());
 					
 					Eval eval = new Eval();
@@ -484,10 +484,8 @@ public class Agent_OptionsManager extends Agent {
 
 				if (agree != null) {
 					msg_received = true;
-					// get max number of tasks
-					System.out.println("agree received");
+					// get max number of tasks					
 					max_number_of_tasks = Integer.parseInt(agree.getContent());						
-					System.out.println("max_number_of_tasks: " + max_number_of_tasks);
 					
 					// if the agent name is not filled in
 					// TODO task.agent - it can be a list
@@ -579,15 +577,15 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleRefuse(ACLMessage refuse) {
 			System.out.println(getLocalName() + ": Agent "
 					+ refuse.getSender().getName()
-					+ " refused to perform the requested action");
-			// + preposlat zpravu managerovi
+					+ " refused to perform the requested action.");
+			// TODO preposlat zpravu managerovi
 		}
 
 		protected void handleFailure(ACLMessage failure) {
 			System.out.println(getLocalName() + ": Agent "
 					+ failure.getSender().getName()
 					+ ": failure while performing the requested action");
-			// preposlat zpravu managerovi
+			// TODO preposlat zpravu managerovi
 		}
 
 	};

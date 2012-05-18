@@ -105,19 +105,35 @@ public class Agent_Duration extends Agent {
     AID aid = null;
     int id = 0;
     
+    
+    boolean log_LR_durations = false;
     String file_name = "LRDurations";
     
     @Override
     protected void setup() {
-    	
-		File file = new File(file_name);
-		try {
-			file.createNewFile();			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}		
 
+    	// get the agent's parameters
+    	Object[] args = getArguments();
+		if (args != null && args.length > 0) {
+			int i = 0;
+						
+			while (i < args.length){
+				if (args[i].equals("log_LR_durations")){
+					log_LR_durations = true;
+				}
+				i++;
+			}
+		}		    	
+
+    	if (log_LR_durations){
+			File file = new File(file_name);
+			try {
+				file.createNewFile();			
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}		
+    	}	
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
@@ -130,8 +146,7 @@ public class Agent_Duration extends Agent {
 		msg_ca.setOntology(ontology.getName());
 		
 		CreateAgent ca = new CreateAgent();
-		// ca.setType("LinearRegression");
-		ca.setType("RBFNetwork");
+		ca.setType("LinearRegression");
 		ca.setName("DurationServiceRegression");
 //		List args = new ArrayList();
 //		args.add("weka.classifiers.functions.LinearRegression");
@@ -159,7 +174,7 @@ public class Agent_Duration extends Agent {
 		}					
         		
 		// compute one LR (as the first one is usually longer) 
-		addBehaviour(new ExecuteTask(this, createCFPmessage(aid, "89b6f38e6384843c1d92534a9fe75b90")));
+		addBehaviour(new ExecuteTask(this, createCFPmessage(aid, "dc7ce6dea5a75110486760cfac1051a5")));
 		doWait(2000);
 		
         addBehaviour(new Test(this, t));			  
@@ -239,7 +254,7 @@ public class Agent_Duration extends Agent {
     			d = Math.min(t2 - start, time_between_LRs); // osetreni prvniho useku        		
     		}
     		
-    		System.out.println("d: " + d + " LR dur: " + ((Duration)durations.get(i_d + i)).getDuration());
+    		// System.out.println("d: " + d + " LR dur: " + ((Duration)durations.get(i_d + i)).getDuration());
     		number_of_LRs += (float)d / (float)((Duration)durations.get(i_d + i)).getDuration();
     		duration = duration - (int)d;
     		
@@ -262,8 +277,8 @@ public class Agent_Duration extends Agent {
 
 		protected void onTick() {
 			  // compute linear regression on random (but the same) dataset
-			  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "89b6f38e6384843c1d92534a9fe75b90")));
-			  // addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "dc7ce6dea5a75110486760cfac1051a5")));
+			  // addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "89b6f38e6384843c1d92534a9fe75b90")));
+			  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "dc7ce6dea5a75110486760cfac1051a5")));
 			  //  addBehaviour(new ExecuteTask(myAgent, createCFPmessage(aid, "ffc587f1abf9cee29f011640d577ef22")));
 			  
 		} 
@@ -285,14 +300,14 @@ public class Agent_Duration extends Agent {
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused");
+			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused.");
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(myAgent.getLocalName()+": Responder " + failure.getSender().getName() + " does not exist");
 			}
 			else {
 				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
@@ -347,7 +362,7 @@ public class Agent_Duration extends Agent {
 		}
 				
 		protected void handleInform(ACLMessage inform) {
-			System.out.println(myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
+			System.out.println("  --d-- " + myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
 																			
 			ContentElement content;
 			try {
@@ -376,16 +391,18 @@ public class Agent_Duration extends Agent {
 					d.setStart(evaluation.getStart());
 					durations.add(d);
 					
-					// write duration into a file:
-					try {
-						FileWriter fstream = new FileWriter(file_name,true);
-						BufferedWriter out = new BufferedWriter(fstream);
-						out.write(d.getStart() + " - " + d.getDuration() + "\n");
-						out.close();
-				
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if (log_LR_durations){
+						// write duration into a file:
+						try {
+							FileWriter fstream = new FileWriter(file_name,true);
+							BufferedWriter out = new BufferedWriter(fstream);
+							out.write(d.getStart() + " - " + d.getDuration() + "\n");
+							out.close();
+					
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}											
 					
 				}				

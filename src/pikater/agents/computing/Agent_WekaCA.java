@@ -36,6 +36,8 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	private String agentType = null;
 	private String wekaClassName = null;
 	
+	private String DurationServiceRegression_output_prefix = "  --d-- ";
+	
 	protected Classifier getModelObject(){
 		return cls;
 	}
@@ -76,12 +78,16 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	@Override
 	protected Date train(pikater.ontology.messages.Evaluation evaluation) throws Exception {
 		working = true;
-		System.out.println("Agent " + getLocalName() + ": Training...");
+		
+		if (getLocalName().equals("DurationServiceRegression")){
+			System.out.print(DurationServiceRegression_output_prefix);
+		}
+		System.out.println(getLocalName() + ": Training...");
 
 		cls=null;
 		createClassifierClass();//new cls
 		if(cls==null)
-			throw new Exception("Weka classifier class hasn't been created (Wrong type?).");
+			throw new Exception(getLocalName() + "Weka classifier class hasn't been created (Wrong type?).");
 		if (OPTIONS.length > 0) {
 			cls.setOptions(OPTIONS);
 		}
@@ -104,12 +110,18 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		d.setValue(duration);
 		evals.add(d);
 
+		if (getLocalName().equals("DurationServiceRegression")){
+			System.out.print(DurationServiceRegression_output_prefix);
+		}
 		System.out.println(getLocalName()+ " start: " + start + " : duration: " + duration);
 		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
 
 		// write out net parameters
+		if (getLocalName().equals("DurationServiceRegression")){
+			System.out.print(DurationServiceRegression_output_prefix);
+		}
 		System.out.println(getLocalName() + " " + getOptions());
 
 		working = false;
@@ -134,18 +146,18 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
-		System.out.println("Agent " + getLocalName() + ": Testing...");
+		System.out.println(getLocalName() + ": Testing...");
 
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;				
 		eval = new Evaluation(train);
-		if (train == null){ System.out.println("bacha, train je null"); }
-		if (eval == null){ System.out.println("bacha, eval je null"); }
-		if (cls == null){ System.out.println("bacha, cls je null"); }
-		if (test == null){ System.out.println("bacha, test je null"); }
+		// if (train == null){ System.out.println("bacha, train je null"); }
+		// if (eval == null){ System.out.println("bacha, eval je null"); }
+		// if (cls == null){ System.out.println("bacha, cls je null"); }
+		// if (test == null){ System.out.println("bacha, test je null"); }
 		// doWait(10);
 		
-		System.out.println("Evaluation method: ");
+		System.out.println(getLocalName() + ": Evaluation method: ");
 		System.out.print("\t");		
 		
 		if (evaluation_method.getName().equals("CrossValidation") ){
@@ -168,7 +180,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					folds, new Random(1));
 		}
 		else{ // name = Standard
-			System.out.println("standard weka evaluation.");
+			System.out.println("Standard weka evaluation.");
 			eval.evaluateModel(cls, test);
 		}
 				
@@ -325,7 +337,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		 
 		// fills the global Options vector
 
-		System.out.println(getLocalName() + ": The options are: ");
+		// System.out.println(getLocalName() + ": The options are: ");
 
 		String optPath = System.getProperty("user.dir") + getOptFileName();
 
@@ -353,7 +365,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 			// Read through file one line at time. Print line # and line
 			while (line != null) {
-				System.out.println("    " + count + ": " + line);
+				// System.out.println("    " + count + ": " + line);
 
 				// parse the line
 				String delims = "[ ]+";
@@ -377,7 +389,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					}
 
 					String[] default_options = ((Classifier)getModelObject()).getOptions();					 
-					System.out.println("Default options: "+Arrays.deepToString(default_options));
+					// System.out.println("Default options: "+Arrays.deepToString(default_options));
 										
 					Enumeration en = ((Classifier)getModelObject()).listOptions();
 					while (en.hasMoreElements()) {
@@ -445,7 +457,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			 * generated. A message indicating how to the class should be called
 			 * is displayed
 			 */
-			System.out.println("Usage: java ReadFile filename\n");
+			System.err.println(getLocalName() + ": no file specified.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(getLocalName()

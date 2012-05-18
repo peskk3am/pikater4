@@ -37,6 +37,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Random;
 
 import pikater.DataManagerService;
 import pikater.ontology.messages.Data;
@@ -235,7 +236,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		newAgent = false;
 
 		args = getArguments();
-		System.out.println("ARGS: " + args.toString());
+		// System.out.println("ARGS: " + args.toString());
 
 		if (args != null && args.length > 0) {
 			OPTIONS_ARGS = new String[args.length];
@@ -250,17 +251,19 @@ public abstract class Agent_ComputingAgent extends Agent {
 					OPTIONS_ARGS[i] = (String) args[i];
 				}
 
+				/*
 				// write out parameters
 				for (String s : OPTIONS_ARGS) {
 					System.out.print(s + " ");
 				}
+				*/
 
 			}
 		}
 		// some important initializations before registering
 		getParameters();
 
-		System.out.println(getAgentType() + " " + getLocalName()
+		System.out.println(getLocalName() + " " + getAgentType()
 				+ " is alive...");
 
 		registerWithDF();
@@ -303,18 +306,23 @@ public abstract class Agent_ComputingAgent extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following ARFFReader agents:");
+			// System.out.println(getLocalName() + ": Found the following ARFFReader agents:");
 			ARFFReaders = new AID[result.length];
 			for (int i = 0; i < result.length; ++i) {
 				ARFFReaders[i] = result[i].getName();
-				System.out.println(ARFFReaders[i].getName());
+				// System.out.println("    " + ARFFReaders[i].getName());
 			}
-			// choose one
-			reader = ARFFReaders[0];
+			
+			// randomly choose one of the readers
+			Random randomGenerator = new Random();		    
+		    int randomInt = randomGenerator.nextInt(result.length);
+			
+		    reader = ARFFReaders[randomInt];
+			
 			// request
 			msgOut = new ACLMessage(ACLMessage.REQUEST);
 			msgOut.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-			msgOut.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+			// msgOut.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
 			msgOut.setLanguage(codec.getName());
 			msgOut.setOntology(ontology.getName());
 			msgOut.addReceiver(reader);
@@ -711,7 +719,6 @@ public abstract class Agent_ComputingAgent extends Agent {
 						testFileName = test_fn;
 						onto_test = _test;
 						test = onto_test.toWekaInstances();
-						if (test == null){ System.out.println("CA: bacha, test je null"); }
 						test.setClassIndex(test.numAttributes() - 1);
 
 						next = NEXT_JMP;
@@ -824,7 +831,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						success = false;
 						working = false;
 						failureMsg(e.getMessage());
-						System.out.println("Error: " + e.getMessage() + " ");
+						System.err.println(getLocalName() + ": Error: " + e.getMessage() + ".");
 						e.printStackTrace();
 					}
 				}

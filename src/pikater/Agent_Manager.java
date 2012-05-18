@@ -131,7 +131,8 @@ public class Agent_Manager extends Agent {
 	private int problem_i = 0;
 
 	private long timeout = 10000;
-
+	private boolean no_xml_output = false;
+	
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 
@@ -145,7 +146,7 @@ public class Agent_Manager extends Agent {
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
-	private int max_number_of_CAs = 10;
+	private int max_number_of_CAs = 20;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
@@ -188,7 +189,7 @@ public class Agent_Manager extends Agent {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(getLocalName()+": Responder does not exist");
 			}
 			else {
 				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
@@ -346,8 +347,10 @@ public class Agent_Manager extends Agent {
 				}
 				*/
 
-				writeXMLResults(results);
-
+				if (!no_xml_output){
+					writeXMLResults(results);
+				}
+				
 				msgOut.setPerformative(ACLMessage.INFORM);
 				ContentElement content;
 				try {
@@ -419,9 +422,20 @@ public class Agent_Manager extends Agent {
 	
 
 	protected void setup() {
-
-		// doWait(1500); // 1.5 seconds
-
+		
+		Object[] args = getArguments();
+    	// System.out.println(args);
+		if (args != null && args.length > 0) {
+			int i = 0;					
+			while (i < args.length){
+				// System.out.println(args[i]);
+				if (args[i].equals("no_xml_output")){
+					no_xml_output = true;
+				}
+				i++;
+			}
+		}
+		
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
@@ -440,7 +454,7 @@ public class Agent_Manager extends Agent {
 					+ e.getMessage());
 			doDelete();
 		}
-		System.out.println("Manager " + getLocalName()
+		System.out.println(getLocalName() 
 				+ " is alive and waiting...");
 
 		SubscriptionManager subscriptionManager = new SubscriptionManager() {
@@ -498,7 +512,7 @@ public class Agent_Manager extends Agent {
 			ACLMessage request = receive(requestMsgTemplate);
 			
 			if (request != null) {
-				System.out.println("Agent " + getLocalName()
+				System.out.println(getLocalName()
 						+ ": REQUEST received from "
 						+ request.getSender().getName());
 
@@ -546,7 +560,7 @@ public class Agent_Manager extends Agent {
 						
 						n = n <= max_number_of_CAs ? n : max_number_of_CAs;
 						
-						System.out.println(n + " agents assigned."); 
+						System.out.println(getLocalName() + ": " + n + " agents assigned."); 
 								
 						String task_id = ga.getTask_id().getIdentificator();
 						
@@ -612,7 +626,7 @@ public class Agent_Manager extends Agent {
 		ContentElement content;
 		try {
 			content = getContentManager().extractContent(request);
-			System.out.println("Agent " + getLocalName() + ": " + content);
+			// System.out.println("Agent " + getLocalName() + ": " + content);
 
 			if (((Action) content).getAction() instanceof Solve) {
 				
@@ -675,7 +689,8 @@ public class Agent_Manager extends Agent {
 										agent_options.getOptions(),
 										a_next.getOptions()));
 
-								System.out.println("********** Agent "
+								System.out.println(getLocalName() + ": /n" + 
+										"********** Agent "
 										+ agentType
 										+ " recommended. Options: "
 										+ a_next_copy.optionsToString()
@@ -812,11 +827,11 @@ public class Agent_Manager extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println(this.getLocalName()+": Found the following " + agentType + " agents:");
+			// System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				AID aid = result[i].getName();
-				System.out.println(aid.getLocalName());
+				// System.out.println(aid.getLocalName());
 				if (!isBusy(aid) && Agents.size() < n){
 					Agents.add(aid);
 					busyAgents.add(new BusyAgent(aid, task_id));
@@ -1159,7 +1174,7 @@ public class Agent_Manager extends Agent {
 		if (!exists) {
 			boolean success = (new File("xml")).mkdir();
 			if (!success) {
-				System.out.println("Directory: " + "xml"
+				System.err.println(getLocalName() + ": Directory: " + "xml"
 						+ " could not be created"); // TODO exception
 			}
 		}
@@ -1330,6 +1345,7 @@ public class Agent_Manager extends Agent {
 			return null;
 		}
 
+		System.out.println(getLocalName() + ": ");
 		System.out.println("*********** files from the table: ");
 
 		double d_best = Integer.MAX_VALUE;
@@ -1350,7 +1366,7 @@ public class Agent_Manager extends Agent {
 					+ d_new);
 		}
 
-		System.out.println("Nearest file: " + m_best.getExternal_name());
+		System.out.println(getLocalName() + ": Nearest file: " + m_best.getExternal_name());
 		String nearestInternalName = m_best.getInternal_name();
 
 		// find the agent with the lowest error_rate

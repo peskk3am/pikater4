@@ -78,6 +78,8 @@ public class Agent_DataManager extends Agent {
     String db_user;
     String db_password;
     
+    boolean no_log = false; // = use log
+    
     private void openDBConnection() throws SQLException{
     	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
     	db = DriverManager.getConnection(db_url, db_user, db_password);    	
@@ -91,28 +93,39 @@ public class Agent_DataManager extends Agent {
             //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
         	Object[] args = getArguments();
-        	System.out.println(args);
+        	// System.out.println(args);
     		if (args != null && args.length > 0) {
     			int i = 0;
+    			
+    			boolean db_specified = false;
+    			
     			while (i < args.length){
-    				System.out.println(args[i]);
+    				// System.out.println(args[i]);
     				if (args[i].equals("url")){
-    					db_url = (String)args[i+1];    					
+    					db_url = (String)args[i+1];
+    					db_specified = true;
     				}
     				if (args[i].equals("user")){
-    					db_user = (String)args[i+1];    					
+    					db_user = (String)args[i+1];
+    					db_specified = true;
     				}
     				if (args[i].equals("password")){
-    					db_password = (String)args[i+1];    					
+    					db_password = (String)args[i+1];
+    					db_specified = true;
+    				}
+    				if (args[i].equals("no_log")){
+    					no_log = true;
     				}
     				i++;
     			}
-    			if (db_user == null){
-					db_user = "";    					
-				}
-    			if (db_password == null){
-					db_password = "";    					
-				}			
+    			if (db_specified){
+	    			if (db_user == null){
+						db_user = "";    					
+					}
+	    			if (db_password == null){
+						db_password = "";    					
+					}
+    			}
     		}
     		else{
     		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
@@ -120,7 +133,7 @@ public class Agent_DataManager extends Agent {
     		    db_password = "pikater";
     		}
         	
-    		System.out.println("Connecting to " + db_url + ".");
+    		System.out.println(getLocalName() +": Connecting to " + db_url + ".");
     		// System.out.println("user " + db_user);
     		// System.out.println("password " + db_password);
     		openDBConnection();
@@ -132,7 +145,13 @@ public class Agent_DataManager extends Agent {
                     "%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
             log = Logger.getLogger(Agent_DataManager.class);
-            log.setLevel(Level.TRACE);
+            
+            if (no_log){
+            	 log.setLevel(Level.OFF);
+            }
+            else{
+            	log.setLevel(Level.TRACE);	
+            }            
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -616,7 +635,6 @@ public class Agent_DataManager extends Agent {
                         Statement stmt1 = db.createStatement();
 
                         while (rs.next()) {
-                            System.out.println("aaa");
                         	Metadata m = new Metadata();
                             m.setAttribute_type(rs.getString("attributeType"));
                             m.setDefault_task(rs.getString("defaultTask"));
@@ -629,7 +647,7 @@ public class Agent_DataManager extends Agent {
                             // get the number of task with this file as training
                             // set in the db
                             query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
-                            System.out.println(query);
+                            // System.out.println(query);
                             ResultSet rs_number = stmt1.executeQuery(query);
                             rs_number.next();
 
@@ -671,7 +689,6 @@ public class Agent_DataManager extends Agent {
                         pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
                         agent.setName(rs.getString("agentName"));
                         agent.setType(rs.getString("agentType"));
-                        System.out.println("**** options: " + rs.getString("options"));
                         agent.setOptions(agent.stringToOptions(rs.getString("options")));
 
                         log.info("Executing query: " + query);
@@ -691,7 +708,7 @@ public class Agent_DataManager extends Agent {
 
                         String query = "SELECT * FROM filemetadata WHERE " + gfi.toSQLCondition();
 
-                        System.err.println(query);
+                        // System.err.println(query);
 
                         openDBConnection();
                         Statement stmt = db.createStatement();
@@ -720,7 +737,7 @@ public class Agent_DataManager extends Agent {
 
                         getContentManager().fillContent(reply, r);
 
-                        System.err.println("Sending reply");
+                        // System.err.println("Sending reply");
                         
                         db.close();
                         return reply;
@@ -788,11 +805,11 @@ public class Agent_DataManager extends Agent {
 
                         LoadResults lr = (LoadResults) a.getAction();
 
-                        System.err.println(lr.asText());
+                        // System.err.println(lr.asText());
 
                         String query = "SELECT * FROM resultsExternal " + lr.asSQLCondition();
 
-                        System.err.println(query);
+                        // System.err.println(query);
                         log.info(query);
 
                         openDBConnection();

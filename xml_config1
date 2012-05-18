@@ -5,17 +5,17 @@
           <parameter name="P" value="10" />
           <parameter name="E" value="0" />
         </method> 
-		
+
+        <method name="RandomSearch">
+			<parameter name="M" value="3" />
+			<parameter name="E" value="0" />
+        </method>
+        -->
+        		
 		<method name="ChooseXValues">
 			<parameter name="N" value="4" />
         </method>
-        -->
 				        
-        <method name="RandomSearch">
-			<parameter name="M" value="2" />
-			<parameter name="E" value="0" />
-        </method>
-
         <evaluation name="Standard">
         </evaluation>
         
@@ -32,6 +32,6 @@
         	
    </experiment>
 
-   <!-- <hasta_la_vista_baby />  -->
+   <hasta_la_vista_baby />
                               
 </experiments>

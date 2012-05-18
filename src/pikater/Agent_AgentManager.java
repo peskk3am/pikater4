@@ -176,7 +176,6 @@ public class Agent_AgentManager extends Agent {
 								// read agent from file 
 							    String filename = "saved" + System.getProperty("file.separator") 
 							    	+  la.getFilename() + ".model";
-							    System.out.println(filename);						  
 							        
 							    //Construct the ObjectInputStream object
 							    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
@@ -184,7 +183,7 @@ public class Agent_AgentManager extends Agent {
 							    newAgent = (Agent) inputStream.readObject();
 							} 
 						    
-						    System.out.print("Ozivenej: "+newAgent);
+						    System.out.print(getLocalName() + ": Resurrected agent : "+newAgent);
 						    // TODO kdyz se ozivuje 2x ten samej -> chyba
 						    
 						    
