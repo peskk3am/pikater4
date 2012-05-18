@@ -107,8 +107,23 @@ public class Agent_AgentManager extends Agent {
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
 	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();	
 
+	private boolean no_log = false;
+	
 	@Override
 	protected void setup() {
+		Object[] args = getArguments();
+    	if (args != null && args.length > 0) {
+			int i = 0;
+						
+			while (i < args.length){
+				// System.out.println(args[i]);
+				if (args[i].equals("no_log")){					
+					no_log = true;
+				}
+				i++;
+			}
+		}				
+		
 		try {
 			//db = DriverManager.getConnection(
 			//		"jdbc:hsqldb:file:data/db/pikaterdb", "", "");
@@ -121,8 +136,14 @@ public class Agent_AgentManager extends Agent {
 									"%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
 			log = Logger.getLogger(Agent_AgentManager.class);
-			log.setLevel(Level.TRACE);
-
+            
+			if (no_log){
+				log.setLevel(Level.OFF);
+			}
+			else{
+				log.setLevel(Level.TRACE);	
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

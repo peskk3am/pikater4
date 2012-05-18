@@ -24,7 +24,7 @@
           <parameter name="F" value="8" />        
         </evaluation>
         -->
-	<dataset train="iris.arff" test="iris.arff" />		
+	<dataset train="ionosphere.arff" test="ionosphere.arff" />		
 		
         <agent type="MultilayerPerceptron">
         	<parameter name="H" value="?" />

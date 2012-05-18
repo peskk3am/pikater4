@@ -7,7 +7,7 @@ $a pikater.Agent_Manager manager no_xml_output
 # 3 params: url, user, password; no parameter ... connects to remote marp_pikater database
 $a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:file:data/db/pikaterdb 
 # $a pikater.Agent_DataManager dataManager
-$a pikater.Agent_AgentManager agentManager
+$a pikater.Agent_AgentManager agentManager no_log
 $a pikater.Agent_Duration duration log_LR_durations
 
 # $a pikater.Agent_MultilayerPerceptron mp

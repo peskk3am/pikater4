@@ -113,7 +113,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		if (getLocalName().equals("DurationServiceRegression")){
 			System.out.print(DurationServiceRegression_output_prefix);
 		}
-		System.out.println(getLocalName()+ " start: " + start + " : duration: " + duration);
+		System.out.println(getLocalName()+ " start: " + new Date(start) + " : duration: " + duration);
 		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();

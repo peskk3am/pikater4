@@ -840,6 +840,7 @@ public class Agent_Manager extends Agent {
 			
 			while (Agents.size() < n) {
 				// create agent
+				doWait(300);
 				String agentName = generateName(agentType);
 				AID aid = createAgent(agentTypes.get(agentType), agentName, agentOptions.get(agentType));
 				Agents.add(aid);
