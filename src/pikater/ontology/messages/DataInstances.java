@@ -90,10 +90,11 @@ public class DataInstances implements Concept {
 			Iterator itrmis = inst.getMissing().iterator();
 			double[] vals = new double[wattrs.size()];
 			for (int i = 0; i < wattrs.size(); i++) {
+				double val = (Double) itrval.next();
 				if ((Boolean) itrmis.next()) {
 					vals[i] = weka.core.Instance.missingValue();
 				} else {
-					vals[i] = (Double) itrval.next();
+					vals[i] = val;
 				}
 			}
 			weka.core.Instance winst = new weka.core.Instance(1, vals);
