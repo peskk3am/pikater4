@@ -527,7 +527,7 @@ public class Agent_Manager extends Agent {
 
 						Iterator itr = messages.iterator();
 						while (itr.hasNext()) {
-							ACLMessage msg = (ACLMessage) itr.next();
+							ACLMessage msg = (ACLMessage) itr.next();							
 							addBehaviour(new ExecuteTask(myAgent, msg, request, messages.size(), problemID));
 						}
 	
@@ -1038,7 +1038,7 @@ public class Agent_Manager extends Agent {
 
 		// create CFP message for the Option Manager or Computing Agent							  		
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-		cfp.setConversationId(problemID);
+		// cfp.setConversationId(problemID);
 		cfp.setLanguage(codec.getName());
 		cfp.setOntology(ontology.getName());
 
@@ -1047,7 +1047,7 @@ public class Agent_Manager extends Agent {
 		}
 		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 10 secs
-		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 30000));
+		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 60000));
 											
 		try {
 			Action a = new Action();

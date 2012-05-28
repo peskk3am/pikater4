@@ -68,7 +68,7 @@ public class Agent_AgentManager extends Agent {
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
 	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();	
 
-	private boolean no_log = false;
+	private boolean no_log = false;	
 	
 	@Override
 	protected void setup() {
@@ -138,9 +138,9 @@ public class Agent_AgentManager extends Agent {
 				
 				log.info("Agent " + getLocalName() + " received request: "
 						+ request.getContent());
-/*				System.out.println(getLocalName() + ": Queue size: " 
+				System.out.println(getLocalName() + ": Queue size: " 
 						+ myAgent.getCurQueueSize() + " " + myAgent.getQueueSize());
-*/				
+								
 				try {
 					Action a = (Action) getContentManager().extractContent(
 							request);			        
