@@ -17,14 +17,9 @@ import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import jade.proto.SubscriptionResponder;
 import jade.proto.SubscriptionResponder.Subscription;
@@ -32,7 +27,6 @@ import jade.proto.SubscriptionResponder.SubscriptionManager;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
@@ -64,17 +58,13 @@ import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetAgents;
-import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
-import pikater.ontology.messages.SearchSolution;
 import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
 
@@ -83,8 +73,8 @@ public class Agent_Manager extends Agent {
 
 	public Agent_Manager() {
 		
-
-		// Sets up a file reader to read the agent_types file
+		// TODO tohle asi uz neni potreba
+		// Sets up a file reader to read the agent_types file				
 		FileReader input;
 		try {
 			input = new FileReader(path + "agent_types");
@@ -146,7 +136,7 @@ public class Agent_Manager extends Agent {
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
-	private int max_number_of_CAs = 20;
+	private int max_number_of_CAs = 6;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
@@ -546,7 +536,7 @@ public class Agent_Manager extends Agent {
 					
 					if (((Action) content).getAction() instanceof GetAgents) {
 						// find and/or create required number of agents;
-						// maximum being 5
+						// maximum being 10
 						List agents = new ArrayList();
 						
 						GetAgents ga = (GetAgents) (((Action) content).getAction());
@@ -566,6 +556,8 @@ public class Agent_Manager extends Agent {
 						
 						
 						agents = getAgentsByType(agentType, n, task_id);
+						
+						// printBusyAgents();
 						
 						ACLMessage reply = request.createReply();
 						
@@ -778,7 +770,19 @@ public class Agent_Manager extends Agent {
 		return new_options;
 	}
 
-	private boolean isBusy(AID agent) {
+	private boolean isBusy(AID aid) {		
+		Iterator itr = busyAgents.iterator();
+		while (itr.hasNext()) {
+			BusyAgent ba = (BusyAgent) itr.next();
+			if (ba.getAid().equals(aid)){				
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	private boolean isBusy_old(AID agent) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(agent);
@@ -815,6 +819,15 @@ public class Agent_Manager extends Agent {
 	}
 
 	
+	private void printBusyAgents(){
+		Iterator itr = busyAgents.iterator();
+		System.out.println("Busy agents: ");
+		while (itr.hasNext()){
+			BusyAgent ba = (BusyAgent)itr.next();
+			System.out.println("name: " + ba.getAid().getLocalName() + " task id: "+ ba.getTask_id());
+		}		
+	}
+	
 	public List getAgentsByType(String agentType, int n, String task_id) {
 		// returns list of AIDs (n agents that are not busy)
 		
@@ -840,9 +853,11 @@ public class Agent_Manager extends Agent {
 			
 			while (Agents.size() < n) {
 				// create agent
-				doWait(300);
-				String agentName = generateName(agentType);
-				AID aid = createAgent(agentTypes.get(agentType), agentName, agentOptions.get(agentType));
+				// doWait(300);
+				
+				// String agentName = generateName(agentType);
+				// AID aid = createAgent(agentTypes.get(agentType), agentOptions.get(agentType));
+				AID aid = createAgent(agentType, null, null);
 				Agents.add(aid);
 				busyAgents.add(new BusyAgent(aid, task_id));
 			}
@@ -902,6 +917,10 @@ public class Agent_Manager extends Agent {
 	}
 
 	public String generateName(String agentType) {
+		// don't use this function, 
+		// leave the generating of the name on 
+		// agent Agent Manager
+		
 		int number = 0;
 		String name = agentType + number;
 		boolean success = false;
@@ -944,22 +963,44 @@ public class Agent_Manager extends Agent {
 		return false;
 	}
 
-	public AID createAgent(String type, String name, Object[] options) {
-		// TODO use agentManager instead
-		// get a container controller for creating new agents
-		PlatformController container = getContainerController();
-
-		try {
-			AgentController agent = container.createNewAgent(name, type,
-					options);
-			agent.start();
-			doWait(300);
-			return new AID((String) name, AID.ISLOCALNAME);
-		} catch (ControllerException e) {
-			 System.err.println( "Exception while adding agent: " + e );
-			 e.printStackTrace();
-			return null;
+	public AID createAgent(String type, String name, List options) {
+		
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+						
+		CreateAgent ca = new CreateAgent();
+		if (name != null){
+			ca.setName(name);
 		}
+		if (options != null){
+			ca.setArguments(options);
+		}
+		ca.setType(type);
+		
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		AID aid = null; 
+		try {
+			getContentManager().fillContent(msg_ca, a);	
+			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+			
+			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
+		} catch (FIPAException e) {
+			System.err.println(getLocalName() + ": Exception while adding agent "
+					+ type + ": " + e);		
+		} catch (CodecException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		}
+		
+		return aid;		
 	}
 
 
@@ -987,35 +1028,8 @@ public class Agent_Manager extends Agent {
 		}
 		else{
 			// create an Option Manager agent
-			String optionsManagerName = "OptionsManager"+ex.getTask().getId().getIdentificator(); 
-			ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-			msg_ca.addReceiver(new AID("agentManager", false));
-			msg_ca.setLanguage(codec.getName());
-			msg_ca.setOntology(ontology.getName());
-			
-			CreateAgent ca = new CreateAgent();
-			ca.setName(optionsManagerName);
-			ca.setType("OptionsManager");
-			
-			Action a = new Action();
-			a.setAction(ca);
-			a.setActor(this.getAID());
-					
-			ACLMessage msg_name = null;
-			try {
-				getContentManager().fillContent(msg_ca, a);	
-				msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-				receivers.add( msg_name.getContent() );
-			} catch (FIPAException e) {
-				System.err.println("Exception while adding agent"
-						+ ex.getTask().getId() + ": " + e);		
-			} catch (CodecException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OntologyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			AID aid = createAgent("OptionsManager", null, null);			
+			receivers.add( aid.getLocalName() );
 		}
 		return receivers;
 	}
@@ -1033,7 +1047,7 @@ public class Agent_Manager extends Agent {
 		}
 		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 10 secs
-		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 30000));
 											
 		try {
 			Action a = new Action();

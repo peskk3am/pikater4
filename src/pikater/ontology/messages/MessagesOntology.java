@@ -584,7 +584,7 @@ public class MessagesOntology extends Ontology {
 					(ConceptSchema)getSchema(DATA_INSTANCES),
 					ObjectSchema.OPTIONAL);
 			cs.add(EVALUATION_START,
-					(PrimitiveSchema) getSchema(BasicOntology.DATE));
+					(PrimitiveSchema) getSchema(BasicOntology.DATE), ObjectSchema.OPTIONAL);
 
 			cs = (ConceptSchema) getSchema(RESULTS);
 			cs.add(RESULTS_PROBLEM_ID,

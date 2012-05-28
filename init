@@ -1,5 +1,7 @@
 $a pikater.Agent_ARFFReader Reader_Rychlonozka
 $a pikater.Agent_ARFFReader Reader_Cervenacek
+$a pikater.Agent_ARFFReader Reader_Jindra
+$a pikater.Agent_ARFFReader Reader_Jarka
 $a pikater.Agent_ARFFReader Reader_Mirek
 
 $a pikater.Agent_Manager manager no_xml_output
@@ -16,5 +18,5 @@ $a pikater.Agent_Duration duration log_LR_durations
 # $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
 
 # $a pikater.Agent_GUI_config_file UI test.xml
-$a pikater.Agent_GUI_config_file very_simple_GUI xml_config1
+$a pikater.Agent_GUI_config_file very_simple_GUI HECToR_Random1000_small1.xml
 $a jade.tools.sniffer.Sniffer sniffer01 manager

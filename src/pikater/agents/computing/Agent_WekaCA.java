@@ -37,6 +37,12 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	private String wekaClassName = null;
 	
 	private String DurationServiceRegression_output_prefix = "  --d-- ";
+
+	// 3 levels:
+	// 0 no output
+	// 1 minimal
+	// 2 normal
+	private int verbosity = 0;
 	
 	protected Classifier getModelObject(){
 		return cls;
@@ -78,16 +84,16 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	@Override
 	protected Date train(pikater.ontology.messages.Evaluation evaluation) throws Exception {
 		working = true;
-		
+						
 		if (getLocalName().equals("DurationServiceRegression")){
-			System.out.print(DurationServiceRegression_output_prefix);
+				print(DurationServiceRegression_output_prefix, 2, false);
 		}
-		System.out.println(getLocalName() + ": Training...");
-
+		println("Training...", 2, true);		
+				
 		cls=null;
 		createClassifierClass();//new cls
 		if(cls==null)
-			throw new Exception(getLocalName() + "Weka classifier class hasn't been created (Wrong type?).");
+			throw new Exception(getLocalName() + ": Weka classifier class hasn't been created (Wrong type?).");
 		if (OPTIONS.length > 0) {
 			cls.setOptions(OPTIONS);
 		}
@@ -111,19 +117,24 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		evals.add(d);
 
 		if (getLocalName().equals("DurationServiceRegression")){
-			System.out.print(DurationServiceRegression_output_prefix);
+			print(DurationServiceRegression_output_prefix, 1, false);
 		}
-		System.out.println(getLocalName()+ " start: " + new Date(start) + " : duration: " + duration);
+		println("start: " + new Date(start) + " : duration: " + duration, 1, true);
 		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
 
 		// write out net parameters
 		if (getLocalName().equals("DurationServiceRegression")){
-			System.out.print(DurationServiceRegression_output_prefix);
+			if (verbosity >= 2){
+				System.out.print(DurationServiceRegression_output_prefix);
+				System.out.println(getOptions());
+			}			
 		}
-		System.out.println(getLocalName() + " " + getOptions());
-
+		else{
+			println(getOptions(), 1, true);
+		}
+		
 		working = false;
 		
 		// add evals to Evaluation
@@ -146,7 +157,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
-		System.out.println(getLocalName() + ": Testing...");
+		println("Testing...", 2, true);
 
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;				
@@ -157,8 +168,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		// if (test == null){ System.out.println("bacha, test je null"); }
 		// doWait(10);
 		
-		System.out.println(getLocalName() + ": Evaluation method: ");
-		System.out.print("\t");		
+		println("Evaluation method: \t", 2, true);
 		
 		if (evaluation_method.getName().equals("CrossValidation") ){
 			int folds = -1; 
@@ -173,19 +183,20 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					folds = 5;
 				  // TODO read default value from file (if necessary)
 			}
-			System.out.println(folds + "-fold cross validation.");						
+			println(folds + "-fold cross validation.", 2, false);						
 			eval.crossValidateModel(
 					cls,
 					test,
 					folds, new Random(1));
 		}
 		else{ // name = Standard
-			System.out.println("Standard weka evaluation.");
+			println("Standard weka evaluation.", 2, false);
 			eval.evaluateModel(cls, test);
 		}
 				
-		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
-				+ "\nResults\n=======\n", false));
+		println("Error rate: " + eval.errorRate(), 1, true);
+		println(eval.toSummaryString(getLocalName() + " agent: "
+				+ "\nResults\n=======\n", false), 2, true);
 
 		working = false;
 		return eval;
@@ -486,6 +497,22 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		 * System.out.println("------------"); }
 		 */
 	} // end getParameters
+	
+	private void print(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.print(text);
+		}
+	}
 
-
+	private void println(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.println(text);
+		}
+	}
 }

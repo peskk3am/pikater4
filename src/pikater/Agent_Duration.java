@@ -109,6 +109,12 @@ public class Agent_Duration extends Agent {
     boolean log_LR_durations = false;
     String file_name = "LRDurations";
     
+    // 3 levels:
+	// 0 no output
+	// 1 minimal
+	// 2 normal
+	private int verbosity = 1;    
+    
     @Override
     protected void setup() {
 
@@ -300,17 +306,17 @@ public class Agent_Duration extends Agent {
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused.");
+			println("Agent "+refuse.getSender().getName()+" refused.", 1, true);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println(myAgent.getLocalName()+": Responder " + failure.getSender().getName() + " does not exist");
+				println("Responder " + failure.getSender().getName() + " does not exist", 1, true);
 			}
 			else {
-				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
+				println("Agent "+failure.getSender().getName()+" failed", 1, true);
 			}
 		}
 		
@@ -362,7 +368,8 @@ public class Agent_Duration extends Agent {
 		}
 				
 		protected void handleInform(ACLMessage inform) {
-			System.out.println("  --d-- " + myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
+			println("  --d-- " + myAgent.getLocalName()+": Agent "+inform.getSender().getName()
+					+ " successfully performed the requested action", 2, true);
 																			
 			ContentElement content;
 			try {
@@ -481,5 +488,22 @@ public class Agent_Duration extends Agent {
 		return cfp;
 
 	} // end createCFPmessage()
-    
+
+	private void print(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.print(text);
+		}
+	}
+
+	private void println(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.println(text);
+		}
+	}    
 }

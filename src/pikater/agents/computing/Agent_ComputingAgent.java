@@ -316,8 +316,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 			// randomly choose one of the readers
 			Random randomGenerator = new Random();		    
 		    int randomInt = randomGenerator.nextInt(result.length);
-			
 		    reader = ARFFReaders[randomInt];
+
+		    // System.out.println(getLocalName() + ": using " + reader + ", filename: " + fileName);
 			
 			// request
 			msgOut = new ACLMessage(ACLMessage.REQUEST);

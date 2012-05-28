@@ -228,45 +228,8 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (agentTypes == null) {
 					createAgentTypesHashMap();
 				}
-				
-				System.out.println(getLocalName() + ": Creating agent " + newName + ", type: "+ agentType);
-
-				if (agentOptions.get(agentType) != null){
-					aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
-					doWait(100);
-				}
-				else{
-					// send message to AgentManager to create an agent
-					ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-					msg_ca.addReceiver(new AID("agentManager", false));
-					msg_ca.setLanguage(codec.getName());
-					msg_ca.setOntology(ontology.getName());
-					
-					CreateAgent ca = new CreateAgent();
-					ca.setType(agentType);
-					ca.setName(newName);
-											
-					Action a = new Action();
-					a.setAction(ca);
-					a.setActor(this.getAID());
-							
-					String agent_name = null;
-					try {
-						getContentManager().fillContent(msg_ca, a);	
-						ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-						agent_name = msg_name.getContent();
-						aid = new AID(agent_name, AID.ISLOCALNAME);
-					} catch (FIPAException e) {
-						System.err.println(getLocalName() + ": Exception while adding agent"
-								+ agentType + ": " + e);		
-					} catch (CodecException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (OntologyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}				
+									
+				aid = createAgent(agentType, null, null);
 			}
 		}
 		if (aid == null) {
@@ -687,9 +650,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				aid = getAgentByType(type);
 				if (aid == null) {
 					// agent of given type doesn't exist
-					newName = generateName(type);
-					aid = createAgent(agentTypes.get(type), newName, agentOptions.get(type));
-					doWait(100);
+					aid = createAgent(type, null, null);
 				}
 			}
 			if (aid == null) {
@@ -1283,7 +1244,49 @@ public abstract class Agent_GUI extends GuiAgent {
 		return agents;
 	}
 
-	protected AID createAgent(String type, String name, Object[] options) {
+	
+	public AID createAgent(String type, String name, List options) {
+		
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+						
+		CreateAgent ca = new CreateAgent();
+		if (name != null){
+			ca.setName(name);
+		}
+		if (options != null){
+			ca.setArguments(options);
+		}
+		ca.setType(type);
+		
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		AID aid = null; 
+		try {
+			getContentManager().fillContent(msg_ca, a);	
+			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+			
+			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
+		} catch (FIPAException e) {
+			System.err.println(getLocalName() + ": Exception while adding agent "
+					+ type + ": " + e);		
+		} catch (CodecException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		}
+		
+		return aid;		
+	}
+	
+	
+	protected AID createAgent_old(String type, String name, Object[] options) {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 
