@@ -104,7 +104,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	private boolean default_save_results = true;
 	
 	private boolean end_pikater_when_finished = false;
-
+	
+	private boolean shutdown_database = false;
+	
 	private String myAgentName;
 	/*
 	 * should use the following methods: refreshOptions(ontology.messages.Agent
@@ -1546,6 +1548,17 @@ public abstract class Agent_GUI extends GuiAgent {
 		
 	private void terminatePikater(){
 		System.out.println(getLocalName() + ": Shutting down Pikater...");
+		// if running on local database send message to data manager to shuttdown the database
+		if (shutdown_database){
+			System.out.println(getLocalName() + ": Shutting down database...");
+			if (DataManagerService.shutdownDatabase(this)){
+				System.out.println(getLocalName() + ": Database shut down.");
+			}
+			else{
+				System.out.println(getLocalName() + ": Database did not shut down properly.");
+			}
+		}
+		
 		doWait(100);
 
 		getContentManager().registerOntology(JADEManagementOntology.getInstance());
@@ -1595,8 +1608,12 @@ public abstract class Agent_GUI extends GuiAgent {
 		java.util.List _end_pikater_when_finished = root_element.getChildren("hasta_la_vista_baby");
 		if (_end_pikater_when_finished.size() > 0){
 			end_pikater_when_finished = true;
+			// take into consideration only the first one
+			if ( ((Element)_end_pikater_when_finished.get(0)).getAttributeValue("shutdown_database").equals("true")){
+				shutdown_database = true;
+			}
 		}
-		
+				
 		// return all children by name
 		java.util.List _problems = root_element.getChildren("experiment"); 
 		java.util.Iterator p_itr = _problems.iterator();

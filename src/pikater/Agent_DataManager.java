@@ -62,6 +62,7 @@ import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SaveMetadata;
 import pikater.ontology.messages.SaveResults;
 import pikater.ontology.messages.SavedResult;
+import pikater.ontology.messages.ShutdownDatabase;
 import pikater.ontology.messages.Task;
 import pikater.ontology.messages.TranslateFilename;
 import pikater.ontology.messages.UpdateMetadata;
@@ -82,7 +83,7 @@ public class Agent_DataManager extends Agent {
     
     private void openDBConnection() throws SQLException{
     	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-    	db = DriverManager.getConnection(db_url, db_user, db_password);    	
+    	db = DriverManager.getConnection(db_url, db_user, db_password);
     }
     
     @Override
@@ -124,13 +125,13 @@ public class Agent_DataManager extends Agent {
 					}
 	    			if (db_password == null){
 						db_password = "";    					
-					}
+					}	    			
     			}
-    		}
-    		else{
-    		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
-    		    db_user = "marp_pikater";
-    		    db_password = "pikater";
+    			else{
+        		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
+        		    db_user = "marp_pikater";
+        		    db_password = "pikater";
+        		}        		    		
     		}
         	
     		System.out.println(getLocalName() +": Connecting to " + db_url + ".");
@@ -623,11 +624,30 @@ public class Agent_DataManager extends Agent {
                         return reply;
                     }
                     if (a.getAction() instanceof GetAllMetadata) {
+                        GetAllMetadata gm = (GetAllMetadata) a.getAction();
+
                     	openDBConnection();
                     	Statement stmt = db.createStatement();
+                    	
+                        String query = "SELECT * FROM metadata";                        
 
-                        String query = "SELECT * FROM metadata";
-
+                        if (gm.getExceptions() != null){ 
+                        	query += " WHERE ";
+                    		boolean first = true;
+                        	Iterator itr = gm.getExceptions().iterator();
+                    		while (itr.hasNext()) {                    			
+                    			Metadata m = (Metadata) itr.next();
+                    			if (!first){
+                    				query += " AND ";
+                    			}                    			
+                    			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";
+                    			first = false;                    		                    			
+                    		}
+                        	
+                        }
+                        
+                        // System.out.println(query);
+                        
                         List allMetadata = new ArrayList();
 
                         ResultSet rs = stmt.executeQuery(query);
@@ -663,7 +683,7 @@ public class Agent_DataManager extends Agent {
                         Result _result = new Result(a.getAction(), allMetadata);
                         getContentManager().fillContent(reply, _result);
 
-                        db.close();
+                        db.close();                        
                         return reply;
                     }
 
@@ -871,7 +891,20 @@ public class Agent_DataManager extends Agent {
                         return reply;
 
                     }
-
+                    
+                    if (a.getAction() instanceof ShutdownDatabase) {
+                        String query = "SHUTDOWN";
+                        log.info(query);
+                        openDBConnection();
+                        Statement stmt = db.createStatement();
+                        
+                        stmt.execute(query);                        
+                        
+                        ACLMessage reply = request.createReply();                                               
+                        reply.setPerformative(ACLMessage.INFORM);
+                       	return reply;
+                    }                    
+                    
                 } catch (OntologyException e) {
                     e.printStackTrace();
                     log.error("Problem extracting content: " + e.getMessage());

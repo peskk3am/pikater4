@@ -227,6 +227,10 @@ public class Agent_Duration extends Agent {
     }    
     
     private float countDuration(Date _start, int duration){    	
+    	if (duration >= Integer.MAX_VALUE){
+    		return Integer.MAX_VALUE;
+    	}    	
+    	
     	float number_of_LRs = 0; 
     	long start = _start.getTime();
     	
@@ -239,34 +243,49 @@ public class Agent_Duration extends Agent {
     	// nepouzivat t, ale skutecny cas mezi vypocty
     	int i = 0;
     	while (duration > 0){
-    		long t1 = ((Duration)durations.get(i_d + i)).getStart().getTime();
-    		long t2;
-    		if (i_d + i + 1 > durations.size()-1){ 
-    			// after last LR
-        		t2 = t1 + t; // expected time    		
-    		}
-    		else {
-    			t2 = ((Duration)durations.get(i_d + i + 1)).getStart().getTime();
-    		}
-    		long time_between_LRs = t2 - t1;
+    		long t1 = -1;
+    		long t2 = -1;
+    		long d = -1;    		    		
+
+    		try {
+	    		t1 = ((Duration)durations.get(i_d + i)).getStart().getTime();	    		
+	    		if (i_d + i + 1 > durations.size()-1){ 
+	    			// after last LR
+	        		t2 = t1 + t; // expected time    		
+	    		}
+	    		else {
+	    			t2 = ((Duration)durations.get(i_d + i + 1)).getStart().getTime();
+	    		}
+	    		long time_between_LRs = t2 - t1;
+	    		
+	    		// if (duration < t){
+	    		if (duration < time_between_LRs){
+	    			d = duration;
+	    		}
+	    		else {
+	    		// 	d = t;
+	    			d = Math.min(t2 - start, time_between_LRs); // osetreni prvniho useku        		
+	    		}
+	    		
+	    		// System.out.println("d: " + d + " LR dur: " + ((Duration)durations.get(i_d + i)).getDuration());
+	    		number_of_LRs += (float)d / (float)((Duration)durations.get(i_d + i)).getDuration();
+	    		duration = duration - (int)Math.ceil(d);
+	    		
+	    		i++;
     		
-    		long d;    		    		
-    		// if (duration < t){
-    		if (duration < time_between_LRs){
-    			d = duration;
-    		}
-    		else {
-    		// 	d = t;
-    			d = Math.min(t2 - start, time_between_LRs); // osetreni prvniho useku        		
-    		}
-    		
-    		// System.out.println("d: " + d + " LR dur: " + ((Duration)durations.get(i_d + i)).getDuration());
-    		number_of_LRs += (float)d / (float)((Duration)durations.get(i_d + i)).getDuration();
-    		duration = duration - (int)d;
-    		
-    		i++;    		
+	    	}
+	    	catch (Exception e){
+	    		e.printStackTrace();
+	    		System.err.println("duration: " + duration);
+	    		System.err.println("start: " + start);
+	    		System.err.println("d: " + d);
+	    		System.err.println("i: " + i);
+	    		System.err.println("t1: " + t1);
+	    		System.err.println("t2: " + t2);
+	    		System.err.println("*******************");
+	    	}
+
     	}
-    			
     	// System.out.println("number_of_LRs: " + number_of_LRs + ", i: " + i);
     	    	
     	return number_of_LRs;

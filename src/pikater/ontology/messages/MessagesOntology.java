@@ -226,6 +226,7 @@ public class MessagesOntology extends Ontology {
 	public static final String SAVE_METADATA_METADATA = "metadata";
 
 	public static final String GET_ALL_METADATA = "GET-ALL-METADATA";
+	public static final String GET_ALL_METADATA_EXCEPTIONS = "exceptions";
 
 	public static final String GET_THE_BEST_AGENT = "GET-THE-BEST-AGENT";
 	public static final String GET_THE_BEST_AGENT_NEAREST_FILE_NAME = "nearest_file_name";
@@ -313,7 +314,9 @@ public class MessagesOntology extends Ontology {
         public static final String GET_AGENTS_TASK_ID = "task_id";        
 
         public static final String GET_DURATION = "GET_DURATION";
-        public static final String GET_DURATION_DURATION = "duration";        
+        public static final String GET_DURATION_DURATION = "duration";
+        
+        public static final String SHUTDOWN_DATABASE = "SHUTDOWN-DATABASE";
         
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
@@ -394,6 +397,7 @@ public class MessagesOntology extends Ontology {
             add(new AgentActionSchema(EXECUTE_PARAMETERS), ExecuteParameters.class);            
             add(new AgentActionSchema(GET_AGENTS), GetAgents.class);
             add(new AgentActionSchema(GET_DURATION), GetDuration.class);
+            add(new AgentActionSchema(SHUTDOWN_DATABASE), ShutdownDatabase.class);
             
 			ConceptSchema cs = (ConceptSchema) getSchema(ID);
 			cs.add(ID_IDENTIFICATOR, (PrimitiveSchema) getSchema(BasicOntology.STRING));
@@ -771,6 +775,7 @@ public class MessagesOntology extends Ontology {
                         as.add(GET_DATA_SAVE_META, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
+			as.add(GET_ALL_METADATA_EXCEPTIONS, (ConceptSchema) getSchema(METADATA), 0, ObjectSchema.UNLIMITED);
 
 			as = (AgentActionSchema) getSchema(GET_THE_BEST_AGENT);
 			as.add(GET_THE_BEST_AGENT_NEAREST_FILE_NAME,
@@ -863,6 +868,8 @@ public class MessagesOntology extends Ontology {
 
             as = (AgentActionSchema) getSchema(GET_DURATION);                       
             as.add(GET_DURATION_DURATION,  (ConceptSchema) getSchema(DURATION));
+
+            as = (AgentActionSchema) getSchema(SHUTDOWN_DATABASE);                       
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

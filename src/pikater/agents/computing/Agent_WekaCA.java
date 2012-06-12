@@ -32,7 +32,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	 * 
 	 */
 	private static final long serialVersionUID = -3594051562022044000L;
-	private Classifier cls = null;//TODO: constructor
+	private Classifier cls = null;//TODO: constructors
 	private String agentType = null;
 	private String wekaClassName = null;
 	
@@ -42,7 +42,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	// 0 no output
 	// 1 minimal
 	// 2 normal
-	private int verbosity = 0;
+	private int verbosity = 1;
 	
 	protected Classifier getModelObject(){
 		return cls;
@@ -117,9 +117,9 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		evals.add(d);
 
 		if (getLocalName().equals("DurationServiceRegression")){
-			print(DurationServiceRegression_output_prefix, 1, false);
+			print(DurationServiceRegression_output_prefix, 2, false);
 		}
-		println("start: " + new Date(start) + " : duration: " + duration, 1, true);
+		println("start: " + new Date(start) + " : duration: " + duration, 2, true);
 		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
@@ -194,7 +194,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			eval.evaluateModel(cls, test);
 		}
 				
-		println("Error rate: " + eval.errorRate(), 1, true);
+		println("Error rate: " + eval.errorRate()+" ", 1, true);
 		println(eval.toSummaryString(getLocalName() + " agent: "
 				+ "\nResults\n=======\n", false), 2, true);
 

@@ -59,6 +59,7 @@ import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAgents;
+import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
@@ -136,7 +137,7 @@ public class Agent_Manager extends Agent {
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
-	private int max_number_of_CAs = 6;
+	private int max_number_of_CAs = 5;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
@@ -674,9 +675,11 @@ public class Agent_Manager extends Agent {
 							} else {									
 								agentType = a_next.getType();
 								a_next_copy.setType(agentType);
-								String agentName = a_next.getName();
+								// String agentName = a_next.getName();
 								// get options
-								pikater.ontology.messages.Agent agent_options = onlyGetAgentOptions(agentName);
+								pikater.ontology.messages.Agent agent_options = onlyGetAgentOptions(agentType, "?");
+								// TODO ^ cislovat otaznicky (taks_id)
+								
 								a_next_copy.setOptions(mergeOptions(
 										agent_options.getOptions(),
 										a_next.getOptions()));
@@ -875,10 +878,12 @@ public class Agent_Manager extends Agent {
 		return new Vector<String> (agentTypes.keySet());
 	} // end offerAgentTypes
 
-	private pikater.ontology.messages.Agent onlyGetAgentOptions(String agent) {
+	private pikater.ontology.messages.Agent onlyGetAgentOptions(String agentType, String task_id) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-		request.addReceiver(new AID(agent, AID.ISLOCALNAME));
+		// find an agent acording to type
+		List agent = getAgentsByType(agentType, 1, task_id);
+		request.addReceiver((AID)agent.get(0));
 
 		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
@@ -1319,9 +1324,11 @@ public class Agent_Manager extends Agent {
 				&& metadata.getNumber_of_instances() > -1) {
 			hasMetadata = true;
 		}
+		
+		GetAllMetadata gm = new GetAllMetadata();
 
 		// choose the nearest training data
-		List allMetadata = DataManagerService.getAllMetadata(this);
+		List allMetadata = DataManagerService.getAllMetadata(this, gm);
 
 		// set the min, max instances and attributes first
 		Iterator itr = allMetadata.iterator();
@@ -1371,7 +1378,8 @@ public class Agent_Manager extends Agent {
 		while (itr.hasNext()) {
 			Metadata next_md = (Metadata) itr.next();
 			d_new = distance(metadata, next_md);
-			if (next_md.getNumber_of_tasks_in_db() > 0) {
+			if (next_md.getNumber_of_tasks_in_db() > 0 &&
+					!next_md.getInternal_name().equals(metadata.getInternal_name())) {
 				if (d_new < d_best) {
 					d_best = d_new;
 					m_best = next_md;

@@ -12,6 +12,7 @@ import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -25,6 +26,8 @@ import jade.proto.ContractNetInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -123,29 +126,39 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 			if (responses.size() < nResponders) {
 				// Some responder didn't reply within the specified timeout
-				println("Timeout expired: missing "+(nResponders - responses.size())+" responses", 1, true);
+				println("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2, true);
 			}
+			/* if (responses.size() == 0) {
+				// Some responder didn't reply within the specified timeout
+				println("Timeout expired: all responses missing", 1, true);
+			}
+			*/
 			// Evaluate proposals.
 			int bestProposal = Integer.MAX_VALUE;
 			AID bestProposer = null;
 			ACLMessage accept = null;
+			List replies = new ArrayList();
+			
 			Enumeration e = responses.elements();
 			while (e.hasMoreElements()) {
 				ACLMessage msg = (ACLMessage) e.nextElement();
 				if (msg.getPerformative() == ACLMessage.PROPOSE) {
 					ACLMessage reply = msg.createReply();
-					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-					acceptances.addElement(reply);
+					reply.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);					
 					int proposal = Integer.parseInt(msg.getContent());
 					if (proposal < bestProposal) {
 						bestProposal = proposal;
 						bestProposer = msg.getSender();
 						accept = reply;
 					}
+					acceptances.addElement(reply);
 				}
 			}
 			// Accept the proposal of the best proposer
 			if (accept != null) {
+				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+				
 				println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2, true);
 								
 				try {
@@ -168,16 +181,22 @@ public class Agent_OptionsManager extends Agent {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+																
+				// acceptances.addElement(accept); // TODO sends the accept twice		
 				
-				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);				
-			}						
-			// TODO - if there is no best proposer, return options to the queue
+			} else{
+				// if there is no (best) proposer, return options to the queue
+				number_of_current_tasks--;
+				query_queue.add(query);
+			}			
 		}
 		
-		protected void handleInform(ACLMessage inform) {
+		protected void handleInform(ACLMessage inform) {		
 			println("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2, true);
 			// send result to the search agent:
 			
+			number_of_current_tasks--;
+
 			// extract evaluation from the task in the inform message
 			ContentElement content;
 			try {
@@ -255,10 +274,7 @@ public class Agent_OptionsManager extends Agent {
 			}			
 			
 			// send new CFP:
-			boolean next_query_processes = ProcessNextQuery();
-			if (!next_query_processes){				
-				number_of_current_tasks--;
-			}
+			ProcessNextQuery();
 		}
 	} // end of call for proposal bahavior
 	
@@ -286,7 +302,7 @@ public class Agent_OptionsManager extends Agent {
 			
 			cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 			// We want to receive a reply in 10 secs
-			cfp.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+			cfp.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
 			Execute ex = new Execute();
 			
 			// add task id
@@ -325,18 +341,27 @@ public class Agent_OptionsManager extends Agent {
 	
 	
 	private boolean ProcessNextQuery(){
-				
+		
 		if (computing_agents != null){
+			
+			println("number_of_current_tasks: " + number_of_current_tasks 
+					+ " computing_agents.size(): " + computing_agents.size()
+					+ " query_queue.size(): " + query_queue.size() , 2, true);					
+
 			if (number_of_current_tasks < computing_agents.size()
 					&& query_queue.size() > 0){
+				
+				println("added", 2, true);
 				
 				ACLMessage query = (ACLMessage)query_queue.get(0);
 				query_queue.remove(0);
 	
 				ACLMessage cfp = createCFPmsg(query);																			
+
+				number_of_current_tasks++;
 				
 				// create new contract net protocol
-				addBehaviour(new ExecuteTask(this, cfp, query));	
+				addBehaviour(new ExecuteTask(this, cfp, query));
 				return true;
 			}
 		}
@@ -488,7 +513,7 @@ public class Agent_OptionsManager extends Agent {
 						// options manager received options to execute					
 						
 						query_queue.add(query);
-						ProcessNextQuery();
+						ProcessNextQuery();												
 					}
 				}
 
@@ -658,6 +683,15 @@ public class Agent_OptionsManager extends Agent {
 		registerWithDF();
 				
 		addBehaviour(new RequestServer(this));
+
+		// if there are still some queries left in the queue, process them
+		// (also processed after informs from CAs are received)
+		addBehaviour(new TickerBehaviour(this, 10000) {			
+			  protected void onTick() {
+				  println("tick="+getTickCount(), 2, true);
+				  ProcessNextQuery();
+			  } 			  
+			});	
 
 	} // end setup
 	

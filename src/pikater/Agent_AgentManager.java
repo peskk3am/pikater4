@@ -136,11 +136,12 @@ public class Agent_AgentManager extends Agent {
 			protected ACLMessage handleRequest(ACLMessage request)
 					throws NotUnderstoodException, RefuseException {
 				
-				log.info("Agent " + getLocalName() + " received request: "
+				/* log.info("Agent " + getLocalName() + " received request: "
 						+ request.getContent());
 				System.out.println(getLocalName() + ": Queue size: " 
 						+ myAgent.getCurQueueSize() + " " + myAgent.getQueueSize());
-								
+				*/
+				
 				try {
 					Action a = (Action) getContentManager().extractContent(
 							request);			        
