@@ -242,11 +242,12 @@ public class Agent_Duration extends Agent {
     	
     	// nepouzivat t, ale skutecny cas mezi vypocty
     	int i = 0;
-    	while (duration > 0){
-    		long t1 = -1;
-    		long t2 = -1;
-    		long d = -1;    		    		
-
+		
+    	long t1 = -1;
+		long t2 = -1;
+		long d = -1; 
+		
+    	while (duration > 0){   		    	
     		try {
 	    		t1 = ((Duration)durations.get(i_d + i)).getStart().getTime();	    		
 	    		if (i_d + i + 1 > durations.size()-1){ 

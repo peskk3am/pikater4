@@ -137,7 +137,7 @@ public class Agent_Manager extends Agent {
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
-	private int max_number_of_CAs = 5;
+	private int max_number_of_CAs = 10;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies

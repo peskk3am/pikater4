@@ -18,6 +18,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -93,28 +94,43 @@ public class Agent_DataManager extends Agent {
             //db = DriverManager.getConnection(
             //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
-        	Object[] args = getArguments();
-        	// System.out.println(args);
-    		if (args != null && args.length > 0) {
+        	// TODO predelat -> vzdycky zkusti parametry rozparsovat
+    		// je to proto, ze kdyz predavam parametry DataManagerovi
+    		// ve scriptu, bere vsechno jako jeden parametr:
+    		
+    		List args = new ArrayList();
+    		
+    		Object[] arguments = getArguments();
+    		if (arguments != null){
+	    		for (Object arg : arguments) {
+	    	    	String[] split_arg = ((String)arg).split(" ");
+	    	    	for (String a : split_arg){
+	    	    		args.add(a);
+	    	    	}
+	    	    }    		
+    		}
+    		
+    		// System.out.println(args);
+    		if (args.size() > 0) {
     			int i = 0;
     			
     			boolean db_specified = false;
     			
-    			while (i < args.length){
-    				// System.out.println(args[i]);
-    				if (args[i].equals("url")){
-    					db_url = (String)args[i+1];
+    			while (i < args.size()){
+    				System.out.println(args.get(i));
+    				if (args.get(i).equals("url")){
+    					db_url = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("user")){
-    					db_user = (String)args[i+1];
+    				if (args.get(i).equals("user")){
+    					db_user = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("password")){
-    					db_password = (String)args[i+1];
+    				if (args.get(i).equals("password")){
+    					db_password = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("no_log")){
+    				if (args.get(i).equals("no_log")){
     					no_log = true;
     				}
     				i++;
@@ -148,7 +164,7 @@ public class Agent_DataManager extends Agent {
             log = Logger.getLogger(Agent_DataManager.class);
             
             if (no_log){
-            	 log.setLevel(Level.OFF);
+            	log.setLevel(Level.OFF);
             }
             else{
             	log.setLevel(Level.TRACE);	
@@ -646,13 +662,11 @@ public class Agent_DataManager extends Agent {
                         	
                         }
                         
-                        // System.out.println(query);
+                        System.out.println(query);
                         
                         List allMetadata = new ArrayList();
 
-                        ResultSet rs = stmt.executeQuery(query);
-
-                        Statement stmt1 = db.createStatement();
+                        ResultSet rs = stmt.executeQuery(query);                                               
 
                         while (rs.next()) {
                         	Metadata m = new Metadata();
@@ -667,7 +681,9 @@ public class Agent_DataManager extends Agent {
                             // get the number of task with this file as training
                             // set in the db
                             query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
-                            // System.out.println(query);
+                            System.out.println(query);
+                            
+                            Statement stmt1 = db.createStatement();
                             ResultSet rs_number = stmt1.executeQuery(query);
                             rs_number.next();
 
@@ -896,6 +912,11 @@ public class Agent_DataManager extends Agent {
                         String query = "SHUTDOWN";
                         log.info(query);
                         openDBConnection();
+                        
+                        // Makes all changes made since the previous commit/rollback permanent
+                        // and releases any database locks currently held by this Connection object. 
+                        db.commit();
+                       
                         Statement stmt = db.createStatement();
                         
                         stmt.execute(query);                        
