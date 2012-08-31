@@ -173,7 +173,6 @@ public class MessagesOntology extends Ontology {
 	public static final String METADATA_MISSING_VALUES = "missing_values";
 	public static final String METADATA_DEFAULT_TASK = "default_task";
 	public static final String METADATA_ATTRIBUTE_TYPE = "attribute_type";
-	public static final String METADATA_NUMBER_OF_TASKS_IN_DB = "number_of_tasks_in_db";
 	
 	public static final String OPTIONS = "OPTIONS";
 	public static final String OPTIONS_LIST = "list";
@@ -227,6 +226,7 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_ALL_METADATA = "GET-ALL-METADATA";
 	public static final String GET_ALL_METADATA_EXCEPTIONS = "exceptions";
+	public static final String GET_ALL_METADATA_RESULTS_REQUIRED = "results_required";
 
 	public static final String GET_THE_BEST_AGENT = "GET-THE-BEST-AGENT";
 	public static final String GET_THE_BEST_AGENT_NEAREST_FILE_NAME = "nearest_file_name";
@@ -683,9 +683,6 @@ public class MessagesOntology extends Ontology {
 			cs.add(METADATA_ATTRIBUTE_TYPE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-			cs.add(METADATA_NUMBER_OF_TASKS_IN_DB,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER),
-					ObjectSchema.OPTIONAL);
 
                         cs = (ConceptSchema)getSchema(SAVED_RESULT);
                         cs.add(SAVED_RESULT_ERR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
@@ -776,7 +773,8 @@ public class MessagesOntology extends Ontology {
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
 			as.add(GET_ALL_METADATA_EXCEPTIONS, (ConceptSchema) getSchema(METADATA), 0, ObjectSchema.UNLIMITED);
-
+			as.add(GET_ALL_METADATA_RESULTS_REQUIRED, (PrimitiveSchema)getSchema(BasicOntology.BOOLEAN), ObjectSchema.OPTIONAL);
+			
 			as = (AgentActionSchema) getSchema(GET_THE_BEST_AGENT);
 			as.add(GET_THE_BEST_AGENT_NEAREST_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),

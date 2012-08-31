@@ -1,5 +1,7 @@
 package pikater.ontology.messages;
 
+import java.util.regex.Pattern;
+
 import jade.content.Concept;
 
 public class Data implements Concept {
@@ -94,6 +96,10 @@ public class Data implements Concept {
 
 	public String getExternal_test_file_name() {
 		return _external_test_file_name;
+	}
+	
+	public String removePath(String filename){				
+		return filename.split(Pattern.quote(System.getProperty("file.separator")))[2];
 	}
 
 }

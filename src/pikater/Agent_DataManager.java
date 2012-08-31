@@ -523,8 +523,8 @@ public class Agent_DataManager extends Agent {
                             query += "\'" + res.getAgent().getName() + "\',";
                             query += "\'" + res.getAgent().getType() + "\',";
                             query += "\'" + res.getAgent().optionsToString() + "\',";
-                            query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-                            query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
+                            query += "\'" + res.getData().removePath(res.getData().getTrain_file_name()) + "\',";
+                            query += "\'" + res.getData().removePath(res.getData().getTest_file_name()) + "\',";
                                                         
             				float Error_rate = Float.MAX_VALUE;
             				float Kappa_statistic = Float.MAX_VALUE;
@@ -645,25 +645,39 @@ public class Agent_DataManager extends Agent {
                     	openDBConnection();
                     	Statement stmt = db.createStatement();
                     	
-                        String query = "SELECT * FROM metadata";                        
-
-                        if (gm.getExceptions() != null){ 
-                        	query += " WHERE ";
-                    		boolean first = true;
-                        	Iterator itr = gm.getExceptions().iterator();
-                    		while (itr.hasNext()) {                    			
-                    			Metadata m = (Metadata) itr.next();
-                    			if (!first){
-                    				query += " AND ";
-                    			}                    			
-                    			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";
-                    			first = false;                    		                    			
+                    	String query;
+                    	if (gm.getResults_required()){
+                    		query = "SELECT * FROM metadata WHERE EXISTS " +
+                            		"(SELECT * FROM results WHERE results.dataFile=metadata.internalFilename)";
+                    		if (gm.getExceptions() != null){                            	
+	                    		Iterator itr = gm.getExceptions().iterator();
+	                       		while (itr.hasNext()) {                    			
+	                       			Metadata m = (Metadata) itr.next();
+	                    			query += " AND ";
+	                       			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";                            	
+	                            }
                     		}
-                        	
-                        }
-                        
-                        System.out.println(query);
-                        
+                    	}
+                    	else{
+                    		query = "SELECT * FROM metadata";
+
+                    		if (gm.getExceptions() != null){ 
+                            	query += " WHERE ";
+                        		boolean first = true;
+                            	Iterator itr = gm.getExceptions().iterator();
+                        		while (itr.hasNext()) {                    			
+                        			Metadata m = (Metadata) itr.next();
+                        			if (!first){
+                        				query += " AND ";
+                        			}                    			
+                        			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";
+                        			first = false;                    		                    			
+                        		}
+                            	
+                            }
+
+                    	}
+                                                
                         List allMetadata = new ArrayList();
 
                         ResultSet rs = stmt.executeQuery(query);                                               
@@ -678,16 +692,6 @@ public class Agent_DataManager extends Agent {
                             m.setNumber_of_attributes(rs.getInt("numberOfAttributes"));
                             m.setNumber_of_instances(rs.getInt("numberOfInstances"));
 
-                            // get the number of task with this file as training
-                            // set in the db
-                            query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
-                            System.out.println(query);
-                            
-                            Statement stmt1 = db.createStatement();
-                            ResultSet rs_number = stmt1.executeQuery(query);
-                            rs_number.next();
-
-                            m.setNumber_of_tasks_in_db(rs_number.getInt("n"));
                             allMetadata.add(m);
                         }
 
@@ -710,24 +714,26 @@ public class Agent_DataManager extends Agent {
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + "AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
-
+                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
+                        // System.out.println(query);
+                        log.info("Executing query: " + query);
+                        
                         ResultSet rs = stmt.executeQuery(query);
-                        if (rs == null) {
+                        if (!rs.isBeforeFirst()) {
                             ACLMessage reply = request.createReply();
                             reply.setPerformative(ACLMessage.FAILURE);
                             reply.setContent("There are no results for this file in the database.");
-
+                            
+                            db.close();
                             return reply;
                         }
                         rs.next();
-
+                        
                         pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
                         agent.setName(rs.getString("agentName"));
                         agent.setType(rs.getString("agentType"));
                         agent.setOptions(agent.stringToOptions(rs.getString("options")));
-
-                        log.info("Executing query: " + query);
+                        agent.setGui_id(rs.getString("errorRate"));                                                
 
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);

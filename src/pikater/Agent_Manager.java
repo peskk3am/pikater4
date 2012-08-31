@@ -60,6 +60,7 @@ import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAgents;
 import pikater.ontology.messages.GetAllMetadata;
+import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
@@ -656,6 +657,7 @@ public class Agent_Manager extends Agent {
 						if (agentType.contains("?")) {
 							// metadata musn't be null; if they are
 							// generate at least nearly empty metadata
+							
 							Metadata metadata;
 							if (next_data.getMetadata() == null) {
 								metadata = new Metadata();
@@ -684,12 +686,24 @@ public class Agent_Manager extends Agent {
 										agent_options.getOptions(),
 										a_next.getOptions()));
 
-								System.out.println(getLocalName() + ": /n" + 
+								System.out.println(getLocalName() + ": " + 
 										"********** Agent "
 										+ agentType
 										+ " recommended. Options: "
 										+ a_next_copy.optionsToString()
-										+ "**********");									
+										+ "**********");
+								
+								String file_name = next_data.removePath(next_data.getTest_file_name());
+								pikater.ontology.messages.Agent best = DataManagerService.getTheBestAgent(this, file_name);
+
+								if (best != null){
+									System.out.println("Best agent type: "+ best.getType() +
+											", options: " + best.optionsToString() + 
+											", error rate: " + best.getGui_id());
+								}
+								else{
+									System.out.println("No results in database for file " + next_data.getTest_file_name());
+								}
 							}																
 						}													
 						
@@ -1326,6 +1340,7 @@ public class Agent_Manager extends Agent {
 		}
 		
 		GetAllMetadata gm = new GetAllMetadata();
+		gm.setResults_required(true);
 
 		// choose the nearest training data
 		List allMetadata = DataManagerService.getAllMetadata(this, gm);
@@ -1378,8 +1393,7 @@ public class Agent_Manager extends Agent {
 		while (itr.hasNext()) {
 			Metadata next_md = (Metadata) itr.next();
 			d_new = distance(metadata, next_md);
-			if (next_md.getNumber_of_tasks_in_db() > 0 &&
-					!next_md.getInternal_name().equals(metadata.getInternal_name())) {
+			if (!next_md.getInternal_name().equals(metadata.getInternal_name())) {
 				if (d_new < d_best) {
 					d_best = d_new;
 					m_best = next_md;

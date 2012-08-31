@@ -23,5 +23,5 @@ $a pikater.Agent_Duration duration log_LR_durations
 # $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
 
 # $a pikater.Agent_GUI_config_file UI test.xml
-$a pikater.Agent_GUI_config_file very_simple_GUI otaznicek.xml
+$a pikater.Agent_GUI_config_file very_simple_GUI otaznicky_all.xml
 $a jade.tools.sniffer.Sniffer sniffer01 dataManager
