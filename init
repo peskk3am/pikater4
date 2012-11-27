@@ -7,12 +7,14 @@ $a pikater.Agent_ARFFReader Reader_Rychlonozka
 $a pikater.Agent_Manager manager no_xml_output
 
 # 3 params: url, user, password; no parameter ... connects to remote marp_pikater database
-# $a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:file:data/db/pikaterdb
+$a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:file:data/db/pikaterdb
 
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:hsql://localhost/db user SA 
 # $a pikater.Agent_DataManager dataManager no_log
 
-$a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://localhost/pikater user root
+# $a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://localhost/pikater user root
+
+$a pikater.Agent_MetadataQueen Freddie
 
 $a pikater.Agent_AgentManager agentManager no_log
 $a pikater.Agent_Duration duration log_LR_durations
@@ -22,6 +24,6 @@ $a pikater.Agent_Duration duration log_LR_durations
 # get a Problem from "config" file
 # $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
 
-# $a pikater.Agent_GUI_config_file UI test.xml
-$a pikater.Agent_GUI_config_file very_simple_GUI otaznicky_all.xml
-$a jade.tools.sniffer.Sniffer sniffer01 dataManager
+$a pikater.Agent_GUI_config_file UI test.xml
+# $a pikater.Agent_GUI_config_file very_simple_GUI otaznicky_all.xml
+$a jade.tools.sniffer.Sniffer sniffer01 Freddie

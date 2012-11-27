@@ -219,7 +219,6 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_DATA = "GET-DATA";
 	public static final String GET_DATA_FILE_NAME = "file_name";
-        public static final String GET_DATA_SAVE_META = "saveMetadata";
 
 	public static final String SAVE_METADATA = "SAVE-METADATA";
 	public static final String SAVE_METADATA_METADATA = "metadata";
@@ -315,6 +314,10 @@ public class MessagesOntology extends Ontology {
 
         public static final String GET_DURATION = "GET_DURATION";
         public static final String GET_DURATION_DURATION = "duration";
+
+        public static final String GET_METADATA = "GET_METADATA";
+    	public static final String GET_METADATA_INTERNAL_FILENAME = "internal_filename";
+    	public static final String GET_METADATA_EXTERNAL_FILENAME = "external_filename";
         
         public static final String SHUTDOWN_DATABASE = "SHUTDOWN-DATABASE";
         
@@ -365,7 +368,7 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(ATTRIBUTE), Attribute.class);
 			add(new ConceptSchema(INSTANCE), Instance.class);
 			add(new ConceptSchema(METADATA), Metadata.class);
-                        add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
+            add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
             add(new ConceptSchema(OPTIONS), Options.class);
 			add(new ConceptSchema(FITNESS), Fitness.class);
 			add(new ConceptSchema(ID), Id.class);
@@ -397,6 +400,7 @@ public class MessagesOntology extends Ontology {
             add(new AgentActionSchema(EXECUTE_PARAMETERS), ExecuteParameters.class);            
             add(new AgentActionSchema(GET_AGENTS), GetAgents.class);
             add(new AgentActionSchema(GET_DURATION), GetDuration.class);
+            add(new AgentActionSchema(GET_METADATA), GetMetadata.class);
             add(new AgentActionSchema(SHUTDOWN_DATABASE), ShutdownDatabase.class);
             
 			ConceptSchema cs = (ConceptSchema) getSchema(ID);
@@ -769,7 +773,6 @@ public class MessagesOntology extends Ontology {
 			as.add(GET_DATA_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-                        as.add(GET_DATA_SAVE_META, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
 			as.add(GET_ALL_METADATA_EXCEPTIONS, (ConceptSchema) getSchema(METADATA), 0, ObjectSchema.UNLIMITED);
@@ -867,7 +870,11 @@ public class MessagesOntology extends Ontology {
             as = (AgentActionSchema) getSchema(GET_DURATION);                       
             as.add(GET_DURATION_DURATION,  (ConceptSchema) getSchema(DURATION));
 
-            as = (AgentActionSchema) getSchema(SHUTDOWN_DATABASE);                       
+            as = (AgentActionSchema) getSchema(GET_METADATA);                       
+			as.add(GET_METADATA_EXTERNAL_FILENAME,	(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			as.add(GET_METADATA_INTERNAL_FILENAME, (PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);            
+            
+			as = (AgentActionSchema) getSchema(SHUTDOWN_DATABASE);                       
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

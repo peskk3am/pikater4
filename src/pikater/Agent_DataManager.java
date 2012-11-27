@@ -305,7 +305,7 @@ public class Agent_DataManager extends Agent {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
+        /*
         try {
             if (!triggerNames.contains("PREPAREMETADATA")) {
                 db.createStatement().execute(
@@ -314,7 +314,7 @@ public class Agent_DataManager extends Agent {
         } catch (SQLException e) {
             log.fatal("Error creating trigger prepareMetadata: " + e.getMessage());
         }
-
+		*/
         
         try {
 			db.close();
@@ -657,6 +657,7 @@ public class Agent_DataManager extends Agent {
 	                       			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";                            	
 	                            }
                     		}
+                    		query += " ORDER BY externalFilename";
                     	}
                     	else{
                     		query = "SELECT * FROM metadata";
@@ -675,9 +676,11 @@ public class Agent_DataManager extends Agent {
                         		}
                             	
                             }
-
+                    		query += " ORDER BY externalFilename";
                     	}
-                                                
+                        
+                    	System.out.println(query);
+                    	
                         List allMetadata = new ArrayList();
 
                         ResultSet rs = stmt.executeQuery(query);                                               

@@ -113,7 +113,6 @@ public class Agent_ARFFReader extends Agent {
 					.extractContent(request);
                         GetData gd = (GetData) ((Action) content).getAction();
 			String file_name = gd.getFile_name();
-                        boolean saveMetadata = gd.getSaveMetadata();
 			DataInstances instances = new DataInstances();
 			// Read the file
 			working = true;
@@ -142,38 +141,6 @@ public class Agent_ARFFReader extends Agent {
                                     // System.err.println(a.type());
                                 }
                             }
-                        }
-			if (saveMetadata) {
-                            Metadata m = new Metadata();
-                            if (types.size() > 1)
-                                m.setAttribute_type("Multivariate");
-                            else {
-                                switch (types.get(0)) {
-                                    case Attribute.NOMINAL:
-                                        m.setAttribute_type("Categorical");
-                                        break;
-                                    case Attribute.NUMERIC:
-                                        m.setAttribute_type("Numeric");
-                                        break;
-                                }
-                            }
-                            if (data.attribute(data.classIndex() >= 0 ? data.classIndex() : data.numAttributes() - 1).type() == Attribute.NUMERIC)
-                                m.setDefault_task("Regression");
-                            else
-                                m.setDefault_task("Classification");
-
-                            m.setInternal_name(file_name);
-                            m.setMissing_values(missing);
-                            int ninst = instances.getInstances().size();
-                            // System.err.println("Reader: " + ninst);
-
-                            if (ninst > 0) {
-                                    m.setNumber_of_attributes(((Instance) instances.getInstances()
-                                                    .iterator().next()).getValues().size());
-                            }
-                            m.setNumber_of_instances(instances.getInstances().size());
-                        
-                            DataManagerService.saveMetadata(this, m);
                         }
 
 			// Prepare the content

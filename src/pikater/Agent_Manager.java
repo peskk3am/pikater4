@@ -143,6 +143,8 @@ public class Agent_Manager extends Agent {
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
 	
+	private boolean print_distance_matrix = true;
+	
 	protected class ExecuteTask extends ContractNetInitiator{
 
 		private static final long serialVersionUID = -2044738642107219180L;
@@ -655,6 +657,12 @@ public class Agent_Manager extends Agent {
 						String agentType = a_next.getType();
 						
 						if (agentType.contains("?")) {
+							/* if (print_distance_matrix){ 
+								System.out.println(distanceMatrix());
+								print_distance_matrix = false;
+							}
+							*/
+							
 							// metadata musn't be null; if they are
 							// generate at least nearly empty metadata
 							
@@ -1331,6 +1339,57 @@ public class Agent_Manager extends Agent {
 		return Double.toString(value);
 	}
 
+	private String distanceMatrix() {
+		String matrix = "";
+		
+		GetAllMetadata gm = new GetAllMetadata();
+		gm.setResults_required(false);
+
+		List allMetadata = DataManagerService.getAllMetadata(this, gm);
+
+		Iterator itr_colls = allMetadata.iterator();
+		while (itr_colls.hasNext()) {
+			Metadata next_coll = (Metadata) itr_colls.next();			
+
+			int na = next_coll.getNumber_of_attributes();
+			if (na < minAttributes) {
+				minAttributes = na;
+			}
+			if (na > maxAttributes) {
+				maxAttributes = na;
+			}
+	
+			int ni = next_coll.getNumber_of_instances();
+			if (ni < minInstances) {
+				minInstances = ni;
+			}
+			if (ni > maxInstances) {
+				maxInstances = ni;
+			}
+		}
+		
+		itr_colls = allMetadata.iterator();
+
+		double d;
+		while (itr_colls.hasNext()) {
+			Metadata next_coll = (Metadata) itr_colls.next();			
+			matrix +=next_coll.getExternal_name() + ";";
+			Iterator itr_rows = allMetadata.iterator();
+			
+			while (itr_rows.hasNext()) {
+				Metadata next_row = (Metadata) itr_rows.next();
+				d = distance(next_coll, next_row);
+				matrix += String.format("%.10f", d);
+				matrix += ";";				
+			}
+			matrix +="\n";
+		}
+		
+		return matrix;
+		
+	} // end distanceMatrix
+
+	
 	private pikater.ontology.messages.Agent chooseTheBestAgent(Metadata metadata) {
 		// at least name attribute in metadata has to be filled
 		boolean hasMetadata = false;

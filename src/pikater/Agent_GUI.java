@@ -60,6 +60,7 @@ import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetData;
+import pikater.ontology.messages.GetMetadata;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.Interval;
@@ -1386,32 +1387,18 @@ public abstract class Agent_GUI extends GuiAgent {
                 String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
                 internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
 
-                sd = new ServiceDescription();
-                sd.setType("ARFFReader");
-
-                dfd = new DFAgentDescription();
-                dfd.addServices(sd);
-
                 try {
-                    DFAgentDescription readers[] = DFService.search(this, dfd);
 
-                    if (readers.length == 0) {
-                        System.err.println(getLocalName() + ": No readers found");
-                        break;
-                    }
-
-                    AID reader = readers[0].getName();
-
-                    GetData gd = new GetData();
-                    gd.setFile_name(internalFilename);
-                    gd.setSaveMetadata(true);
+                    GetMetadata gm = new GetMetadata();
+                    gm.setInternal_filename(internalFilename);
+                    gm.setExternal_filename(fileName);
 
                     Action a = new Action();
-                    a.setAction(gd);
+                    a.setAction(gm);
                     a.setActor(this.getAID());
 
                     ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-                    req.addReceiver(reader);
+                    req.addReceiver(new AID("Freddie", false));
                     req.setLanguage(codec.getName());
                     req.setOntology(ontology.getName());
                     req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -1421,7 +1408,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     ACLMessage response = FIPAService.doFipaRequestClient(this, req);
 
                     if (response.getPerformative() != ACLMessage.INFORM) {
-                        System.err.println(getLocalName() + ": Error reading file");
+                        System.err.println(getLocalName() + ": Error in getting metadata");
                     }
 
                 } catch (CodecException ce) {
