@@ -94,7 +94,8 @@ public class Agent_DataManager extends Agent {
     }
 
     private void openDBConnection() throws SQLException{
-    	db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
+        db = DriverManager.getConnection("jdbc:hsqldb:file:data/db/pikaterdb", "", "");
+    	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
     }
     
     @Override
