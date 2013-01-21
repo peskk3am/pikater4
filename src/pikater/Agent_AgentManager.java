@@ -531,6 +531,7 @@ public class Agent_AgentManager extends Agent {
 
 		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
                 agentTypes.put("GASearch", "pikater.Agent_GASearch");
+                agentTypes.put("EASearch", "pikater.Agent_EASearch");
                 agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
 		agentTypes.put("RandomSearch", "pikater.Agent_RandomSearch");
 		agentTypes.put("OptionsManager", "pikater.Agent_OptionsManager");

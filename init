@@ -11,5 +11,5 @@ $a pikater.Agent_AgentManager agentManager
 # $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
 
 # $a pikater.Agent_GUI_config_file UI test.xml
-$a pikater.Agent_GUI_config_file very_simple_GUI xml_config1
+$a pikater.Agent_GUI_config_file very_simple_GUI surrogateGA.xml
 $a jade.tools.sniffer.Sniffer sniffer01 OptionsManager0
