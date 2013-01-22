@@ -33,17 +33,23 @@ public class Agent_EASearch extends Agent_Search {
      * -T float
      * Mutation rate (default 0.2)
      * 
+     * -F float
+     * Mutation rate per field in individual (default 0.2)
+     * 
      * -X float
      * Crossover probability (default 0.5)
      * 
      * -P int
-     * population size (default 5)
+     * population size (default 10)
      * 
      * -S int
      * Size of tournament in selection (default 2)
      * 
-     * -K string
-     * Type of the surrogate model (default linear regression)
+     * 
+     * -L float
+     * The percentage of elite individuals (default 0.1)
+     * 
+     * 
      */
 
     //fitness is the error rate - the lower, the better!
@@ -56,10 +62,10 @@ public class Agent_EASearch extends Agent_Search {
     double eliteSize = 0.1;
     int pop_size = 10;
     double mut_prob = 0.0;
+    double mut_prob_per_field = 0.0;
     double xover_prob = 0.0;
     private int number_of_generations = 0;
     private double best_error_rate = Double.MAX_VALUE;
-    private String modelType = "weka.classifiers.functions.LinearRegression";
     private int maximum_generations = 5;
     private double final_error_rate = 0.1;
     int tournament_size = 2;
@@ -85,8 +91,8 @@ public class Agent_EASearch extends Agent_Search {
             operators = new java.util.ArrayList<Operator>();
             
             environmentalSelectors.add(new TournamentSelector());
-            operators.add(new OnePtXOver(0.8));
-            operators.add(new SearchItemIndividualMutation(0.5, 1.0));
+            operators.add(new OnePtXOver(xover_prob));
+            operators.add(new SearchItemIndividualMutation(mut_prob, mut_prob_per_field));
             
             parents = new Population();
             parents.setPopulationSize(pop_size);
@@ -275,8 +281,11 @@ public class Agent_EASearch extends Agent_Search {
             if (next.getName().equals("S")) {
                 tournament_size = Integer.parseInt(next.getValue());
             }
-            if (next.getName().equals("K")) {
-                modelType = next.getValue();
+            if (next.getName().equals("F")) {
+                mut_prob_per_field = Float.parseFloat(next.getValue());
+            }
+            if (next.getName().equals("L")) {
+                eliteSize = Float.parseFloat(next.getValue());
             }
         }
         query_block_size = pop_size;
