@@ -24,6 +24,10 @@ public class SearchItemIndividualArchive {
         return archive.get(si.toString()).getFitnessValue();
     }
     
+    public int size() {
+        return archive.size();
+    }
+    
     public Instances getWekaDataSet() {
         
         Collection<SearchItemIndividual> inds = archive.values();

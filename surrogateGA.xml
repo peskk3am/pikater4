@@ -2,15 +2,18 @@
     <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
 		<method name="EASearch">
 			<parameter name="E" value="0.02" />
-        	<parameter name="M" value="10" />
+        	<parameter name="M" value="1000" />
 			<parameter name="P" value="10" />
+			<parameter name="X" value="0.8" />
+			<parameter name="L" value="0.5" />
+			<parameter name="I" value="300" />
         </method>
         
         <evaluation name="CrossValidation">
           <parameter name="F" value="10" />        
         </evaluation>
         
-		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="machine.arff" test="machine.arff" />
 		
         <agent type="RBFNetwork">
         	<parameter name="B" value="?" />

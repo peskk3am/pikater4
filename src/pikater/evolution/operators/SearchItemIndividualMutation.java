@@ -3,7 +3,10 @@ package pikater.evolution.operators;
 import pikater.evolution.Population;
 import pikater.evolution.RandomNumberGenerator;
 import pikater.evolution.individuals.SearchItemIndividual;
+import pikater.ontology.messages.FloatSItem;
+import pikater.ontology.messages.IntSItem;
 import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SetSItem;
 
 /**
  *
@@ -33,7 +36,25 @@ public class SearchItemIndividualMutation implements Operator {
              if (rng.nextDouble() < mutationProbability) {
                  for (int j = 0; j < o1.length(); j++) {
                      if (rng.nextDouble() < geneChangeProbability) {
-                         o1.set(j, p1.getSchema(j).randomValue(rng.getRandom()));
+                         if (o1.getSchema(j) instanceof SetSItem) {
+                            o1.set(j, p1.getSchema(j).randomValue(rng.getRandom()));
+                         }
+                         if (o1.getSchema(j) instanceof FloatSItem) {
+                             FloatSItem fs = (FloatSItem)o1.getSchema(j);
+                             float val = Float.parseFloat(o1.get(j));
+                             val += 0.3*(fs.getMax()-fs.getMin())*rng.nextGaussian();
+                             val = Math.min(val, fs.getMax());
+                             val = Math.max(val, fs.getMin());
+                             o1.set(j, String.valueOf(val));
+                         }
+                         if (o1.getSchema(j) instanceof IntSItem) {
+                             IntSItem fs = (IntSItem)o1.getSchema(j);
+                             int val = Integer.parseInt(o1.get(j));
+                             val += 0.3*(fs.getMax()-fs.getMin())*rng.nextGaussian();
+                             val = Math.min(val, fs.getMax());
+                             val = Math.max(val, fs.getMin());
+                             o1.set(j, String.valueOf(val));
+                         }
                      }
                  }
              }
