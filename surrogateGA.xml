@@ -13,13 +13,12 @@
           <parameter name="F" value="10" />        
         </evaluation>
         
-		<dataset train="machine.arff" test="machine.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
 		
-        <agent type="RBFNetwork">
-        	<parameter name="B" value="?" />
-        	<parameter name="W" value="?" />
-        	<parameter name="R" value="?" />
+        <agent type="J48">
+        	<parameter name="U" value="?" />
         	<parameter name="M" value="?" />
+			<parameter name="C" value="?" />
     	</agent>
         	
    </experiment>

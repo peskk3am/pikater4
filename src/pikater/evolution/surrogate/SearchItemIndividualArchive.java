@@ -48,7 +48,7 @@ public class SearchItemIndividualArchive {
         while (it.hasNext()) {
             SearchItemIndividual ind = it.next();
             Instance in = ind.toWekaInstance();
-            in.setClassValue(this.getFitness(ind));
+            in.setClassValue(-this.getFitness(ind));
             in.setDataset(inst);
             inst.add(in);
         }

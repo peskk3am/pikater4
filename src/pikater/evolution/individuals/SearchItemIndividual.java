@@ -3,6 +3,7 @@ package pikater.evolution.individuals;
 import jade.util.leap.Iterator;
 import java.util.Arrays;
 import pikater.evolution.RandomNumberGenerator;
+import pikater.ontology.messages.BoolSItem;
 import pikater.ontology.messages.SearchItem;
 import pikater.ontology.messages.SetSItem;
 import weka.core.Attribute;
@@ -127,6 +128,11 @@ public class SearchItemIndividual extends ArrayIndividual {
         for (int i = 0; i < items.length; i++) {
             if (schema[i] instanceof SetSItem) {
                 inst.setValue(i, items[i]);
+                continue;
+            }
+            if (schema[i] instanceof BoolSItem) {
+                inst.setValue(i, items[i].equals("False") ? 0.0 : 1.0);
+                continue;
             }
             inst.setValue(i, Double.parseDouble(items[i]));
         }
