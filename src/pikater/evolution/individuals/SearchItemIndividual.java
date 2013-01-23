@@ -1,11 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pikater.evolution.individuals;
 
+import jade.util.leap.Iterator;
+import java.util.Arrays;
 import pikater.evolution.RandomNumberGenerator;
 import pikater.ontology.messages.SearchItem;
+import pikater.ontology.messages.SetSItem;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
 
 /**
  *
@@ -51,6 +54,10 @@ public class SearchItemIndividual extends ArrayIndividual {
         }   
     }
     
+    public String toString() {
+        return Arrays.toString(items);
+    }
+    
     public Object clone() {
         
         SearchItemIndividual newSI = (SearchItemIndividual)super.clone();
@@ -67,6 +74,60 @@ public class SearchItemIndividual extends ArrayIndividual {
         
         return newSI;
         
+    }
+    
+    /**
+     * Creates an empty dataset from the schema of the individual. Assigns the
+     * attributes types according the schema specified in the individual. 
+     * 
+     * @return The empty dataset representing the schema of the individual.
+     */
+    
+    public Instances emptyDatasetFromSchema() {
+        
+        FastVector attributes = new FastVector();
+        
+        for (int i = 0; i < length(); i++) {
+            if (schema[i] instanceof SetSItem) {
+                FastVector values = new FastVector();
+                Iterator it = schema[i].possibleValues().iterator();
+                while (it.hasNext()) {
+                    values.addElement(it.next());
+                }
+                attributes.addElement(new Attribute("a" + i, values));
+                continue;
+            }
+            attributes.addElement(new Attribute("a" + i));
+        }
+        
+        attributes.addElement("class");
+        
+        Instances inst = new Instances("train", attributes, 0);
+        inst.setClassIndex(attributes.size() - 1);
+        
+        return inst;
+        
+    }
+    
+    /**
+     * Transforms the individual into a Weka instance which can be used for
+     * surrogate model training.
+     * 
+     * The instance does not have any dataset assigned. Use the dataset returned
+     * by {@link #emptyDatasetFromSchema() emptyDatasetFromSchema} method.
+     * 
+     * @return the instance representing this individual WITHOUT the class value
+     * set.
+     */
+    public Instance toWekaInstance() {
+
+        Instance inst = new Instance(items.length + 1);
+        
+        for (int i = 0; i < items.length; i++) {
+            inst.setValue(i, items[i]);
+        }
+        
+        return inst;
     }
     
 }

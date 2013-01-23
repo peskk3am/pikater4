@@ -6,8 +6,9 @@ import jade.util.leap.List;
 import java.util.Random;
 import pikater.evolution.MergingReplacement;
 import pikater.evolution.Population;
+import pikater.evolution.RandomNumberGenerator;
 import pikater.evolution.Replacement;
-import pikater.evolution.SGAReplacement;
+import pikater.evolution.surrogate.SearchItemIndividualArchive;
 import pikater.evolution.individuals.Individual;
 import pikater.evolution.individuals.SearchItemIndividual;
 import pikater.evolution.operators.OnePtXOver;
@@ -53,8 +54,11 @@ public class Agent_EASearch extends Agent_Search {
      */
 
     //fitness is the error rate - the lower, the better!
+    SearchItemIndividualArchive archive = new SearchItemIndividualArchive();
     Population parents;
     Population offspring;
+    Population toEvaluate = new Population();
+    Population evaluated = new Population();
     Replacement replacement = new MergingReplacement();
     java.util.ArrayList<Selector> environmentalSelectors;
     java.util.ArrayList<Selector> matingSelectors;
@@ -69,12 +73,12 @@ public class Agent_EASearch extends Agent_Search {
     private int maximum_generations = 5;
     private double final_error_rate = 0.1;
     int tournament_size = 2;
-    protected Random rnd_gen = new Random(1);
+    protected Random rnd_gen = RandomNumberGenerator.getInstance().getRandom();
     /**
      *
      */
     private static final long serialVersionUID = -387458001824777077L;
-
+    
     @Override
     protected List generateNewSolutions(List solutions, float[][] evaluations) {
 
@@ -144,7 +148,19 @@ public class Agent_EASearch extends Agent_Search {
             matingPool = offspring;
         }
         
-        return populationToList(offspring);
+        toEvaluate.clear();
+        evaluated.clear();
+        
+        for (int i = 0; i < offspring.getPopulationSize(); i++) {
+            if (archive.contains((SearchItemIndividual)offspring.get(i))) {
+                offspring.get(i).setFitnessValue(archive.getFitness((SearchItemIndividual)offspring.get(i)));
+                evaluated.add(offspring.get(i));
+                continue;
+            }
+            toEvaluate.add(offspring.get(i));
+        }
+        
+        return populationToList(toEvaluate);
         
     }
 
@@ -168,6 +184,7 @@ public class Agent_EASearch extends Agent_Search {
     
     @Override
     protected void updateFinished(float[][] evaluations) {
+        
         //assign evaluations to the population as fitnesses		
         if (evaluations == null) {
             for (int i = 0; i < pop_size; i++) {
@@ -183,16 +200,22 @@ public class Agent_EASearch extends Agent_Search {
                 if (evaluations[i][0] < best_error_rate) {
                     best_error_rate = evaluations[i][0];
                 }
+                archive.add((SearchItemIndividual)parents.get(i));
             }
             return;
         }
         
         for (int i = 0; i < evaluations.length; i++) {
-            offspring.get(i).setFitnessValue(-evaluations[i][0]);
+            toEvaluate.get(i).setFitnessValue(-evaluations[i][0]);
             if (evaluations[i][0] < best_error_rate) {
                 best_error_rate = evaluations[i][0];
             }
+            archive.add((SearchItemIndividual)toEvaluate.get(i));
         }
+        
+        offspring.clear();
+        offspring.addAll(toEvaluate);
+        offspring.addAll(evaluated);
         
         Population selected = new Population();
 
