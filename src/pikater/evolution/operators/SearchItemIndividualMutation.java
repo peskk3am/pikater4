@@ -27,6 +27,7 @@ public class SearchItemIndividualMutation implements Operator {
     public SearchItemIndividualMutation(double mutationProbability, double geneChangeProbability, double changeWidth) {
         this.mutationProbability = mutationProbability;
         this.geneChangeProbability = geneChangeProbability;
+        this.changeWidth = changeWidth;
     }
     
     @Override

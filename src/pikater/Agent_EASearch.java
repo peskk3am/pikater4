@@ -97,7 +97,8 @@ public class Agent_EASearch extends Agent_Search {
             
             environmentalSelectors.add(new TournamentSelector());
             operators.add(new OnePtXOver(xOverProb));
-            operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.1));            operators.add(new SurrogateMutationOperator(archive, 0.2));
+            operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.1));
+            operators.add(new SurrogateMutationOperator(archive, 0.2));
             
             parents = new Population();
             parents.setPopulationSize(popSize);
