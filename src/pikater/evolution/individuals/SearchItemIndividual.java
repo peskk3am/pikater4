@@ -83,7 +83,7 @@ public class SearchItemIndividual extends ArrayIndividual {
      * @return The empty dataset representing the schema of the individual.
      */
     
-    public Instances emptyDatasetFromSchema() {
+    public Instances emptyDatasetFromSchema() {        
         
         FastVector attributes = new FastVector();
         
@@ -100,7 +100,7 @@ public class SearchItemIndividual extends ArrayIndividual {
             attributes.addElement(new Attribute("a" + i));
         }
         
-        attributes.addElement("class");
+        attributes.addElement(new Attribute("class"));
         
         Instances inst = new Instances("train", attributes, 0);
         inst.setClassIndex(attributes.size() - 1);
@@ -122,9 +122,13 @@ public class SearchItemIndividual extends ArrayIndividual {
     public Instance toWekaInstance() {
 
         Instance inst = new Instance(items.length + 1);
+        inst.setDataset(emptyDatasetFromSchema());
         
         for (int i = 0; i < items.length; i++) {
-            inst.setValue(i, items[i]);
+            if (schema[i] instanceof SetSItem) {
+                inst.setValue(i, items[i]);
+            }
+            inst.setValue(i, Double.parseDouble(items[i]));
         }
         
         return inst;

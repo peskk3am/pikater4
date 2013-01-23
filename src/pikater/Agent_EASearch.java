@@ -16,6 +16,7 @@ import pikater.evolution.operators.SearchItemIndividualMutation;
 import pikater.evolution.selectors.Selector;
 import pikater.evolution.selectors.TournamentSelector;
 import pikater.evolution.surrogate.SearchItemIndividualArchive;
+import pikater.evolution.surrogate.SurrogateMutationOperator;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SearchItem;
 import pikater.ontology.messages.SearchSolution;
@@ -92,10 +93,12 @@ public class Agent_EASearch extends Agent_Search {
             matingSelectors = new java.util.ArrayList<Selector>();
             environmentalSelectors = new java.util.ArrayList<Selector>();
             operators = new java.util.ArrayList<Operator>();
+            archive = new SearchItemIndividualArchive();
             
             environmentalSelectors.add(new TournamentSelector());
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField));
+            operators.add(new SurrogateMutationOperator(archive));
             
             parents = new Population();
             parents.setPopulationSize(popSize);
@@ -114,8 +117,6 @@ public class Agent_EASearch extends Agent_Search {
             genNumber = 0;
             bestError = Double.MAX_VALUE;
             parents.createRandomInitialPopulation();
-            
-            archive = new SearchItemIndividualArchive();
             
             return populationToList(parents);
         }
