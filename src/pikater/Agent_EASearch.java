@@ -3,6 +3,7 @@ package pikater;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
+import java.util.Arrays;
 import java.util.Random;
 import pikater.evolution.MergingReplacement;
 import pikater.evolution.Population;
@@ -98,7 +99,7 @@ public class Agent_EASearch extends Agent_Search {
             environmentalSelectors.add(new TournamentSelector());
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.3));
-            operators.add(new SurrogateMutationOperator(archive, 0.1));
+            //operators.add(new SurrogateMutationOperator(archive, 0.6));
             
             parents = new Population();
             parents.setPopulationSize(popSize);
@@ -208,6 +209,7 @@ public class Agent_EASearch extends Agent_Search {
         }
         
         for (int i = 0; i < evaluations.length; i++) {
+            System.err.println(toEvaluate.get(i).toString() + " : " + Arrays.toString(evaluations[i]));
             toEvaluate.get(i).setFitnessValue(-evaluations[i][0]);
             if (evaluations[i][0] < bestError) {
                 bestError = evaluations[i][0];

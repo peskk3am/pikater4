@@ -1,5 +1,6 @@
 <experiments>
-    <experiment timeout="10000" get_results="after_each_computation" save_results="yes">        
+    
+	<experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="EA-01">        
 		<method name="EASearch">
 			<parameter name="E" value="0.01" />
         	<parameter name="M" value="1000" />
@@ -12,17 +13,18 @@
         </method>
         
         <evaluation name="CrossValidation">
-          <parameter name="F" value="10" />        
+			<parameter name="F" value="10" />        
         </evaluation>
         
-		<dataset train="dermatology.arff" test="dermatology.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
 		
-        <agent type="SMO">
-        	<parameter name="C" value="0.05" />
-        	<parameter name="G" value="0.3" />
-			<parameter name="R" value="True" />
-    	</agent>
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
         	
    </experiment>
-       
+    
 </experiments>

@@ -94,8 +94,9 @@ public class Agent_DataManager extends Agent {
     }
 
     private void openDBConnection() throws SQLException{
-        db = DriverManager.getConnection("jdbc:hsqldb:file:data/db/pikaterdb", "", "");
+        //db = DriverManager.getConnection("jdbc:hsqldb:file:data/db/pikaterdb", "", "");
     	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
+        db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
     }
     
     @Override
@@ -161,7 +162,7 @@ public class Agent_DataManager extends Agent {
             if (!tableNames.contains("FILEMAPPING")) {
                 log.info("Creating table FILEMAPPING");
                 db.createStatement().executeUpdate(
-                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(256) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
+                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(64) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
             }
         } catch (SQLException e) {
             log.fatal("Error creating table FILEMAPPING: " + e.getMessage());
