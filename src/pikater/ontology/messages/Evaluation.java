@@ -1,5 +1,7 @@
 package pikater.ontology.messages;
 
+import java.util.Date;
+
 import jade.content.Concept;
 import jade.util.leap.LinkedList;
 import jade.util.leap.List;
@@ -12,6 +14,7 @@ public class Evaluation implements Concept {
 	
 	private static final long serialVersionUID = 1319671908304254420L;
 	private List evaluations;
+	private Date start;
 	private String _status;
 
 	private String object_filename;
@@ -68,4 +71,13 @@ public class Evaluation implements Concept {
 	public void setEvaluations(List evaluations) {
 		this.evaluations = evaluations;
 	}
+	
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
 }

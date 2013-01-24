@@ -84,8 +84,6 @@ public abstract class Agent_Search extends Agent {
 			
 			// Read through file one line at time. Print line # and line
 			while (line != null) {
-				System.out.println("    " + count + ": " + line);
-
 				// parse the line
 				String delims = "[ ]+";
 				String[] params = line.split(delims, 11);
@@ -352,7 +350,6 @@ public abstract class Agent_Search extends Agent {
 				public void action() {
 					cont = false;
 					if(get_option_action != null){
-						System.out.println("OK: GetOptions");
 						ACLMessage reply = getParameters((ACLMessage)getDataStore().get(REQUEST_KEY));
 						getDataStore().put(RESULT_NOTIFICATION_KEY, reply);
 					}
@@ -362,16 +359,16 @@ public abstract class Agent_Search extends Agent {
 						if(queriesToProcess == 0){//skoncili jsme nebo zacali jeden cyklus query
 							
 							if(solutions_new == null){
-								System.out.println("OK: Pars - Nove solutiony vygenerovat");
+								// System.out.println("OK: Pars - Nove solutiony vygenerovat");
 							}else{
 								//postprocess
-								System.out.println("OK: Pars - Update");
+								// System.out.println("OK: Pars - Update");
 								updateFinished(evaluations);
 							}
 							
 							if (finished()) {
 								//konec vsech evaluaci
-								System.out.println("OK: Pars - Ukoncovani");
+								// System.out.println("OK: Pars - Ukoncovani");
 								solutions_new = null; 
 								evaluations = null; 
 								cont = false;
@@ -383,7 +380,7 @@ public abstract class Agent_Search extends Agent {
 								getDataStore().put(RESULT_NOTIFICATION_KEY, reply);
 							}else{
 								//nova vlna evaluaci - generovani query
-								System.out.println("OK: Pars - nove solutiony poslat");
+								// System.out.println("OK: Pars - nove solutiony poslat");
 								solutions_new = generateNewSolutions(solutions_new, evaluations);
 								if(solutions_new!= null)
 									evaluations = new float[solutions_new.size()][];
@@ -429,7 +426,7 @@ public abstract class Agent_Search extends Agent {
 							if(response == null)
 								block();//elseif zadna zprava inform - cekej
 							else{
-								System.out.println("!OK: Pars - Prisla evaluace");
+								// System.out.println("!OK: Pars - Prisla evaluace");
 								//prisla evaluace - odpoved na QUERY
 								//prirad inform ke spravnemu query
 								int id = Integer.parseInt(response.getConversationId());
@@ -468,8 +465,7 @@ public abstract class Agent_Search extends Agent {
 		
 		@Override
 		protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException{
-			System.out.println("request:" + request);
-
+			
 			get_option_action = null;
 			get_next_parameters_action = null;
 			ContentElement content;
@@ -478,7 +474,6 @@ public abstract class Agent_Search extends Agent {
 
 				if (((Action) content).getAction() instanceof GetOptions) {			
 					get_option_action = (GetOptions) ((Action) content).getAction();
-					System.out.println("get_option_action" + get_option_action);
 					return null;
 				} else if (((Action) content).getAction() instanceof GetParameters){
 					get_next_parameters_action = (GetParameters) ((Action) content).getAction();

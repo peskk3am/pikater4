@@ -15,7 +15,7 @@ public class Data implements Concept {
 	private Metadata _metadata;  // for training data file
 	private String _external_label_file_name;
 	private String _output = "evaluation_only"; // "predictions"
-	private String _mode = "train_test"; // test_only, train_test
+	private String _mode = "train_test"; // test_only, train_test, train_only
 
 	private int _gui_id; // not included in ontology
 

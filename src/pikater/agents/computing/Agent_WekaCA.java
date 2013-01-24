@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
@@ -34,6 +35,14 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	private Classifier cls = null;//TODO: constructor
 	private String agentType = null;
 	private String wekaClassName = null;
+	
+	private String DurationServiceRegression_output_prefix = "  --d-- ";
+
+	// 3 levels:
+	// 0 no output
+	// 1 minimal
+	// 2 normal
+	private int verbosity = 0;
 	
 	protected Classifier getModelObject(){
 		return cls;
@@ -73,25 +82,73 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	}
 
 	@Override
-	protected void train() throws Exception {
+	protected Date train(pikater.ontology.messages.Evaluation evaluation) throws Exception {
 		working = true;
-		System.out.println("Agent " + getLocalName() + ": Training...");
-
+						
+		if (getLocalName().equals("DurationServiceRegression")){
+				print(DurationServiceRegression_output_prefix, 2, false);
+		}
+		println("Training...", 2, true);		
+				
 		cls=null;
 		createClassifierClass();//new cls
 		if(cls==null)
-			throw new Exception("Weka classifier class hasn't been created (Wrong type?).");
+			throw new Exception(getLocalName() + ": Weka classifier class hasn't been created (Wrong type?).");
 		if (OPTIONS.length > 0) {
 			cls.setOptions(OPTIONS);
 		}
+		
+		long start = System.currentTimeMillis();
 		cls.buildClassifier(train);
+		long end = System.currentTimeMillis();
+		long duration = end - start;
+		if (duration < 1) { duration = 1; } 
+		
+		List evals = new ArrayList();
+		
+		Eval s = new Eval();
+		s.setName("start");
+		s.setValue(start);
+		evals.add(s);
+		
+		Eval d = new Eval();
+		d.setName("duration");
+		d.setValue(duration);
+		evals.add(d);
+
+		if (getLocalName().equals("DurationServiceRegression")){
+			print(DurationServiceRegression_output_prefix, 1, false);
+		}
+		println("start: " + new Date(start) + " : duration: " + duration, 1, true);
+		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
 
 		// write out net parameters
-		System.out.println(getLocalName() + " " + getOptions());
-
+		if (getLocalName().equals("DurationServiceRegression")){
+			if (verbosity >= 2){
+				System.out.print(DurationServiceRegression_output_prefix);
+				System.out.println(getOptions());
+			}			
+		}
+		else{
+			println(getOptions(), 1, true);
+		}
+		
 		working = false;
+		
+		// add evals to Evaluation
+		List evaluations_new = evaluation.getEvaluations();
+		
+		Iterator itr = evals.iterator();
+		while (itr.hasNext()) {
+			Eval eval = (Eval) itr.next();
+			evaluations_new.add(eval);
+		}
+		
+		evaluation.setEvaluations(evaluations_new);
+		
+		return new Date(start);
 	}
 
 	protected String getOptFileName(){
@@ -100,14 +157,18 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
-		System.out.println("Agent " + getLocalName() + ": Testing...");
+		println("Testing...", 2, true);
 
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;				
 		eval = new Evaluation(train);
-
-		System.out.println("Evaluation method: ");
-		System.out.print("\t");		
+		// if (train == null){ System.out.println("bacha, train je null"); }
+		// if (eval == null){ System.out.println("bacha, eval je null"); }
+		// if (cls == null){ System.out.println("bacha, cls je null"); }
+		// if (test == null){ System.out.println("bacha, test je null"); }
+		// doWait(10);
+		
+		println("Evaluation method: \t", 2, true);
 		
 		if (evaluation_method.getName().equals("CrossValidation") ){
 			int folds = -1; 
@@ -122,27 +183,31 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					folds = 5;
 				  // TODO read default value from file (if necessary)
 			}
-			System.out.println(folds + "-fold cross validation.");
-			eval.crossValidateModel(cls, test, folds, new Random(1));
+			println(folds + "-fold cross validation.", 2, false);						
+			eval.crossValidateModel(
+					cls,
+					test,
+					folds, new Random(1));
 		}
 		else{ // name = Standard
-			System.out.println("standard weka evaluation.");
+			println("Standard weka evaluation.", 2, false);
 			eval.evaluateModel(cls, test);
 		}
 				
-		System.out.println(eval.toSummaryString(getLocalName() + " agent: "
-				+ "\nResults\n=======\n", false));
+		println("Error rate: " + eval.errorRate(), 1, true);
+		println(eval.toSummaryString(getLocalName() + " agent: "
+				+ "\nResults\n=======\n", false), 2, true);
 
 		working = false;
 		return eval;
 	}
 
 	@Override
-	protected pikater.ontology.messages.Evaluation evaluateCA(EvaluationMethod evaluation_method) throws Exception{
+	protected void evaluateCA(EvaluationMethod evaluation_method,
+			pikater.ontology.messages.Evaluation evaluation) throws Exception{
+		
 		float default_value = Float.MAX_VALUE;
 		Evaluation eval = test(evaluation_method);
-
-		pikater.ontology.messages.Evaluation result = new pikater.ontology.messages.Evaluation();				
 		
 		List evaluations = new ArrayList();
 		Eval ev = new Eval();
@@ -194,10 +259,17 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			ev.setValue(default_value);
 		}
 		evaluations.add(ev);
-
-		result.setEvaluations(evaluations);
 		
-		return result;
+		
+		List evaluations_new = evaluation.getEvaluations();
+		
+		Iterator itr = evaluations.iterator();
+		while (itr.hasNext()) {
+			Eval _ev = (Eval) itr.next();
+			evaluations_new.add(_ev);
+		}
+		
+		evaluation.setEvaluations(evaluations_new);		
 	}
 
 	@Override
@@ -276,7 +348,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		 
 		// fills the global Options vector
 
-		System.out.println(getLocalName() + ": The options are: ");
+		// System.out.println(getLocalName() + ": The options are: ");
 
 		String optPath = System.getProperty("user.dir") + getOptFileName();
 
@@ -304,7 +376,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 			// Read through file one line at time. Print line # and line
 			while (line != null) {
-				System.out.println("    " + count + ": " + line);
+				// System.out.println("    " + count + ": " + line);
 
 				// parse the line
 				String delims = "[ ]+";
@@ -328,7 +400,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					}
 
 					String[] default_options = ((Classifier)getModelObject()).getOptions();					 
-					System.out.println("Default options: "+Arrays.deepToString(default_options));
+					// System.out.println("Default options: "+Arrays.deepToString(default_options));
 										
 					Enumeration en = ((Classifier)getModelObject()).listOptions();
 					while (en.hasMoreElements()) {
@@ -396,7 +468,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			 * generated. A message indicating how to the class should be called
 			 * is displayed
 			 */
-			System.out.println("Usage: java ReadFile filename\n");
+			System.err.println(getLocalName() + ": no file specified.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(getLocalName()
@@ -425,6 +497,22 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		 * System.out.println("------------"); }
 		 */
 	} // end getParameters
+	
+	private void print(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.print(text);
+		}
+	}
 
-
+	private void println(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.println(text);
+		}
+	}
 }

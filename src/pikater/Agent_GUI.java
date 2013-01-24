@@ -19,6 +19,8 @@ import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.gui.GuiAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -100,6 +102,8 @@ public abstract class Agent_GUI extends GuiAgent {
 	private int default_maximum_tries = 10;
 	private String default_get_results = "after_each_computation";
 	private boolean default_save_results = true;
+	
+	private boolean end_pikater_when_finished = false;
 
 	private String myAgentName;
 	/*
@@ -188,18 +192,18 @@ public abstract class Agent_GUI extends GuiAgent {
 		template.addServices(CAsd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following agents:");
+			// System.out.println("Found the following agents:");
 			ComputingAgents = new String[result.length];
 
 			for (int i = 0; i < result.length; ++i) {
 				ComputingAgents[i] = result[i].getName().getLocalName();
-				System.out.println(ComputingAgents[i]);
+				// System.out.println(ComputingAgents[i]);
 			}
 
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
 		} catch (ArrayIndexOutOfBoundsException ae) {
-			System.out.println("No " + type + " found.");
+			System.out.println(getLocalName() + ": No " + type + " found.");
 		}
 		return ComputingAgents;
 
@@ -224,45 +228,8 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (agentTypes == null) {
 					createAgentTypesHashMap();
 				}
-				
-				System.out.println("Creating agent " + newName + ", type: "+ agentType);
-
-				if (agentOptions.get(agentType) != null){
-					aid = createAgent(agentTypes.get(agentType), newName, agentOptions.get(agentType));
-					doWait(100);
-				}
-				else{
-					// send message to AgentManager to create an agent
-					ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-					msg_ca.addReceiver(new AID("agentManager", false));
-					msg_ca.setLanguage(codec.getName());
-					msg_ca.setOntology(ontology.getName());
-					
-					CreateAgent ca = new CreateAgent();
-					ca.setType(agentType);
-					ca.setName(newName);
-											
-					Action a = new Action();
-					a.setAction(ca);
-					a.setActor(this.getAID());
-							
-					String agent_name = null;
-					try {
-						getContentManager().fillContent(msg_ca, a);	
-						ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-						agent_name = msg_name.getContent();
-						aid = new AID(agent_name, AID.ISLOCALNAME);
-					} catch (FIPAException e) {
-						System.err.println("Exception while adding agent"
-								+ agentType + ": " + e);		
-					} catch (CodecException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (OntologyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}				
+									
+				aid = createAgent(agentType, null, null);
 			}
 		}
 		if (aid == null) {
@@ -341,6 +308,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			oe.printStackTrace();
 		}
 
+		// get options behaviour:		
 		AchieveREInitiator behav = new AchieveREInitiator(this, msg) {
 
 			protected void handleInform(ACLMessage inform) {
@@ -348,7 +316,7 @@ public abstract class Agent_GUI extends GuiAgent {
 						+ inform.getSender().getName() + " replied.");
 				// we've just received the Options in an inform message
 
-				System.out.println("Conversation id:" + inform.getConversationId());
+				// System.out.println("Conversation id:" + inform.getConversationId());
 				
 				ContentElement content;
 				try {
@@ -407,10 +375,10 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (failure.getSender().equals(myAgent.getAMS())) {
 					// FAILURE notification from the JADE runtime: the receiver
 					// does not exist
-					System.out.println("Agent " + myAgent.getLocalName()
+					System.out.println(myAgent.getLocalName()
 							+ "Responder " + agentName + " does not exist.");
 				} else {
-					System.out.println("Agent " + myAgent.getLocalName()
+					System.out.println(myAgent.getLocalName()
 							+ ": Agent " + agentName
 							+ " failed to perform the requested action");
 				}
@@ -451,7 +419,8 @@ public abstract class Agent_GUI extends GuiAgent {
 
 			// remove problem from problems vector
 			// problems.remove(problem);
-
+			updateProblemStatus(gui_id, "finished");
+			allProblemsFinished();
 		}
 
 		protected void handleRefuse(ACLMessage refuse) {
@@ -459,18 +428,22 @@ public abstract class Agent_GUI extends GuiAgent {
 					+ refuse.getSender().getName()
 					+ " refused to perform the requested action");
 			displayResult(refuse);
+			updateProblemStatus(gui_id, "refused");
+			allProblemsFinished();
 		}
 
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(getLocalName() + ": Responder does not exist");
 			} else {
-				System.out.println("Agent " + failure.getSender().getName()
+				System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 						+ " failed to perform the requested action");
 			}
 			displayResult(failure);
+			updateProblemStatus(gui_id, "failed");
+			allProblemsFinished();
 		}
 
 	}
@@ -483,7 +456,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (Integer.parseInt(next_problem.getGui_id()) == _problem_id
-					&& !next_problem.getSent()) {
+					&& next_problem.getStatus().equals("new") ) {
 				problem = next_problem;
 			}
 		}
@@ -532,7 +505,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		addBehaviour(new SendProblem(this, msg, problem.getGui_id()));
 
-		problem.setSent(true);
+		problem.setStatus("sent");
 
 		ACLMessage subscrmsg = new ACLMessage(ACLMessage.SUBSCRIBE);
 		subscrmsg.addReceiver(new AID("manager", AID.ISLOCALNAME)); // TODO find
@@ -566,9 +539,9 @@ public abstract class Agent_GUI extends GuiAgent {
 				if (failure.getSender().equals(myAgent.getAMS())) {
 					// FAILURE notification from the JADE runtime: the receiver
 					// does not exist
-					System.out.println("Responder does not exist");
+					System.out.println(getLocalName() + ": Responder does not exist");
 				} else {
-					System.out.println("Agent " + failure.getSender().getName()
+					System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 							+ " failed to perform the requested action");
 				}
 				displayResult(failure);
@@ -604,7 +577,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		// agent manager changes the id afterwards		
 		if (name != null){
 			problem.setName(name);
-			System.out.println("experiment name: "+ name);
+			System.out.println(getLocalName() + ": experiment " + name + " received.");
 		}
 		if (timeout == null) {
 			_timeout = default_timeout;
@@ -638,7 +611,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		problem.setTimeout(_timeout);
 		problem.setAgents(new ArrayList());
 		problem.setData(new ArrayList());
-		problem.setSent(false);
+		problem.setStatus("new");
 		problem.setGet_results(_get_results);
 		problem.setGui_agent(myAgentName);
 		problem.setSave_results(_save_results);
@@ -677,9 +650,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				aid = getAgentByType(type);
 				if (aid == null) {
 					// agent of given type doesn't exist
-					newName = generateName(type);
-					aid = createAgent(agentTypes.get(type), newName, agentOptions.get(type));
-					doWait(100);
+					aid = createAgent(type, null, null);
 				}
 			}
 			if (aid == null) {
@@ -726,7 +697,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				// find the given agent
 				Iterator itr = next_problem.getAgents().iterator();
 				while (itr.hasNext()) {
@@ -772,7 +743,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
 					pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
 					agent.setName(name);
@@ -802,7 +773,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		// System.err.println("Add option to agent");
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 
 				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
 					Iterator itr = next_problem.getAgents().iterator();
@@ -863,7 +834,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void addSearchOption(int _problem_id, String option_name, String option_value) {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				
 				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
 					pikater.ontology.messages.Agent method = next_problem.getMethod();
@@ -888,7 +859,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	private void addEvaluationMethodToProblem(int problem_id, String name) {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				if (Integer.parseInt(next_problem.getGui_id()) == problem_id) {
 					
 					EvaluationMethod evaluation_method = new EvaluationMethod();
@@ -903,7 +874,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	protected void addEvaluationMethodOption(int _problem_id, String option_name, String option_value) {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				
 				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
 						EvaluationMethod evaluation_method = next_problem.getEvaluation_method();
@@ -930,7 +901,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		// get the problem
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
 					List data = next_problem.getData();
 					Data d = new Data();
@@ -1009,7 +980,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (Integer.parseInt(next_problem.getGui_id()) == problem_id
-					&& !next_problem.getSent()) {
+					&& next_problem.getStatus().equals("new")) {
 
 				pikater.ontology.messages.Agent method = new pikater.ontology.messages.Agent();
 				method.setType(name);
@@ -1034,10 +1005,10 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 
-	private void checkProblems() {
+	private void checkProblems() {		
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				boolean done = true;
 				Iterator aitr = next_problem.getAgents().iterator();
 				while (aitr.hasNext()) {
@@ -1084,7 +1055,7 @@ public abstract class Agent_GUI extends GuiAgent {
 
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
-			if (!next_problem.getSent()) {
+			if (next_problem.getStatus().equals("new")) {
 				if (performative == ACLMessage.INFORM) {
 
 					Iterator aitr = next_problem.getAgents().iterator();
@@ -1273,7 +1244,49 @@ public abstract class Agent_GUI extends GuiAgent {
 		return agents;
 	}
 
-	protected AID createAgent(String type, String name, Object[] options) {
+	
+	public AID createAgent(String type, String name, List options) {
+		
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+						
+		CreateAgent ca = new CreateAgent();
+		if (name != null){
+			ca.setName(name);
+		}
+		if (options != null){
+			ca.setArguments(options);
+		}
+		ca.setType(type);
+		
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		AID aid = null; 
+		try {
+			getContentManager().fillContent(msg_ca, a);	
+			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+			
+			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
+		} catch (FIPAException e) {
+			System.err.println(getLocalName() + ": Exception while adding agent "
+					+ type + ": " + e);		
+		} catch (CodecException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		}
+		
+		return aid;		
+	}
+	
+	
+	protected AID createAgent_old(String type, String name, Object[] options) {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 
@@ -1299,12 +1312,12 @@ public abstract class Agent_GUI extends GuiAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following " + agentType + " agents:");
+			// System.out.println("Found the following " + agentType + " agents:");
 			Agents = new AID[result.length];
 
 			for (int i = 0; i < result.length; ++i) {
 				Agents[i] = result[i].getName();
-				System.out.println(Agents[i].getName());
+				// System.out.println(Agents[i].getName());
 			}
 
 			if (Agents.length > 0) {
@@ -1322,6 +1335,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	}
 
 	protected void setup() {
+		// wait for duration to compute a task
+		doWait(15000);
+		
 		myAgentName = this.getLocalName();
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
@@ -1378,7 +1394,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     DFAgentDescription readers[] = DFService.search(this, dfd);
 
                     if (readers.length == 0) {
-                        System.err.println("No readers found");
+                        System.err.println(getLocalName() + ": No readers found");
                         break;
                     }
 
@@ -1403,7 +1419,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     ACLMessage response = FIPAService.doFipaRequestClient(this, req);
 
                     if (response.getPerformative() != ACLMessage.INFORM) {
-                        System.err.println("Error reading file");
+                        System.err.println(getLocalName() + ": Error reading file");
                     }
 
                 } catch (CodecException ce) {
@@ -1418,12 +1434,13 @@ public abstract class Agent_GUI extends GuiAgent {
             }
                displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
 
-		System.out.println("GUI agent " + getLocalName()
+		System.out.println(getLocalName() + ": GUI agent " + getLocalName()
 				+ " is alive and waiting...");
 
 		mySetup();
 		
 		// test getOptions
+		/* 
 		try {
 			System.out.println("Test of getOptions:"+getOptions("RBFNetwork").toString());
 		} catch (CodecException e) {
@@ -1436,6 +1453,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
 
 	} // end setup
@@ -1490,24 +1508,97 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 
+	/*
+	 * updates the status of problems in the problem list
+	 * after receiving a message from manager - 
+	 * - either "finished", "failed" or "refused"
+	 */
+	protected void updateProblemStatus(String gui_id, String status){
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (next_problem.getGui_id().equals(gui_id)){
+				next_problem.setStatus(status);
+			}
+		}
+	}
+	
+	/*
+	 * checks whether all problems in the problem list are finished,
+	 * if the end_pikater_when_finished == true,
+	 * it finishes the system
+	 */
+	private void allProblemsFinished(){
+		boolean finished = true;
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (! (next_problem.getStatus().equals("finished")
+				|| next_problem.getStatus().equals("failed")
+				|| next_problem.getStatus().equals("refused")) ){
+
+				finished = false;
+			}
+		}
+		
+		if (finished && end_pikater_when_finished){
+			terminatePikater();
+		}
+	}
+		
+	private void terminatePikater(){
+		System.out.println(getLocalName() + ": Shutting down Pikater...");
+		doWait(100);
+
+		getContentManager().registerOntology(JADEManagementOntology.getInstance());
+		
+		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+		request.addReceiver(getAMS());
+		request.setSender(getAID());
+     	request.setOntology(JADEManagementOntology.getInstance().getName());
+		request.setLanguage(codec.getName());
+		//  request.setLanguage(FIPANames.ContentLanguage.FIPA_SL0);
+		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+		ShutdownPlatform sp = new ShutdownPlatform();		
+		
+		Action a = new Action();
+		a.setActor(this.getAID());
+		a.setAction(sp);
+		
+		try {
+			getContentManager().fillContent(request, a);
+			FIPAService.doFipaRequestClient(this, request);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	protected void getProblemsFromXMLFile(String fileName)
 			throws JDOMException, IOException {
 		SAXBuilder builder = new SAXBuilder();
-		System.out.println("GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		System.out.println(getLocalName() + ": GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// tohle fungje na linuxu: - funguje vsude
 		Document doc = builder.build("file:"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// tohle mi funguje na win:
 		//Document doc = builder.build("file:\\"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		// a tohle snad vsude: NE Document doc = builder.build("file:"+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 				
-		System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
+		// System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
 		Element root_element = doc.getRootElement();
 
-		java.util.List _problems = root_element.getChildren("experiment"); // return
-																			// all
-																			// children
-																			// by
-																			// name
+		java.util.List _end_pikater_when_finished = root_element.getChildren("hasta_la_vista_baby");
+		if (_end_pikater_when_finished.size() > 0){
+			end_pikater_when_finished = true;
+		}
+		
+		// return all children by name
+		java.util.List _problems = root_element.getChildren("experiment"); 
 		java.util.Iterator p_itr = _problems.iterator();
 		while (p_itr.hasNext()) {
 			Element next_problem = (Element) p_itr.next();
@@ -1594,7 +1685,7 @@ public abstract class Agent_GUI extends GuiAgent {
 				try {
 					a_id = addAgentToProblem(p_id, agent_name, agent_type, null);
 				} catch (FailureException e) {
-					System.err.println(e.getLocalizedMessage());
+					System.err.println(getLocalName() + ": " + e.getLocalizedMessage());
 					// e.printStackTrace();
 				}
 

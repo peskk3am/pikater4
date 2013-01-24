@@ -17,14 +17,9 @@ import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.FailureException;
-import jade.domain.FIPAAgentManagement.NotUnderstoodException;
-import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
-import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import jade.proto.SubscriptionResponder;
 import jade.proto.SubscriptionResponder.Subscription;
@@ -32,7 +27,6 @@ import jade.proto.SubscriptionResponder.SubscriptionManager;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
@@ -64,17 +58,13 @@ import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetAgents;
-import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Options;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
-import pikater.ontology.messages.SearchSolution;
 import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
 
@@ -83,8 +73,8 @@ public class Agent_Manager extends Agent {
 
 	public Agent_Manager() {
 		
-
-		// Sets up a file reader to read the agent_types file
+		// TODO tohle asi uz neni potreba
+		// Sets up a file reader to read the agent_types file				
 		FileReader input;
 		try {
 			input = new FileReader(path + "agent_types");
@@ -131,7 +121,8 @@ public class Agent_Manager extends Agent {
 	private int problem_i = 0;
 
 	private long timeout = 10000;
-
+	private boolean no_xml_output = false;
+	
 	private Codec codec = new SLCodec();
 	private Ontology ontology = MessagesOntology.getInstance();
 
@@ -144,7 +135,8 @@ public class Agent_Manager extends Agent {
 	double maxInstances = Integer.MIN_VALUE;
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
-	private String[] type;
+	
+	private int max_number_of_CAs = 6;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
@@ -187,7 +179,7 @@ public class Agent_Manager extends Agent {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				System.out.println(getLocalName()+": Responder does not exist");
 			}
 			else {
 				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
@@ -265,6 +257,9 @@ public class Agent_Manager extends Agent {
 			}
 			receivedProblemsID.put(problemID, n+1);
 			
+			// send subscription to gui agent after each received task
+			sendSubscription(inform);
+			
 			// when all tasks' results are sent, send reply-inform to gui agent
 			if (lastTask()){
 			
@@ -272,6 +267,7 @@ public class Agent_Manager extends Agent {
 							+ ": all results sent.");
 				
 				ACLMessage msgOut = request.createReply();
+				msgOut.setPerformative(ACLMessage.INFORM);
 				msgOut.setContent("Finished");
 
 				send(msgOut);
@@ -307,10 +303,7 @@ public class Agent_Manager extends Agent {
 			} catch (OntologyException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-			// send subscription to gui agent after each received task
-			sendSubscription(inform);
+			}			
 
 			// killAgent(inform.getSender().getName());	
 		}		
@@ -331,6 +324,7 @@ public class Agent_Manager extends Agent {
 			if (results != null) {
 
 				// write results to the database
+				/* 
 				Iterator resIterator = results.getResults().iterator();
 				while (resIterator.hasNext()) {
 					Task t = (Task) resIterator.next();
@@ -341,9 +335,12 @@ public class Agent_Manager extends Agent {
 						DataManagerService.saveResult(myAgent, t);
 					}					
 				}
+				*/
 
-				writeXMLResults(results);
-
+				if (!no_xml_output){
+					writeXMLResults(results);
+				}
+				
 				msgOut.setPerformative(ACLMessage.INFORM);
 				ContentElement content;
 				try {
@@ -415,9 +412,20 @@ public class Agent_Manager extends Agent {
 	
 
 	protected void setup() {
-
-		// doWait(1500); // 1.5 seconds
-
+		
+		Object[] args = getArguments();
+    	// System.out.println(args);
+		if (args != null && args.length > 0) {
+			int i = 0;					
+			while (i < args.length){
+				// System.out.println(args[i]);
+				if (args[i].equals("no_xml_output")){
+					no_xml_output = true;
+				}
+				i++;
+			}
+		}
+		
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
@@ -436,7 +444,7 @@ public class Agent_Manager extends Agent {
 					+ e.getMessage());
 			doDelete();
 		}
-		System.out.println("Manager " + getLocalName()
+		System.out.println(getLocalName() 
 				+ " is alive and waiting...");
 
 		SubscriptionManager subscriptionManager = new SubscriptionManager() {
@@ -494,7 +502,7 @@ public class Agent_Manager extends Agent {
 			ACLMessage request = receive(requestMsgTemplate);
 			
 			if (request != null) {
-				System.out.println("Agent " + getLocalName()
+				System.out.println(getLocalName()
 						+ ": REQUEST received from "
 						+ request.getSender().getName());
 
@@ -519,7 +527,7 @@ public class Agent_Manager extends Agent {
 
 						Iterator itr = messages.iterator();
 						while (itr.hasNext()) {
-							ACLMessage msg = (ACLMessage) itr.next();
+							ACLMessage msg = (ACLMessage) itr.next();							
 							addBehaviour(new ExecuteTask(myAgent, msg, request, messages.size(), problemID));
 						}
 	
@@ -528,7 +536,7 @@ public class Agent_Manager extends Agent {
 					
 					if (((Action) content).getAction() instanceof GetAgents) {
 						// find and/or create required number of agents;
-						// maximum being 5
+						// maximum being 10
 						List agents = new ArrayList();
 						
 						GetAgents ga = (GetAgents) (((Action) content).getAction());
@@ -540,9 +548,16 @@ public class Agent_Manager extends Agent {
 								+ request.getSender().getName() + " requested "
 								+ n + " agents.");
 						
+						n = n <= max_number_of_CAs ? n : max_number_of_CAs;
+						
+						System.out.println(getLocalName() + ": " + n + " agents assigned."); 
+								
 						String task_id = ga.getTask_id().getIdentificator();
-											
+						
+						
 						agents = getAgentsByType(agentType, n, task_id);
+						
+						// printBusyAgents();
 						
 						ACLMessage reply = request.createReply();
 						
@@ -603,7 +618,7 @@ public class Agent_Manager extends Agent {
 		ContentElement content;
 		try {
 			content = getContentManager().extractContent(request);
-			System.out.println("Agent " + getLocalName() + ": " + content);
+			// System.out.println("Agent " + getLocalName() + ": " + content);
 
 			if (((Action) content).getAction() instanceof Solve) {
 				
@@ -666,7 +681,8 @@ public class Agent_Manager extends Agent {
 										agent_options.getOptions(),
 										a_next.getOptions()));
 
-								System.out.println("********** Agent "
+								System.out.println(getLocalName() + ": /n" + 
+										"********** Agent "
 										+ agentType
 										+ " recommended. Options: "
 										+ a_next_copy.optionsToString()
@@ -754,7 +770,19 @@ public class Agent_Manager extends Agent {
 		return new_options;
 	}
 
-	private boolean isBusy(AID agent) {
+	private boolean isBusy(AID aid) {		
+		Iterator itr = busyAgents.iterator();
+		while (itr.hasNext()) {
+			BusyAgent ba = (BusyAgent) itr.next();
+			if (ba.getAid().equals(aid)){				
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	private boolean isBusy_old(AID agent) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(agent);
@@ -791,6 +819,15 @@ public class Agent_Manager extends Agent {
 	}
 
 	
+	private void printBusyAgents(){
+		Iterator itr = busyAgents.iterator();
+		System.out.println("Busy agents: ");
+		while (itr.hasNext()){
+			BusyAgent ba = (BusyAgent)itr.next();
+			System.out.println("name: " + ba.getAid().getLocalName() + " task id: "+ ba.getTask_id());
+		}		
+	}
+	
 	public List getAgentsByType(String agentType, int n, String task_id) {
 		// returns list of AIDs (n agents that are not busy)
 		
@@ -803,11 +840,11 @@ public class Agent_Manager extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println(this.getLocalName()+": Found the following " + agentType + " agents:");
+			// System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				AID aid = result[i].getName();
-				System.out.println(aid.getLocalName());
+				// System.out.println(aid.getLocalName());
 				if (!isBusy(aid) && Agents.size() < n){
 					Agents.add(aid);
 					busyAgents.add(new BusyAgent(aid, task_id));
@@ -816,8 +853,11 @@ public class Agent_Manager extends Agent {
 			
 			while (Agents.size() < n) {
 				// create agent
-				String agentName = generateName(agentType);
-				AID aid = createAgent(agentTypes.get(agentType), agentName, agentOptions.get(agentType));
+				// doWait(300);
+				
+				// String agentName = generateName(agentType);
+				// AID aid = createAgent(agentTypes.get(agentType), agentOptions.get(agentType));
+				AID aid = createAgent(agentType, null, null);
 				Agents.add(aid);
 				busyAgents.add(new BusyAgent(aid, task_id));
 			}
@@ -877,6 +917,10 @@ public class Agent_Manager extends Agent {
 	}
 
 	public String generateName(String agentType) {
+		// don't use this function, 
+		// leave the generating of the name on 
+		// agent Agent Manager
+		
 		int number = 0;
 		String name = agentType + number;
 		boolean success = false;
@@ -919,22 +963,44 @@ public class Agent_Manager extends Agent {
 		return false;
 	}
 
-	public AID createAgent(String type, String name, Object[] options) {
-		// TODO use agentManager instead
-		// get a container controller for creating new agents
-		PlatformController container = getContainerController();
-
-		try {
-			AgentController agent = container.createNewAgent(name, type,
-					options);
-			agent.start();
-			doWait(300);
-			return new AID((String) name, AID.ISLOCALNAME);
-		} catch (ControllerException e) {
-			 System.err.println( "Exception while adding agent: " + e );
-			 e.printStackTrace();
-			return null;
+	public AID createAgent(String type, String name, List options) {
+		
+		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
+		msg_ca.addReceiver(new AID("agentManager", false));
+		msg_ca.setLanguage(codec.getName());
+		msg_ca.setOntology(ontology.getName());
+						
+		CreateAgent ca = new CreateAgent();
+		if (name != null){
+			ca.setName(name);
 		}
+		if (options != null){
+			ca.setArguments(options);
+		}
+		ca.setType(type);
+		
+		Action a = new Action();
+		a.setAction(ca);
+		a.setActor(this.getAID());
+				
+		AID aid = null; 
+		try {
+			getContentManager().fillContent(msg_ca, a);	
+			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
+			
+			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
+		} catch (FIPAException e) {
+			System.err.println(getLocalName() + ": Exception while adding agent "
+					+ type + ": " + e);		
+		} catch (CodecException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			System.err.print(getLocalName() + ": ");
+			e.printStackTrace();
+		}
+		
+		return aid;		
 	}
 
 
@@ -962,35 +1028,8 @@ public class Agent_Manager extends Agent {
 		}
 		else{
 			// create an Option Manager agent
-			String optionsManagerName = "OptionsManager"+ex.getTask().getId().getIdentificator(); 
-			ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-			msg_ca.addReceiver(new AID("agentManager", false));
-			msg_ca.setLanguage(codec.getName());
-			msg_ca.setOntology(ontology.getName());
-			
-			CreateAgent ca = new CreateAgent();
-			ca.setName(optionsManagerName);
-			ca.setType("OptionsManager");
-			
-			Action a = new Action();
-			a.setAction(ca);
-			a.setActor(this.getAID());
-					
-			ACLMessage msg_name = null;
-			try {
-				getContentManager().fillContent(msg_ca, a);	
-				msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-				receivers.add( msg_name.getContent() );
-			} catch (FIPAException e) {
-				System.err.println("Exception while adding agent"
-						+ ex.getTask().getId() + ": " + e);		
-			} catch (CodecException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OntologyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			AID aid = createAgent("OptionsManager", null, null);			
+			receivers.add( aid.getLocalName() );
 		}
 		return receivers;
 	}
@@ -999,7 +1038,7 @@ public class Agent_Manager extends Agent {
 
 		// create CFP message for the Option Manager or Computing Agent							  		
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-		cfp.setConversationId(problemID);
+		// cfp.setConversationId(problemID);
 		cfp.setLanguage(codec.getName());
 		cfp.setOntology(ontology.getName());
 
@@ -1008,7 +1047,7 @@ public class Agent_Manager extends Agent {
 		}
 		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 		// We want to receive a reply in 10 secs
-		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 60000));
 											
 		try {
 			Action a = new Action();
@@ -1150,7 +1189,7 @@ public class Agent_Manager extends Agent {
 		if (!exists) {
 			boolean success = (new File("xml")).mkdir();
 			if (!success) {
-				System.out.println("Directory: " + "xml"
+				System.err.println(getLocalName() + ": Directory: " + "xml"
 						+ " could not be created"); // TODO exception
 			}
 		}
@@ -1321,6 +1360,7 @@ public class Agent_Manager extends Agent {
 			return null;
 		}
 
+		System.out.println(getLocalName() + ": ");
 		System.out.println("*********** files from the table: ");
 
 		double d_best = Integer.MAX_VALUE;
@@ -1341,7 +1381,7 @@ public class Agent_Manager extends Agent {
 					+ d_new);
 		}
 
-		System.out.println("Nearest file: " + m_best.getExternal_name());
+		System.out.println(getLocalName() + ": Nearest file: " + m_best.getExternal_name());
 		String nearestInternalName = m_best.getInternal_name();
 
 		// find the agent with the lowest error_rate

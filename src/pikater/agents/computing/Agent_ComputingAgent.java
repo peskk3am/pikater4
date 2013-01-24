@@ -33,9 +33,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Random;
 
+import pikater.DataManagerService;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Eval;
@@ -101,10 +105,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 	private boolean newAgent = true;
 	private boolean resurrected = false;
 
-	protected abstract void train() throws Exception;
+	protected abstract Date train(Evaluation evaluation) throws Exception;
 
-	protected abstract pikater.ontology.messages.Evaluation evaluateCA(
-			EvaluationMethod evaluation_method) throws Exception;
+	protected abstract void evaluateCA(EvaluationMethod evaluation_method,
+			Evaluation evaluation) throws Exception;
 
 	protected abstract DataInstances getPredictions(Instances test,
 			DataInstances onto_test);
@@ -232,6 +236,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 		newAgent = false;
 
 		args = getArguments();
+		// System.out.println("ARGS: " + args.toString());
 
 		if (args != null && args.length > 0) {
 			OPTIONS_ARGS = new String[args.length];
@@ -246,17 +251,19 @@ public abstract class Agent_ComputingAgent extends Agent {
 					OPTIONS_ARGS[i] = (String) args[i];
 				}
 
+				/*
 				// write out parameters
 				for (String s : OPTIONS_ARGS) {
 					System.out.print(s + " ");
 				}
+				*/
 
 			}
 		}
 		// some important initializations before registering
 		getParameters();
 
-		System.out.println(getAgentType() + " " + getLocalName()
+		System.out.println(getLocalName() + " " + getAgentType()
 				+ " is alive...");
 
 		registerWithDF();
@@ -299,18 +306,24 @@ public abstract class Agent_ComputingAgent extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println("Found the following ARFFReader agents:");
+			// System.out.println(getLocalName() + ": Found the following ARFFReader agents:");
 			ARFFReaders = new AID[result.length];
 			for (int i = 0; i < result.length; ++i) {
 				ARFFReaders[i] = result[i].getName();
-				System.out.println(ARFFReaders[i].getName());
+				// System.out.println("    " + ARFFReaders[i].getName());
 			}
-			// choose one
-			reader = ARFFReaders[0];
+			
+			// randomly choose one of the readers
+			Random randomGenerator = new Random();		    
+		    int randomInt = randomGenerator.nextInt(result.length);
+		    reader = ARFFReaders[randomInt];
+
+		    // System.out.println(getLocalName() + ": using " + reader + ", filename: " + fileName);
+			
 			// request
 			msgOut = new ACLMessage(ACLMessage.REQUEST);
 			msgOut.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-			msgOut.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+			// msgOut.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
 			msgOut.setLanguage(codec.getName());
 			msgOut.setOntology(ontology.getName());
 			msgOut.addReceiver(reader);
@@ -605,6 +618,12 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}
 					// Set options
 					setOptions(execute_action.getTask());
+					
+					// set agent name in Task
+					pikater.ontology.messages.Agent agent = current_task.getAgent();
+					agent.setName(getLocalName());
+					current_task.setAgent(agent);
+					
 					eval = new Evaluation();
 					success = true;
 					Data data = execute_action.getTask().getData();
@@ -613,23 +632,29 @@ public abstract class Agent_ComputingAgent extends Agent {
 					
 					train_fn = data.getTrain_file_name();
 					AchieveREInitiator get_train_behaviour = (AchieveREInitiator) ((ProcessAction) parent).getState(GETTRAINDATA_STATE);
+					
+					// get_train_behaviour.reset(sendGetDataReq(train_fn));
+										
 					if (!train_fn.equals(trainFileName)) {
 						get_train_behaviour.reset(sendGetDataReq(train_fn));
 					} else {
 						// We have already the right data
 						get_train_behaviour.reset(null);
 					}
+					
 
-					test_fn = data.getTest_file_name();
-					AchieveREInitiator get_test_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
-							.getState(GETTESTDATA_STATE);
-					if (!test_fn.equals(testFileName)) {
-						get_test_behaviour.reset(sendGetDataReq(test_fn));
-					} else {
-						// We have already the right data
-						get_test_behaviour.reset(null);
+					if (!mode.equals("train_only")) {
+						test_fn = data.getTest_file_name();
+						AchieveREInitiator get_test_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
+								.getState(GETTESTDATA_STATE);
+						if (!test_fn.equals(testFileName)) {
+							get_test_behaviour.reset(sendGetDataReq(test_fn));
+						} else {
+							// We have already the right data
+							get_test_behaviour.reset(null);
+						}
 					}
-
+					
 					if (data.getLabel_file_name() != null) {
 						label_fn = data.getLabel_file_name();
 						AchieveREInitiator get_label_behaviour = (AchieveREInitiator) ((ProcessAction) parent)
@@ -764,47 +789,50 @@ public abstract class Agent_ComputingAgent extends Agent {
 					try {
 
 						List labeledData = new ArrayList();
-
-						Date start = new Date();
+						
+						eval = new Evaluation();
+						
+						eval.setEvaluations(new ArrayList());
+						// Date start = new Date();
+						Date start = null;
 						if (state != states.TRAINED) {
-							train();
+							start = train(eval);
 						} else if (!resurrected) {
 							if (!mode.equals("test_only")) {
-								train();
+								start = train(eval);
 							}
 						}
-						Date end = new Date();
-						int duration = (int) (end.getTime() - start.getTime());
-
+						eval.setStart(start);
+						// Date end = new Date();
+						// int duration = (int) (end.getTime() - start.getTime());
+						
+						
+						List test_evals = new ArrayList();
 						if (state == states.TRAINED) {
 							EvaluationMethod evaluation_method = execute_action.getTask().getEvaluation_method();
-							eval = evaluateCA(evaluation_method);
-							if (output.equals("predictions")) {
-								DataInstances di = new DataInstances();
-								di.fillWekaInstances(test);
-								labeledData.add(getPredictions(test, di));
-								if (!labelFileName.equals("")) {
-									di = new DataInstances();
-									di.fillWekaInstances(label);
-									labeledData.add(getPredictions(label, di));
+							
+							if (!mode.equals("train_only")) {
+								evaluateCA(evaluation_method, eval);							
+							
+								if (output.equals("predictions")) {
+									DataInstances di = new DataInstances();
+									di.fillWekaInstances(test);
+									labeledData.add(getPredictions(test, di));
+									if (!labelFileName.equals("")) {
+										di = new DataInstances();
+										di.fillWekaInstances(label);
+										labeledData.add(getPredictions(label, di));
+									}
+									eval.setLabeled_data(labeledData);
 								}
-								eval.setLabeled_data(labeledData);
-							}
+							}														
 						}
-						Eval ev = new Eval();
-						ev.setName("duration");
-						ev.setValue((float)duration);
-						
-						// add eval to eval list
-						List evaluations = eval.getEvaluations();
-						evaluations.add(ev);
-						eval.setEvaluations(evaluations);
 
 					} catch (Exception e) {
 						success = false;
 						working = false;
 						failureMsg(e.getMessage());
-						System.out.println("Error: " + e.getMessage() + " ");
+						System.err.println(getLocalName() + ": Error: " + e.getMessage() + ".");
 						e.printStackTrace();
 					}
 				}
@@ -896,8 +924,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 					if (current_task.getGet_results().equals("after_each_task")) {								
 						result_msg.addReceiver(new AID(current_task.getGui_agent(), false));
 					}			
-				
-					send(result_msg);
+					current_task.setFinish(getDateTime());
+					
+					send(result_msg);					
 
 				}
 			}, SENDRESULTS_STATE);
@@ -973,5 +1002,11 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		return objectFilename;
 	}
+	
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
 };

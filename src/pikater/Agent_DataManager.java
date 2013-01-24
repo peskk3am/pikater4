@@ -8,6 +8,7 @@ import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.Agent;
+import jade.core.Profile;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
@@ -18,6 +19,7 @@ import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +36,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import java.util.LinkedList;
 import java.util.regex.Pattern;
@@ -70,39 +74,93 @@ public class Agent_DataManager extends Agent {
     Codec codec = new SLCodec();
     Ontology ontology = MessagesOntology.getInstance();
     
+    String db_url;
+    String db_user;
+    String db_password;
     
-    public Agent_DataManager() {
-        super();
-        try {
+    boolean no_log = false; // = use log
+    
+    private void openDBConnection() throws SQLException{
+    	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
+    	db = DriverManager.getConnection(db_url, db_user, db_password);    	
+    }
+    
+    @Override
+    protected void setup() {
+        
+    	try {
             //db = DriverManager.getConnection(
             //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
-        	openDBConnection();
+        	Object[] args = getArguments();
+        	// System.out.println(args);
+    		if (args != null && args.length > 0) {
+    			int i = 0;
+    			
+    			boolean db_specified = false;
+    			
+    			while (i < args.length){
+    				// System.out.println(args[i]);
+    				if (args[i].equals("url")){
+    					db_url = (String)args[i+1];
+    					db_specified = true;
+    				}
+    				if (args[i].equals("user")){
+    					db_user = (String)args[i+1];
+    					db_specified = true;
+    				}
+    				if (args[i].equals("password")){
+    					db_password = (String)args[i+1];
+    					db_specified = true;
+    				}
+    				if (args[i].equals("no_log")){
+    					no_log = true;
+    				}
+    				i++;
+    			}
+    			if (db_specified){
+	    			if (db_user == null){
+						db_user = "";    					
+					}
+	    			if (db_password == null){
+						db_password = "";    					
+					}
+    			}
+    		}
+    		else{
+    		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
+    		    db_user = "marp_pikater";
+    		    db_password = "pikater";
+    		}
         	
+    		System.out.println(getLocalName() +": Connecting to " + db_url + ".");
+    		// System.out.println("user " + db_user);
+    		// System.out.println("password " + db_password);
+    		openDBConnection();
+        	
+    		String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
+    		
             Logger.getRootLogger().addAppender(
                     new FileAppender(new PatternLayout(
-                    "%r [%t] %-5p %c - %m%n"), "log"));
+                    "%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
             log = Logger.getLogger(Agent_DataManager.class);
-            log.setLevel(Level.TRACE);
+            
+            if (no_log){
+            	 log.setLevel(Level.OFF);
+            }
+            else{
+            	log.setLevel(Level.TRACE);	
+            }            
 
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void openDBConnection() throws SQLException{
-        //db = DriverManager.getConnection("jdbc:hsqldb:file:data/db/pikaterdb", "", "");
     	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-        db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
-    }
-    
-    @Override
-    protected void setup() {
-        super.setup();
-
+        //db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
+    	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
         
@@ -203,6 +261,7 @@ public class Agent_DataManager extends Agent {
 								+ "start TIMESTAMP, "
 								+ "finish TIMESTAMP, " 
 								+ "duration INTEGER, "
+								+ "durationLR DOUBLE, "
 								+ "experimentID VARCHAR (256), "
 								+ "experimentName VARCHAR (256), "
 								+ "note VARCHAR (256) "
@@ -445,7 +504,7 @@ public class Agent_DataManager extends Agent {
 
                             String query = "INSERT INTO results (userID, agentName, agentType, options, dataFile, testFile,"
                                     + "errorRate, kappaStatistic, meanAbsoluteError, rootMeanSquaredError, relativeAbsoluteError,"
-                                    + "rootRelativeSquaredError, start, finish, duration, objectFilename, experimentID, experimentName, note) VALUES ( 1, ";
+                                    + "rootRelativeSquaredError, start, finish, duration, durationLR, objectFilename, experimentID, experimentName, note) VALUES ( 1, ";
                             query += "\'" + res.getAgent().getName() + "\',";
                             query += "\'" + res.getAgent().getType() + "\',";
                             query += "\'" + res.getAgent().optionsToString() + "\',";
@@ -459,6 +518,7 @@ public class Agent_DataManager extends Agent {
             				float Relative_absolute_error = Float.MAX_VALUE; // percent
             				float Root_relative_squared_error = Float.MAX_VALUE; // percent
             				int duration = Integer.MAX_VALUE; // miliseconds
+            				float durationLR = Float.MAX_VALUE;
 
                     		Iterator itr = res.getResult().getEvaluations().iterator();
                     		while (itr.hasNext()) {
@@ -490,6 +550,9 @@ public class Agent_DataManager extends Agent {
     							if (next_eval.getName().equals("duration")){ 
     								duration = (int)next_eval.getValue();
     							}
+    							if (next_eval.getName().equals("durationLR")){ 
+    								durationLR = (float)next_eval.getValue();
+    							}
                     		}
                     		
                             query += Error_rate + ",";
@@ -509,7 +572,8 @@ public class Agent_DataManager extends Agent {
                             
                             // query += "\'" + currentTimestamp + "\',";
                             query += "\'" + duration + "\',";
-
+                            query += "\'" + durationLR + "\',";
+                            
                             query += "\'" + res.getResult().getObject_filename() + "\', ";
                             query += "\'" + res.getId().getIdentificator() + "\',";  // TODO - pozor - neni jednoznacne, pouze pro jednoho managera
                             query += "\'" + res.getProblem_name() + "\',";
@@ -573,7 +637,6 @@ public class Agent_DataManager extends Agent {
                         Statement stmt1 = db.createStatement();
 
                         while (rs.next()) {
-                            System.out.println("aaa");
                         	Metadata m = new Metadata();
                             m.setAttribute_type(rs.getString("attributeType"));
                             m.setDefault_task(rs.getString("defaultTask"));
@@ -586,7 +649,7 @@ public class Agent_DataManager extends Agent {
                             // get the number of task with this file as training
                             // set in the db
                             query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
-                            System.out.println(query);
+                            // System.out.println(query);
                             ResultSet rs_number = stmt1.executeQuery(query);
                             rs_number.next();
 
@@ -628,7 +691,6 @@ public class Agent_DataManager extends Agent {
                         pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
                         agent.setName(rs.getString("agentName"));
                         agent.setType(rs.getString("agentType"));
-                        System.out.println("**** options: " + rs.getString("options"));
                         agent.setOptions(agent.stringToOptions(rs.getString("options")));
 
                         log.info("Executing query: " + query);
@@ -648,7 +710,7 @@ public class Agent_DataManager extends Agent {
 
                         String query = "SELECT * FROM filemetadata WHERE " + gfi.toSQLCondition();
 
-                        System.err.println(query);
+                        // System.err.println(query);
 
                         openDBConnection();
                         Statement stmt = db.createStatement();
@@ -677,7 +739,7 @@ public class Agent_DataManager extends Agent {
 
                         getContentManager().fillContent(reply, r);
 
-                        System.err.println("Sending reply");
+                        // System.err.println("Sending reply");
                         
                         db.close();
                         return reply;
@@ -745,11 +807,11 @@ public class Agent_DataManager extends Agent {
 
                         LoadResults lr = (LoadResults) a.getAction();
 
-                        System.err.println(lr.asText());
+                        // System.err.println(lr.asText());
 
                         String query = "SELECT * FROM resultsExternal " + lr.asSQLCondition();
 
-                        System.err.println(query);
+                        // System.err.println(query);
                         log.info(query);
 
                         openDBConnection();
@@ -927,11 +989,11 @@ public class Agent_DataManager extends Agent {
 	    log.info("Executing query " + query1);
 	    
 	    ResultSet rs = stmt.executeQuery(query);
-	    ResultSet rs1 = stmt.executeQuery(query1);
-		
 	    rs.next();
-	    rs1.next();
 	    int isInMetadata = rs.getInt("number");
+	    
+	    ResultSet rs1 = stmt.executeQuery(query1);
+		rs1.next();	    
 	    int isInFileMapping = rs1.getInt("number");
 	
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
@@ -942,7 +1004,7 @@ public class Agent_DataManager extends Agent {
 	        				"null, 0, 0, false)";
 	        stmt.executeUpdate(query);       
 	    }	        
-        stmt.close();
+        // stmt.close();
         db.close();
 	}
     

@@ -64,7 +64,7 @@ public class Agent_Initiator extends Agent {
 
 			// Read through file one line at time. Print line # and line
 			while (line != null) {
-				System.out.println(count + ": " + line);
+				// System.out.println(count + ": " + line);
 
 				// parse the line
 				String delims = "[ ]+";
@@ -102,21 +102,21 @@ public class Agent_Initiator extends Agent {
 			 * generated. A message indicating how to the class should be called
 			 * is displayed
 			 */
-			System.out.println("Usage: java ReadFile filename\n");
+			System.out.println(getLocalName() + ": no init file specified.");
 
 		} catch (IOException e) {
 			// If another exception is generated, print a stack trace
 			e.printStackTrace();
 		}
 		
-		addBehaviour(new TickerBehaviour(this, 10000) {
+		addBehaviour(new TickerBehaviour(this, 60000) {
 			
 		  Calendar cal;
 		  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			  
 		  protected void onTick() {
 			  cal = Calendar.getInstance();
-			  System.out.println("Agent "+myAgent.getLocalName()+": tick="+getTickCount()+" time="+sdf.format(cal.getTime()));
+			  System.out.println(myAgent.getLocalName()+": tick="+getTickCount()+" time="+sdf.format(cal.getTime()));
 		  } 
 		  
 		});
