@@ -176,7 +176,7 @@ public class Agent_DataManager extends Agent {
             e.printStackTrace();
         }
     	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-        db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
+        //db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
