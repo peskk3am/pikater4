@@ -1,96 +1,59 @@
 package pikater;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Vector;
-import java.util.regex.Pattern;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import pikater.agents.computing.Agent_ComputingAgent;
-import pikater.agents.computing.Agent_ComputingAgent.states;
-import pikater.ontology.messages.CreateAgent;
-import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.GetAllMetadata;
-import pikater.ontology.messages.GetFileInfo;
-import pikater.ontology.messages.GetFiles;
-import pikater.ontology.messages.GetSavedAgents;
-import pikater.ontology.messages.GetTheBestAgent;
-import pikater.ontology.messages.ImportFile;
-import pikater.ontology.messages.LoadAgent;
-import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Metadata;
-import pikater.ontology.messages.Option;
-import pikater.ontology.messages.SaveAgent;
-import pikater.ontology.messages.SaveMetadata;
-import pikater.ontology.messages.SaveResults;
-import pikater.ontology.messages.Task;
-import pikater.ontology.messages.TranslateFilename;
-import pikater.ontology.messages.UpdateMetadata;
-import weka.classifiers.Classifier;
-import weka.core.Instances;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
-import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.AgentContainer;
-import jade.core.LifeCycle;
-import jade.domain.AMSService;
+import jade.core.Profile;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
-import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.persistence.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
-import jade.proto.SimpleAchieveREInitiator;
-import jade.util.leap.ArrayList;
-import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import jade.wrapper.StaleProxyException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
+import pikater.ontology.messages.CreateAgent;
+import pikater.ontology.messages.Execute;
+import pikater.ontology.messages.LoadAgent;
+import pikater.ontology.messages.MessagesOntology;
+import pikater.ontology.messages.SaveAgent;
 
 public class Agent_AgentManager extends Agent {
 
@@ -105,20 +68,43 @@ public class Agent_AgentManager extends Agent {
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
 	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();	
 
-	public Agent_AgentManager() {
-		super();
+	private boolean no_log = false;	
+	
+	@Override
+	protected void setup() {
+		Object[] args = getArguments();
+    	if (args != null && args.length > 0) {
+			int i = 0;
+						
+			while (i < args.length){
+				// System.out.println(args[i]);
+				if (args[i].equals("no_log")){					
+					no_log = true;
+				}
+				i++;
+			}
+		}				
+		
 		try {
 			//db = DriverManager.getConnection(
 			//		"jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
+			String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
+			
 			Logger.getRootLogger()
 					.addAppender(
 							new FileAppender(new PatternLayout(
-									"%r [%t] %-5p %c - %m%n"), "log"));
+									"%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
 			log = Logger.getLogger(Agent_AgentManager.class);
-			log.setLevel(Level.TRACE);
-
+            
+			if (no_log){
+				log.setLevel(Level.OFF);
+			}
+			else{
+				log.setLevel(Level.TRACE);	
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -133,13 +119,6 @@ public class Agent_AgentManager extends Agent {
             }
         }
         
-		
-	}
-
-	@Override
-	protected void setup() {
-		super.setup();
-
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
@@ -156,13 +135,16 @@ public class Agent_AgentManager extends Agent {
 			@Override
 			protected ACLMessage handleRequest(ACLMessage request)
 					throws NotUnderstoodException, RefuseException {
-
-				log.info("Agent " + getLocalName() + " received request: "
+				
+				/* log.info("Agent " + getLocalName() + " received request: "
 						+ request.getContent());
-
+				System.out.println(getLocalName() + ": Queue size: " 
+						+ myAgent.getCurQueueSize() + " " + myAgent.getQueueSize());
+				*/
+				
 				try {
 					Action a = (Action) getContentManager().extractContent(
-							request);
+							request);			        
 
 					if (a.getAction() instanceof LoadAgent) {
 						LoadAgent la = (LoadAgent) a.getAction();
@@ -178,7 +160,6 @@ public class Agent_AgentManager extends Agent {
 								// read agent from file 
 							    String filename = "saved" + System.getProperty("file.separator") 
 							    	+  la.getFilename() + ".model";
-							    System.out.println(filename);						  
 							        
 							    //Construct the ObjectInputStream object
 							    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename));
@@ -186,7 +167,7 @@ public class Agent_AgentManager extends Agent {
 							    newAgent = (Agent) inputStream.readObject();
 							} 
 						    
-						    System.out.print("Ozivenej: "+newAgent);
+						    System.out.print(getLocalName() + ": Resurrected agent : "+newAgent);
 						    // TODO kdyz se ozivuje 2x ten samej -> chyba
 						    
 						    
@@ -353,15 +334,16 @@ public class Agent_AgentManager extends Agent {
 							agent_name = ca.getName();
 						}
 						else{
-							agent_name = generateName(ca.getType());
+							agent_name = ca.getType();
 						}
 						
-						createAgent(ca.getType(), agent_name, ca.getArguments());
+						agent_name = createAgent(ca.getType(), agent_name, ca.getArguments());
 						
 						ACLMessage reply = request.createReply();
 						reply.setPerformative(ACLMessage.INFORM);
 						reply.setContent(agent_name);
 						System.out.println(myAgent.getLocalName()+": Agent "+agent_name+" created.");
+						
 						return reply;												
 					}	
 				
@@ -447,31 +429,81 @@ public class Agent_AgentManager extends Agent {
         return dateFormat.format(date);
     }
     
-	private void createAgent(String type, String name, List args) throws ControllerException {
+	private String createAgent(String type, String name, List args){
 		// get a container controller for creating new agents
-		PlatformController container = getContainerController();
+		PlatformController container = getContainerController();				
 		
-		Object[] Args;
-		if (args == null){
-			Args = new Object[0];
+		Object[] Args1 = new Object[0];
+		Object[] Args2 = new Object[0];
+
+		if (agentOptions.get(type) != null){
+			Args1 = agentOptions.get(type);						
 		}
-		else{
-			Args = args.toArray();
+		
+		if (args != null){
+			Args2 = args.toArray();
 		}
+		
+		int size = Args1.length + Args2.length;
+		Object[] Args = new Object[size];	    
+		int i = 0;
+		for (Object o: Args1){
+			Args[i] = o;
+			i++;
+		}
+		for (Object o: Args2){
+			Args[i] = o;
+			i++;
+		}			
 		
 		/*
 		System.out.println("name: "+name);
 		System.out.println("type: "+agentTypes.get(type));
 		System.out.println("args: "+Args);
-		*/
+		*/				
 		
-		AgentController agent = container.createNewAgent(name, agentTypes.get(type), Args);
-		agent.start();
+		boolean agent_created = false;
+		while (!agent_created){		
+			try {
+				AgentController agent = container.createNewAgent(name, agentTypes.get(type), Args);
+				agent.start();
+				agent_created = true; // no exception occured
+			} catch (ControllerException e) {
+				// System.err.print(getLocalName() + " :");
+				// e.printStackTrace();
+				// try again with a different name				
+				name = generateName(name);
+				// System.err.print(getLocalName() + " : new name: " + name);
+				agent_created = false;
+			}
+		
+		}
 		// provide agent time to register with DF etc.
 		doWait(300);
+		
+		return name;
+	}
+
+	private String generateName(String name) {
+		int i = 0;
+		while (name.charAt(name.length()-i-1) >= 48 &&
+				name.charAt(name.length()-i-1) <= 57){
+			i++;			
+		}
+		
+		if (i == 0){
+			// no numbers
+			return name += "0";
+		}
+		else{
+			int number = Integer.parseInt(name.substring(name.length()-i, name.length()));
+			number++;
+			return name.substring(0, name.length()-i) + number;
+		}
+				
 	}
 	
-	private String generateName(String agentType) {
+	private String generateName_old(String agentType) {
 		int number = 0;
 		String name = agentType + number;
 		boolean success = false;

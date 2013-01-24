@@ -1,5 +1,7 @@
 package pikater;
 
+import java.util.Date;
+
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
@@ -24,6 +26,7 @@ import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.SaveMetadata;
 import pikater.ontology.messages.SaveResults;
+import pikater.ontology.messages.ShutdownDatabase;
 import pikater.ontology.messages.Task;
 import pikater.ontology.messages.TranslateFilename;
 import pikater.ontology.messages.UpdateMetadata;
@@ -173,7 +176,7 @@ public class DataManagerService extends FIPAService {
 		}
 	}
 
-	public static List getAllMetadata(Agent agent) {
+	public static List getAllMetadata(Agent agent, GetAllMetadata gm) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("dataManager", false));
@@ -183,8 +186,8 @@ public class DataManagerService extends FIPAService {
 
 		Action a = new Action();
 		a.setActor(agent.getAID());
-		a.setAction(new GetAllMetadata());
-
+		a.setAction(gm);
+		
 		try {
 			agent.getContentManager().fillContent(request, a);
 			ACLMessage inform = FIPAService.doFipaRequestClient(agent, request);
@@ -375,5 +378,42 @@ public class DataManagerService extends FIPAService {
 		return null;
 
 	}
+	
+	public static boolean shutdownDatabase(Agent agent) {
 
+		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+		request.addReceiver(new AID("dataManager", false));
+		request.setOntology(MessagesOntology.getInstance().getName());
+		request.setLanguage(codec.getName());
+		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+		request.setReplyByDate(new Date(System.currentTimeMillis() + 1000));
+
+		ShutdownDatabase sd = new ShutdownDatabase();
+		
+		Action a = new Action();
+		a.setActor(agent.getAID());
+		a.setAction(sd);
+
+		ACLMessage inform = null;
+		try {
+			agent.getContentManager().fillContent(request, a);
+
+			inform = FIPAService.doFipaRequestClient(agent, request);
+
+		} catch (CodecException e) {
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			e.printStackTrace();
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+
+		if (inform == null){
+			return false;		
+		}
+		else {
+			return true;			
+		}
+
+	}
 }

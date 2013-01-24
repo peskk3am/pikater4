@@ -60,7 +60,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 									error_rate = next_eval.getValue();
 								}
 							}
-							System.out.println("Agent " + getLocalName()
+							System.out.println(getLocalName()
 									+ ": options for agent "
 									+ task.getAgent().getName() + " were "
 									+ task.getAgent().optionsToString()
@@ -68,7 +68,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 									+ error_rate);
 						}
 					} else {
-						System.out.println("Agent " + getLocalName()
+						System.out.println(getLocalName()
 								+ ": there were no tasks in this computation.");
 					}
 				}
@@ -78,7 +78,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CodecException e) {
-			System.out.println("Agent " + getLocalName() + " "
+			System.out.println(getLocalName() + ": "
 					+ inform.getContent());
 		} catch (OntologyException e) {
 			// TODO Auto-generated catch block
@@ -106,21 +106,22 @@ public class Agent_GUI_config_file extends Agent_GUI {
 						}
 					}
 					
-					System.out.println("Agent " + getLocalName()
+					System.out.println(getLocalName()
 									+ ": "
 									+ " error_rate: "
 									+ error_rate);
 					
-					List dataList = eval.getLabeled_data();
+					/* List dataList = eval.getLabeled_data();
 					Iterator itr = dataList.iterator();
 					while (itr.hasNext()) {
 						System.out.println("Instances: "+((DataInstances)itr.next()).getInstances());
 					}
+					*/
 				}
 				
 			}
 			else {
-				System.out.println("Agent " + getLocalName()
+				System.out.println(getLocalName()
 							+ ": there were no tasks in this computation.");
 			}
 		
@@ -128,7 +129,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CodecException e) {
-			System.out.println("Agent " + getLocalName() + " "
+			System.out.println(getLocalName() + ": "
 					+ inform.getContent());
 		} catch (OntologyException e) {
 			// TODO Auto-generated catch block
@@ -143,7 +144,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		try {
 			content = getContentManager().extractContent(inform);
 			
-			System.out.println(content);
+			// System.out.println(content);
 			
 			if (content instanceof Result) {
 				
@@ -160,17 +161,18 @@ public class Agent_GUI_config_file extends Agent_GUI {
 						}
 					}
 					
-					System.out.println("Agent " + getLocalName()
+					System.out.println(getLocalName()
 							+ ": options for agent "
 							+ task.getAgent().getName() + " were "
 							+ task.getAgent().optionsToString()
-							+ " error_rate: "
-							+ error_rate);
+							+ " error_rate: "+ error_rate
+							+ ", dataset: "
+							+ task.getData().getExternal_train_file_name());
 				}
 				
 			}
 			else {
-				System.out.println("Agent " + getLocalName()
+				System.out.println(getLocalName()
 							+ ": there were no tasks in this computation.");
 			}
 		
@@ -178,7 +180,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CodecException e) {
-			System.out.println("Agent " + getLocalName() + " "
+			System.out.println(getLocalName() + ": "
 					+ inform.getContent());
 		} catch (OntologyException e) {
 			// TODO Auto-generated catch block
@@ -239,21 +241,21 @@ public class Agent_GUI_config_file extends Agent_GUI {
 		 * "iris.arff", null, null); // getAgentOptions("mp1"); //
 		 */
 
-		System.out.println("Agent types: " + offerAgentTypes());
+		// System.out.println("Agent types: " + offerAgentTypes());
 
 		configFileName = getConfigFileName();
 		try {
-			System.out.println(
+			 System.out.println(getLocalName() + ": xml file name " + 
 					//"file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+
 					System.getProperty("user.dir")+ System.getProperty("file.separator") + configFileName);
 			getProblemsFromXMLFile(configFileName);
 		}
 		// indicates a well-formedness error
 		catch (JDOMException e) {
-			System.out.println(configFileName + " is not well-formed. "
+			System.out.println(getLocalName() + ": " + configFileName + " is not well-formed. "
 					+ e.getMessage());
 		} catch (IOException e) {
-			System.out.print("Could not check " + configFileName);
+			System.out.print(getLocalName() + ": Could not check " + configFileName);
 			System.out.println(" because " + e.getMessage());
 		}
 		// */
@@ -317,7 +319,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 	@Override
 	protected void displayPartialResult(ACLMessage inform) {
-		System.out.println("Partial results");
+		System.out.println(getLocalName() + ": Partial results");
 	}
 
 	private String getConfigFileName() {

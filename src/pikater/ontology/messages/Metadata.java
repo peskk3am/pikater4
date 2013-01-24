@@ -15,7 +15,6 @@ public class Metadata implements Concept {
 	private boolean _missing_values;
 	private String _default_task; // Classification, Regression, Clustering
 	private String _attribute_type; // Categorical, Numerical, Mixed
-	private int _number_of_tasks_in_db;
 
 	public int getNumber_of_instances() {
 		return _number_of_instances;
@@ -71,14 +70,6 @@ public class Metadata implements Concept {
 
 	public String getExternal_name() {
 		return _external_name;
-	}
-
-	public void setNumber_of_tasks_in_db(int number_of_tasks_in_db) {
-		this._number_of_tasks_in_db = number_of_tasks_in_db;
-	}
-
-	public int getNumber_of_tasks_in_db() {
-		return _number_of_tasks_in_db;
 	}
 
 }

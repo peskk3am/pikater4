@@ -4,10 +4,10 @@
 # 
 
 # Sets the number of randomly chosen attributes.
-$ K int 1 1 r 1 10
+$ K int 1 1 r 1 50
 
 # The minimum total weight of the instances in a leaf.
-$ M int 1 1 r 0 10
+$ M int 1 1 r 0 100
 
 # The random number seed used for selecting attributes.
 $ Q int 1 1 r 1 MAXINT 

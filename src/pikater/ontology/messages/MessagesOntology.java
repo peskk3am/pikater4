@@ -58,7 +58,7 @@ public class MessagesOntology extends Ontology {
 	public static final String PROBLEM = "PROBLEM";
 	public static final String PROBLEM_ID = "id";
 	public static final String PROBLEM_GUI_ID = "gui_id";
-	public static final String PROBLEM_SENT = "sent";
+	public static final String PROBLEM_STATUS = "status";
 	public static final String PROBLEM_AGENTS = "agents";
 	public static final String PROBLEM_DATA = "data";
 	public static final String PROBLEM_TIMEOUT = "timeout";
@@ -87,6 +87,7 @@ public class MessagesOntology extends Ontology {
 	public static final String EVALUATION_OBJECT_FILENAME = "object_filename";
 	public static final String EVALUATION_OBJECT = "object";
 	public static final String EVALUATION_DATA_TABLE = "data_table";
+	public static final String EVALUATION_START = "start";	
 	
 	public static final String EVAL = "EVAL";
 	public static final String EVAL_NAME = "name";
@@ -172,7 +173,6 @@ public class MessagesOntology extends Ontology {
 	public static final String METADATA_MISSING_VALUES = "missing_values";
 	public static final String METADATA_DEFAULT_TASK = "default_task";
 	public static final String METADATA_ATTRIBUTE_TYPE = "attribute_type";
-	public static final String METADATA_NUMBER_OF_TASKS_IN_DB = "number_of_tasks_in_db";
 	
 	public static final String OPTIONS = "OPTIONS";
 	public static final String OPTIONS_LIST = "list";
@@ -180,6 +180,11 @@ public class MessagesOntology extends Ontology {
 	public static final String FITNESS = "FITNESS";
 	public static final String FITNESS_SOLUTION = "solution";
 	public static final String FITNESS_FITNESS_VALUES = "fitnessValues";
+	
+	public static final String DURATION = "DURATION";
+	public static final String DURATION_START = "start";	
+	public static final String DURATION_DURATION = "duration";		
+	public static final String DURATION_LR_DURATION = "LR_duration";	
 	
 	// Predicates
 	public static final String PARTIALRESULTS = "PARTIALRESULTS";
@@ -214,12 +219,13 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_DATA = "GET-DATA";
 	public static final String GET_DATA_FILE_NAME = "file_name";
-        public static final String GET_DATA_SAVE_META = "saveMetadata";
 
 	public static final String SAVE_METADATA = "SAVE-METADATA";
 	public static final String SAVE_METADATA_METADATA = "metadata";
 
 	public static final String GET_ALL_METADATA = "GET-ALL-METADATA";
+	public static final String GET_ALL_METADATA_EXCEPTIONS = "exceptions";
+	public static final String GET_ALL_METADATA_RESULTS_REQUIRED = "results_required";
 
 	public static final String GET_THE_BEST_AGENT = "GET-THE-BEST-AGENT";
 	public static final String GET_THE_BEST_AGENT_NEAREST_FILE_NAME = "nearest_file_name";
@@ -306,6 +312,15 @@ public class MessagesOntology extends Ontology {
         public static final String GET_AGENTS_NUMBER = "number";        
         public static final String GET_AGENTS_TASK_ID = "task_id";        
 
+        public static final String GET_DURATION = "GET_DURATION";
+        public static final String GET_DURATION_DURATION = "duration";
+
+        public static final String GET_METADATA = "GET_METADATA";
+    	public static final String GET_METADATA_INTERNAL_FILENAME = "internal_filename";
+    	public static final String GET_METADATA_EXTERNAL_FILENAME = "external_filename";
+        
+        public static final String SHUTDOWN_DATABASE = "SHUTDOWN-DATABASE";
+        
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
 
@@ -353,10 +368,11 @@ public class MessagesOntology extends Ontology {
 			add(new ConceptSchema(ATTRIBUTE), Attribute.class);
 			add(new ConceptSchema(INSTANCE), Instance.class);
 			add(new ConceptSchema(METADATA), Metadata.class);
-                        add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
+            add(new ConceptSchema(SAVED_RESULT), SavedResult.class);
             add(new ConceptSchema(OPTIONS), Options.class);
 			add(new ConceptSchema(FITNESS), Fitness.class);
 			add(new ConceptSchema(ID), Id.class);
+			add(new ConceptSchema(DURATION), Duration.class);
 			
             add(new PredicateSchema(PARTIALRESULTS), PartialResults.class);
             
@@ -383,7 +399,10 @@ public class MessagesOntology extends Ontology {
             add(new AgentActionSchema(CREATE_AGENT), CreateAgent.class);
             add(new AgentActionSchema(EXECUTE_PARAMETERS), ExecuteParameters.class);            
             add(new AgentActionSchema(GET_AGENTS), GetAgents.class);
-
+            add(new AgentActionSchema(GET_DURATION), GetDuration.class);
+            add(new AgentActionSchema(GET_METADATA), GetMetadata.class);
+            add(new AgentActionSchema(SHUTDOWN_DATABASE), ShutdownDatabase.class);
+            
 			ConceptSchema cs = (ConceptSchema) getSchema(ID);
 			cs.add(ID_IDENTIFICATOR, (PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(ID_SUBID, (ConceptSchema) getSchema(ID), ObjectSchema.OPTIONAL);
@@ -394,8 +413,8 @@ public class MessagesOntology extends Ontology {
 			cs.add(PROBLEM_GUI_ID,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-			cs.add(PROBLEM_SENT,
-					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
+			cs.add(PROBLEM_STATUS,
+					(PrimitiveSchema) getSchema(BasicOntology.STRING));
 			cs.add(PROBLEM_AGENTS, (ConceptSchema) getSchema(AGENT), 1,
 					ObjectSchema.UNLIMITED);
 			cs.add(PROBLEM_DATA, (ConceptSchema) getSchema(DATA), 1,
@@ -423,7 +442,7 @@ public class MessagesOntology extends Ontology {
 
 			cs = (ConceptSchema) getSchema(TASK);
 			cs.add(TASK_ID, (ConceptSchema) getSchema(ID));
-			cs.add(TASK_PROBLEM_ID, (ConceptSchema) getSchema(ID));
+			cs.add(TASK_PROBLEM_ID, (ConceptSchema) getSchema(ID), ObjectSchema.OPTIONAL);
 			cs.add(TASK_AGENT, (ConceptSchema) getSchema(AGENT));
 			cs.add(TASK_DATA, (ConceptSchema) getSchema(DATA));
 			cs.add(TASK_RESULT, (ConceptSchema) getSchema(EVALUATION),
@@ -435,10 +454,10 @@ public class MessagesOntology extends Ontology {
 			cs.add(TASK_SAVE_RESULTS,
 					(PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 			cs.add(TASK_GUI_AGENT,
-					(PrimitiveSchema) getSchema(BasicOntology.STRING));
+					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 
 			cs.add(TASK_USERID,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER));			
+					(PrimitiveSchema) getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);			
 			cs.add(TASK_START,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
 			cs.add(TASK_FINISH,
@@ -572,6 +591,8 @@ public class MessagesOntology extends Ontology {
 			cs.add(EVALUATION_DATA_TABLE,
 					(ConceptSchema)getSchema(DATA_INSTANCES),
 					ObjectSchema.OPTIONAL);
+			cs.add(EVALUATION_START,
+					(PrimitiveSchema) getSchema(BasicOntology.DATE), ObjectSchema.OPTIONAL);
 
 			cs = (ConceptSchema) getSchema(RESULTS);
 			cs.add(RESULTS_PROBLEM_ID,
@@ -666,9 +687,6 @@ public class MessagesOntology extends Ontology {
 			cs.add(METADATA_ATTRIBUTE_TYPE,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-			cs.add(METADATA_NUMBER_OF_TASKS_IN_DB,
-					(PrimitiveSchema) getSchema(BasicOntology.INTEGER),
-					ObjectSchema.OPTIONAL);
 
                         cs = (ConceptSchema)getSchema(SAVED_RESULT);
                         cs.add(SAVED_RESULT_ERR, (PrimitiveSchema)getSchema(BasicOntology.FLOAT));
@@ -692,6 +710,12 @@ public class MessagesOntology extends Ontology {
             		(ConceptSchema) getSchema(SEARCHSOLUTION),
 					ObjectSchema.OPTIONAL);
             cs.add(FITNESS_FITNESS_VALUES, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), 1, ObjectSchema.UNLIMITED);
+            
+            cs = (ConceptSchema)getSchema(DURATION);
+            cs.add(DURATION_START, (PrimitiveSchema)getSchema(BasicOntology.DATE), 1);
+            cs.add(DURATION_DURATION, (PrimitiveSchema)getSchema(BasicOntology.INTEGER), 1);
+            cs.add(DURATION_LR_DURATION, (PrimitiveSchema)getSchema(BasicOntology.FLOAT), ObjectSchema.MANDATORY);
+            
             
 			PredicateSchema ps = (PredicateSchema) getSchema(PARTIALRESULTS);
 			ps.add(PARTIALRESULTS_TASK, (ConceptSchema) getSchema(TASK),
@@ -749,10 +773,11 @@ public class MessagesOntology extends Ontology {
 			as.add(GET_DATA_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
-                        as.add(GET_DATA_SAVE_META, (PrimitiveSchema) getSchema(BasicOntology.BOOLEAN));
 
 			as = (AgentActionSchema) getSchema(GET_ALL_METADATA);
-
+			as.add(GET_ALL_METADATA_EXCEPTIONS, (ConceptSchema) getSchema(METADATA), 0, ObjectSchema.UNLIMITED);
+			as.add(GET_ALL_METADATA_RESULTS_REQUIRED, (PrimitiveSchema)getSchema(BasicOntology.BOOLEAN), ObjectSchema.OPTIONAL);
+			
 			as = (AgentActionSchema) getSchema(GET_THE_BEST_AGENT);
 			as.add(GET_THE_BEST_AGENT_NEAREST_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
@@ -841,6 +866,15 @@ public class MessagesOntology extends Ontology {
 
             as = (AgentActionSchema) getSchema(EXECUTE_PARAMETERS);                       
             as.add(EXECUTE_PARAMETERS_SOLUTIONS, (ConceptSchema) getSchema(SEARCHSOLUTION), 0, ObjectSchema.UNLIMITED);
+
+            as = (AgentActionSchema) getSchema(GET_DURATION);                       
+            as.add(GET_DURATION_DURATION,  (ConceptSchema) getSchema(DURATION));
+
+            as = (AgentActionSchema) getSchema(GET_METADATA);                       
+			as.add(GET_METADATA_EXTERNAL_FILENAME,	(PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);
+			as.add(GET_METADATA_INTERNAL_FILENAME, (PrimitiveSchema) getSchema(BasicOntology.STRING), ObjectSchema.OPTIONAL);            
+            
+			as = (AgentActionSchema) getSchema(SHUTDOWN_DATABASE);                       
 
 		} catch (OntologyException oe) {
 			oe.printStackTrace();

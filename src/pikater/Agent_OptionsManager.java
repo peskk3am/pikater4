@@ -12,6 +12,7 @@ import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -25,6 +26,8 @@ import jade.proto.ContractNetInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -33,11 +36,14 @@ import java.text.DateFormat;
 
 import pikater.ontology.messages.BoolSItem;
 import pikater.ontology.messages.CreateAgent;
+import pikater.ontology.messages.Duration;
+import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.FloatSItem;
 import pikater.ontology.messages.GetAgents;
+import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.IntSItem;
@@ -70,6 +76,13 @@ public class Agent_OptionsManager extends Agent {
 	private Task received_task;
 	private ACLMessage received_request = null;
 	
+	// 3 levels:
+	// 0 no output
+	// 1 minimal
+	// 2 normal
+	private int verbosity = 1;
+	
+	
 	protected String getAgentType() {
 		return "Option Manager";
 	}
@@ -90,21 +103,21 @@ public class Agent_OptionsManager extends Agent {
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused");
+			println("Agent "+refuse.getSender().getName()+" refused.", 1, true);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				System.out.println("Responder does not exist");
+				println("Responder does not exist", 1, true);
 			}
 			else {
-				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
+				println("Agent "+failure.getSender().getName()+" failed", 1, true);
 			}
 			// Immediate failure --> we will not receive a response from this agent
 			nResponders--;
@@ -113,30 +126,40 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 			if (responses.size() < nResponders) {
 				// Some responder didn't reply within the specified timeout
-				System.out.println(myAgent.getLocalName()+": Timeout expired: missing "+(nResponders - responses.size())+" responses");
+				println("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2, true);
 			}
+			/* if (responses.size() == 0) {
+				// Some responder didn't reply within the specified timeout
+				println("Timeout expired: all responses missing", 1, true);
+			}
+			*/
 			// Evaluate proposals.
 			int bestProposal = Integer.MAX_VALUE;
 			AID bestProposer = null;
 			ACLMessage accept = null;
+			List replies = new ArrayList();
+			
 			Enumeration e = responses.elements();
 			while (e.hasMoreElements()) {
 				ACLMessage msg = (ACLMessage) e.nextElement();
 				if (msg.getPerformative() == ACLMessage.PROPOSE) {
 					ACLMessage reply = msg.createReply();
-					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-					acceptances.addElement(reply);
+					reply.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);					
 					int proposal = Integer.parseInt(msg.getContent());
 					if (proposal < bestProposal) {
 						bestProposal = proposal;
 						bestProposer = msg.getSender();
 						accept = reply;
 					}
+					acceptances.addElement(reply);
 				}
 			}
 			// Accept the proposal of the best proposer
 			if (accept != null) {
-				System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+				
+				println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2, true);
 								
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -158,16 +181,22 @@ public class Agent_OptionsManager extends Agent {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+																
+				// acceptances.addElement(accept); // TODO sends the accept twice		
 				
-				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);				
-			}						
-			// TODO - if there is no best proposer, return options to the queue
+			} else{
+				// if there is no (best) proposer, return options to the queue
+				number_of_current_tasks--;
+				query_queue.add(query);
+			}			
 		}
 		
-		protected void handleInform(ACLMessage inform) {
-			System.out.println(myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
+		protected void handleInform(ACLMessage inform) {		
+			println("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2, true);
 			// send result to the search agent:
 			
+			number_of_current_tasks--;
+
 			// extract evaluation from the task in the inform message
 			ContentElement content;
 			try {
@@ -177,9 +206,47 @@ public class Agent_OptionsManager extends Agent {
 					Result result = (Result) content;					
 					// get the original task from the query
 					List tasks = (List)result.getValue();
-					Task t = (Task) tasks.get(0);						
-					Evaluation ev = t.getResult();	
+					Task t = (Task) tasks.get(0);
 					t.setFinish(getDateTime());
+					Evaluation ev = t.getResult();
+					List ev_evaluations = ev.getEvaluations();
+					
+					// get start and end
+					int duration = 0;
+					
+					Iterator itr = ev_evaluations.iterator();
+					while (itr.hasNext()) {
+						Eval eval = (Eval) itr.next();
+						if (eval.getName().equals("duration")){
+							duration = (int) eval.getValue();
+						}
+					}
+		
+					GetDuration gd = new GetDuration();
+					Duration d = new Duration();
+					d.setStart(ev.getStart());
+					d.setDuration(duration);
+					gd.setDuration(d);
+					
+					// set LR duration
+					Duration durationLR = DurationService.getDuration(myAgent, gd);
+					
+					println("durationLR: " + durationLR.getLR_duration() 
+										+ " duration: "+ durationLR.getDuration(), 2, true);
+					
+					Eval eval = new Eval();
+					eval.setName("durationLR");
+					eval.setValue(durationLR.getLR_duration());
+					
+					ev_evaluations.add(eval);
+					ev.setEvaluations(ev_evaluations);					
+					t.setResult(ev);
+					
+					// save results to the database
+					if (t.getSave_results()){						
+						DataManagerService.saveResult(myAgent, t);
+					}
+					
 					results.add(t);
 					
 					// send evaluation to search agent
@@ -194,20 +261,20 @@ public class Agent_OptionsManager extends Agent {
 				}			
 			} catch (UngroundedException e) {
 				// TODO Auto-generated catch block
+				System.err.print(getLocalName() + " ");
 				e.printStackTrace();
 			} catch (CodecException e) {
 				// TODO Auto-generated catch block
+				System.err.print(getLocalName() + " ");
 				e.printStackTrace();
 			} catch (OntologyException e) {
 				// TODO Auto-generated catch block
+				System.err.print(getLocalName() + " ");
 				e.printStackTrace();
 			}			
 			
 			// send new CFP:
-			boolean next_query_processes = ProcessNextQuery();
-			if (!next_query_processes){				
-				number_of_current_tasks--;
-			}
+			ProcessNextQuery();
 		}
 	} // end of call for proposal bahavior
 	
@@ -235,7 +302,7 @@ public class Agent_OptionsManager extends Agent {
 			
 			cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 			// We want to receive a reply in 10 secs
-			cfp.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
+			cfp.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
 			Execute ex = new Execute();
 			
 			// add task id
@@ -274,18 +341,27 @@ public class Agent_OptionsManager extends Agent {
 	
 	
 	private boolean ProcessNextQuery(){
-				
+		
 		if (computing_agents != null){
+			
+			println("number_of_current_tasks: " + number_of_current_tasks 
+					+ " computing_agents.size(): " + computing_agents.size()
+					+ " query_queue.size(): " + query_queue.size() , 2, true);					
+
 			if (number_of_current_tasks < computing_agents.size()
 					&& query_queue.size() > 0){
+				
+				println("added", 2, true);
 				
 				ACLMessage query = (ACLMessage)query_queue.get(0);
 				query_queue.remove(0);
 	
 				ACLMessage cfp = createCFPmsg(query);																			
+
+				number_of_current_tasks++;
 				
 				// create new contract net protocol
-				addBehaviour(new ExecuteTask(this, cfp, query));	
+				addBehaviour(new ExecuteTask(this, cfp, query));
 				return true;
 			}
 		}
@@ -368,13 +444,13 @@ public class Agent_OptionsManager extends Agent {
 								ACLMessage msg_name = FIPAService.doFipaRequestClient(myAgent, msg_ca);
 								search_agent_name = msg_name.getContent();
 							} catch (FIPAException e) {
-								System.err.println("Exception while adding agent"
+								System.err.println(getLocalName() + ": " + "Exception while adding agent"
 										+execute.getMethod().getType()+": " + e);		
 							} catch (CodecException e) {
-								// TODO Auto-generated catch block
+								System.out.println(getLocalName() + ": "); 
 								e.printStackTrace();
 							} catch (OntologyException e) {
-								// TODO Auto-generated catch block
+								System.out.println(getLocalName() + ": ");
 								e.printStackTrace();
 							}
 
@@ -437,14 +513,13 @@ public class Agent_OptionsManager extends Agent {
 						// options manager received options to execute					
 						
 						query_queue.add(query);
-						ProcessNextQuery();
+						ProcessNextQuery();												
 					}
 				}
 
 				if (agree != null) {
 					msg_received = true;
-					// get max number of tasks
-					System.out.println("agree received");
+					// get max number of tasks					
 					max_number_of_tasks = Integer.parseInt(agree.getContent());						
 					
 					// if the agent name is not filled in
@@ -518,30 +593,31 @@ public class Agent_OptionsManager extends Agent {
 		
 		public StartGettingParameters(Agent a, ACLMessage msg) {
 			super(a, msg);
-			System.out.println(a.getLocalName()
-					+ ": StartGettingParameters behavior created.");
+			println("StartGettingParameters behavior created.", 2, true);
 		}
 
 		
 		protected void handleInform(ACLMessage inform) {
-			System.out.println(getLocalName() + ": Agent "
-					+ inform.getSender().getName() + ": sending of Options have been finished.");
+			println("Agent " + inform.getSender().getName() 
+					+ ": sending of Options have been finished.", 2, true);
+			
+			// throw away the rest of the queries
+			query_queue = new ArrayList();
+			
 			// sending of Options have been finished -> send message to Manager
 			sendResultsToManager();			
 		}
 				
 		protected void handleRefuse(ACLMessage refuse) {
-			System.out.println(getLocalName() + ": Agent "
-					+ refuse.getSender().getName()
-					+ " refused to perform the requested action");
-			// + preposlat zpravu managerovi
+			println("Agent " + refuse.getSender().getName()
+					+ " refused to perform the requested action.", 1, true);
+			// TODO preposlat zpravu managerovi
 		}
 
 		protected void handleFailure(ACLMessage failure) {
-			System.out.println(getLocalName() + ": Agent "
-					+ failure.getSender().getName()
-					+ ": failure while performing the requested action");
-			// preposlat zpravu managerovi
+			println("Agent "+ failure.getSender().getName()
+					+ ": failure while performing the requested action", 1, true);
+			// TODO preposlat zpravu managerovi
 		}
 
 	};
@@ -585,9 +661,8 @@ public class Agent_OptionsManager extends Agent {
 		// prefer to do this asynchronously using a behaviour.
 		try {
 			DFService.register(this, description);
-			System.out.println(getLocalName()
-					+ ": successfully registered with DF; service type: "
-					+ typeDesc);
+			println("successfully registered with DF; service type: "
+					+ typeDesc, 2, true);
 			return true;
 		} catch (FIPAException e) {
 			System.err.println(getLocalName()
@@ -600,7 +675,7 @@ public class Agent_OptionsManager extends Agent {
 
 	@Override
 	protected void setup() {
-		System.out.println(getLocalName() + " is alive...");
+		println("is alive...", 1, true);
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
@@ -608,6 +683,15 @@ public class Agent_OptionsManager extends Agent {
 		registerWithDF();
 				
 		addBehaviour(new RequestServer(this));
+
+		// if there are still some queries left in the queue, process them
+		// (also processed after informs from CAs are received)
+		addBehaviour(new TickerBehaviour(this, 10000) {			
+			  protected void onTick() {
+				  println("tick="+getTickCount(), 2, true);
+				  ProcessNextQuery();
+			  } 			  
+			});	
 
 	} // end setup
 	
@@ -678,7 +762,7 @@ public class Agent_OptionsManager extends Agent {
 	}
 
 	//Fill an option's ? with values in iterator
-	private String fillOptWithSolution(Option opt, Iterator solution_itr){
+	private String fillOptWithSolution(Option opt, Iterator solution_itr){		
 		String res_values = "";
 		String[] values = ((String)opt.getUser_value()).split(",");
 		int numArgs = values.length;
@@ -688,7 +772,11 @@ public class Agent_OptionsManager extends Agent {
 			}else{
 				res_values+=values[i];
 			}
+			if (i < numArgs-1){
+				res_values+=",";
+			}
 		}
+		
 		return res_values;
 	}
 	
@@ -751,6 +839,24 @@ public class Agent_OptionsManager extends Agent {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         Date date = new Date();
         return dateFormat.format(date);
-    }    
+    }   
+    
+	private void print(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.print(text);
+		}
+	}
+
+	private void println(String text, int level, boolean print_agent_name){
+		if (verbosity >= level){
+			if (print_agent_name){
+				System.out.print(getLocalName() + ": ");
+			}
+			System.out.println(text);
+		}
+	}
 
 }

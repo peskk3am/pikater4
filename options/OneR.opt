@@ -4,4 +4,4 @@
 # 
 
 # Specify the minimum number of objects in a bucket (default: 6).
-$ B int 1 1 r 1 15 
+$ B int 1 1 r 1 100 

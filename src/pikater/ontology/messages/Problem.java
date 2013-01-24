@@ -8,10 +8,11 @@ public class Problem implements Concept {
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 7185046750972524624L;
 	private Id _id;
 	private String _gui_id;
-	private boolean _sent;
+	private String _status;  // status in GUI agent: new, sent, finished, failed, refused
 	private List _agents;
 	private List _data;
 	private int _timeout;
@@ -63,12 +64,12 @@ public class Problem implements Concept {
 		return _timeout;
 	}
 
-	public boolean getSent() {
-		return _sent;
+	public String getStatus() {
+		return _status;
 	}
 
-	public void setSent(boolean sent) {
-		_sent = sent;
+	public void setStatus(String status) {
+		_status = status;
 	}
 
 	public Agent getMethod() {
