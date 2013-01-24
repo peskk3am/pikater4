@@ -1,8 +1,8 @@
 $a pikater.Agent_ARFFReader Reader_Rychlonozka
-$a pikater.Agent_ARFFReader Reader_Cervenacek
-$a pikater.Agent_ARFFReader Reader_Jindra
-$a pikater.Agent_ARFFReader Reader_Jarka
-$a pikater.Agent_ARFFReader Reader_Mirek
+#$a pikater.Agent_ARFFReader Reader_Cervenacek
+#$a pikater.Agent_ARFFReader Reader_Jindra
+#$a pikater.Agent_ARFFReader Reader_Jarka
+#$a pikater.Agent_ARFFReader Reader_Mirek
 
 $a pikater.Agent_Manager manager no_xml_output
 
