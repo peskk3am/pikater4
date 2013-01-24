@@ -10,6 +10,8 @@ import pikater.evolution.operators.Operator;
 import pikater.evolution.operators.SearchItemIndividualMutation;
 import pikater.evolution.selectors.TournamentSelector;
 import weka.classifiers.functions.GaussianProcesses;
+import weka.classifiers.functions.RBFNetwork;
+import weka.classifiers.functions.SMOreg;
 import weka.core.Instances;
 
 /**
@@ -62,7 +64,7 @@ public class SurrogateMutationOperator implements Operator {
                 EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
 
                 ea.addOperator(new OnePtXOver(0.8));
-                ea.addOperator(new SearchItemIndividualMutation(0.8, 0.5, 0.1));
+                ea.addOperator(new SearchItemIndividualMutation(0.8, 0.5, 0.05));
                 ea.addEnvironmentalSelector(new TournamentSelector());
                 ea.setReplacement(new MergingReplacement());
 

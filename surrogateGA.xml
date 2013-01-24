@@ -15,13 +15,12 @@
           <parameter name="F" value="10" />        
         </evaluation>
         
-		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="dermatology.arff" test="dermatology.arff" />
 		
-        <agent type="RBFNetwork">
-        	<parameter name="B" value="?" />
-        	<parameter name="W" value="?" />
-			<parameter name="R" value="?" />
-			<parameter name="M" value="?" />
+        <agent type="SMO">
+        	<parameter name="C" value="0.05" />
+        	<parameter name="G" value="0.3" />
+			<parameter name="R" value="True" />
     	</agent>
         	
    </experiment>
