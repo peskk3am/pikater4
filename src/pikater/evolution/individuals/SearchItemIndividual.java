@@ -19,6 +19,15 @@ public class SearchItemIndividual extends ArrayIndividual {
 
     SearchItem[] schema;
     String[] items;
+    float[] objectives;
+
+    public void setObjectives(float[] objectives) {
+        this.objectives = objectives;
+    }
+
+    public float[] getObjectives() {
+        return objectives;
+    }
 
     public SearchItemIndividual(int n) {
         schema = new SearchItem[n];

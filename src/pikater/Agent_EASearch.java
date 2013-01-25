@@ -16,6 +16,7 @@ import pikater.evolution.operators.Operator;
 import pikater.evolution.operators.SearchItemIndividualMutation;
 import pikater.evolution.selectors.Selector;
 import pikater.evolution.selectors.TournamentSelector;
+import pikater.evolution.selectors.TwoObjectiveTournament;
 import pikater.evolution.surrogate.SearchItemIndividualArchive;
 import pikater.evolution.surrogate.SurrogateMutationOperator;
 import pikater.ontology.messages.Option;
@@ -96,7 +97,7 @@ public class Agent_EASearch extends Agent_Search {
             operators = new java.util.ArrayList<Operator>();
             archive = new SearchItemIndividualArchive();
             
-            environmentalSelectors.add(new TournamentSelector());
+            environmentalSelectors.add(new TwoObjectiveTournament());
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.3));
             //operators.add(new SurrogateMutationOperator(archive, 0.6));
@@ -200,6 +201,7 @@ public class Agent_EASearch extends Agent_Search {
         if (genNumber == 0) {
             for (int i = 0; i < evaluations.length; i++) {
                 parents.get(i).setFitnessValue(-evaluations[i][0]);
+                ((SearchItemIndividual)parents.get(i)).setObjectives(evaluations[i]);
                 if (evaluations[i][0] < bestError) {
                     bestError = evaluations[i][0];
                 }
@@ -211,6 +213,7 @@ public class Agent_EASearch extends Agent_Search {
         for (int i = 0; i < evaluations.length; i++) {
             System.err.println(toEvaluate.get(i).toString() + " : " + Arrays.toString(evaluations[i]));
             toEvaluate.get(i).setFitnessValue(-evaluations[i][0]);
+            ((SearchItemIndividual)toEvaluate.get(i)).setObjectives(evaluations[i]);
             if (evaluations[i][0] < bestError) {
                 bestError = evaluations[i][0];
             }

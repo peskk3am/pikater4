@@ -4,7 +4,7 @@
 		<method name="EASearch">
 			<parameter name="E" value="0.01" />
         	<parameter name="M" value="1000" />
-			<parameter name="P" value="10" />
+			<parameter name="P" value="5" />
 			<parameter name="X" value="0.0" />
 			<parameter name="L" value="0.1" />
 			<parameter name="I" value="300" />
@@ -16,7 +16,7 @@
 			<parameter name="F" value="10" />        
         </evaluation>
         
-		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
 		
 		<agent type="RBFNetwork">
 			<parameter name="B" value="?" />
