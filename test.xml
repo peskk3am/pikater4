@@ -1,5 +1,5 @@
 <experiments>
-<experiment name="test_method" get_results="after_each_computation" save_results="yes">        
+<experiment name="test_method" get_results="after_each_computation" save_results="yes" name="test">        
         <method name="ChooseXValues">
           <parameter name="N" value="2" />
         </method>

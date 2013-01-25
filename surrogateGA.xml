@@ -1,22 +1,26 @@
 <experiments>
     
-	<experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="EA-01">        
+	<experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-01">        
 		<method name="EASearch">
-			<parameter name="E" value="0.01" />
+			<parameter name="E" value="0.0" />
         	<parameter name="M" value="1000" />
 			<parameter name="P" value="10" />
-			<parameter name="X" value="0.0" />
+			<parameter name="X" value="0.2" />
 			<parameter name="L" value="0.1" />
 			<parameter name="I" value="300" />
-			<parameter name="T" value="1.0" />
-			<parameter name="F" value="0.2" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
         </method>
         
         <evaluation name="CrossValidation">
 			<parameter name="F" value="10" />        
         </evaluation>
         
+		<dataset train="haberman.arff" test="haberman.arff" />
 		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
 		
 		<agent type="RBFNetwork">
 			<parameter name="B" value="?" />
@@ -26,5 +30,285 @@
 		</agent>
         	
    </experiment>
+	
+	<experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-02">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-03">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+	
+	<experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-04">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-05">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-06">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-07">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-08">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-09">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="surrogateEA-10">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		<dataset train="iris.arff" test="iris.arff" />
+		<dataset train="car.arff" test="car.arff" />
+		<dataset train="balance-scale.arff" test="balance-scale.arff" />
+		<dataset train="breast-w.arff" test="breast-w.arff" />
+		
+		<agent type="RBFNetwork">
+			<parameter name="B" value="?" />
+			<parameter name="W" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
     
 </experiments>

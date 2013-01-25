@@ -32,7 +32,7 @@ public class SurrogateFitnessFunction implements FitnessFunction {
         Instance in = si.toWekaInstance();
         
         try {
-            return -surrogate.classifyInstance(in);
+            return surrogate.classifyInstance(in);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

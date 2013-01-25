@@ -15,7 +15,7 @@ import weka.core.Instances;
  *
  * @author Martin Pilat
  */
-public class SearchItemIndividual extends ArrayIndividual {
+public class SearchItemIndividual extends MultiobjectiveIndividual {
 
     SearchItem[] schema;
     String[] items;
@@ -55,10 +55,12 @@ public class SearchItemIndividual extends ArrayIndividual {
         }   
     }
     
+    @Override
     public String toString() {
         return Arrays.toString(items);
     }
     
+    @Override
     public Object clone() {
         
         SearchItemIndividual newSI = (SearchItemIndividual)super.clone();

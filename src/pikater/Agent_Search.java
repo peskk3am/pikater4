@@ -268,7 +268,7 @@ public abstract class Agent_Search extends Agent {
 			if(e.getName().equals("error_rate")) {
 				res[0]=e.getValue();
                         }
-                        if(e.getName().equals("kappa_statistic")) {
+                        if(e.getName().equals("root_mean_squared_error")) {
                             res[1] = e.getValue();
                         }
 		}
@@ -447,7 +447,7 @@ public abstract class Agent_Search extends Agent {
 								}
 								
 								queriesToProcess--;
-                                                                System.out.println("OK: " + queriesToProcess + " queries remaining");
+                                                                //System.out.println("OK: " + queriesToProcess + " queries remaining");
 							}
 						}
 					}

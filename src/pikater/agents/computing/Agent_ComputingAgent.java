@@ -464,23 +464,10 @@ public abstract class Agent_ComputingAgent extends Agent {
 		@Override
 		public void action() {			
 			
-			// receive only one message
-			ACLMessage CFPreq = null;
-			ACLMessage CFPproposal =null;
-			
-			ACLMessage req = receive(reqMsgTemplate);
-			if (req == null){
-				CFPreq = receive(CFPreqMsgTemplate);				
-				if (CFPreq == null){
-					CFPproposal = receive(CFPproposalMsgTemplate);
-				}
-			}
-			
-			if (req != null || CFPreq != null || CFPproposal != null){
 						
 				ContentElement content;
 				try {				
-					
+                                ACLMessage req = receive(reqMsgTemplate);
 					if (req != null) {
 						content = getContentManager().extractContent(req);					
 						if (((Action) content).getAction() instanceof GetOptions) {						
@@ -494,7 +481,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 						send(result_msg);
 						return;
 					}
-					
+                                
+                                ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
 					if (CFPproposal != null){
 						content = getContentManager().extractContent(CFPproposal);
 						if (((Action) content).getAction() instanceof Execute) {						
@@ -509,6 +497,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						}
 					}
 					
+                                ACLMessage CFPreq = receive(CFPreqMsgTemplate);
 					if (CFPreq != null){					
 						engaged = false;
 						content = getContentManager().extractContent(CFPreq);
@@ -524,10 +513,6 @@ public abstract class Agent_ComputingAgent extends Agent {
 				} catch (OntologyException oe) {
 					oe.printStackTrace();
 				}
-			
-			} else {				
-				block();
-			}
 		}
 	}
 

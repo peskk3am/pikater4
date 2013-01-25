@@ -175,8 +175,6 @@ public class Agent_DataManager extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-        //db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
@@ -237,7 +235,7 @@ public class Agent_DataManager extends Agent {
             if (!tableNames.contains("FILEMAPPING")) {
                 log.info("Creating table FILEMAPPING");
                 db.createStatement().executeUpdate(
-                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(64) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
+                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(256) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
             }
         } catch (SQLException e) {
             log.fatal("Error creating table FILEMAPPING: " + e.getMessage());
@@ -272,9 +270,9 @@ public class Agent_DataManager extends Agent {
                                                                 + "rootMeanSquaredError DOUBLE, "
                                                                 + "relativeAbsoluteError DOUBLE," 
 								+ "rootRelativeSquaredError DOUBLE, "
-								
+
 								+ "objectFilename VARCHAR(256), "
-								
+
 								+ "start TIMESTAMP, "
 								+ "finish TIMESTAMP, " 
 								+ "duration INTEGER, "
@@ -578,7 +576,7 @@ public class Agent_DataManager extends Agent {
                             query += Root_mean_squared_error + ",";
                             query += Relative_absolute_error + ",";
                             query += Root_relative_squared_error;                            
-							
+
                             
                     		Timestamp currentTimestamp =
                             new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -994,13 +992,13 @@ public class Agent_DataManager extends Agent {
 
 	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{		
 		String query = "";
-		
+
 		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
 
 		// read first line
 		String line = bufRdr.readLine();
 		String captions[] = line.split(";");
-				
+
 		while((line = bufRdr.readLine()) != null){
 			String values[] = line.split(";");
 			 query += "UPDATE metadata SET ";
@@ -1044,21 +1042,21 @@ public class Agent_DataManager extends Agent {
     private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException{ 
     	openDBConnection();
 	    Statement stmt = db.createStatement();
-	    
+
 	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
 	    String query1 = "SELECT COUNT(*) AS number FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
-	    
+
 	    log.info("Executing query " + query);
 	    log.info("Executing query " + query1);
-	    
+
 	    ResultSet rs = stmt.executeQuery(query);
 	    rs.next();
 	    int isInMetadata = rs.getInt("number");
-	    
+
 	    ResultSet rs1 = stmt.executeQuery(query1);
 		rs1.next();	    
 	    int isInFileMapping = rs1.getInt("number");
-	
+
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
 	        log.info("Executing query: " + query);
 	        query = "INSERT into metadata (externalFilename, internalFilename, defaultTask, " +

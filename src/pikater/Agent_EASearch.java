@@ -10,12 +10,16 @@ import pikater.evolution.Population;
 import pikater.evolution.RandomNumberGenerator;
 import pikater.evolution.Replacement;
 import pikater.evolution.individuals.Individual;
+import pikater.evolution.individuals.MultiobjectiveIndividual;
 import pikater.evolution.individuals.SearchItemIndividual;
+import pikater.evolution.multiobjective.NSGAFitnessEvaluator;
 import pikater.evolution.operators.OnePtXOver;
 import pikater.evolution.operators.Operator;
 import pikater.evolution.operators.SearchItemIndividualMutation;
+import pikater.evolution.selectors.BestIndividualsSelector;
 import pikater.evolution.selectors.Selector;
 import pikater.evolution.selectors.TournamentSelector;
+import pikater.evolution.selectors.TwoObjectiveTournament;
 import pikater.evolution.surrogate.SearchItemIndividualArchive;
 import pikater.evolution.surrogate.SurrogateMutationOperator;
 import pikater.ontology.messages.Option;
@@ -64,6 +68,7 @@ public class Agent_EASearch extends Agent_Search {
     java.util.ArrayList<Selector> environmentalSelectors;
     java.util.ArrayList<Selector> matingSelectors;
     java.util.ArrayList<Operator> operators;
+    boolean multiobjective = false;
     double eliteSize = 0.1;
     int popSize = 10;
     double mutProb = 0.0;
@@ -96,10 +101,11 @@ public class Agent_EASearch extends Agent_Search {
             operators = new java.util.ArrayList<Operator>();
             archive = new SearchItemIndividualArchive();
             
-            environmentalSelectors.add(new TournamentSelector());
+            multiobjective = false;
+            environmentalSelectors.add(new TournamentSelector());            
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.3));
-            //operators.add(new SurrogateMutationOperator(archive, 0.6));
+            operators.add(new SurrogateMutationOperator(archive, 0.25));
             
             parents = new Population();
             parents.setPopulationSize(popSize);
@@ -199,7 +205,8 @@ public class Agent_EASearch extends Agent_Search {
         //initial generation -- evaluate the random population
         if (genNumber == 0) {
             for (int i = 0; i < evaluations.length; i++) {
-                parents.get(i).setFitnessValue(-evaluations[i][0]);
+                parents.get(i).setFitnessValue(evaluations[i][0]);
+                ((SearchItemIndividual)parents.get(i)).setObjectives(evaluations[i]);
                 if (evaluations[i][0] < bestError) {
                     bestError = evaluations[i][0];
                 }
@@ -210,7 +217,8 @@ public class Agent_EASearch extends Agent_Search {
         
         for (int i = 0; i < evaluations.length; i++) {
             System.err.println(toEvaluate.get(i).toString() + " : " + Arrays.toString(evaluations[i]));
-            toEvaluate.get(i).setFitnessValue(-evaluations[i][0]);
+            toEvaluate.get(i).setFitnessValue(evaluations[i][0]);
+            ((SearchItemIndividual)toEvaluate.get(i)).setObjectives(evaluations[i]);
             if (evaluations[i][0] < bestError) {
                 bestError = evaluations[i][0];
             }
@@ -231,6 +239,16 @@ public class Agent_EASearch extends Agent_Search {
         Population combined = replacement.replace(parents, offspring);
         
         System.err.println("COMBINED: " + combined.getPopulationSize());
+        
+        if (multiobjective) {
+            NSGAFitnessEvaluator NSGAfit = new NSGAFitnessEvaluator();
+            NSGAfit.evaluate(combined);
+            java.util.List<Individual> nonDom = NSGAfit.getNonDominatedFront(combined.getSortedIndividuals());
+            
+            for (Individual ind: nonDom) {
+                System.err.println("NONDOM: " + ind.toString() + " : " + Arrays.toString(((MultiobjectiveIndividual)ind).getObjectives()));
+            }
+        }
         
         int envSel = environmentalSelectors.size();
         int toSelect = (parents.getPopulationSize() - selected.getPopulationSize())/envSel;

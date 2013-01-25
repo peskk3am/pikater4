@@ -1,29 +1,18 @@
 $a pikater.Agent_ARFFReader Reader_Rychlonozka
-# $a pikater.Agent_ARFFReader Reader_Cervenacek
-# $a pikater.Agent_ARFFReader Reader_Jindra
-# $a pikater.Agent_ARFFReader Reader_Jarka
-# $a pikater.Agent_ARFFReader Reader_Mirek
+#$a pikater.Agent_ARFFReader Reader_Cervenacek
+#$a pikater.Agent_ARFFReader Reader_Jindra
+#$a pikater.Agent_ARFFReader Reader_Jarka
+#$a pikater.Agent_ARFFReader Reader_Mirek
 
 $a pikater.Agent_Manager manager no_xml_output
 
 # 3 params: url, user, password; no parameter ... connects to remote marp_pikater database
-$a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:file:data/db/pikaterdb
+$a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://127.0.0.1/pikater_local user root password m4rt1n 
 
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:hsql://localhost/db user SA 
 # $a pikater.Agent_DataManager dataManager no_log
 
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://localhost/pikater user root
-
 $a pikater.Agent_MetadataQueen Freddie
-
-$a pikater.Agent_AgentManager agentManager no_log
-$a pikater.Agent_Duration duration log_LR_durations
-
-# $a pikater.Agent_MultilayerPerceptron mp
-
-# get a Problem from "config" file
-# $a pikater.gui.java.Agent_GUI_Java very_simple_GUI
-
-$a pikater.Agent_GUI_config_file UI test.xml
 $a pikater.Agent_GUI_config_file very_simple_GUI surrogateGA.xml
-$a jade.tools.sniffer.Sniffer sniffer01 Freddie
+$a jade.tools.sniffer.Sniffer sniffer01 manager
