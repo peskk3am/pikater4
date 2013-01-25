@@ -101,12 +101,11 @@ public class Agent_EASearch extends Agent_Search {
             operators = new java.util.ArrayList<Operator>();
             archive = new SearchItemIndividualArchive();
             
-            multiobjective = true;
-            environmentalSelectors.add(new BestIndividualsSelector());
-            eliteSize = 0;
+            multiobjective = false;
+            environmentalSelectors.add(new TournamentSelector());            
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.3));
-            operators.add(new SurrogateMutationOperator(archive, 0.6));
+            operators.add(new SurrogateMutationOperator(archive, 0.25));
             
             parents = new Population();
             parents.setPopulationSize(popSize);
