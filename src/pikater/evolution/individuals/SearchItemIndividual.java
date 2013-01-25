@@ -15,19 +15,10 @@ import weka.core.Instances;
  *
  * @author Martin Pilat
  */
-public class SearchItemIndividual extends ArrayIndividual {
+public class SearchItemIndividual extends MultiobjectiveIndividual {
 
     SearchItem[] schema;
     String[] items;
-    float[] objectives;
-
-    public void setObjectives(float[] objectives) {
-        this.objectives = objectives;
-    }
-
-    public float[] getObjectives() {
-        return objectives;
-    }
 
     public SearchItemIndividual(int n) {
         schema = new SearchItem[n];
@@ -64,10 +55,12 @@ public class SearchItemIndividual extends ArrayIndividual {
         }   
     }
     
+    @Override
     public String toString() {
         return Arrays.toString(items);
     }
     
+    @Override
     public Object clone() {
         
         SearchItemIndividual newSI = (SearchItemIndividual)super.clone();
