@@ -447,7 +447,7 @@ public abstract class Agent_Search extends Agent {
 								}
 								
 								queriesToProcess--;
-                                                                System.out.println("OK: " + queriesToProcess + " queries remaining");
+                                                                //System.out.println("OK: " + queriesToProcess + " queries remaining");
 							}
 						}
 					}

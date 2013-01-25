@@ -453,14 +453,11 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		@Override
 		public void action() {			
-			ACLMessage req = receive(reqMsgTemplate);
-			ACLMessage CFPreq = receive(CFPreqMsgTemplate);
-			ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
 			boolean msg_received = false;
 			
 			ContentElement content;
 			try {				
-				
+                                ACLMessage req = receive(reqMsgTemplate);
 				if (req != null) {
 					msg_received = true;
 					content = getContentManager().extractContent(req);					
@@ -475,7 +472,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 					send(result_msg);
 					return;
 				}
-				
+                                
+                                ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
 				if (CFPproposal != null){
 					msg_received = true;
 					content = getContentManager().extractContent(CFPproposal);
@@ -488,6 +486,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}
 				}
 				
+                                ACLMessage CFPreq = receive(CFPreqMsgTemplate);
 				if (CFPreq != null){
 					msg_received = true;					
 					content = getContentManager().extractContent(CFPreq);

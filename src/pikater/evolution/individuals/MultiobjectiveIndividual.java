@@ -24,7 +24,9 @@ public abstract class MultiobjectiveIndividual extends ArrayIndividual {
     public Object clone() {
         MultiobjectiveIndividual mi = (MultiobjectiveIndividual)super.clone();
         
-        mi.objectives = Arrays.copyOf(this.objectives, this.objectives.length);
+        if (this.objectives != null) {
+            mi.objectives = Arrays.copyOf(this.objectives, this.objectives.length);
+        }
         
         return mi;
     }

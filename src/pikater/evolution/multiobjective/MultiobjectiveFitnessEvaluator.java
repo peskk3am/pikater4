@@ -99,7 +99,7 @@ public abstract class MultiobjectiveFitnessEvaluator implements FitnessEvaluator
         MultiobjectiveIndividual i2 = (MultiobjectiveIndividual) b;
         int dom_count = 0;
         for (int i = 0; i < i1.getObjectives().length; i++) {
-            if (i1.getObjectives()[i] >= i2.getObjectives()[i]) {
+            if (i1.getObjectives()[i] <= i2.getObjectives()[i]) {
                 dom_count++;
             }
         }
