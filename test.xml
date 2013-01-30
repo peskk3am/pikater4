@@ -18,12 +18,11 @@
         <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
         
                 
-        <agent type="RBFNetwork">
-        	<parameter name="B" value="?" />
-        	<parameter name="W" value="?" />
-        	<parameter name="R" value="?" />
-        	<parameter name="M" value="?" />
-    		</agent>
+        <agent type="SMO">
+       
+        	<parameter name="G" value="0.3" />
+			
+    	</agent>
 
 </experiment>     
 
