@@ -104,6 +104,8 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 	private boolean newAgent = true;
 	private boolean resurrected = false;
+	
+	private boolean engaged = false;
 
 	protected abstract Date train(Evaluation evaluation) throws Exception;
 
@@ -441,9 +443,17 @@ public abstract class Agent_ComputingAgent extends Agent {
 			if (acceptTask()) {
 				result_msg.setPerformative(ACLMessage.AGREE);
 				taskFIFO.addLast(req);
-				if (!execution_behaviour.isRunnable()) {
+				
+			 	if (taskFIFO.size() == 1){
+					if (!execution_behaviour.isRunnable()) {
+						execution_behaviour.restart();
+					}
+			 	}
+				/*
+			 	if (!execution_behaviour.isRunnable()) {
 					execution_behaviour.restart();
 				}
+				*/
 			} else {
 				result_msg.setPerformative(ACLMessage.REFUSE);
 				result_msg.setContent("(Computing agent overloaded)");
@@ -453,58 +463,56 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 		@Override
 		public void action() {			
-			boolean msg_received = false;
 			
-			ContentElement content;
-			try {				
+						
+				ContentElement content;
+				try {				
                                 ACLMessage req = receive(reqMsgTemplate);
-				if (req != null) {
-					msg_received = true;
-					content = getContentManager().extractContent(req);					
-					if (((Action) content).getAction() instanceof GetOptions) {						
-						ACLMessage result_msg = sendOptions(req);
+					if (req != null) {
+						content = getContentManager().extractContent(req);					
+						if (((Action) content).getAction() instanceof GetOptions) {						
+							ACLMessage result_msg = sendOptions(req);
+							send(result_msg);
+							return;
+						}
+		
+						ACLMessage result_msg = req.createReply();
+						result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
 						send(result_msg);
 						return;
 					}
-	
-					ACLMessage result_msg = req.createReply();
-					result_msg.setPerformative(ACLMessage.NOT_UNDERSTOOD);
-					send(result_msg);
-					return;
-				}
                                 
                                 ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
-				if (CFPproposal != null){
-					msg_received = true;
-					content = getContentManager().extractContent(CFPproposal);
-					if (((Action) content).getAction() instanceof Execute) {						
-						ACLMessage propose = CFPproposal.createReply();
-						propose.setPerformative(ACLMessage.PROPOSE);
-						propose.setContent(Integer.toString(taskFIFO.size()));
-						send(propose);
-						return;
+					if (CFPproposal != null){
+						content = getContentManager().extractContent(CFPproposal);
+						if (((Action) content).getAction() instanceof Execute) {						
+							ACLMessage propose = CFPproposal.createReply();
+							propose.setPerformative(ACLMessage.PROPOSE);
+							int size = taskFIFO.size();
+							if (engaged) {size++;}
+							propose.setContent(Integer.toString(size));
+							engaged = true;
+							send(propose);
+							return;
+						}
 					}
-				}
-				
+					
                                 ACLMessage CFPreq = receive(CFPreqMsgTemplate);
-				if (CFPreq != null){
-					msg_received = true;					
-					content = getContentManager().extractContent(CFPreq);
-					if (((Action) content).getAction() instanceof Execute) {												
-						send(processExecute(CFPreq));
+					if (CFPreq != null){					
+						engaged = false;
+						content = getContentManager().extractContent(CFPreq);
+						if (((Action) content).getAction() instanceof Execute) {												
+							send(processExecute(CFPreq));
+						}
+						
+						// TODO create search agent here						
+						return;					
 					}
-					// TODO create search agent here						
-					return;					
+				} catch (CodecException ce) {
+					ce.printStackTrace();
+				} catch (OntologyException oe) {
+					oe.printStackTrace();
 				}
-			} catch (CodecException ce) {
-				ce.printStackTrace();
-			} catch (OntologyException oe) {
-				oe.printStackTrace();
-			}
-			
-			if (! msg_received){
-				block();
-			}
 		}
 	}
 
@@ -535,22 +543,32 @@ public abstract class Agent_ComputingAgent extends Agent {
 		/* Resulting message: FAILURE */
 
 		void failureMsg(String desc) {
-			
-			Eval ev = new Eval();
-			ev.setName("error_rate");
-			ev.setValue(Float.MAX_VALUE);
-			
 			List evaluations = new ArrayList();
-			evaluations.add(ev);
+			
+			Eval er = new Eval();
+			er.setName("error_rate");
+			er.setValue(Float.MAX_VALUE);
+			evaluations.add(er);
+			
+			// set duration to max_float
+			Eval du = new Eval();
+			du.setName("duration");
+			du.setValue(Integer.MAX_VALUE);
+			evaluations.add(du);			
+
+			// set start to now
+			Eval st = new Eval();
+			st.setName("start");
+			st.setValue(System.currentTimeMillis());
+			evaluations.add(st);
 			
 			eval.setEvaluations(evaluations);
-			evaluations.add(ev);
 						
 			eval.setStatus(desc);
 		}
 
 		/* Get a message from the FIFO of tasks */
-		boolean getRequest() {
+		boolean getRequest() {			
 			if (taskFIFO.size() > 0) {
 				incoming_request = taskFIFO.removeFirst();
 				try {
@@ -831,8 +849,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 						success = false;
 						working = false;
 						failureMsg(e.getMessage());
-						System.err.println(getLocalName() + ": Error: " + e.getMessage() + ".");
-						e.printStackTrace();
+						System.out.println(getLocalName() + ": Error: " + e.getMessage() + ".");
+						// System.err.println(getLocalName() + ": Error: " + e.getMessage() + ".");
+						// e.printStackTrace();
 					}
 				}
 
@@ -926,7 +945,12 @@ public abstract class Agent_ComputingAgent extends Agent {
 					current_task.setFinish(getDateTime());
 					
 					send(result_msg);					
-
+					
+					
+					if (taskFIFO.size() > 0){
+						execution_behaviour.restart();
+					}
+					
 				}
 			}, SENDRESULTS_STATE);
 

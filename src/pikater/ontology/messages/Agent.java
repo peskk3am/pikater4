@@ -79,6 +79,7 @@ public class Agent implements Concept, Cloneable {
 						opt.setData_type("BOOLEAN");
 					} else {
 						value = optArray[i + 1];
+						opt.setData_type("FLOAT");
 					}
 				}
 

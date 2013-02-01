@@ -59,6 +59,8 @@ import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAgents;
+import pikater.ontology.messages.GetAllMetadata;
+import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
@@ -136,10 +138,12 @@ public class Agent_Manager extends Agent {
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
-	private int max_number_of_CAs = 6;
+	private int max_number_of_CAs = 10;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
 	// problem id, number of received replies
+	
+	private boolean print_distance_matrix = true;
 	
 	protected class ExecuteTask extends ContractNetInitiator{
 
@@ -653,8 +657,15 @@ public class Agent_Manager extends Agent {
 						String agentType = a_next.getType();
 						
 						if (agentType.contains("?")) {
+							/* if (print_distance_matrix){ 
+								System.out.println(distanceMatrix());
+								print_distance_matrix = false;
+							}
+							*/
+							
 							// metadata musn't be null; if they are
 							// generate at least nearly empty metadata
+							
 							Metadata metadata;
 							if (next_data.getMetadata() == null) {
 								metadata = new Metadata();
@@ -674,19 +685,33 @@ public class Agent_Manager extends Agent {
 							} else {									
 								agentType = a_next.getType();
 								a_next_copy.setType(agentType);
-								String agentName = a_next.getName();
+								// String agentName = a_next.getName();
 								// get options
-								pikater.ontology.messages.Agent agent_options = onlyGetAgentOptions(agentName);
+								pikater.ontology.messages.Agent agent_options = onlyGetAgentOptions(agentType, "?");
+								// TODO ^ cislovat otaznicky (taks_id)
+								
 								a_next_copy.setOptions(mergeOptions(
 										agent_options.getOptions(),
 										a_next.getOptions()));
 
-								System.out.println(getLocalName() + ": /n" + 
+								System.out.println(getLocalName() + ": " + 
 										"********** Agent "
 										+ agentType
 										+ " recommended. Options: "
 										+ a_next_copy.optionsToString()
-										+ "**********");									
+										+ "**********");
+								
+								String file_name = next_data.removePath(next_data.getTest_file_name());
+								pikater.ontology.messages.Agent best = DataManagerService.getTheBestAgent(this, file_name);
+
+								if (best != null){
+									System.out.println("Best agent type: "+ best.getType() +
+											", options: " + best.optionsToString() + 
+											", error rate: " + best.getGui_id());
+								}
+								else{
+									System.out.println("No results in database for file " + next_data.getTest_file_name());
+								}
 							}																
 						}													
 						
@@ -875,10 +900,12 @@ public class Agent_Manager extends Agent {
 		return new Vector<String> (agentTypes.keySet());
 	} // end offerAgentTypes
 
-	private pikater.ontology.messages.Agent onlyGetAgentOptions(String agent) {
+	private pikater.ontology.messages.Agent onlyGetAgentOptions(String agentType, String task_id) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-		request.addReceiver(new AID(agent, AID.ISLOCALNAME));
+		// find an agent acording to type
+		List agent = getAgentsByType(agentType, 1, task_id);
+		request.addReceiver((AID)agent.get(0));
 
 		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
@@ -1312,6 +1339,57 @@ public class Agent_Manager extends Agent {
 		return Double.toString(value);
 	}
 
+	private String distanceMatrix() {
+		String matrix = "";
+		
+		GetAllMetadata gm = new GetAllMetadata();
+		gm.setResults_required(false);
+
+		List allMetadata = DataManagerService.getAllMetadata(this, gm);
+
+		Iterator itr_colls = allMetadata.iterator();
+		while (itr_colls.hasNext()) {
+			Metadata next_coll = (Metadata) itr_colls.next();			
+
+			int na = next_coll.getNumber_of_attributes();
+			if (na < minAttributes) {
+				minAttributes = na;
+			}
+			if (na > maxAttributes) {
+				maxAttributes = na;
+			}
+	
+			int ni = next_coll.getNumber_of_instances();
+			if (ni < minInstances) {
+				minInstances = ni;
+			}
+			if (ni > maxInstances) {
+				maxInstances = ni;
+			}
+		}
+		
+		itr_colls = allMetadata.iterator();
+
+		double d;
+		while (itr_colls.hasNext()) {
+			Metadata next_coll = (Metadata) itr_colls.next();			
+			matrix +=next_coll.getExternal_name() + ";";
+			Iterator itr_rows = allMetadata.iterator();
+			
+			while (itr_rows.hasNext()) {
+				Metadata next_row = (Metadata) itr_rows.next();
+				d = distance(next_coll, next_row);
+				matrix += String.format("%.10f", d);
+				matrix += ";";				
+			}
+			matrix +="\n";
+		}
+		
+		return matrix;
+		
+	} // end distanceMatrix
+
+	
 	private pikater.ontology.messages.Agent chooseTheBestAgent(Metadata metadata) {
 		// at least name attribute in metadata has to be filled
 		boolean hasMetadata = false;
@@ -1319,9 +1397,12 @@ public class Agent_Manager extends Agent {
 				&& metadata.getNumber_of_instances() > -1) {
 			hasMetadata = true;
 		}
+		
+		GetAllMetadata gm = new GetAllMetadata();
+		gm.setResults_required(true);
 
 		// choose the nearest training data
-		List allMetadata = DataManagerService.getAllMetadata(this);
+		List allMetadata = DataManagerService.getAllMetadata(this, gm);
 
 		// set the min, max instances and attributes first
 		Iterator itr = allMetadata.iterator();
@@ -1371,7 +1452,7 @@ public class Agent_Manager extends Agent {
 		while (itr.hasNext()) {
 			Metadata next_md = (Metadata) itr.next();
 			d_new = distance(metadata, next_md);
-			if (next_md.getNumber_of_tasks_in_db() > 0) {
+			if (!next_md.getInternal_name().equals(metadata.getInternal_name())) {
 				if (d_new < d_best) {
 					d_best = d_new;
 					m_best = next_md;

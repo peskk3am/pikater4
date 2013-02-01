@@ -18,6 +18,7 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -62,6 +63,7 @@ import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SaveMetadata;
 import pikater.ontology.messages.SaveResults;
 import pikater.ontology.messages.SavedResult;
+import pikater.ontology.messages.ShutdownDatabase;
 import pikater.ontology.messages.Task;
 import pikater.ontology.messages.TranslateFilename;
 import pikater.ontology.messages.UpdateMetadata;
@@ -82,7 +84,7 @@ public class Agent_DataManager extends Agent {
     
     private void openDBConnection() throws SQLException{
     	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-    	db = DriverManager.getConnection(db_url, db_user, db_password);    	
+    	db = DriverManager.getConnection(db_url, db_user, db_password);
     }
     
     @Override
@@ -92,28 +94,43 @@ public class Agent_DataManager extends Agent {
             //db = DriverManager.getConnection(
             //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
 
-        	Object[] args = getArguments();
-        	// System.out.println(args);
-    		if (args != null && args.length > 0) {
+        	// TODO predelat -> vzdycky zkusti parametry rozparsovat
+    		// je to proto, ze kdyz predavam parametry DataManagerovi
+    		// ve scriptu, bere vsechno jako jeden parametr:
+    		
+    		List args = new ArrayList();
+    		
+    		Object[] arguments = getArguments();
+    		if (arguments != null){
+	    		for (Object arg : arguments) {
+	    	    	String[] split_arg = ((String)arg).split(" ");
+	    	    	for (String a : split_arg){
+	    	    		args.add(a);
+	    	    	}
+	    	    }    		
+    		}
+    		
+    		// System.out.println(args);
+    		if (args.size() > 0) {
     			int i = 0;
     			
     			boolean db_specified = false;
     			
-    			while (i < args.length){
-    				// System.out.println(args[i]);
-    				if (args[i].equals("url")){
-    					db_url = (String)args[i+1];
+    			while (i < args.size()){
+    				System.out.println(args.get(i));
+    				if (args.get(i).equals("url")){
+    					db_url = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("user")){
-    					db_user = (String)args[i+1];
+    				if (args.get(i).equals("user")){
+    					db_user = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("password")){
-    					db_password = (String)args[i+1];
+    				if (args.get(i).equals("password")){
+    					db_password = (String)args.get(i+1);
     					db_specified = true;
     				}
-    				if (args[i].equals("no_log")){
+    				if (args.get(i).equals("no_log")){
     					no_log = true;
     				}
     				i++;
@@ -124,13 +141,13 @@ public class Agent_DataManager extends Agent {
 					}
 	    			if (db_password == null){
 						db_password = "";    					
-					}
+					}	    			
     			}
-    		}
-    		else{
-    		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
-    		    db_user = "marp_pikater";
-    		    db_password = "pikater";
+    			else{
+        		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
+        		    db_user = "marp_pikater";
+        		    db_password = "pikater";
+        		}        		    		
     		}
         	
     		System.out.println(getLocalName() +": Connecting to " + db_url + ".");
@@ -147,7 +164,7 @@ public class Agent_DataManager extends Agent {
             log = Logger.getLogger(Agent_DataManager.class);
             
             if (no_log){
-            	 log.setLevel(Level.OFF);
+            	log.setLevel(Level.OFF);
             }
             else{
             	log.setLevel(Level.TRACE);	
@@ -158,8 +175,6 @@ public class Agent_DataManager extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    	//db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-        //db = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pikater_local", "root", "m4rt1n");
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
@@ -220,7 +235,7 @@ public class Agent_DataManager extends Agent {
             if (!tableNames.contains("FILEMAPPING")) {
                 log.info("Creating table FILEMAPPING");
                 db.createStatement().executeUpdate(
-                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(64) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
+                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(256) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
             }
         } catch (SQLException e) {
             log.fatal("Error creating table FILEMAPPING: " + e.getMessage());
@@ -255,9 +270,9 @@ public class Agent_DataManager extends Agent {
                                                                 + "rootMeanSquaredError DOUBLE, "
                                                                 + "relativeAbsoluteError DOUBLE," 
 								+ "rootRelativeSquaredError DOUBLE, "
-								
+
 								+ "objectFilename VARCHAR(256), "
-								
+
 								+ "start TIMESTAMP, "
 								+ "finish TIMESTAMP, " 
 								+ "duration INTEGER, "
@@ -290,7 +305,7 @@ public class Agent_DataManager extends Agent {
         catch (SQLException e) {
             e.printStackTrace();
         }
-
+        /*
         try {
             if (!triggerNames.contains("PREPAREMETADATA")) {
                 db.createStatement().execute(
@@ -299,7 +314,7 @@ public class Agent_DataManager extends Agent {
         } catch (SQLException e) {
             log.fatal("Error creating trigger prepareMetadata: " + e.getMessage());
         }
-
+		*/
         
         try {
 			db.close();
@@ -508,8 +523,8 @@ public class Agent_DataManager extends Agent {
                             query += "\'" + res.getAgent().getName() + "\',";
                             query += "\'" + res.getAgent().getType() + "\',";
                             query += "\'" + res.getAgent().optionsToString() + "\',";
-                            query += "\'" + (res.getData().getTrain_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
-                            query += "\'" + (res.getData().getTest_file_name().split(Pattern.quote(System.getProperty("file.separator"))))[2] + "\',";
+                            query += "\'" + res.getData().removePath(res.getData().getTrain_file_name()) + "\',";
+                            query += "\'" + res.getData().removePath(res.getData().getTest_file_name()) + "\',";
                                                         
             				float Error_rate = Float.MAX_VALUE;
             				float Kappa_statistic = Float.MAX_VALUE;
@@ -561,7 +576,7 @@ public class Agent_DataManager extends Agent {
                             query += Root_mean_squared_error + ",";
                             query += Relative_absolute_error + ",";
                             query += Root_relative_squared_error;                            
-							
+
                             
                     		Timestamp currentTimestamp =
                             new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -625,16 +640,50 @@ public class Agent_DataManager extends Agent {
                         return reply;
                     }
                     if (a.getAction() instanceof GetAllMetadata) {
+                        GetAllMetadata gm = (GetAllMetadata) a.getAction();
+
                     	openDBConnection();
                     	Statement stmt = db.createStatement();
+                    	
+                    	String query;
+                    	if (gm.getResults_required()){
+                    		query = "SELECT * FROM metadata WHERE EXISTS " +
+                            		"(SELECT * FROM results WHERE results.dataFile=metadata.internalFilename)";
+                    		if (gm.getExceptions() != null){                            	
+	                    		Iterator itr = gm.getExceptions().iterator();
+	                       		while (itr.hasNext()) {                    			
+	                       			Metadata m = (Metadata) itr.next();
+	                    			query += " AND ";
+	                       			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";                            	
+	                            }
+                    		}
+                    		query += " ORDER BY externalFilename";
+                    	}
+                    	else{
+                    		query = "SELECT * FROM metadata";
 
-                        String query = "SELECT * FROM metadata";
-
+                    		if (gm.getExceptions() != null){ 
+                            	query += " WHERE ";
+                        		boolean first = true;
+                            	Iterator itr = gm.getExceptions().iterator();
+                        		while (itr.hasNext()) {                    			
+                        			Metadata m = (Metadata) itr.next();
+                        			if (!first){
+                        				query += " AND ";
+                        			}                    			
+                        			query += "internalFilename <> '" + new File(m.getInternal_name()).getName() + "'";
+                        			first = false;                    		                    			
+                        		}
+                            	
+                            }
+                    		query += " ORDER BY externalFilename";
+                    	}
+                        
+                    	System.out.println(query);
+                    	
                         List allMetadata = new ArrayList();
 
-                        ResultSet rs = stmt.executeQuery(query);
-
-                        Statement stmt1 = db.createStatement();
+                        ResultSet rs = stmt.executeQuery(query);                                               
 
                         while (rs.next()) {
                         	Metadata m = new Metadata();
@@ -646,14 +695,6 @@ public class Agent_DataManager extends Agent {
                             m.setNumber_of_attributes(rs.getInt("numberOfAttributes"));
                             m.setNumber_of_instances(rs.getInt("numberOfInstances"));
 
-                            // get the number of task with this file as training
-                            // set in the db
-                            query = "SELECT COUNT(*) AS n FROM results WHERE dataFile=\'" + rs.getString("internalFilename") + "\'";
-                            // System.out.println(query);
-                            ResultSet rs_number = stmt1.executeQuery(query);
-                            rs_number.next();
-
-                            m.setNumber_of_tasks_in_db(rs_number.getInt("n"));
                             allMetadata.add(m);
                         }
 
@@ -665,7 +706,7 @@ public class Agent_DataManager extends Agent {
                         Result _result = new Result(a.getAction(), allMetadata);
                         getContentManager().fillContent(reply, _result);
 
-                        db.close();
+                        db.close();                        
                         return reply;
                     }
 
@@ -676,24 +717,26 @@ public class Agent_DataManager extends Agent {
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + "AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
-
+                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
+                        // System.out.println(query);
+                        log.info("Executing query: " + query);
+                        
                         ResultSet rs = stmt.executeQuery(query);
-                        if (rs == null) {
+                        if (!rs.isBeforeFirst()) {
                             ACLMessage reply = request.createReply();
                             reply.setPerformative(ACLMessage.FAILURE);
                             reply.setContent("There are no results for this file in the database.");
-
+                            
+                            db.close();
                             return reply;
                         }
                         rs.next();
-
+                        
                         pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
                         agent.setName(rs.getString("agentName"));
                         agent.setType(rs.getString("agentType"));
                         agent.setOptions(agent.stringToOptions(rs.getString("options")));
-
-                        log.info("Executing query: " + query);
+                        agent.setGui_id(rs.getString("errorRate"));                                                
 
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
@@ -873,7 +916,25 @@ public class Agent_DataManager extends Agent {
                         return reply;
 
                     }
-
+                    
+                    if (a.getAction() instanceof ShutdownDatabase) {
+                        String query = "SHUTDOWN";
+                        log.info(query);
+                        openDBConnection();
+                        
+                        // Makes all changes made since the previous commit/rollback permanent
+                        // and releases any database locks currently held by this Connection object. 
+                        db.commit();
+                       
+                        Statement stmt = db.createStatement();
+                        
+                        stmt.execute(query);                        
+                        
+                        ACLMessage reply = request.createReply();                                               
+                        reply.setPerformative(ACLMessage.INFORM);
+                       	return reply;
+                    }                    
+                    
                 } catch (OntologyException e) {
                     e.printStackTrace();
                     log.error("Problem extracting content: " + e.getMessage());
@@ -931,13 +992,13 @@ public class Agent_DataManager extends Agent {
 
 	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{		
 		String query = "";
-		
+
 		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
 
 		// read first line
 		String line = bufRdr.readLine();
 		String captions[] = line.split(";");
-				
+
 		while((line = bufRdr.readLine()) != null){
 			String values[] = line.split(";");
 			 query += "UPDATE metadata SET ";
@@ -981,21 +1042,21 @@ public class Agent_DataManager extends Agent {
     private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException{ 
     	openDBConnection();
 	    Statement stmt = db.createStatement();
-	    
+
 	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
 	    String query1 = "SELECT COUNT(*) AS number FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
-	    
+
 	    log.info("Executing query " + query);
 	    log.info("Executing query " + query1);
-	    
+
 	    ResultSet rs = stmt.executeQuery(query);
 	    rs.next();
 	    int isInMetadata = rs.getInt("number");
-	    
+
 	    ResultSet rs1 = stmt.executeQuery(query1);
 		rs1.next();	    
 	    int isInFileMapping = rs1.getInt("number");
-	
+
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
 	        log.info("Executing query: " + query);
 	        query = "INSERT into metadata (externalFilename, internalFilename, defaultTask, " +

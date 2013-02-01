@@ -4,7 +4,7 @@
 # 
 
 # Set the number of folder to use in the computing of the mutual information (default 5)
-$ I int 1 1 r 1 15 
+$ I int 1 1 r 1 100 
 
 # Set the number of attempts of generalisation (default 5)
-$ G int 1 1 r 1 15
+$ G int 1 1 r 1 50

@@ -60,6 +60,7 @@ import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetData;
+import pikater.ontology.messages.GetMetadata;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.Interval;
@@ -104,7 +105,9 @@ public abstract class Agent_GUI extends GuiAgent {
 	private boolean default_save_results = true;
 	
 	private boolean end_pikater_when_finished = false;
-
+	
+	private boolean shutdown_database = false;
+	
 	private String myAgentName;
 	/*
 	 * should use the following methods: refreshOptions(ontology.messages.Agent
@@ -1384,32 +1387,18 @@ public abstract class Agent_GUI extends GuiAgent {
                 String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
                 internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
 
-                sd = new ServiceDescription();
-                sd.setType("ARFFReader");
-
-                dfd = new DFAgentDescription();
-                dfd.addServices(sd);
-
                 try {
-                    DFAgentDescription readers[] = DFService.search(this, dfd);
 
-                    if (readers.length == 0) {
-                        System.err.println(getLocalName() + ": No readers found");
-                        break;
-                    }
-
-                    AID reader = readers[0].getName();
-
-                    GetData gd = new GetData();
-                    gd.setFile_name(internalFilename);
-                    gd.setSaveMetadata(true);
+                    GetMetadata gm = new GetMetadata();
+                    gm.setInternal_filename(internalFilename);
+                    gm.setExternal_filename(fileName);
 
                     Action a = new Action();
-                    a.setAction(gd);
+                    a.setAction(gm);
                     a.setActor(this.getAID());
 
                     ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-                    req.addReceiver(reader);
+                    req.addReceiver(new AID("Freddie", false));
                     req.setLanguage(codec.getName());
                     req.setOntology(ontology.getName());
                     req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -1419,7 +1408,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     ACLMessage response = FIPAService.doFipaRequestClient(this, req);
 
                     if (response.getPerformative() != ACLMessage.INFORM) {
-                        System.err.println(getLocalName() + ": Error reading file");
+                        System.err.println(getLocalName() + ": Error in getting metadata");
                     }
 
                 } catch (CodecException ce) {
@@ -1546,6 +1535,17 @@ public abstract class Agent_GUI extends GuiAgent {
 		
 	private void terminatePikater(){
 		System.out.println(getLocalName() + ": Shutting down Pikater...");
+		// if running on local database send message to data manager to shuttdown the database
+		if (shutdown_database){
+			System.out.println(getLocalName() + ": Shutting down database...");
+			if (DataManagerService.shutdownDatabase(this)){
+				System.out.println(getLocalName() + ": Database shut down.");
+			}
+			else{
+				System.out.println(getLocalName() + ": Database did not shut down properly.");
+			}
+		}
+		
 		doWait(100);
 
 		getContentManager().registerOntology(JADEManagementOntology.getInstance());
@@ -1595,8 +1595,12 @@ public abstract class Agent_GUI extends GuiAgent {
 		java.util.List _end_pikater_when_finished = root_element.getChildren("hasta_la_vista_baby");
 		if (_end_pikater_when_finished.size() > 0){
 			end_pikater_when_finished = true;
+			// take into consideration only the first one
+			if ( ((Element)_end_pikater_when_finished.get(0)).getAttributeValue("shutdown_database").equals("true")){
+				shutdown_database = true;
+			}
 		}
-		
+				
 		// return all children by name
 		java.util.List _problems = root_element.getChildren("experiment"); 
 		java.util.Iterator p_itr = _problems.iterator();
@@ -1663,12 +1667,11 @@ public abstract class Agent_GUI extends GuiAgent {
 					java.util.Iterator md_itr = metadata.iterator();
 					Element next_metadata = (Element) md_itr.next();
 
-					addMetadataToDataset(d_id, next_dataset
-							.getAttributeValue("train"), next_metadata
-							.getAttributeValue("missing_values"), next_metadata
-							.getAttributeValue("number_of_attributes"),
-							next_metadata
-									.getAttributeValue("number_of_instances"),
+					addMetadataToDataset(d_id, 
+							next_dataset.getAttributeValue("train"),
+							next_metadata.getAttributeValue("missing_values"), 
+							next_metadata.getAttributeValue("number_of_attributes"),
+							next_metadata.getAttributeValue("number_of_instances"),
 							next_metadata.getAttributeValue("attribute_type"),
 							next_metadata.getAttributeValue("default_task"));
 				}

@@ -20,6 +20,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -39,8 +40,16 @@ public class Agent_Initiator extends Agent {
 	private String path = System.getProperty("user.dir")
 			+ System.getProperty("file.separator");
 
+	private String init_file_name = "init";
 	@Override
 	protected void setup() {
+		
+    	// get the agent's parameters
+    	Object[] args = getArguments();
+		if (args != null && args.length > 0) {
+			init_file_name = (String)args[0];
+		}		    	
+
 		//Register the SL content language
 		getContentManager().registerLanguage(new SLCodec(), FIPANames.ContentLanguage.FIPA_SL);
 		getContentManager().registerLanguage(codec);
@@ -49,7 +58,7 @@ public class Agent_Initiator extends Agent {
 		// read agents from file
 		try {
 			/* Sets up a file reader to read the init file */
-			FileReader input = new FileReader(path + "init");
+			FileReader input = new FileReader(path + init_file_name);
 			/*
 			 * Filter FileReader through a Buffered read to read a line at a
 			 * time

@@ -165,8 +165,9 @@ public class Agent_GUI_config_file extends Agent_GUI {
 							+ ": options for agent "
 							+ task.getAgent().getName() + " were "
 							+ task.getAgent().optionsToString()
-							+ " error_rate: "
-							+ error_rate);
+							+ " error_rate: "+ error_rate
+							+ ", dataset: "
+							+ task.getData().getExternal_train_file_name());
 				}
 				
 			}
