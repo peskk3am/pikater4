@@ -21,3 +21,9 @@ $ F float 1 1 r 0 1 0.2 mutation_rate_per_field Mutation rate per field in indiv
 
 # The percentage of elite individuals (default 0.1)
 $ L float 1 1 r 0 1 0.1 eliteSize Elite size
+
+# Use surrogate model
+$ S boolean
+
+# Use multiobjective optimization (objectives are given by the Agent_Search, hardcoded)
+$ O boolean

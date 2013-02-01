@@ -261,7 +261,7 @@ public abstract class Agent_Search extends Agent {
 	
 	/*Converts List of Evals to an array of values - at the moment only error_rate*/
 	private float[] namedEvalsToFitness(List named_evals) {
-		float[] res = new float[2];//named_evals.size...
+		float[] res = new float[3];//named_evals.size...
 		jade.util.leap.Iterator itr = named_evals.iterator();
 		while(itr.hasNext()){
 			Eval e = (Eval)itr.next();
@@ -270,6 +270,9 @@ public abstract class Agent_Search extends Agent {
                         }
                         if(e.getName().equals("root_mean_squared_error")) {
                             res[1] = e.getValue();
+                        }
+                        if(e.getName().equals("kappa_statistic")) {
+                            res[2] = -e.getValue();
                         }
 		}
 		return res;

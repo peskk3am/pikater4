@@ -17,9 +17,11 @@ import weka.core.Instance;
 public class SurrogateFitnessFunction implements FitnessFunction {
 
     Classifier surrogate;
+    ModelInputNormalizer norm;
     
-    public SurrogateFitnessFunction(Classifier surrogate)  {
+    public SurrogateFitnessFunction(Classifier surrogate, ModelInputNormalizer norm)  {
         this.surrogate = surrogate;
+        this.norm = norm;
     }
 
     public void setSurrogate(Classifier surrogate) {
@@ -29,7 +31,7 @@ public class SurrogateFitnessFunction implements FitnessFunction {
     @Override
     public double evaluate(Individual ind) {
         SearchItemIndividual si = (SearchItemIndividual)ind;
-        Instance in = si.toWekaInstance();
+        Instance in = si.toWekaInstance(norm);
         
         try {
             return surrogate.classifyInstance(in);

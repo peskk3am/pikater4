@@ -1,5 +1,6 @@
 package pikater.evolution.surrogate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import pikater.evolution.individuals.SearchItemIndividual;
@@ -28,7 +29,13 @@ public class SearchItemIndividualArchive {
         return archive.size();
     }
     
-    public Instances getWekaDataSet() {
+    public ArrayList<SearchItemIndividual> getSavedIndividuals() {
+        return new ArrayList<SearchItemIndividual>(archive.values());
+    }
+    
+    public Instances getWekaDataSet(ModelValueProvider mvp, ModelInputNormalizer norm) {
+        
+        mvp.reset();
         
         Collection<SearchItemIndividual> inds = archive.values();
         
@@ -40,15 +47,15 @@ public class SearchItemIndividualArchive {
         SearchItemIndividual first = it.next();
         
         Instances inst = first.emptyDatasetFromSchema();
-        Instance firstInstance = first.toWekaInstance();
-        firstInstance.setClassValue(this.getFitness(first));
+        Instance firstInstance = first.toWekaInstance(norm);
+        firstInstance.setClassValue(mvp.getModelValue(first, this, norm));
         firstInstance.setDataset(inst);
         inst.add(firstInstance);
         
         while (it.hasNext()) {
             SearchItemIndividual ind = it.next();
-            Instance in = ind.toWekaInstance();
-            in.setClassValue(this.getFitness(ind));
+            Instance in = ind.toWekaInstance(norm);
+            in.setClassValue(mvp.getModelValue(ind, this, norm));
             in.setDataset(inst);
             inst.add(in);
         }

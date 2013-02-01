@@ -1,0 +1,53 @@
+<experiments>
+   
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="multiEA-03">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="haberman.arff" test="haberman.arff" />
+		
+		<agent type="J48">
+			<parameter name="C" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+	
+   <experiment timeout="10000" get_results="after_each_computation" save_results="yes" name="multiEA-09">        
+		<method name="EASearch">
+			<parameter name="E" value="0.0" />
+        	<parameter name="M" value="1000" />
+			<parameter name="P" value="10" />
+			<parameter name="X" value="0.2" />
+			<parameter name="L" value="0.1" />
+			<parameter name="I" value="300" />
+			<parameter name="T" value="0.8" />
+			<parameter name="F" value="0.25" />
+        </method>
+        
+        <evaluation name="CrossValidation">
+			<parameter name="F" value="10" />        
+        </evaluation>
+        
+		<dataset train="iris.arff" test="iris.arff" />
+		
+		<agent type="J48">
+			<parameter name="C" value="?" />
+			<parameter name="M" value="?" />
+		</agent>
+        	
+   </experiment>
+   
+</experiments>

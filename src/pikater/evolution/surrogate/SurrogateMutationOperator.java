@@ -10,6 +10,7 @@ import pikater.evolution.operators.Operator;
 import pikater.evolution.operators.SearchItemIndividualMutation;
 import pikater.evolution.selectors.TournamentSelector;
 import weka.classifiers.functions.GaussianProcesses;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.RBFNetwork;
 import weka.classifiers.functions.SMOreg;
 import weka.core.Instances;
@@ -22,22 +23,26 @@ public class SurrogateMutationOperator implements Operator {
 
     SearchItemIndividualArchive archive;
     double mutProbability;
+    ModelValueProvider mvp;
+    ModelInputNormalizer norm;
 
-    public SurrogateMutationOperator(SearchItemIndividualArchive archive, double mutProbability) {
+    public SurrogateMutationOperator(SearchItemIndividualArchive archive, double mutProbability, ModelValueProvider mvp, ModelInputNormalizer norm) {
         this.archive = archive;
         this.mutProbability = mutProbability;
+        this.mvp = mvp;
+        this.norm = norm;
     }
 
     @Override
     public void operate(Population parents, Population offspring) {
         try {
             
-            if (archive.size() < 50) {
+            if (archive.size() < 20) {
                 offspring.addAll(parents);
                 return;
             }
             
-            Instances train = archive.getWekaDataSet();
+            Instances train = archive.getWekaDataSet(mvp, norm);
             GaussianProcesses smo = new GaussianProcesses();
             smo.buildClassifier(train);
 
@@ -69,16 +74,15 @@ public class SurrogateMutationOperator implements Operator {
                 ea.setReplacement(new MergingReplacement());
 
                 ea.setElite(0.1);
-                ea.setFitnessFunction(new SurrogateFitnessFunction(smo));
+                ea.setFitnessFunction(new SurrogateFitnessFunction(smo,norm));
                 
                 for (int j = 0; j < 10; j++) {
                     ea.evolve(innerPopulation);
                 }
               
-
                 SearchItemIndividual bestIndividual = (SearchItemIndividual)innerPopulation.getSortedIndividuals().get(0);
                 offspring.add(bestIndividual);
-                System.err.println("SURROGATE_OUT" + bestIndividual.toString() + " " + bestIndividual.getFitnessValue());
+                //System.err.println("SURROGATE_OUT" + bestIndividual.toString() + " " + bestIndividual.getFitnessValue());
 
             }
 

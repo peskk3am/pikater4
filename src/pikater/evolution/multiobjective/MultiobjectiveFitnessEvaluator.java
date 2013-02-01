@@ -17,7 +17,7 @@ public abstract class MultiobjectiveFitnessEvaluator implements FitnessEvaluator
      * @param pop Population from which the non-dominated front is chosen
      * @return List of Individuals in current non-dominated front
      */
-    public List<Individual> getNonDominatedFront(List<Individual> population) {
+    public static List<Individual> getNonDominatedFront(List<Individual> population) {
         ArrayList<Individual> front = new ArrayList<Individual>();
         front.add(population.get(0));
 
@@ -94,7 +94,7 @@ public abstract class MultiobjectiveFitnessEvaluator implements FitnessEvaluator
      * @param b second Individual to compare
      * @return true if Individual a dominates Individual b
      */
-    public boolean dominates(Individual a, Individual b) {
+    public static boolean dominates(Individual a, Individual b) {
         MultiobjectiveIndividual i1 = (MultiobjectiveIndividual) a;
         MultiobjectiveIndividual i2 = (MultiobjectiveIndividual) b;
         int dom_count = 0;
