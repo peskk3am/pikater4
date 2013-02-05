@@ -27,3 +27,4 @@ $a pikater.Agent_Duration duration log_LR_durations
 $a pikater.Agent_GUI_config_file UI test.xml
 # $a pikater.Agent_GUI_config_file very_simple_GUI otaznicky_all.xml
 $a jade.tools.sniffer.Sniffer sniffer01 Freddie
+

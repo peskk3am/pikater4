@@ -18,10 +18,19 @@
         <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
         
                 
-        <agent type="SMO">
-       
-        	<parameter name="G" value="0.3" />
-			
+        <agent type="?">       
+
+<!--
+	 parameter muze byt parovy i neparovy
+     pokud parovy - ma jenom jmeno; vnorena hodnota - optiony     
+
+        	<parameter name="B" value="?">
+
+        	<parameter name="S">
+	        	<parameter name="B" value="0.3">
+	        	<parameter name="C" value="0.4">        	 		        	        	 	
+	        </parameter>
+-->        	                
     	</agent>
 
 </experiment>     

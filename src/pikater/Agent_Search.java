@@ -261,12 +261,16 @@ public abstract class Agent_Search extends Agent {
 	
 	/*Converts List of Evals to an array of values - at the moment only error_rate*/
 	private float[] namedEvalsToFitness(List named_evals) {
-		float[] res = new float[1];//named_evals.size...
+		float[] res = new float[2];//named_evals.size...
 		jade.util.leap.Iterator itr = named_evals.iterator();
 		while(itr.hasNext()){
 			Eval e = (Eval)itr.next();
-			if(e.getName().compareTo("error_rate")==0)
+			if(e.getName().equals("error_rate")) {
 				res[0]=e.getValue();
+                        }
+                        if(e.getName().equals("root_mean_squared_error")) {
+                            res[1] = e.getValue();
+                        }
 		}
 		return res;
 	}
@@ -443,6 +447,7 @@ public abstract class Agent_Search extends Agent {
 								}
 								
 								queriesToProcess--;
+                                                                //System.out.println("OK: " + queriesToProcess + " queries remaining");
 							}
 						}
 					}
