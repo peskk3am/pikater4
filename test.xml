@@ -7,14 +7,7 @@
         <evaluation name="CrossValidation">
           <parameter name="F" value="8" />        
         </evaluation>               
-<!--
-        <dataset train="iris.arff" test="iris.arff" />
-        <dataset train="tic-tac-toe.arff" test="tic-tac-toe.arff" />
-        <dataset train="weather.arff" test="weather.arff" />
-        <dataset train="car.arff" test="car.arff" />                
-        <dataset train="wine.arff" test="wine.arff" />
-        <dataset train="breast-w.arff" test="breast-w.arff" />
--->
+
         <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
         
         <recommender name="BasicRecommender">
@@ -22,19 +15,7 @@
                 
         <agent type="?">       		
 		</agent>
-		
-<!--
-	 parameter muze byt parovy i neparovy
-     pokud parovy - ma jenom jmeno; vnorena hodnota - optiony     
-
-        	<parameter name="B" value="?">
-
-        	<parameter name="S">
-	        	<parameter name="B" value="0.3">
-	        	<parameter name="C" value="0.4">        	 		        	        	 	
-	        </parameter>
--->        	                
-    	
+		      	                    
 
 </experiment>     
 
