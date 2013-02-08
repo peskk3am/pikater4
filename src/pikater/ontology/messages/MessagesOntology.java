@@ -443,7 +443,7 @@ public class MessagesOntology extends Ontology {
 					ObjectSchema.OPTIONAL);
 			cs.add(PROBLEM_EVALUATION_METHOD,
 					(ConceptSchema) getSchema(EVALUATION_METHOD));
-			cs.add(PROBLEM_RECOMMENDER, (ConceptSchema) getSchema(AGENT));
+			cs.add(PROBLEM_RECOMMENDER, (ConceptSchema) getSchema(AGENT), ObjectSchema.OPTIONAL);
 
 			cs = (ConceptSchema) getSchema(METHOD);
 			cs.add(METHOD_NAME,

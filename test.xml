@@ -9,9 +9,11 @@
         </evaluation>               
 
         <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
-        
+       
+       <!-- 
         <recommender name="BasicRecommender">
         </recommender>
+       -->
                 
         <agent type="?">       		
 		</agent>

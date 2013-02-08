@@ -103,6 +103,7 @@ public abstract class Agent_GUI extends GuiAgent {
 	private int default_maximum_tries = 10;
 	private String default_get_results = "after_each_computation";
 	private boolean default_save_results = true;
+	private String default_recommender = "BasicRecommender";
 	
 	private boolean end_pikater_when_finished = false;
 	
@@ -636,7 +637,7 @@ public abstract class Agent_GUI extends GuiAgent {
 		String newName = null;
 
 		if (type != null) {
-			if (type.contains("?")) {
+			if (type.contains("?")) {				
 				addAgent(_problem_id, agent_id, name, type, optString);
 				checkProblems();
 				return agent_id++;
@@ -1072,6 +1073,15 @@ public abstract class Agent_GUI extends GuiAgent {
 									.next())).getData_type() == null) {
 								done = false;
 							}
+						}
+					}
+					else{
+						// type contains ?
+						// check whether the recommender type is set
+						// if not, set default_recommender
+						if (next_problem.getRecommender() == null){
+							System.out.print("sss");
+							addRecommenderToProblem(Integer.parseInt(next_problem.getGui_id()), default_recommender);
 						}
 					}
 				}
@@ -1714,8 +1724,7 @@ public abstract class Agent_GUI extends GuiAgent {
 			if (recommender.size() != 0) {
 				while (r_itr.hasNext()) {					
 					Element next_recommender = (Element) r_itr.next();				
-					addRecommenderToProblem(p_id, next_recommender.getAttributeValue("name"));
-					System.out.println ("ok");
+					addRecommenderToProblem(p_id, next_recommender.getAttributeValue("name"));					
 				}
 				/* java.util.List _recommender_options = next_method.getChildren("parameter");
 				java.util.Iterator ro_itr = _recommender_options.iterator();
