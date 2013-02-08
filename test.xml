@@ -17,9 +17,12 @@
 -->
         <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
         
+        <recommender name="BasicRecommender">
+        </recommender>
                 
-        <agent type="?">       
-
+        <agent type="?">       		
+		</agent>
+		
 <!--
 	 parameter muze byt parovy i neparovy
      pokud parovy - ma jenom jmeno; vnorena hodnota - optiony     
@@ -31,7 +34,7 @@
 	        	<parameter name="C" value="0.4">        	 		        	        	 	
 	        </parameter>
 -->        	                
-    	</agent>
+    	
 
 </experiment>     
 

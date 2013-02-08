@@ -3,7 +3,10 @@ package pikater.evolution.individuals;
 import jade.util.leap.Iterator;
 import java.util.Arrays;
 import pikater.evolution.RandomNumberGenerator;
+import pikater.evolution.surrogate.ModelInputNormalizer;
 import pikater.ontology.messages.BoolSItem;
+import pikater.ontology.messages.FloatSItem;
+import pikater.ontology.messages.IntSItem;
 import pikater.ontology.messages.SearchItem;
 import pikater.ontology.messages.SetSItem;
 import weka.core.Attribute;
@@ -122,7 +125,7 @@ public class SearchItemIndividual extends MultiobjectiveIndividual {
      * @return the instance representing this individual WITHOUT the class value
      * set.
      */
-    public Instance toWekaInstance() {
+    public Instance toWekaInstance(ModelInputNormalizer norm) {
 
         Instance inst = new Instance(items.length + 1);
         inst.setDataset(emptyDatasetFromSchema());
@@ -136,7 +139,13 @@ public class SearchItemIndividual extends MultiobjectiveIndividual {
                 inst.setValue(i, items[i].equals("False") ? 0.0 : 1.0);
                 continue;
             }
-            inst.setValue(i, Double.parseDouble(items[i]));
+            if (schema[i] instanceof IntSItem) {
+                inst.setValue(i, norm.normalizeInt(items[i], (IntSItem)schema[i]));
+                continue;
+            }
+            if (schema[i] instanceof FloatSItem) {
+                inst.setValue(i, norm.normalizeFloat(items[i], (FloatSItem)schema[i]));
+            }
         }
         
         return inst;

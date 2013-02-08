@@ -20,6 +20,7 @@ import pikater.ontology.messages.DeleteTempFiles;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
+import pikater.ontology.messages.GetMetadata;
 import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.ImportFile;
 import pikater.ontology.messages.MessagesOntology;
@@ -207,6 +208,36 @@ public class DataManagerService extends FIPAService {
 		return null;
 	}
 
+	public static Metadata getMetadata(Agent agent, GetMetadata gm) {
+
+		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+		request.addReceiver(new AID("dataManager", false));
+		request.setOntology(MessagesOntology.getInstance().getName());
+		request.setLanguage(codec.getName());
+		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+		Action a = new Action();
+		a.setActor(agent.getAID());
+		a.setAction(gm);
+		
+		try {
+			agent.getContentManager().fillContent(request, a);
+			ACLMessage inform = FIPAService.doFipaRequestClient(agent, request);
+
+			Result r = (Result) agent.getContentManager().extractContent(inform);
+			Metadata metadata = (Metadata)r.getValue();
+			return metadata;
+
+		} catch (CodecException e) {
+			e.printStackTrace();
+		} catch (OntologyException e) {
+			e.printStackTrace();
+		} catch (FIPAException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static pikater.ontology.messages.Agent getTheBestAgent(Agent agent,
 			String fileName) {
 		GetTheBestAgent g = new GetTheBestAgent();

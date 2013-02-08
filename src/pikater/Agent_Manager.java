@@ -66,6 +66,7 @@ import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Problem;
+import pikater.ontology.messages.Recommend;
 import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
@@ -130,11 +131,6 @@ public class Agent_Manager extends Agent {
 
 	private Set subscriptions = new HashSet();
 	// private Subscription subscription;
-
-	double minAttributes = Integer.MAX_VALUE;
-	double maxAttributes = Integer.MIN_VALUE;
-	double minInstances = Integer.MAX_VALUE;
-	double maxInstances = Integer.MIN_VALUE;
 
 	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
 	
@@ -559,7 +555,7 @@ public class Agent_Manager extends Agent {
 						String task_id = ga.getTask_id().getIdentificator();
 						
 						
-						agents = getAgentsByType(agentType, n, task_id);
+						agents = getAgentsByType(agentType, n, task_id, true);
 						
 						// printBusyAgents();
 						
@@ -657,62 +653,44 @@ public class Agent_Manager extends Agent {
 						String agentType = a_next.getType();
 						
 						if (agentType.contains("?")) {
-							/* if (print_distance_matrix){ 
-								System.out.println(distanceMatrix());
-								print_distance_matrix = false;
-							}
-							*/
+							// create recommender agent
+							AID Recommender = createAgent(problem.getRecommender().getType(), null, null);
 							
-							// metadata musn't be null; if they are
-							// generate at least nearly empty metadata
+							// send task to recommender:
+							ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+							req.addReceiver(Recommender);
+
+							req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+							req.setLanguage(codec.getName());
+							req.setOntology(ontology.getName());
+							// request.setReplyByDate(new Date(System.currentTimeMillis() + 200));
+
+							Recommend recommend = new Recommend();
+							recommend.setData(next_data);
 							
-							Metadata metadata;
-							if (next_data.getMetadata() == null) {
-								metadata = new Metadata();
-								metadata.setInternal_name(next_data
-										.getTest_file_name());
-							} else {
-								metadata = next_data.getMetadata();
-							}
+							Action a = new Action();
+							a.setAction(recommend);
+							a.setActor(this.getAID());
 
-							a_next = chooseTheBestAgent(metadata);
+							try {
+								getContentManager().fillContent(req, a);
 
-							if (a_next == null) {
-								ACLMessage msg = new ACLMessage(
-										ACLMessage.FAILURE);
-								msg.setContent("No metadata available.");
-								// behav.sendSubscription(msg);
-							} else {									
-								agentType = a_next.getType();
-								a_next_copy.setType(agentType);
-								// String agentName = a_next.getName();
-								// get options
-								pikater.ontology.messages.Agent agent_options = onlyGetAgentOptions(agentType, "?");
-								// TODO ^ cislovat otaznicky (taks_id)
+								ACLMessage inform = FIPAService.doFipaRequestClient(this, req);
+
+								Result r = (Result) getContentManager().extractContent(inform);
+
+								a_next = (pikater.ontology.messages.Agent) r.getItems().get(0);
+								a_next_copy = a_next;
 								
-								a_next_copy.setOptions(mergeOptions(
-										agent_options.getOptions(),
-										a_next.getOptions()));
-
-								System.out.println(getLocalName() + ": " + 
-										"********** Agent "
-										+ agentType
-										+ " recommended. Options: "
-										+ a_next_copy.optionsToString()
-										+ "**********");
-								
-								String file_name = next_data.removePath(next_data.getTest_file_name());
-								pikater.ontology.messages.Agent best = DataManagerService.getTheBestAgent(this, file_name);
-
-								if (best != null){
-									System.out.println("Best agent type: "+ best.getType() +
-											", options: " + best.optionsToString() + 
-											", error rate: " + best.getGui_id());
-								}
-								else{
-									System.out.println("No results in database for file " + next_data.getTest_file_name());
-								}
-							}																
+							} catch (CodecException ce) {
+								ce.printStackTrace();
+							} catch (OntologyException oe) {
+								oe.printStackTrace();
+							} catch (FIPAException fe) {
+								fe.printStackTrace();
+							}							
+							
 						}													
 						
 						if (a_next != null) {
@@ -761,39 +739,6 @@ public class Agent_Manager extends Agent {
 		return msgList;
 	
 	} // end prepareTaskMessages
-
-	
-	private List mergeOptions(List o1_CA, List o2) {
-		List new_options = new ArrayList();
-		if (o1_CA != null) {
-
-			// if this type of agent has got some options
-			// update the options (merge them)
-
-			// go through the CA options
-			// replace the value and add it to the new options
-			Iterator o2itr = o2.iterator();
-			while (o2itr.hasNext()) {
-				Option next_option = (Option) o2itr.next();
-
-				Iterator o1CAitr = o1_CA.iterator();
-				while (o1CAitr.hasNext()) {
-					Option next_CA_option = (Option) o1CAitr.next();
-
-					if (next_option.getName().equals(next_CA_option.getName())) {
-						// copy the value
-						next_CA_option.setValue(next_option.getValue());
-						next_CA_option.setMutable(false);
-
-						new_options.add(next_CA_option);
-
-					}
-				}
-			}
-
-		}
-		return new_options;
-	}
 
 	private boolean isBusy(AID aid) {		
 		Iterator itr = busyAgents.iterator();
@@ -853,7 +798,7 @@ public class Agent_Manager extends Agent {
 		}		
 	}
 	
-	public List getAgentsByType(String agentType, int n, String task_id) {
+	public List getAgentsByType(String agentType, int n, String task_id, boolean assign) {
 		// returns list of AIDs (n agents that are not busy)
 		
 		List Agents = new ArrayList(); // List of AIDs
@@ -872,7 +817,9 @@ public class Agent_Manager extends Agent {
 				// System.out.println(aid.getLocalName());
 				if (!isBusy(aid) && Agents.size() < n){
 					Agents.add(aid);
-					busyAgents.add(new BusyAgent(aid, task_id));
+					if (assign){
+						busyAgents.add(new BusyAgent(aid, task_id));
+					}
 				}
 			}
 			
@@ -884,7 +831,9 @@ public class Agent_Manager extends Agent {
 				// AID aid = createAgent(agentTypes.get(agentType), agentOptions.get(agentType));
 				AID aid = createAgent(agentType, null, null);
 				Agents.add(aid);
-				busyAgents.add(new BusyAgent(aid, task_id));
+				if (assign){
+					busyAgents.add(new BusyAgent(aid, task_id));
+				}
 			}
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
@@ -900,48 +849,6 @@ public class Agent_Manager extends Agent {
 		return new Vector<String> (agentTypes.keySet());
 	} // end offerAgentTypes
 
-	private pikater.ontology.messages.Agent onlyGetAgentOptions(String agentType, String task_id) {
-
-		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-		// find an agent acording to type
-		List agent = getAgentsByType(agentType, 1, task_id);
-		request.addReceiver((AID)agent.get(0));
-
-		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-
-		request.setLanguage(codec.getName());
-		request.setOntology(ontology.getName());
-
-		pikater.ontology.messages.GetOptions get = new pikater.ontology.messages.GetOptions();
-		Action a = new Action();
-		a.setAction(get);
-		a.setActor(this.getAID());
-
-		try {
-			// Let JADE convert from Java objects to string
-			getContentManager().fillContent(request, a);
-
-			ACLMessage inform = FIPAService.doFipaRequestClient(this, request);
-
-			if (inform == null) {
-				return null;
-			}
-
-			Result r = (Result) getContentManager().extractContent(inform);
-
-			return (pikater.ontology.messages.Agent) r.getItems().get(0);
-
-		} catch (CodecException ce) {
-			ce.printStackTrace();
-		} catch (OntologyException oe) {
-			oe.printStackTrace();
-		} catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-
-		return null;
-
-	}
 
 	public String generateName(String agentType) {
 		// don't use this function, 
@@ -1050,7 +957,7 @@ public class Agent_Manager extends Agent {
 		if (mutable.size() == 0){
 			// find or create an computing agent 
 			String agentType = ex.getTask().getAgent().getType();
-			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator());
+			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator(), false);
 			receivers.add( ((AID)agents.get(0)).getLocalName() );			
 		}
 		else{
@@ -1337,211 +1244,6 @@ public class Agent_Manager extends Agent {
 			return "NA";
 		}
 		return Double.toString(value);
-	}
-
-	private String distanceMatrix() {
-		String matrix = "";
-		
-		GetAllMetadata gm = new GetAllMetadata();
-		gm.setResults_required(false);
-
-		List allMetadata = DataManagerService.getAllMetadata(this, gm);
-
-		Iterator itr_colls = allMetadata.iterator();
-		while (itr_colls.hasNext()) {
-			Metadata next_coll = (Metadata) itr_colls.next();			
-
-			int na = next_coll.getNumber_of_attributes();
-			if (na < minAttributes) {
-				minAttributes = na;
-			}
-			if (na > maxAttributes) {
-				maxAttributes = na;
-			}
-	
-			int ni = next_coll.getNumber_of_instances();
-			if (ni < minInstances) {
-				minInstances = ni;
-			}
-			if (ni > maxInstances) {
-				maxInstances = ni;
-			}
-		}
-		
-		itr_colls = allMetadata.iterator();
-
-		double d;
-		while (itr_colls.hasNext()) {
-			Metadata next_coll = (Metadata) itr_colls.next();			
-			matrix +=next_coll.getExternal_name() + ";";
-			Iterator itr_rows = allMetadata.iterator();
-			
-			while (itr_rows.hasNext()) {
-				Metadata next_row = (Metadata) itr_rows.next();
-				d = distance(next_coll, next_row);
-				matrix += String.format("%.10f", d);
-				matrix += ";";				
-			}
-			matrix +="\n";
-		}
-		
-		return matrix;
-		
-	} // end distanceMatrix
-
-	
-	private pikater.ontology.messages.Agent chooseTheBestAgent(Metadata metadata) {
-		// at least name attribute in metadata has to be filled
-		boolean hasMetadata = false;
-		if (metadata.getNumber_of_attributes() > -1
-				&& metadata.getNumber_of_instances() > -1) {
-			hasMetadata = true;
-		}
-		
-		GetAllMetadata gm = new GetAllMetadata();
-		gm.setResults_required(true);
-
-		// choose the nearest training data
-		List allMetadata = DataManagerService.getAllMetadata(this, gm);
-
-		// set the min, max instances and attributes first
-		Iterator itr = allMetadata.iterator();
-		while (itr.hasNext()) {
-			Metadata next_md = (Metadata) itr.next();
-
-			// try to look up the file (-> metadata) in the database
-			if (!hasMetadata) {
-				if (("data" + System.getProperty("file.separator") + "files"
-						+ System.getProperty("file.separator") + next_md
-						.getInternal_name())
-						.equals(metadata.getInternal_name())) {
-					metadata = next_md;
-					hasMetadata = true;
-				}
-			}
-
-			int na = next_md.getNumber_of_attributes();
-			if (na < minAttributes) {
-				minAttributes = na;
-			}
-			if (na > maxAttributes) {
-				maxAttributes = na;
-			}
-
-			int ni = next_md.getNumber_of_instances();
-			if (ni < minInstances) {
-				minInstances = ni;
-			}
-			if (ni > maxInstances) {
-				maxInstances = ni;
-			}
-		}
-
-		if (!hasMetadata) {
-			return null;
-		}
-
-		System.out.println(getLocalName() + ": ");
-		System.out.println("*********** files from the table: ");
-
-		double d_best = Integer.MAX_VALUE;
-		Metadata m_best = null;
-
-		double d_new;
-		itr = allMetadata.iterator();
-		while (itr.hasNext()) {
-			Metadata next_md = (Metadata) itr.next();
-			d_new = distance(metadata, next_md);
-			if (!next_md.getInternal_name().equals(metadata.getInternal_name())) {
-				if (d_new < d_best) {
-					d_best = d_new;
-					m_best = next_md;
-				}
-			}
-			System.out.println("    " + next_md.getExternal_name() + " d: "
-					+ d_new);
-		}
-
-		System.out.println(getLocalName() + ": Nearest file: " + m_best.getExternal_name());
-		String nearestInternalName = m_best.getInternal_name();
-
-		// find the agent with the lowest error_rate
-		pikater.ontology.messages.Agent agent = DataManagerService
-				.getTheBestAgent(this, nearestInternalName);
-		if (agent == null) {
-			return null;
-		}
-		agent.setName(null); // we want only the type, since the particular
-								// agent may not any longer exist
-
-		return agent;
-
-		// TODO - testing data?
-	}
-
-	/*
-	 * Compute distance between two datasets (use metadata)
-	 */
-	private double distance(Metadata m1, Metadata m2) {
-
-		double wAttribute_type = 1;
-		double wDefault_task = 1;
-		double wMissing_values = 1;
-		double wNumber_of_attributes = 1;
-		double wNumber_of_instances = 1;
-
-		// can be null
-		double dAttribute_type = dCategory(m1.getAttribute_type(), m2
-				.getAttribute_type());
-		double dDefault_task = dCategory(m1.getDefault_task(), m2
-				.getDefault_task());
-		// default false - always set
-		double dMissing_values = dBoolean(m1.getMissing_values(), m2
-				.getMissing_values());
-		// mandatory attributes - always set
-		double dNumber_of_attributes = d(m1.getNumber_of_attributes(), m2
-				.getNumber_of_attributes(), minAttributes, maxAttributes);
-		double dNumber_of_instances = d(m1.getNumber_of_instances(), m2
-				.getNumber_of_instances(), minInstances, maxInstances);
-
-		// System.out.println("   dNumber_of_attributes: "+dNumber_of_attributes);
-		// System.out.println("   dNumber_of_instances : "+dNumber_of_instances);
-
-		double distance = wAttribute_type * dAttribute_type + wDefault_task
-				* dDefault_task + wMissing_values * dMissing_values
-				+ wNumber_of_attributes * dNumber_of_attributes
-				+ wNumber_of_instances * dNumber_of_instances;
-
-		return distance;
-	}
-
-	private double d(double v1, double v2, double min, double max) {
-		// map the value to the 0,1 interval; 0 - the same, 1 - the most
-		// different
-
-		return Math.abs(v1 - v2) / (max - min);
-	}
-
-	private int dCategory(String v1, String v2) {
-		// null considered another value
-		if (v1 == null) {
-			v1 = "null";
-		}
-		if (v2 == null) {
-			v2 = "null";
-		}
-
-		if (v1.equals(v2)) {
-			return 0;
-		}
-		return 1;
-	}
-
-	private int dBoolean(Boolean v1, Boolean v2) {
-		if (v1 == v2) {
-			return 0;
-		}
-		return 1;
 	}
 
 	protected String generateProblemID() {		

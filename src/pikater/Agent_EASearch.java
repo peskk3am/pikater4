@@ -20,6 +20,10 @@ import pikater.evolution.selectors.BestIndividualsSelector;
 import pikater.evolution.selectors.Selector;
 import pikater.evolution.selectors.TournamentSelector;
 import pikater.evolution.selectors.TwoObjectiveTournament;
+import pikater.evolution.surrogate.ASMMOMAModelValueProvider;
+import pikater.evolution.surrogate.FitnessModelValueProvider;
+import pikater.evolution.surrogate.IdentityNormalizer;
+import pikater.evolution.surrogate.LogarithmicNormalizer;
 import pikater.evolution.surrogate.SearchItemIndividualArchive;
 import pikater.evolution.surrogate.SurrogateMutationOperator;
 import pikater.ontology.messages.Option;
@@ -69,6 +73,7 @@ public class Agent_EASearch extends Agent_Search {
     java.util.ArrayList<Selector> matingSelectors;
     java.util.ArrayList<Operator> operators;
     boolean multiobjective = false;
+    boolean surrogate = false;
     double eliteSize = 0.1;
     int popSize = 10;
     double mutProb = 0.0;
@@ -101,11 +106,24 @@ public class Agent_EASearch extends Agent_Search {
             operators = new java.util.ArrayList<Operator>();
             archive = new SearchItemIndividualArchive();
             
-            multiobjective = false;
-            environmentalSelectors.add(new TournamentSelector());            
+            if (!multiobjective) {
+                environmentalSelectors.add(new TournamentSelector());            
+            }
+            else {
+                environmentalSelectors.add(new BestIndividualsSelector());
+                eliteSize = 0.0;
+            }
+                
             operators.add(new OnePtXOver(xOverProb));
             operators.add(new SearchItemIndividualMutation(mutProb, mutProbPerField, 0.3));
-            operators.add(new SurrogateMutationOperator(archive, 0.25));
+            
+            if (surrogate && !multiobjective) {
+                operators.add(new SurrogateMutationOperator(archive, 0.25, new FitnessModelValueProvider(), new IdentityNormalizer()));
+            }
+            
+            if (surrogate && multiobjective) {
+                operators.add(new SurrogateMutationOperator(archive, 0.25, new ASMMOMAModelValueProvider(), new LogarithmicNormalizer()));
+            }
             
             parents = new Population();
             parents.setPopulationSize(popSize);
@@ -216,7 +234,6 @@ public class Agent_EASearch extends Agent_Search {
         }
         
         for (int i = 0; i < evaluations.length; i++) {
-            System.err.println(toEvaluate.get(i).toString() + " : " + Arrays.toString(evaluations[i]));
             toEvaluate.get(i).setFitnessValue(evaluations[i][0]);
             ((SearchItemIndividual)toEvaluate.get(i)).setObjectives(evaluations[i]);
             if (evaluations[i][0] < bestError) {
@@ -238,16 +255,9 @@ public class Agent_EASearch extends Agent_Search {
         
         Population combined = replacement.replace(parents, offspring);
         
-        System.err.println("COMBINED: " + combined.getPopulationSize());
-        
         if (multiobjective) {
             NSGAFitnessEvaluator NSGAfit = new NSGAFitnessEvaluator();
             NSGAfit.evaluate(combined);
-            java.util.List<Individual> nonDom = NSGAfit.getNonDominatedFront(combined.getSortedIndividuals());
-            
-            for (Individual ind: nonDom) {
-                System.err.println("NONDOM: " + ind.toString() + " : " + Arrays.toString(((MultiobjectiveIndividual)ind).getObjectives()));
-            }
         }
         
         int envSel = environmentalSelectors.size();
@@ -267,18 +277,11 @@ public class Agent_EASearch extends Agent_Search {
 
         parents.clear();
         parents.addAll(selected);
-        
-        System.err.println("PARENTS: " + parents.getPopulationSize());
-
     }
 
     @Override
     protected boolean finished() {
         //number of generations, best error rate
-        
-        System.err.println("FINISHED_GEN: " + genNumber + "/" + maxGeneration);
-        System.err.println("FINISHED_ERR: " + bestError + "/" + goalError);
-        System.err.println("FINISHED_EVA: " + archive.size() + "/" + maxEval);
         
         if (genNumber >= maxGeneration) {
             return true;
@@ -334,6 +337,12 @@ public class Agent_EASearch extends Agent_Search {
             }
             if (next.getName().equals("L")) {
                 eliteSize = Float.parseFloat(next.getValue());
+            }
+            if (next.getName().equals("S")) {
+                surrogate = Boolean.parseBoolean(next.getValue());
+            }
+            if (next.getName().equals("O")) {
+                multiobjective = Boolean.parseBoolean(next.getValue());
             }
         }
         query_block_size = popSize;

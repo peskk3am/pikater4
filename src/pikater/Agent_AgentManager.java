@@ -136,11 +136,12 @@ public class Agent_AgentManager extends Agent {
 			protected ACLMessage handleRequest(ACLMessage request)
 					throws NotUnderstoodException, RefuseException {
 				
-				log.info("Agent " + getLocalName() + " received request: "
+				/* log.info("Agent " + getLocalName() + " received request: "
 						+ request.getContent());
 				System.out.println(getLocalName() + ": Queue size: " 
 						+ myAgent.getCurQueueSize() + " " + myAgent.getQueueSize());
-								
+				*/
+				
 				try {
 					Action a = (Action) getContentManager().extractContent(
 							request);			        
@@ -326,8 +327,7 @@ public class Agent_AgentManager extends Agent {
 					}	
 					*/									
 				 	if (a.getAction() instanceof CreateAgent){
-						CreateAgent ca = (CreateAgent) a.getAction();
-																	
+						CreateAgent ca = (CreateAgent) a.getAction();																							
 						String agent_name;
 						if (ca.getName() != null){
 							agent_name = ca.getName();
@@ -455,11 +455,11 @@ public class Agent_AgentManager extends Agent {
 			i++;
 		}			
 		
-		/*
-		System.out.println("name: "+name);
-		System.out.println("type: "+agentTypes.get(type));
-		System.out.println("args: "+Args);
-		*/				
+		
+		// System.out.println("name: "+name);
+		// System.out.println("type: "+agentTypes.get(type));
+		// System.out.println("args: "+Args);
+						
 		
 		boolean agent_created = false;
 		while (!agent_created){		
@@ -468,8 +468,8 @@ public class Agent_AgentManager extends Agent {
 				agent.start();
 				agent_created = true; // no exception occured
 			} catch (ControllerException e) {
-				// System.err.print(getLocalName() + " :");
-				// e.printStackTrace();
+				System.err.print(getLocalName() + " :");
+				e.printStackTrace();
 				// try again with a different name				
 				name = generateName(name);
 				// System.err.print(getLocalName() + " : new name: " + name);
@@ -561,11 +561,12 @@ public class Agent_AgentManager extends Agent {
 		}
 
 		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
-                agentTypes.put("GASearch", "pikater.Agent_GASearch");
-                agentTypes.put("EASearch", "pikater.Agent_EASearch");
-                agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
+        agentTypes.put("GASearch", "pikater.Agent_GASearch");
+        agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
 		agentTypes.put("RandomSearch", "pikater.Agent_RandomSearch");
 		agentTypes.put("OptionsManager", "pikater.Agent_OptionsManager");
+		
+		agentTypes.put("BasicRecommender", "pikater.agents.recommenders.Agent_Basic");
 
 	}
     

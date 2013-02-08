@@ -1008,6 +1008,37 @@ public abstract class Agent_GUI extends GuiAgent {
 		}
 	}
 
+	private void addRecommenderToProblem(int problem_id, String name) {
+		// get the problem
+	
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (Integer.parseInt(next_problem.getGui_id()) == problem_id
+					&& next_problem.getStatus().equals("new")) {
+
+				pikater.ontology.messages.Agent recommender = new pikater.ontology.messages.Agent();
+				recommender.setType(name);
+				// method.setOptions(new ArrayList());
+
+				next_problem.setRecommender(recommender);
+				
+				/*try {
+					method.setOptions(getOptions(name));
+				} catch (CodecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (OntologyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FIPAException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				*/
+			}
+		}
+	}	
+	
 	private void checkProblems() {		
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
@@ -1677,6 +1708,25 @@ public abstract class Agent_GUI extends GuiAgent {
 				}
 			}
 
+			java.util.List recommender = next_problem.getChildren("recommender");
+			java.util.Iterator r_itr = recommender.iterator();
+
+			if (recommender.size() != 0) {
+				while (r_itr.hasNext()) {					
+					Element next_recommender = (Element) r_itr.next();				
+					addRecommenderToProblem(p_id, next_recommender.getAttributeValue("name"));
+					System.out.println ("ok");
+				}
+				/* java.util.List _recommender_options = next_method.getChildren("parameter");
+				java.util.Iterator ro_itr = _recommender_options.iterator();
+				while (ro_itr.hasNext()) {
+					Element next_option = (Element) ro_itr.next();
+					addRecommenderOption(p_id, next_option.getAttributeValue("name"),
+							next_option.getAttributeValue("value"));
+				}
+				*/
+			}
+
 			java.util.List _agents = next_problem.getChildren("agent");
 			java.util.Iterator a_itr = _agents.iterator();
 			while (a_itr.hasNext()) {
@@ -1704,7 +1754,7 @@ public abstract class Agent_GUI extends GuiAgent {
 							next_option.getAttributeValue("number_of_values_to_try"),
 							next_option.getAttributeValue("set"));
 				}
-			}
+			}			
 		}
 	} // end _test_getProblemsFromXMLFile
 
