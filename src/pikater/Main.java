@@ -11,10 +11,11 @@ public class Main {
 
         String[] arg = {"pikater.properties"};
 
-        if (args.length == 0)
+        if (args.length == 0) {
             args = arg;
+        }
 
-        jade.Boot.main(arg);
+        jade.Boot.main(args);
 
     }
 

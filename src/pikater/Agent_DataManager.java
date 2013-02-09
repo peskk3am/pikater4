@@ -54,6 +54,7 @@ import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetFileInfo;
 import pikater.ontology.messages.GetFiles;
+import pikater.ontology.messages.GetMetadata;
 import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.ImportFile;
 import pikater.ontology.messages.LoadResults;
@@ -639,6 +640,41 @@ public class Agent_DataManager extends Agent {
                         db.close();
                         return reply;
                     }
+                    
+                    if (a.getAction() instanceof GetMetadata) {
+                        GetMetadata gm = (GetMetadata) a.getAction();
+
+                    	openDBConnection();
+                    	Statement stmt = db.createStatement();
+                    	
+                    	String query = "SELECT * FROM metadata WHERE internalfilename = '" + gm.getInternal_filename() +"'";                        
+                    	
+                        Metadata m = new Metadata();
+
+                        ResultSet rs = stmt.executeQuery(query);                                               
+
+                        while (rs.next()) {
+                            m.setAttribute_type(rs.getString("attributeType"));
+                            m.setDefault_task(rs.getString("defaultTask"));
+                            m.setExternal_name(rs.getString("externalFilename"));
+                            m.setInternal_name(rs.getString("internalFilename"));
+                            m.setMissing_values(rs.getBoolean("missingValues"));
+                            m.setNumber_of_attributes(rs.getInt("numberOfAttributes"));
+                            m.setNumber_of_instances(rs.getInt("numberOfInstances"));
+                        }
+
+                        log.info("Executing query: " + query);
+                       
+                        ACLMessage reply = request.createReply();
+                        reply.setPerformative(ACLMessage.INFORM);
+
+                        Result _result = new Result(a.getAction(), m);
+                        getContentManager().fillContent(reply, _result);
+
+                        db.close();                        
+                        return reply;
+                    }
+                    
                     if (a.getAction() instanceof GetAllMetadata) {
                         GetAllMetadata gm = (GetAllMetadata) a.getAction();
 
@@ -679,7 +715,7 @@ public class Agent_DataManager extends Agent {
                     		query += " ORDER BY externalFilename";
                     	}
                         
-                    	System.out.println(query);
+                    	// System.out.println(query);
                     	
                         List allMetadata = new ArrayList();
 

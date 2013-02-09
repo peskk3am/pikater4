@@ -23,7 +23,8 @@ public class Problem implements Concept {
 	private boolean _save_results;
 	private String _name;
 	private EvaluationMethod _evaluation_method;
-
+	private Agent Recommender;
+	
 	public void setAgents(List agents) {
 		_agents = agents;
 	}
@@ -126,5 +127,13 @@ public class Problem implements Concept {
 	
 	public EvaluationMethod getEvaluation_method() {
 		return _evaluation_method;
+	}
+
+	public Agent getRecommender() {
+		return Recommender;
+	}
+
+	public void setRecommender(Agent recommender) {
+		Recommender = recommender;
 	}	
 }
