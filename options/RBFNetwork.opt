@@ -4,10 +4,10 @@
 
 
 # number of clusters, default 2
-$ B int 1 1 r 2 10
+$ B int 1 1 r 2 1000
 
 # minStdDev, default 0.1
-$ W float 1 1 r 0.01 1
+$ W float 1 1 r 0.01 2
 
 # Ridge (Set the Ridge value for the logistic or linear regression), default 1.0E-8
 $ R float 1 1 r 0.000000001 10

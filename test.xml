@@ -1,21 +1,19 @@
 <experiments>
 <experiment get_results="after_each_computation" save_results="yes" name="test">        
-        <method name="ChooseXValues">
-          <parameter name="N" value="2" />
+        <method name="GridSearch">
+          <parameter name="N" value="10" />
         </method>
         
         <evaluation name="CrossValidation">
-          <parameter name="F" value="8" />        
+          <parameter name="F" value="10" />        
         </evaluation>               
 
-        <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
-       
-       <!-- 
-        <recommender name="BasicRecommender">
-        </recommender>
-       -->
+        <dataset train="iris.arff" test="iris.arff" /> 		 		    
                 
-        <agent type="?">       		
+        <agent type="RBFNetwork">       		
+			<parameter name="B" value="?" />
+			<parameter name="R" value="?" />
+			<parameter name="W" value="?" />
 		</agent>
 		      	                    
 

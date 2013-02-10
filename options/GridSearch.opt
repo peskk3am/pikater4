@@ -1,0 +1,8 @@
+# maximum block size (default 10)
+$ B int 1 1 r 0 100000 10 maxBlock Block size
+ 
+# default number of tries (default 10)
+$ N int 1 1 r 0 1000 10 defaultTries Default tries
+
+# zero for logarithmic steps (default 0.000000001)
+$ Z float 1 1 r 0 1000 0.000000001 logZero Zero for logarithmic steps
