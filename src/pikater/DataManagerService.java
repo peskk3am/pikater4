@@ -238,10 +238,14 @@ public class DataManagerService extends FIPAService {
 		return null;
 	}
 	
-	public static pikater.ontology.messages.Agent getTheBestAgent(Agent agent,
-			String fileName) {
+        public static pikater.ontology.messages.Agent getTheBestAgent(Agent agent, String fileName) {
+            return (pikater.ontology.messages.Agent) getTheBestAgents(agent, fileName, 1).get(0);
+        }
+        
+	public static List getTheBestAgents(Agent agent, String fileName, int number) {
 		GetTheBestAgent g = new GetTheBestAgent();
 		g.setNearest_file_name(fileName);
+                g.setNumberOfAgents(number);
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("dataManager", false));
@@ -261,11 +265,9 @@ public class DataManagerService extends FIPAService {
 				return null;
 			}
 
-			Result r = (Result) agent.getContentManager()
-					.extractContent(inform);
-			pikater.ontology.messages.Agent bestAgent = (pikater.ontology.messages.Agent) r
-					.getValue();
-			return bestAgent;
+			Result r = (Result) agent.getContentManager().extractContent(inform);
+			List bestAgents = (List) r.getValue();
+			return bestAgents;
 
 		} catch (CodecException e) {
 			e.printStackTrace();

@@ -229,6 +229,7 @@ public class MessagesOntology extends Ontology {
 
 	public static final String GET_THE_BEST_AGENT = "GET-THE-BEST-AGENT";
 	public static final String GET_THE_BEST_AGENT_NEAREST_FILE_NAME = "nearest_file_name";
+        public static final String GET_THE_BEST_AGENT_NUMBER_OF_AGENTS = "numberOfAgents";
 
 	public static final String GET_FILE_INFO = "GET-FILE-INFO";
 	public static final String GET_FILE_INFO_USERID = "userID";
@@ -388,8 +389,7 @@ public class MessagesOntology extends Ontology {
 			add(new AgentActionSchema(SAVE_METADATA), SaveMetadata.class);
 			add(new AgentActionSchema(GET_DATA), GetData.class);
 			add(new AgentActionSchema(GET_ALL_METADATA), GetAllMetadata.class);
-			add(new AgentActionSchema(GET_THE_BEST_AGENT),
-					GetTheBestAgent.class);
+			add(new AgentActionSchema(GET_THE_BEST_AGENT), GetTheBestAgent.class);
 			add(new AgentActionSchema(GET_FILE_INFO), GetFileInfo.class);
 			add(new AgentActionSchema(UPDATE_METADATA), UpdateMetadata.class);
 			add(new AgentActionSchema(GET_FILES), GetFiles.class);
@@ -821,6 +821,7 @@ public class MessagesOntology extends Ontology {
 			as.add(GET_THE_BEST_AGENT_NEAREST_FILE_NAME,
 					(PrimitiveSchema) getSchema(BasicOntology.STRING),
 					ObjectSchema.OPTIONAL);
+                        as.add(GET_THE_BEST_AGENT_NUMBER_OF_AGENTS, (PrimitiveSchema) getSchema(BasicOntology.INTEGER), ObjectSchema.OPTIONAL);
 
 			as = (AgentActionSchema) getSchema(GET_FILE_INFO);
 			as.add(GET_FILE_INFO_USERID,

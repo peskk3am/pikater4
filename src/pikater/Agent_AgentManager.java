@@ -571,6 +571,7 @@ public class Agent_AgentManager extends Agent {
                 agentTypes.put("OptionsManager", "pikater.Agent_OptionsManager");
 		
 		agentTypes.put("BasicRecommender", "pikater.agents.recommenders.Agent_Basic");
+                agentTypes.put("NMTopRecommender", "pikater.agents.recommenders.Agent_NMTopRecommender");
 
 	}
     

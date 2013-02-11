@@ -72,7 +72,7 @@ public class Agent_EASearch extends Agent_Search {
     java.util.ArrayList<Selector> environmentalSelectors;
     java.util.ArrayList<Selector> matingSelectors;
     java.util.ArrayList<Operator> operators;
-    boolean multiobjective = false;
+    boolean multiobjective = true;
     boolean surrogate = false;
     double eliteSize = 0.1;
     int popSize = 10;
@@ -338,12 +338,12 @@ public class Agent_EASearch extends Agent_Search {
             if (next.getName().equals("L")) {
                 eliteSize = Float.parseFloat(next.getValue());
             }
-            if (next.getName().equals("S")) {
-                surrogate = Boolean.parseBoolean(next.getValue());
-            }
-            if (next.getName().equals("O")) {
-                multiobjective = Boolean.parseBoolean(next.getValue());
-            }
+            //if (next.getName().equals("S")) {
+            //    surrogate = Boolean.parseBoolean(next.getValue());
+            //}
+            //if (next.getName().equals("O")) {
+            //    multiobjective = Boolean.parseBoolean(next.getValue());
+            //}
         }
         query_block_size = popSize;
 

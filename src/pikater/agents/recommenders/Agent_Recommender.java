@@ -176,7 +176,7 @@ public abstract class Agent_Recommender extends Agent {
         			println("********** Agent "
         					+ recommended_agent.getType()
         					+ " recommended. Options: "
-        					+ recommended_agent.optionsToString()
+        					+ recommended_agent.toGuiString()
         					+ "**********", 1, true);            			
 
                 		// Prepare the content of inform message                       
@@ -223,12 +223,15 @@ public abstract class Agent_Recommender extends Agent {
 					if (next_option.getName().equals(next_CA_option.getName())) {
 						// copy the value
 						next_CA_option.setValue(next_option.getValue());
+                                                next_CA_option.setUser_value(next_option.getUser_value());
 						if (next_option.getValue().contains("?")){
 							// just in case the someone forgot to set opt to mutable
 							next_CA_option.setMutable(true);
+                                                        next_CA_option.setRange(next_option.getRange());
 						}
 						else {
 							next_CA_option.setMutable(next_option.getMutable());
+                                                        next_CA_option.setRange(next_option.getRange());
 						}
 
 						new_options.add(next_CA_option);
@@ -239,7 +242,7 @@ public abstract class Agent_Recommender extends Agent {
 		return new_options;
 	}
 	
-	private List getAgentOptions(String agentType) {
+	protected List getAgentOptions(String agentType) {
 
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		// find an agent according to type
