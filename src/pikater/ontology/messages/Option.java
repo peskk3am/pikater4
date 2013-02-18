@@ -153,22 +153,23 @@ public class Option implements Concept {
 		
 		_name = name;
 		_data_type = data_type;
-
-		_number_of_args = new Interval();
-		_number_of_args.setMin((float)numArgsMin);
-		_number_of_args.setMax((float)numArgsMax);
-			
-		if (range.equals("r")) {
-			_range = new Interval();
-			_range.setMin(rangeMin);
-			_range.setMax(rangeMax);
-			_is_a_set = false;
-		}
-		if (range.equals("s")) {
-			_is_a_set = true;
-			_set = set; 
-		}
 		
+		if (!data_type.equals("BOOLEAN")){
+			_number_of_args = new Interval();
+			_number_of_args.setMin((float)numArgsMin);
+			_number_of_args.setMax((float)numArgsMax);
+				
+			if (range.equals("r")) {
+				_range = new Interval();
+				_range.setMin(rangeMin);
+				_range.setMax(rangeMax);
+				_is_a_set = false;
+			}
+			if (range.equals("s")) {
+				_is_a_set = true;
+				_set = set; 
+			}
+		}		
 		_description = description;
 		_synopsis  = synopsis;
 		

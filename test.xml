@@ -1,14 +1,6 @@
 <experiments>
 <experiment get_results="after_each_computation" save_results="yes" name="test">        
-        <method name="EASearch">
-			<parameter name="E" value="0.0" />
-        	<parameter name="M" value="1000" />
-			<parameter name="P" value="10" />
-			<parameter name="X" value="0.2" />
-			<parameter name="L" value="0.1" />
-			<parameter name="I" value="300" />
-			<parameter name="T" value="0.8" />
-			<parameter name="F" value="0.25" />
+        <method name="GridSearch">
         </method>
         
         <evaluation name="CrossValidation">
