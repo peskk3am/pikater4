@@ -324,7 +324,8 @@ public class MessagesOntology extends Ontology {
 
 	public static final String RECOMMEND = "RECOMMEND";
 	public static final String RECOMMEND_DATA = "data";
-
+	public static final String RECOMMEND_RECOMMENDER = "recommender";
+	
 	// public static final String SEND_OPTIONS = "SEND-OPTIONS";
 	// public static final String SEND_OPTIONS_OPTIONS = "options";
 
@@ -985,7 +986,8 @@ public class MessagesOntology extends Ontology {
 
 			as = (AgentActionSchema) getSchema(RECOMMEND);
 			as.add(RECOMMEND_DATA, (ConceptSchema) getSchema(DATA));
-					
+			as.add(RECOMMEND_RECOMMENDER, (ConceptSchema) getSchema(AGENT));
+			
 		} catch (OntologyException oe) {
 			oe.printStackTrace();
 		}

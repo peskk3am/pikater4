@@ -1,6 +1,5 @@
 package pikater.agents.computing;
 
-//import java.io.BufferedReader;
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
@@ -26,20 +25,17 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
 import jade.util.leap.ArrayList;
-import jade.util.leap.Iterator;
 import jade.util.leap.List;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
-import pikater.DataManagerService;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Eval;
@@ -49,10 +45,8 @@ import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Option;
 import pikater.ontology.messages.PartialResults;
 import pikater.ontology.messages.Task;
-import pikater.ontology.messages.Id;
 import weka.core.Instances;
 
 public abstract class Agent_ComputingAgent extends Agent {

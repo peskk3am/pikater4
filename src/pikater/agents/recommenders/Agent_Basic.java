@@ -22,7 +22,7 @@ public class Agent_Basic extends Agent_Recommender {
 	protected String getAgentType(){
 		return "BasicRecommender";
 	}
-	
+		
 	@Override
 	protected pikater.ontology.messages.Agent chooseBestAgent(Data data){
 		// in data there are already metadata filled in 
@@ -214,21 +214,4 @@ public class Agent_Basic extends Agent_Recommender {
 		return 1;
 	}
 	
-	private void print(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.print(text);
-		}
-	}
-
-	private void println(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.println(text);
-		}
-	}
 }

@@ -899,6 +899,34 @@ public abstract class Agent_GUI extends GuiAgent {
 			}
 		}
 	}	
+
+	protected void addRecommenderOption(int _problem_id, String option_name, String option_value) {
+		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
+			Problem next_problem = (Problem) pe.nextElement();
+			if (next_problem.getStatus().equals("new")) {
+				
+				if (Integer.parseInt(next_problem.getGui_id()) == _problem_id) {
+						pikater.ontology.messages.Agent recommender = next_problem.getRecommender();
+
+						Option option = new Option();
+						option.setName(option_name);
+
+						if (option_value == null) {
+							option_value = "True";
+						}
+						option.setUser_value(option_value);
+						option.setValue(option_value);						
+
+						List options = recommender.getOptions();
+						if (options == null){
+							options = new ArrayList();							
+						}
+						options.add(option);
+						recommender.setOptions(options);
+				}							
+			}
+		}
+	}	
 	
 	protected int addDatasetToProblem(int _problem_id, String _train,
 			String _test, String _label, String _output, String _mode) {
@@ -1726,14 +1754,14 @@ public abstract class Agent_GUI extends GuiAgent {
 					Element next_recommender = (Element) r_itr.next();				
 					addRecommenderToProblem(p_id, next_recommender.getAttributeValue("name"));					
 				}
-				/* java.util.List _recommender_options = next_method.getChildren("parameter");
+				java.util.List _recommender_options = next_method.getChildren("parameter");
 				java.util.Iterator ro_itr = _recommender_options.iterator();
 				while (ro_itr.hasNext()) {
 					Element next_option = (Element) ro_itr.next();
 					addRecommenderOption(p_id, next_option.getAttributeValue("name"),
 							next_option.getAttributeValue("value"));
 				}
-				*/
+				
 			}
 
 			java.util.List _agents = next_problem.getChildren("agent");

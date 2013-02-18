@@ -112,6 +112,7 @@ public class Agent_Initiator extends Agent {
 			 * is displayed
 			 */
 			System.out.println(getLocalName() + ": no init file specified.");
+			e.printStackTrace();
 
 		} catch (IOException e) {
 			// If another exception is generated, print a stack trace

@@ -17,7 +17,8 @@
 
         <dataset train="iris.arff" test="iris.arff" /> 		 		    
 		
-		<recommender name="NMTopRecommender"/>
+		<recommender name="BasicRecommender">
+		</recommender>
 
         <agent type="?" />
 

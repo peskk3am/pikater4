@@ -647,8 +647,9 @@ public class Agent_DataManager extends Agent {
                     	openDBConnection();
                     	Statement stmt = db.createStatement();
                     	
-                    	String query = "SELECT * FROM metadata WHERE internalfilename = '" + gm.getInternal_filename() +"'";                        
-                    	
+                    	String query = "SELECT * FROM metadata WHERE internalFilename=\'" + gm.getInternal_filename().split(
+                                Pattern.quote(System.getProperty("file.separator")))[2] + "\'";                        
+                    	                    	
                         Metadata m = new Metadata();
 
                         ResultSet rs = stmt.executeQuery(query);                                               
@@ -662,7 +663,7 @@ public class Agent_DataManager extends Agent {
                             m.setNumber_of_attributes(rs.getInt("numberOfAttributes"));
                             m.setNumber_of_instances(rs.getInt("numberOfInstances"));
                         }
-
+                        
                         log.info("Executing query: " + query);
                        
                         ACLMessage reply = request.createReply();
@@ -754,7 +755,7 @@ public class Agent_DataManager extends Agent {
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " ORDER BY errorRate ASC LIMIT 1," + number;
+                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " ORDER BY errorRate ASC LIMIT " + number;
                         // System.out.println(query);
                         log.info("Executing query: " + query);
                         

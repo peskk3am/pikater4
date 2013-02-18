@@ -668,6 +668,7 @@ public class Agent_Manager extends Agent {
 
 							Recommend recommend = new Recommend();
 							recommend.setData(next_data);
+							recommend.setRecommender(problem.getRecommender());
 							
 							Action a = new Action();
 							a.setAction(recommend);
@@ -957,7 +958,7 @@ public class Agent_Manager extends Agent {
 		if (mutable.size() == 0){
 			// find or create an computing agent 
 			String agentType = ex.getTask().getAgent().getType();
-			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator(), false);
+			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator(), true);
 			receivers.add( ((AID)agents.get(0)).getLocalName() );			
 		}
 		else{

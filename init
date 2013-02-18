@@ -7,11 +7,11 @@ $a pikater.Agent_ARFFReader Reader_Rychlonozka
 $a pikater.Agent_Manager manager no_xml_output
 
 # 3 params: url, user, password; no parameter ... connects to remote marp_pikater database
-$a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://127.0.0.1/pikater_local user root password m4rt1n 
+
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://127.0.0.1/pikater_local user root password m4rt1n 
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:hsql://localhost/db user SA 
 # $a pikater.Agent_DataManager dataManager no_log
-
+$a pikater.Agent_DataManager dataManager no_log url jdbc:hsqldb:file:data/db/pikaterdb
 # $a pikater.Agent_DataManager dataManager no_log url jdbc:mysql://localhost/pikater user root
 
 $a pikater.Agent_MetadataQueen Freddie

@@ -468,8 +468,8 @@ public class Agent_AgentManager extends Agent {
 				agent.start();
 				agent_created = true; // no exception occured
 			} catch (ControllerException e) {
-				System.err.print(getLocalName() + " :");
-				e.printStackTrace();
+				// System.err.print(getLocalName() + " :");
+				// e.printStackTrace();
 				// try again with a different name				
 				name = generateName(name);
 				// System.err.print(getLocalName() + " : new name: " + name);

@@ -1,6 +1,13 @@
 package pikater.agents.recommenders;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Enumeration;
+
 import pikater.DataManagerService;
+import pikater.gui.java.MyWekaOption;
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.GetMetadata;
@@ -8,6 +15,8 @@ import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Recommend;
+import weka.classifiers.Classifier;
+import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
@@ -49,8 +58,13 @@ public abstract class Agent_Recommender extends Agent {
 	// 0 no output
 	// 1 minimal
 	// 2 normal
-	protected int verbosity = 1;    
+	protected int verbosity = 2;    
     
+	private pikater.ontology.messages.Agent myAgentOntology = new pikater.ontology.messages.Agent();
+	
+	protected String getOptFileName(){
+		return "/options/"+getAgentType() +".opt";
+	}
 	
 	protected boolean registerWithDF() {
 		// register with the DF
@@ -143,23 +157,27 @@ public abstract class Agent_Recommender extends Agent {
         		Action a = (Action) getContentManager().extractContent(request);
 
                 if (a.getAction() instanceof Recommend) {
-                    Recommend rec = (Recommend) a.getAction();                        
-    				
-                    // TODO decide which recommendation method to use acording
-                    // to the Recommend options
+                    Recommend rec = (Recommend) a.getAction();
+                    myAgentOntology = rec.getRecommender();
+                    
+                    // merge options with .opt file options
+                    myAgentOntology.setOptions(getParameters());
+                    
+                    println("options: " + myAgentOntology.optionsToString(), 2, true);
                     Data data = rec.getData();
                     
                     // Get metadata:
 					Metadata metadata = null;    
 					
-					// either metatada are not yet in ontology		
+					// if metatada are not yet in ontology		
 					if (rec.getData().getMetadata() == null) {
 						// or fetch them from database:
 						GetMetadata gm = new GetMetadata();
 						gm.setInternal_filename(rec.getData().getTest_file_name());
 						metadata = DataManagerService.getMetadata(myAgent, gm);
 						data.setMetadata(metadata);
-					}                            					
+					}                            			
+
 					// else TODO - overit, jestli jsou metadata OK, pripadne vygenerovat
 					/* boolean hasMetadata = false;
 					if (metadata.getNumber_of_attributes() > -1
@@ -222,8 +240,16 @@ public abstract class Agent_Recommender extends Agent {
 
 					if (next_option.getName().equals(next_CA_option.getName())) {
 						// copy the value
-						next_CA_option.setValue(next_option.getValue());
-                                                next_CA_option.setUser_value(next_option.getUser_value());
+                        if (next_CA_option.getValue() == null){
+                        	next_CA_option.setValue(next_option.getValue());
+                        }
+                        
+                        next_CA_option.setUser_value(next_option.getUser_value());
+                        
+                        if (next_CA_option.getData_type() == null){
+                        	next_CA_option.setData_type(next_option.getData_type());                        
+                        }
+                        
 						if (next_option.getValue().contains("?")){
 							// just in case the someone forgot to set opt to mutable
 							next_CA_option.setMutable(true);
@@ -355,7 +381,119 @@ public abstract class Agent_Recommender extends Agent {
 		return aid;		
 	}
 	
-	private void print(String text, int level, boolean print_agent_name){
+	protected List getParameters(){
+		ArrayList optFileOptions = getParametersFromOptFile();
+		return mergeOptions(myAgentOntology.getOptions(), optFileOptions);
+	}
+	
+	private ArrayList getParametersFromOptFile(){
+		// set default values of options
+		// if values exceed intervals in .opt file -> warning
+
+		// fill the Options vector:
+		ArrayList Options = new ArrayList();
+		
+		String optPath = System.getProperty("user.dir") +
+				System.getProperty("file.separator") + "options" + 
+				System.getProperty("file.separator") + getAgentType() + ".opt";
+
+			// read options from file
+			try {
+				/* Sets up a file reader to read the options file */
+				FileReader input = new FileReader(optPath);
+				/*
+				 * Filter FileReader through a Buffered read to read a line at a
+				 * time
+				 */
+				BufferedReader bufRead = new BufferedReader(input);
+
+				String line; // String that holds current file line
+				int count = 0; // Line number of count
+				// Read first line
+				line = bufRead.readLine();
+				count++;
+
+				// Read through file one line at time. Print line # and line
+				while (line != null) {
+					// parse the line
+					String delims = "[ ]+";
+					String[] params = line.split(delims, 11);
+
+					if (params[0].equals("$")) {
+						
+						String dt = null; 										
+						if (params[2].equals("boolean")) {
+							dt = "BOOLEAN";
+						}
+						if (params[2].equals("float")) {
+							dt = "FLOAT";
+						}
+						if (params[2].equals("int")) {
+							dt = "INT";
+						}
+						if (params[2].equals("mixed")) {
+							dt = "MIXED";
+						}					
+						
+						float numArgsMin;
+						float numArgsMax;
+						float rangeMin = 0;
+						float rangeMax = 0;
+						String range;
+						List set = null;
+						
+						if (dt.equals("BOOLEAN")){
+							numArgsMin = 1;
+							numArgsMax = 1;
+							range = null;						
+						}
+						else{
+							numArgsMin = Float.parseFloat(params[3]);
+							numArgsMax = Float.parseFloat(params[4]);
+							range = params[5];
+
+							if (range.equals("r")){
+								rangeMin = Float.parseFloat(params[6]);
+								rangeMax = Float.parseFloat(params[7]);
+							}
+							if (range.equals("s")){
+								set = new ArrayList();
+								String[] s = params[6].split("[ ]+");
+								for (int i=0; i<s.length; i++){
+									set.add(s[i]);
+								}
+							}
+						}
+						
+						Option o = new Option(params[1], dt,
+								numArgsMin, numArgsMax,
+								range, rangeMin, rangeMax, set,
+								params[params.length-3],
+								params[params.length-2],
+								params[params.length-1]);
+						
+						Options.add(o);
+						
+					}
+
+					line = bufRead.readLine();
+
+					count++;
+				}
+				bufRead.close();
+				
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return Options;
+	} // end getParameters
+		
+	protected void print(String text, int level, boolean print_agent_name){
 		if (verbosity >= level){
 			if (print_agent_name){
 				System.out.print(getLocalName() + ": ");
@@ -364,7 +502,7 @@ public abstract class Agent_Recommender extends Agent {
 		}
 	}
 
-	private void println(String text, int level, boolean print_agent_name){
+	protected void println(String text, int level, boolean print_agent_name){
 		if (verbosity >= level){
 			if (print_agent_name){
 				System.out.print(getLocalName() + ": ");
