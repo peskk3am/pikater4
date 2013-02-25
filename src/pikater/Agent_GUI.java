@@ -1439,7 +1439,7 @@ public abstract class Agent_GUI extends GuiAgent {
                     a.setActor(this.getAID());
 
                     ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-                    req.addReceiver(new AID("Freddie", false));
+                    req.addReceiver(new AID("queen", false));
                     req.setLanguage(codec.getName());
                     req.setOntology(ontology.getName());
                     req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);

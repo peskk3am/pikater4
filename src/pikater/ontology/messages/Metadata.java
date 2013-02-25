@@ -1,6 +1,12 @@
 package pikater.ontology.messages;
 
 import jade.content.Concept;
+import java.util.ArrayList;
+import java.util.List;
+import pikater.metadata.AttributeMetadata;
+import pikater.metadata.CategoricalAttributeMetadata;
+import pikater.metadata.IntegerAttributeMetadata;
+import pikater.metadata.RealAttributeMetadata;
 
 public class Metadata implements Concept {
 
@@ -15,6 +21,85 @@ public class Metadata implements Concept {
 	private boolean _missing_values;
 	private String _default_task; // Classification, Regression, Clustering
 	private String _attribute_type; // Categorical, Numerical, Mixed
+        private List<AttributeMetadata> _attributeMetadataList = new ArrayList<>();
+        
+        public String getTargetClassType()
+        {
+            for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+            {
+                AttributeMetadata att= getAttributeMetadataList().get(i);
+                if (att.isIsTarget()) return att.getType();
+            }
+            return "No target class";
+        }
+        
+        public double getCategoricalRatio()
+        {
+            double n=getNumber_of_attributes()-1;
+            return getNumberOfCategorical()/n;
+        }
+        
+        public double getIntegerRatio()
+        {
+            double n=getNumber_of_attributes()-1;
+            return getNumberOfInteger()/n;
+        }
+        
+        public double getRealRatio()
+        {
+            double n=getNumber_of_attributes()-1;
+            return getNumberOfReal()/n;
+        }
+        
+        public int getNumberOfCategorical()
+        {
+            int count=0;
+           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+            {
+                AttributeMetadata att= getAttributeMetadataList().get(i);
+                if (!att.isIsTarget())
+                {
+                    if (att instanceof CategoricalAttributeMetadata) count++;
+                }
+            }
+            return count;
+        }
+        
+        public int getNumberOfInteger()
+        {
+            int count=0;
+           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+            {
+                AttributeMetadata att= getAttributeMetadataList().get(i);
+                if (!att.isIsTarget())
+                {
+                    if (att instanceof IntegerAttributeMetadata) count++;
+                }
+            }
+            return count;
+        }
+        
+        public int getNumberOfReal()
+        {
+           int count=0;
+           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+            {
+                AttributeMetadata att= getAttributeMetadataList().get(i);
+                if (!att.isIsTarget())
+                {
+                    if (att instanceof RealAttributeMetadata) count++;
+                }
+            }
+            return count;
+        }
+        
+        public List<AttributeMetadata> getAttributeMetadataList() {
+            return _attributeMetadataList;
+        }
+
+        public void setAttributeMetadataList(List<AttributeMetadata> _attributeMetadataList) {
+            this._attributeMetadataList = _attributeMetadataList;
+        }
 
 	public int getNumber_of_instances() {
 		return _number_of_instances;

@@ -1,6 +1,7 @@
 package pikater;
 
 import jade.content.ContentElement;
+import jade.content.ContentManager;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
 import jade.content.lang.sl.SLCodec;
@@ -68,6 +69,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import pikater.metadata.MetadataReader;
 import pikater.ontology.messages.DeleteTempFiles;
 
 import pikater.ontology.messages.CreateAgent;
@@ -140,6 +142,8 @@ public class Agent_MetadataQueen extends Agent {
         // receive request
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchOntology(ontology.getName()), MessageTemplate.MatchPerformative(ACLMessage.REQUEST));        
 		addBehaviour(new receiveRequest(this, mt));
+                
+               
 
     }  // end setup()
     
@@ -206,7 +210,8 @@ public class Agent_MetadataQueen extends Agent {
     pikater.ontology.messages.DataInstances processGetData(ACLMessage inform) {
 		ContentElement content;
 		try {
-			content = getContentManager().extractContent(inform);
+                        ContentManager manager= getContentManager();
+			content = manager.extractContent(inform);
 			if (content instanceof Result) {
 				Result result = (Result) content;
 				if (result.getValue() instanceof pikater.ontology.messages.DataInstances) {
@@ -279,49 +284,8 @@ public class Agent_MetadataQueen extends Agent {
 	
 	private Metadata computeMetadata(DataInstances data){	
 
-		Metadata m = new Metadata();		
-							
-        // number of instances
-		m.setNumber_of_instances(data.getInstances().size());
-		
-		// number of attributes
-		m.setNumber_of_attributes(data.getAttributes().size());
-
-		// missing values
-		boolean missing = false; 
-		jade.util.leap.Iterator itr = data.getInstances().iterator();
-		while(itr.hasNext()){
-			Instance i = (Instance)itr.next();
-			if (i.getMissing().size() != 0){
-				missing = true;
-			}			
-		}		
-		m.setMissing_values(missing);
-		
-		// data type
-		String type = ""; 
-		itr = data.getAttributes().iterator();
-		while(itr.hasNext()){
-			Attribute a = (Attribute)itr.next();
-			if (type.isEmpty()){
-				type = a.getType();
-			}
-			if (! a.getType().equals((type))){
-				type = "Multivariate";
-			}
-					
-		}		
-		m.setAttribute_type(type);
-		
-		// default task 
-        if ( ((Attribute) data.getAttributes().get((data.getClass_index() >= 0 ? data.getClass_index() : data.getAttributes().size() - 1))).getType().equals("Numeric") ){
-            m.setDefault_task("Regression");
-        }
-        else {
-            m.setDefault_task("Classification");
-        }
-
-		return m;
+		MetadataReader reader=new MetadataReader();
+                return reader.computeMetadata(data);
 	}
 	
 	
