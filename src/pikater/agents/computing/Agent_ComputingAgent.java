@@ -117,7 +117,9 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 	protected boolean registerWithDF() {
 		// register with the DF
-
+		if (this.getAID().getLocalName().contains("Service")){
+			return false;
+		}
 		DFAgentDescription description = new DFAgentDescription();
 		// the description is the root description for each agent
 		// and how we prefer to communicate.

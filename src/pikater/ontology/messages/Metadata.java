@@ -15,6 +15,7 @@ public class Metadata implements Concept {
 	private boolean _missing_values;
 	private String _default_task; // Classification, Regression, Clustering
 	private String _attribute_type; // Categorical, Numerical, Mixed
+	private int _linear_regression_duration; // ms
 
 	public int getNumber_of_instances() {
 		return _number_of_instances;
@@ -70,6 +71,14 @@ public class Metadata implements Concept {
 
 	public String getExternal_name() {
 		return _external_name;
+	}
+
+	public int getLinear_regression_duration() {
+		return _linear_regression_duration;
+	}
+
+	public void setLinear_regression_duration(int _linear_regression_duration) {
+		this._linear_regression_duration = _linear_regression_duration;
 	}
 
 }

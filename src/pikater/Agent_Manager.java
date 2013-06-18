@@ -250,7 +250,6 @@ public class Agent_Manager extends Agent {
 		
 		protected void handleInform(ACLMessage inform) {
 			System.out.println(myAgent.getLocalName()+": Agent "+inform.getSender().getName()+" successfully performed the requested action");
-						
 			int n = 0;
 			if (receivedProblemsID.get(problemID) != null){
 				n = receivedProblemsID.get(problemID);
@@ -283,7 +282,15 @@ public class Agent_Manager extends Agent {
 					List tasks = (List)result.getValue();
 					Task t = (Task) tasks.get(0);						
 					// it would be enough to get id from one of the task
-					task_id = t.getId().getIdentificator();										
+					task_id = t.getId().getIdentificator();
+					
+					// if sender was computational agent, write results into the database
+					if (!inform.getSender().getLocalName().contains("OptionsManager")){
+							t.setFinish(getDateTime());
+							if (t.getSave_results()){						
+								DataManagerService.saveResult(myAgent, t);
+							}
+					}
 				}
 				
 				// remove dedicated agents from busyAgents list							
@@ -959,7 +966,9 @@ public class Agent_Manager extends Agent {
 			// find or create an computing agent 
 			String agentType = ex.getTask().getAgent().getType();
 			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator(), true);
-			receivers.add( ((AID)agents.get(0)).getLocalName() );			
+			receivers.add( ((AID)agents.get(0)).getLocalName() );
+			// write results into the database instead of optionsManager
+			// TODO nemel by to delat vzdycky manager? aby to bylo pokazdy stejny?
 		}
 		else{
 			// create an Option Manager agent

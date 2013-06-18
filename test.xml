@@ -1,19 +1,24 @@
 <experiments>
 <experiment get_results="after_each_computation" save_results="yes" name="test">        
-        <method name="GridSearch">
+        <method name="ChooseXValues">
         </method>
         
         <evaluation name="CrossValidation">
           <parameter name="F" value="10" />        
         </evaluation>               
 
-        <dataset train="iris.arff" test="iris.arff" /> 		 		    
+        <dataset train="weather.arff" test="weather.arff" /> 		 		    
 		
+<!--
 		<recommender name="BasicRecommender">
 		</recommender>
+-->
 
-        <agent type="?" />
+        <agent type="RBFNetwork">
+<!--        	<parameter name="B" value="?" />   -->
+        </agent>
 
 </experiment>     
 
+<hasta_la_vista_baby shutdown_database="true" />
 </experiments>
