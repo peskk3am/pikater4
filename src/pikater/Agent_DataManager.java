@@ -271,15 +271,9 @@ public class Agent_DataManager extends Agent {
                                                                 + "rootMeanSquaredError DOUBLE, "
                                                                 + "relativeAbsoluteError DOUBLE," 
 								+ "rootRelativeSquaredError DOUBLE, "
-<<<<<<< HEAD
-
-								+ "objectFilename VARCHAR(256), "
-
-=======
 								
 								+ "objectFilename VARCHAR(256), "
 								
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 								+ "start TIMESTAMP, "
 								+ "finish TIMESTAMP, " 
 								+ "duration INTEGER, "
@@ -583,11 +577,7 @@ public class Agent_DataManager extends Agent {
                             query += Root_mean_squared_error + ",";
                             query += Relative_absolute_error + ",";
                             query += Root_relative_squared_error;                            
-<<<<<<< HEAD
-
-=======
 							
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                             
                     		Timestamp currentTimestamp =
                             new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
@@ -657,14 +647,8 @@ public class Agent_DataManager extends Agent {
                     	openDBConnection();
                     	Statement stmt = db.createStatement();
                     	
-<<<<<<< HEAD
-                    	String query = "SELECT * FROM metadata WHERE internalFilename=\'" + gm.getInternal_filename().split(
-                                Pattern.quote(System.getProperty("file.separator")))[2] + "\'";                        
-                    	                    	
-=======
                     	String query = "SELECT * FROM metadata WHERE internalfilename = '" + gm.getInternal_filename() +"'";                        
                     	
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                         Metadata m = new Metadata();
 
                         ResultSet rs = stmt.executeQuery(query);                                               
@@ -678,11 +662,7 @@ public class Agent_DataManager extends Agent {
                             m.setNumber_of_attributes(rs.getInt("numberOfAttributes"));
                             m.setNumber_of_instances(rs.getInt("numberOfInstances"));
                         }
-<<<<<<< HEAD
-                        
-=======
 
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                         log.info("Executing query: " + query);
                        
                         ACLMessage reply = request.createReply();
@@ -769,19 +749,11 @@ public class Agent_DataManager extends Agent {
                     if (a.getAction() instanceof GetTheBestAgent) {
                         GetTheBestAgent g = (GetTheBestAgent) a.getAction();
                         String name = g.getNearest_file_name();
-<<<<<<< HEAD
-                        int number = g.getNumberOfAgents();
-=======
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                         
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-<<<<<<< HEAD
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " ORDER BY errorRate ASC LIMIT " + number;
-=======
                         String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                         // System.out.println(query);
                         log.info("Executing query: " + query);
                         
@@ -794,22 +766,6 @@ public class Agent_DataManager extends Agent {
                             db.close();
                             return reply;
                         }
-<<<<<<< HEAD
-                        
-                        List agents = new jade.util.leap.LinkedList();
-                        while (rs.next()) { 
-                            pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
-                            agent.setName(rs.getString("agentName"));
-                            agent.setType(rs.getString("agentType"));
-                            agent.setOptions(agent.stringToOptions(rs.getString("options")));
-                            agent.setGui_id(rs.getString("errorRate"));                                                
-                            agents.add(agent);
-                       }
-                        ACLMessage reply = request.createReply();
-                        reply.setPerformative(ACLMessage.INFORM);
-
-                        Result _result = new Result(a.getAction(), agents);
-=======
                         rs.next();
                         
                         pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
@@ -822,7 +778,6 @@ public class Agent_DataManager extends Agent {
                         reply.setPerformative(ACLMessage.INFORM);
 
                         Result _result = new Result(a.getAction(), agent);
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
                         getContentManager().fillContent(reply, _result);
 
                         db.close();
@@ -1073,21 +1028,13 @@ public class Agent_DataManager extends Agent {
 
 	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{		
 		String query = "";
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
 
 		// read first line
 		String line = bufRdr.readLine();
 		String captions[] = line.split(";");
-<<<<<<< HEAD
-
-=======
 				
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 		while((line = bufRdr.readLine()) != null){
 			String values[] = line.split(";");
 			 query += "UPDATE metadata SET ";
@@ -1131,23 +1078,6 @@ public class Agent_DataManager extends Agent {
     private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException{ 
     	openDBConnection();
 	    Statement stmt = db.createStatement();
-<<<<<<< HEAD
-
-	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
-	    String query1 = "SELECT COUNT(*) AS number FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
-
-	    log.info("Executing query " + query);
-	    log.info("Executing query " + query1);
-
-	    ResultSet rs = stmt.executeQuery(query);
-	    rs.next();
-	    int isInMetadata = rs.getInt("number");
-
-	    ResultSet rs1 = stmt.executeQuery(query1);
-		rs1.next();	    
-	    int isInFileMapping = rs1.getInt("number");
-
-=======
 	    
 	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
 	    String query1 = "SELECT COUNT(*) AS number FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
@@ -1163,7 +1093,6 @@ public class Agent_DataManager extends Agent {
 		rs1.next();	    
 	    int isInFileMapping = rs1.getInt("number");
 	
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
 	        log.info("Executing query: " + query);
 	        query = "INSERT into metadata (externalFilename, internalFilename, defaultTask, " +

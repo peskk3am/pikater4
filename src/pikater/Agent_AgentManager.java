@@ -468,13 +468,8 @@ public class Agent_AgentManager extends Agent {
 				agent.start();
 				agent_created = true; // no exception occured
 			} catch (ControllerException e) {
-<<<<<<< HEAD
 				// System.err.print(getLocalName() + " :");
 				// e.printStackTrace();
-=======
-				System.err.print(getLocalName() + " :");
-				e.printStackTrace();
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 				// try again with a different name				
 				name = generateName(name);
 				// System.err.print(getLocalName() + " : new name: " + name);
@@ -566,7 +561,6 @@ public class Agent_AgentManager extends Agent {
 		}
 
 		agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
-<<<<<<< HEAD
                 agentTypes.put("GASearch", "pikater.Agent_GASearch");
                 agentTypes.put("EASearch", "pikater.Agent_EASearch");
                 agentTypes.put("GridSearch", "pikater.Agent_GridSearch");
@@ -578,14 +572,6 @@ public class Agent_AgentManager extends Agent {
 		
 		agentTypes.put("BasicRecommender", "pikater.agents.recommenders.Agent_Basic");
                 agentTypes.put("NMTopRecommender", "pikater.agents.recommenders.Agent_NMTopRecommender");
-=======
-        agentTypes.put("GASearch", "pikater.Agent_GASearch");
-        agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
-		agentTypes.put("RandomSearch", "pikater.Agent_RandomSearch");
-		agentTypes.put("OptionsManager", "pikater.Agent_OptionsManager");
-		
-		agentTypes.put("BasicRecommender", "pikater.agents.recommenders.Agent_Basic");
->>>>>>> e8e6d2588c3b5ebd21c1c7f65cd5e4c5b26a0178
 
 	}
     
