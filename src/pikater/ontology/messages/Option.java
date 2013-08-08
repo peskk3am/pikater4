@@ -1,6 +1,5 @@
 package pikater.ontology.messages;
 
-import pikater.gui.java.MyWekaOption.dataType;
 import jade.content.Concept;
 import jade.util.leap.List;
 
