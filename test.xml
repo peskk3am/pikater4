@@ -1,30 +1,24 @@
 <experiments>
-<experiment name="test_method" get_results="after_each_computation" save_results="yes" name="test">        
+<experiment get_results="after_each_computation" save_results="yes" name="test">        
         <method name="ChooseXValues">
-          <parameter name="N" value="2" />
         </method>
         
         <evaluation name="CrossValidation">
-          <parameter name="F" value="8" />        
+          <parameter name="F" value="10" />        
         </evaluation>               
+
+        <dataset train="weather.arff" test="weather.arff" /> 		 		    
+		
 <!--
-        <dataset train="iris.arff" test="iris.arff" />
-        <dataset train="tic-tac-toe.arff" test="tic-tac-toe.arff" />
-        <dataset train="weather.arff" test="weather.arff" />
-        <dataset train="car.arff" test="car.arff" />                
-        <dataset train="wine.arff" test="wine.arff" />
-        <dataset train="breast-w.arff" test="breast-w.arff" />
+		<recommender name="BasicRecommender">
+		</recommender>
 -->
-        <dataset train="lung-cancer.arff" test="lung-cancer.arff" /> 		 		    
-        
-                
+
         <agent type="RBFNetwork">
-        	<parameter name="B" value="?" />
-        	<parameter name="W" value="?" />
-        	<parameter name="R" value="?" />
-        	<parameter name="M" value="?" />
-    		</agent>
+<!--        	<parameter name="B" value="?" />   -->
+        </agent>
 
 </experiment>     
 
+<hasta_la_vista_baby shutdown_database="true" />
 </experiments>
