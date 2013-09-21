@@ -189,7 +189,7 @@ public abstract class Agent_Recommender extends Agent {
                     pikater.ontology.messages.Agent recommended_agent = chooseBestAgent(rec.getData());
                     
                     // fill options
-                	recommended_agent.setOptions(mergeOptions(getAgentOptions(recommended_agent.getType()), recommended_agent.getOptions()));
+                	recommended_agent.setOptions(mergeOptions(recommended_agent.getOptions(), getAgentOptions(recommended_agent.getType()) ));
 
         			println("********** Agent "
         					+ recommended_agent.getType()
@@ -233,35 +233,40 @@ public abstract class Agent_Recommender extends Agent {
 			Iterator o2itr = o2.iterator();
 			while (o2itr.hasNext()) {
 				Option next_option = (Option) o2itr.next();
-
+				
+				// System.out.println("prvni: " + next_option.getName() + " hodnota: " + next_option.getValue());
+				next_option.setValue(next_option.getDefault_value());
+				
 				Iterator o1CAitr = o1_CA.iterator();
 				while (o1CAitr.hasNext()) {
 					Option next_CA_option = (Option) o1CAitr.next();
 
 					if (next_option.getName().equals(next_CA_option.getName())) {
-						// copy the value
-                        if (next_CA_option.getValue() == null){
-                        	next_CA_option.setValue(next_option.getValue());
-                        }
-                        
-                        next_CA_option.setUser_value(next_option.getUser_value());
-                        
-                        if (next_CA_option.getData_type() == null){
-                        	next_CA_option.setData_type(next_option.getData_type());                        
-                        }
-                        
-						if (next_option.getValue().contains("?")){
-							// just in case the someone forgot to set opt to mutable
-							next_CA_option.setMutable(true);
-                                                        next_CA_option.setRange(next_option.getRange());
-						}
-						else {
-							next_CA_option.setMutable(next_option.getMutable());
-                                                        next_CA_option.setRange(next_option.getRange());
-						}
+						// ostatni optiony zustanou puvodni (= ze souboru)			
+						// System.out.println("druha: " + next_CA_option.getName() + " hodnota: " + next_CA_option.getValue());
 
-						new_options.add(next_CA_option);
+						next_option.setUser_value(next_CA_option.getUser_value());
+
+						// copy the value
+                        if (next_CA_option.getValue() != null){  // TODO promyslet
+                        	next_option.setValue(next_CA_option.getValue());
+                        }
+                                               
+                        if (next_CA_option.getData_type() != null){
+                        	next_option.setData_type(next_CA_option.getData_type());                        
+                        }
+                        
+						if (next_CA_option.getValue().contains("?")){
+							// just in case the someone forgot to set opt to mutable
+							next_option.setMutable(true);
+						}
 					}
+				}
+				
+				// System.out.println("nova: " + next_option.getName() + " hodnota: " + next_option.getValue());
+				// System.out.println("-----");
+				if (next_option.getValue() != null){
+					new_options.add(next_option);
 				}
 			}
 		}

@@ -688,6 +688,7 @@ public class Agent_Manager extends Agent {
 
 								Result r = (Result) getContentManager().extractContent(inform);
 
+								// recommended agent from recommender
 								a_next = (pikater.ontology.messages.Agent) r.getItems().get(0);
 								a_next_copy = a_next;
 								
@@ -758,44 +759,6 @@ public class Agent_Manager extends Agent {
 		}
 		return false;
 	}
-
-	
-	private boolean isBusy_old(AID agent) {
-
-		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-		request.addReceiver(agent);
-
-		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-
-		request.setLanguage(codec.getName());
-		request.setOntology(ontology.getName());
-		request.setReplyByDate(new Date(System.currentTimeMillis() + 200));
-
-		pikater.ontology.messages.GetOptions get = new pikater.ontology.messages.GetOptions();
-		Action a = new Action();
-		a.setAction(get);
-		a.setActor(this.getAID());
-
-		try {
-			// Let JADE convert from Java objects to string
-			getContentManager().fillContent(request, a);
-
-			ACLMessage r = FIPAService.doFipaRequestClient(this, request);
-
-			if (r != null) {
-				return false;
-			}
-		} catch (CodecException ce) {
-			ce.printStackTrace();
-		} catch (OntologyException oe) {
-			oe.printStackTrace();
-		} catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-
-		return true;
-	}
-
 	
 	private void printBusyAgents(){
 		Iterator itr = busyAgents.iterator();

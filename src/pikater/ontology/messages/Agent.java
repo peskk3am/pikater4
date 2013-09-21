@@ -146,7 +146,7 @@ public class Agent implements Concept, Cloneable {
 		while (itr.hasNext()) {
 			pikater.ontology.messages.Option next_opt = (pikater.ontology.messages.Option) itr.next();
                         if (next_opt.getData_type().equals("BOOLEAN")) {
-                            if (next_opt.getValue().equals("True")) {
+                        	if (next_opt.getValue().equals("True")) {
                                 str += "-" + next_opt.getName() + " ";
                             }
                             if (next_opt.getMutable()) {

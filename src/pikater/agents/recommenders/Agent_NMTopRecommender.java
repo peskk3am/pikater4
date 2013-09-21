@@ -158,47 +158,54 @@ public class Agent_NMTopRecommender extends Agent_Recommender {
         while (it.hasNext()) {
             Option o = (Option) it.next();
 
-            Option newOpt = o.copyOption();
+            Option newOpt = o.copyOption();        	
             
             //ignore boolean and set options for now, set their value to the one of the best agent on closest file
             if (o.getData_type().equals("BOOLEAN") || o.getData_type().equals("MIXED")) {
-                newOpt.setValue(bestAgentOptions.get(0).getOptionByName(o.getName()).getValue());
-            }
-
-            double sum = 0;
-            int count = 0;
-            String optionName = o.getName();
-            for (Agent a : bestAgentOptions) {
-                sum += Double.parseDouble(a.getOptionByName(optionName).getValue());
-                count++;
-            }
-            double avg = sum/count;
-            
-            double stdDev = 0;
-            for (Agent a : bestAgentOptions) {
-                stdDev += Math.pow(Double.parseDouble(a.getOptionByName(optionName).getValue()) - avg, 2);
-            }
-            
-            stdDev = Math.sqrt(stdDev/count);
-
-            if (stdDev > 0) {
-                newOpt.setValue("?");
-                newOpt.setUser_value("?");
-                newOpt.setMutable(true);
-                Interval range = new Interval();
-                range.setMin((float)Math.max(avg - 2*stdDev, o.getRange().getMin()));
-                range.setMax((float)Math.min(avg + 2*stdDev, o.getRange().getMax()));
-                newOpt.setRange(range);
+                if (bestAgentOptions.get(0).getOptionByName(o.getName()) == null){
+                	continue;
+                }
+                newOpt.setValue(bestAgentOptions.get(0).getOptionByName(o.getName()).getValue());                
             }
             else {
-                if (o.getData_type().equals("FLOAT")) {
-                    newOpt.setValue(Double.toString(avg));
-                }
-                if (o.getData_type().equals("INT")) {
-                    newOpt.setValue(Integer.toString((int)avg));
-                }
+	            double sum = 0;
+	            int count = 0;
+	            String optionName = o.getName();
+	            for (Agent a : bestAgentOptions) {
+	            	if (a.getOptionByName(optionName) != null){
+	            		sum += Double.parseDouble(a.getOptionByName(optionName).getValue());
+	            	}
+	                count++;
+	            }
+	            double avg = sum/count;
+	            
+	            double stdDev = 0;
+	            for (Agent a : bestAgentOptions) {
+	            	if (a.getOptionByName(optionName) != null){
+	            		stdDev += Math.pow(Double.parseDouble(a.getOptionByName(optionName).getValue()) - avg, 2);
+	            	}
+	            }
+	            
+	            stdDev = Math.sqrt(stdDev/count);
+	
+	            if (stdDev > 0) {
+	                newOpt.setValue("?");
+	                newOpt.setUser_value("?");
+	                newOpt.setMutable(true);
+	                Interval range = new Interval();
+	                range.setMin((float)Math.max(avg - 2*stdDev, o.getRange().getMin()));
+	                range.setMax((float)Math.min(avg + 2*stdDev, o.getRange().getMax()));
+	                newOpt.setRange(range);
+	            }
+	            else {
+	                if (o.getData_type().equals("FLOAT")) {
+	                    newOpt.setValue(Double.toString(avg));
+	                }
+	                if (o.getData_type().equals("INT")) {
+	                    newOpt.setValue(Integer.toString((int)avg));
+	                }
+	            }
             }
-
             options.add(newOpt);
         }
 

@@ -749,11 +749,12 @@ public class Agent_DataManager extends Agent {
                     if (a.getAction() instanceof GetTheBestAgent) {
                         GetTheBestAgent g = (GetTheBestAgent) a.getAction();
                         String name = g.getNearest_file_name();
+                        int number = g.getNumberOfAgents();
                         
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
+                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " ORDER BY errorRate ASC LIMIT " + number;
                         // System.out.println(query);
                         log.info("Executing query: " + query);
                         
@@ -766,18 +767,20 @@ public class Agent_DataManager extends Agent {
                             db.close();
                             return reply;
                         }
-                        rs.next();
                         
-                        pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
-                        agent.setName(rs.getString("agentName"));
-                        agent.setType(rs.getString("agentType"));
-                        agent.setOptions(agent.stringToOptions(rs.getString("options")));
-                        agent.setGui_id(rs.getString("errorRate"));                                                
-
+                        List agents = new jade.util.leap.LinkedList();
+                        while (rs.next()) { 
+                            pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
+                            agent.setName(rs.getString("agentName"));
+                            agent.setType(rs.getString("agentType"));
+                            agent.setOptions(agent.stringToOptions(rs.getString("options")));
+                            agent.setGui_id(rs.getString("errorRate"));                                                
+                            agents.add(agent);
+                       }
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
 
-                        Result _result = new Result(a.getAction(), agent);
+                        Result _result = new Result(a.getAction(), agents);
                         getContentManager().fillContent(reply, _result);
 
                         db.close();

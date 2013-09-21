@@ -1,8 +1,8 @@
 package pikater.ontology.messages;
 
 import jade.content.Concept;
-import java.util.ArrayList;
-import java.util.List;
+import jade.util.leap.ArrayList;
+import jade.util.leap.List;
 import pikater.ontology.messages.metadata.*;
 
 public class Metadata implements Concept {
@@ -19,13 +19,14 @@ public class Metadata implements Concept {
 	private String _default_task; // Classification, Regression, Clustering
 	private String _attribute_type; // Categorical, Numerical, Mixed
 	private int _linear_regression_duration; // ms
-	private List<AttributeMetadata> _attributeMetadataList = new ArrayList<>();
-        
+	// private List<AttributeMetadata> _attribute_metadata_list = new ArrayList<>();
+	private List _attribute_metadata_list = new ArrayList(); 
+	
         public String getTargetClassType()
         {
-            for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+            for (int i=getAttribute_metadata_list().size()-1;i>=0;i--)
             {
-                AttributeMetadata att= getAttributeMetadataList().get(i);
+                AttributeMetadata att= (AttributeMetadata)getAttribute_metadata_list().get(i);
                 if (att.isIsTarget()) return att.getType();
             }
             return "No target class";
@@ -52,9 +53,9 @@ public class Metadata implements Concept {
         public int getNumberOfCategorical()
         {
             int count=0;
-           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+           for (int i=getAttribute_metadata_list().size()-1;i>=0;i--)
             {
-                AttributeMetadata att= getAttributeMetadataList().get(i);
+                AttributeMetadata att= (AttributeMetadata)getAttribute_metadata_list().get(i);
                 if (!att.isIsTarget())
                 {
                     if (att instanceof CategoricalAttributeMetadata) count++;
@@ -66,9 +67,9 @@ public class Metadata implements Concept {
         public int getNumberOfInteger()
         {
             int count=0;
-           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+           for (int i=getAttribute_metadata_list().size()-1;i>=0;i--)
             {
-                AttributeMetadata att= getAttributeMetadataList().get(i);
+                AttributeMetadata att= (AttributeMetadata)getAttribute_metadata_list().get(i);
                 if (!att.isIsTarget())
                 {
                     if (att instanceof IntegerAttributeMetadata) count++;
@@ -80,9 +81,9 @@ public class Metadata implements Concept {
         public int getNumberOfReal()
         {
            int count=0;
-           for (int i=getAttributeMetadataList().size()-1;i>=0;i--)
+           for (int i=getAttribute_metadata_list().size()-1;i>=0;i--)
             {
-                AttributeMetadata att= getAttributeMetadataList().get(i);
+                AttributeMetadata att= (AttributeMetadata)getAttribute_metadata_list().get(i);
                 if (!att.isIsTarget())
                 {
                     if (att instanceof RealAttributeMetadata) count++;
@@ -91,12 +92,12 @@ public class Metadata implements Concept {
             return count;
         }
         
-        public List<AttributeMetadata> getAttributeMetadataList() {
-            return _attributeMetadataList;
+        public List getAttribute_metadata_list() {
+            return _attribute_metadata_list;
         }
 
-        public void setAttributeMetadataList(List<AttributeMetadata> _attributeMetadataList) {
-            this._attributeMetadataList = _attributeMetadataList;
+        public void setAttribute_metadata_list(List _attribute_metadata_list) {
+            this._attribute_metadata_list = _attribute_metadata_list;
         }
 
 	public int getNumber_of_instances() {
