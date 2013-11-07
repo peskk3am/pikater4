@@ -4,6 +4,7 @@ import java.io.*;
 
 import org.hsqldb.lib.Iterator;
 
+import pikater.agents.PikaterAgent;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.GetParameters;
@@ -34,7 +35,7 @@ import jade.proto.AchieveREResponder;
 import jade.util.leap.ArrayList;
 import jade.util.leap.List;
 
-public abstract class Agent_Search extends Agent {	
+public abstract class Agent_Search extends PikaterAgent {	
 
 	private static final long serialVersionUID = 8637677510056974015L;
 	private Codec codec = new SLCodec();
@@ -45,7 +46,6 @@ public abstract class Agent_Search extends Agent {
 	private List search_options = null;
 	private List schema = null;
 	
-	protected abstract String getAgentType();
 	protected abstract List generateNewSolutions(List solutions, float[][] evaluations); //returns List of Options
 	protected abstract boolean finished();
 	protected abstract void updateFinished(float[][] evaluations);
@@ -278,57 +278,6 @@ public abstract class Agent_Search extends Agent {
 		return res;
 	}
 	
-	protected boolean registerWithDF() {
-		// register with the DF
-
-		DFAgentDescription description = new DFAgentDescription();
-		// the description is the root description for each agent
-		// and how we prefer to communicate.
-
-		description.setName(getAID());
-		// the service description describes a particular service we
-		// provide.
-		ServiceDescription servicedesc = new ServiceDescription();
-		// the name of the service provided (we just re-use our agent name)
-		servicedesc.setName(getLocalName());
-
-		// The service type should be a unique string associated with
-		// the service.s
-		String typeDesc = getAgentType();
-
-		servicedesc.setType(typeDesc);
-
-		// the service has a list of supported languages, ontologies
-		// and protocols for this service.
-		// servicedesc.addLanguages(language.getName());
-		// servicedesc.addOntologies(ontology.getName());
-		// servicedesc.addProtocols(InteractionProtocol.FIPA_REQUEST);
-
-		description.addServices(servicedesc);
-
-		// add "Search agent service"
-		ServiceDescription servicedesc_g = new ServiceDescription();
-
-		servicedesc_g.setName(getLocalName());
-		servicedesc_g.setType("Search");
-		description.addServices(servicedesc_g);
-
-		// register synchronously registers us with the DF, we may
-		// prefer to do this asynchronously using a behaviour.
-		try {
-			DFService.register(this, description);
-			System.out.println(getLocalName()
-					+ ": successfully registered with DF; service type: "
-					+ typeDesc);
-			return true;
-		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ ": error registering with DF, exiting:" + e);
-			// doDelete();
-			return false;
-
-		}
-	} // end registerWithDF
 	
 	private class RequestServer extends AchieveREResponder {
 		private static final long serialVersionUID = 6214306716273574418L;
@@ -522,7 +471,7 @@ public abstract class Agent_Search extends Agent {
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
 
-		registerWithDF();
+		registerWithDF("Search");
 		
 		addBehaviour(new RequestServer(this));
 		

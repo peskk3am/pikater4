@@ -21,6 +21,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import pikater.agents.PikaterAgent;
+import pikater.logging.Severity;
 import pikater.ontology.messages.*;
 
 import java.io.*;
@@ -40,35 +41,21 @@ public class Agent_DataManager extends PikaterAgent {
     Logger log;
     Codec codec = new SLCodec();
     Ontology ontology = MessagesOntology.getInstance();
-    
     String db_url;
     String db_user;
     String db_password;
     
-    boolean no_log = false; // = use log
-    
     private void openDBConnection() throws SQLException{
-    	// db = DriverManager.getConnection("jdbc:mysql://174.120.245.222/marp_pikater", "marp_pikater", "pikater");
-    	db = DriverManager.getConnection(db_url, db_user, db_password);
+    	  db = DriverManager.getConnection(db_url, db_user, db_password);
     }
     
     @Override
     protected void setup() {
-        
     	try {
-            //db = DriverManager.getConnection(
-            //        "jdbc:hsqldb:file:data/db/pikaterdb", "", "");
-
-        	// TODO predelat -> vzdycky zkusti parametry rozparsovat
-    		// je to proto, ze kdyz predavam parametry DataManagerovi
-    		// ve scriptu, bere vsechno jako jeden parametr:
-
     		Object[] args = getArguments();
     		ParseArguments(args);
-    		
-    		// System.out.println(args);
+
     		if (arguments.size() > 0) {
-    			int i = 0;
     			
     			boolean db_specified = false;
                 if (ContainsArgument(URL_ARG_NAME))
@@ -101,41 +88,19 @@ public class Agent_DataManager extends PikaterAgent {
         		}        		    		
     		}
         	
-    		System.out.println(getLocalName() +": Connecting to " + db_url + ".");
-    		// System.out.println("user " + db_user);
-    		// System.out.println("password " + db_password);
+    		log("Connecting to " + db_url + ".");
     		openDBConnection();
-        	
-    		String hostAddress = this.getProperty(Profile.MAIN_HOST, null);
-    		
-            Logger.getRootLogger().addAppender(
-                    new FileAppender(new PatternLayout(
-                    "%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
-            //TODO:use common logging mechanism log = Logger.getLogger(Agent_DataManager.class);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
-        
-//        try {
-//    		loadMetadataFromFile("metadata");
-//    	} catch (IOException e1) {
-//    		// TODO Auto-generated catch block
-//    		e1.printStackTrace();
-//    	} catch (SQLException e1) {
-//    		// TODO Auto-generated catch block
-//    		e1.printStackTrace();
-//    	}
 
         
-        LinkedList<String> tableNames = new LinkedList<String>();
-        LinkedList<String> triggerNames = new LinkedList<String>();
+        LinkedList<String> tableNames = new LinkedList<>();
+        LinkedList<String> triggerNames = new LinkedList<>();
         try {
             String[] types = {"TABLE", "VIEW"};
             ResultSet tables = db.getMetaData().getTables(null, null, "%",
@@ -151,55 +116,57 @@ public class Agent_DataManager extends PikaterAgent {
             }
 
         } catch (SQLException e) {
-            log.error("Error getting tables list: " + e.getMessage());
+            logError("Error getting tables list: " + e.getMessage());
             e.printStackTrace();
         }
 
-        log.info("Found the following tables: ");
+        StringBuilder sb=new StringBuilder("Found the following tables: ");
         for (String s : tableNames) {
-            log.info(s);
+            sb.append(s+" ");
         }
+        log(sb.toString());
 
-        log.info("Found the following triggers: ");
+        sb=new StringBuilder("Found the following triggers: ");
         for (String s : triggerNames) {
-            log.info(s);
+            sb.append(s+" ");
         }
+        log(sb.toString());
 
         File data = new File("data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + "temp");
         if (!data.exists()) {
-            log.info("Creating directory data/files");
+            log("Creating directory data/files");
             if (data.mkdirs()) {
-                log.info("Succesfully created directory data/files");
+                log("Succesfully created directory data/files");
             } else {
-                log.error("Error creating directory data/files");
+                logError("Error creating directory data/files");
             }
         }
 
         try {
             if (!tableNames.contains("FILEMAPPING")) {
-                log.info("Creating table FILEMAPPING");
+                log("Creating table FILEMAPPING");
                 db.createStatement().executeUpdate(
                         "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(256) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
             }
         } catch (SQLException e) {
-            log.fatal("Error creating table FILEMAPPING: " + e.getMessage());
+            logError("Error creating table FILEMAPPING: " + e.getMessage(), Severity.Critical);
             e.printStackTrace();
         }
 
         try {
             if (!tableNames.contains("METADATA")) {
-                log.info("Creating table METADATA");
+                log("Creating table METADATA");
                 db.createStatement().executeUpdate(
                         "CREATE TABLE metadata (" + "externalFilename VARCHAR(256) NOT NULL, " + "internalFilename CHAR(32) NOT NULL, " + "defaultTask VARCHAR(256), " + "attributeType VARCHAR(256), " + "numberOfInstances INTEGER, " + "numberOfAttributes INTEGER, " + "missingValues BOOLEAN, " + "PRIMARY KEY (internalFilename))");
             }
         } catch (SQLException e) {
-            log.fatal("Error creating table METADATA: " + e.getMessage());
+            logError("Error creating table METADATA: " + e.getMessage(),Severity.Critical);
             e.printStackTrace();
         }
     
         try {
             if (!tableNames.contains("RESULTS")) {
-                log.info("Creating table RESULTS");
+                log("Creating table RESULTS");
                 db.createStatement().executeUpdate(
 						"CREATE TABLE results ("
 								+ "userID INTEGER NOT NULL, "
@@ -227,38 +194,28 @@ public class Agent_DataManager extends PikaterAgent {
 								+ ")");
             }
         } catch (SQLException e) {
-            log.fatal("Error creating table RESULTS: " + e.getMessage());
+            logError("Error creating table RESULTS: " + e.getMessage(),Severity.Critical);
         }
 
         try {
             if (!tableNames.contains("FILEMETADATA")) {
-                log.info("Creating view FILEMETADATA");
+                log("Creating view FILEMETADATA");
                 db.createStatement().executeUpdate(
                         "CREATE VIEW filemetadata AS " + "SELECT userid, filemapping.internalfilename, filemapping.externalfilename, " + "defaulttask, attributetype, numberofattributes, numberofinstances, missingvalues " + "FROM filemapping JOIN metadata " + "ON filemapping.internalfilename = metadata.internalfilename");
             }
         } catch (SQLException e) {
-            log.fatal("Error creating table FILEMETADATA: " + e.getMessage());
+            logError("Error creating table FILEMETADATA: " + e.getMessage(),Severity.Critical);
         }
 
         try {
             if (!tableNames.contains("RESULTSEXTERNAL")) {
-                log.info("Creating view RESULTSEXTERNAL");
+                log("Creating view RESULTSEXTERNAL");
                 db.createStatement().executeUpdate("CREATE VIEW RESULTSEXTERNAL AS SELECT results.*,filemapping.externalFilename AS trainFileExt, filemapping2.externalFilename AS testFileExt FROM results JOIN filemapping ON results.userID = filemapping.userID AND results.dataFile = filemapping.internalFilename JOIN filemapping AS filemapping2 ON results.userID = filemapping2.userID AND results.testFile = filemapping2.internalFilename");
             }
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        /*
-        try {
-            if (!triggerNames.contains("PREPAREMETADATA")) {
-                db.createStatement().execute(
-                        "CREATE TRIGGER prepareMetadata AFTER INSERT ON filemapping " + "REFERENCING NEW ROW AS newrow FOR EACH ROW " + "INSERT INTO metadata (internalfilename, externalfilename) " + "VALUES (newrow.internalfilename, newrow.externalfilename)");
-            }
-        } catch (SQLException e) {
-            log.fatal("Error creating trigger prepareMetadata: " + e.getMessage());
-        }
-		*/
         
         try {
 			db.close();
@@ -276,9 +233,6 @@ public class Agent_DataManager extends PikaterAgent {
             @Override
             protected ACLMessage handleRequest(ACLMessage request)
                     throws NotUnderstoodException, RefuseException {
-
-                //log.info("Agent " + getLocalName() + " received request: " + request.getContent());
-
                 try {
                     Action a = (Action) getContentManager().extractContent(
                             request);
@@ -304,7 +258,6 @@ public class Agent_DataManager extends PikaterAgent {
 
                         }
 
-
                         if (im.getFileContent() == null) {
                             String path = System.getProperty("user.dir") + System.getProperty("file.separator");
                             path += "incoming" + System.getProperty("file.separator") + im.getExternalFilename();
@@ -318,7 +271,7 @@ public class Agent_DataManager extends PikaterAgent {
                             openDBConnection();
                             Statement stmt = db.createStatement();
                             String query = "SELECT COUNT(*) AS num FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
-                            log.info("Executing query " + query);
+                            log("Executing query " + query);
 
                             ResultSet rs = stmt.executeQuery(query);
 
@@ -329,13 +282,13 @@ public class Agent_DataManager extends PikaterAgent {
 
                             if (count > 0) {
                                 f.delete();
-                                log.info("File " + internalFilename + " already present in the database");
+                                log("File " + internalFilename + " already present in the database");
                             } else {
 
                                 stmt = db.createStatement();
                               
                                 query = "INSERT into filemapping (userId, externalFilename, internalFilename) VALUES (" + im.getUserID() + ",\'" + im.getExternalFilename() + "\',\'" + internalFilename + "\')";
-                                log.info("Executing query: " + query);
+                                log("Executing query: " + query);
                                 
                                 stmt.executeUpdate(query);
                                 
@@ -366,7 +319,7 @@ public class Agent_DataManager extends PikaterAgent {
                             openDBConnection();
                             Statement stmt = db.createStatement();
                             String query = "SELECT COUNT(*) AS num FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
-                            log.info("Executing query " + query);
+                            log("Executing query " + query);
 
                             ResultSet rs = stmt.executeQuery(query);
 
@@ -376,12 +329,12 @@ public class Agent_DataManager extends PikaterAgent {
                             stmt.close();
 
                             if (count > 0) {
-                                log.info("File " + internalFilename + " already present in the database");
+                                log("File " + internalFilename + " already present in the database");
                             } else {
 
                                 stmt = db.createStatement();
 
-                                log.info("Executing query: " + query);
+                                log("Executing query: " + query);
                                 query = "INSERT into filemapping (userId, externalFilename, internalFilename) VALUES (" + im.getUserID() + ",\'" + im.getExternalFilename() + "\',\'" + internalFilename + "\')";
 
                                 stmt.executeUpdate(query);
@@ -393,7 +346,7 @@ public class Agent_DataManager extends PikaterAgent {
                                 file.write(fileContent);
                                 file.close();
 
-                                log.info("Created file: " + newName);
+                                log("Created file: " + newName);
                             }
                             
                             ACLMessage reply = request.createReply();
@@ -414,14 +367,14 @@ public class Agent_DataManager extends PikaterAgent {
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = null;
+                        String query;
                         if (tf.getInternalFilename() == null) {
                             query = "SELECT internalFilename AS filename FROM filemapping WHERE userID=" + tf.getUserID() + " AND externalFilename=\'" + tf.getExternalFilename() + "\'";
                         } else {
                             query = "SELECT externalFilename AS filename FROM filemapping WHERE userID=" + tf.getUserID() + " AND internalFilename=\'" + tf.getInternalFilename() + "\'";
                         }
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
 
                         ResultSet rs = stmt.executeQuery(query);
                        
@@ -519,17 +472,12 @@ public class Agent_DataManager extends PikaterAgent {
                             query += Mean_absolute_error + ",";
                             query += Root_mean_squared_error + ",";
                             query += Relative_absolute_error + ",";
-                            query += Root_relative_squared_error;                            
-							
-                            
-                    		Timestamp currentTimestamp =
-                            new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+                            query += Root_relative_squared_error;
 
                             query += ",";
                             query += "\'" + java.sql.Timestamp.valueOf(res.getStart()) + "\',";
                             query += "\'" + java.sql.Timestamp.valueOf(res.getFinish()) + "\',";
-                            
-                            // query += "\'" + currentTimestamp + "\',";
+
                             query += "\'" + duration + "\',";
                             query += "\'" + durationLR + "\',";
                             
@@ -539,7 +487,7 @@ public class Agent_DataManager extends PikaterAgent {
                             query += "\'" + res.getNote() + "\'";
                             query += ")";
 
-                            log.info("Executing query: " + query);
+                            log("Executing query: " + query);
 
                             stmt.executeUpdate(query);
                             db.close();
@@ -573,7 +521,7 @@ public class Agent_DataManager extends PikaterAgent {
                         query += " WHERE internalFilename=\'" + metadata.getInternal_name().split(
                                 Pattern.quote(System.getProperty("file.separator")))[2] + "\'";
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
 
                         stmt.executeUpdate(query);
                         
@@ -606,7 +554,7 @@ public class Agent_DataManager extends PikaterAgent {
                             m.setNumber_of_instances(rs.getInt("numberOfInstances"));
                         }
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
                        
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
@@ -657,8 +605,6 @@ public class Agent_DataManager extends PikaterAgent {
                             }
                     		query += " ORDER BY externalFilename";
                     	}
-                        
-                    	// System.out.println(query);
                     	
                         List allMetadata = new ArrayList();
 
@@ -677,7 +623,7 @@ public class Agent_DataManager extends PikaterAgent {
                             allMetadata.add(m);
                         }
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
                        
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
@@ -692,14 +638,12 @@ public class Agent_DataManager extends PikaterAgent {
                     if (a.getAction() instanceof GetTheBestAgent) {
                         GetTheBestAgent g = (GetTheBestAgent) a.getAction();
                         String name = g.getNearest_file_name();
-                        int number = g.getNumberOfAgents();
                         
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " ORDER BY errorRate ASC LIMIT " + number;
-                        // System.out.println(query);
-                        log.info("Executing query: " + query);
+                        String query = "SELECT * FROM results " + "WHERE dataFile =\'" + name + "\'" + " AND errorRate = (SELECT MIN(errorRate) FROM results " + "WHERE dataFile =\'" + name + "\')";
+                        log("Executing query: " + query);
                         
                         ResultSet rs = stmt.executeQuery(query);
                         if (!rs.isBeforeFirst()) {
@@ -710,20 +654,18 @@ public class Agent_DataManager extends PikaterAgent {
                             db.close();
                             return reply;
                         }
+                        rs.next();
                         
-                        List agents = new jade.util.leap.LinkedList();
-                        while (rs.next()) { 
-                            pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
-                            agent.setName(rs.getString("agentName"));
-                            agent.setType(rs.getString("agentType"));
-                            agent.setOptions(agent.stringToOptions(rs.getString("options")));
-                            agent.setGui_id(rs.getString("errorRate"));                                                
-                            agents.add(agent);
-                       }
+                        pikater.ontology.messages.Agent agent = new pikater.ontology.messages.Agent();
+                        agent.setName(rs.getString("agentName"));
+                        agent.setType(rs.getString("agentType"));
+                        agent.setOptions(agent.stringToOptions(rs.getString("options")));
+                        agent.setGui_id(rs.getString("errorRate"));                                                
+
                         ACLMessage reply = request.createReply();
                         reply.setPerformative(ACLMessage.INFORM);
 
-                        Result _result = new Result(a.getAction(), agents);
+                        Result _result = new Result(a.getAction(), agent);
                         getContentManager().fillContent(reply, _result);
 
                         db.close();
@@ -735,12 +677,10 @@ public class Agent_DataManager extends PikaterAgent {
 
                         String query = "SELECT * FROM filemetadata WHERE " + gfi.toSQLCondition();
 
-                        // System.err.println(query);
-
                         openDBConnection();
                         Statement stmt = db.createStatement();
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
 
                         ResultSet rs = stmt.executeQuery(query);
 
@@ -763,8 +703,6 @@ public class Agent_DataManager extends PikaterAgent {
                         reply.setPerformative(ACLMessage.INFORM);
 
                         getContentManager().fillContent(reply, r);
-
-                        // System.err.println("Sending reply");
                         
                         db.close();
                         return reply;
@@ -790,7 +728,7 @@ public class Agent_DataManager extends PikaterAgent {
                         }
                         query += " WHERE internalFilename =\'" + metadata.getInternal_name() + "\'";
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
 
                         stmt.executeUpdate(query);
 
@@ -806,7 +744,7 @@ public class Agent_DataManager extends PikaterAgent {
 
                         String query = "SELECT * FROM filemapping WHERE userid = " + gf.getUserID();
 
-                        log.info("Executing query: " + query);
+                        log("Executing query: " + query);
                         
                         openDBConnection();
                         Statement stmt = db.createStatement();
@@ -832,22 +770,14 @@ public class Agent_DataManager extends PikaterAgent {
 
                         LoadResults lr = (LoadResults) a.getAction();
 
-                        // System.err.println(lr.asText());
-
                         String query = "SELECT * FROM resultsExternal " + lr.asSQLCondition();
-
-                        // System.err.println(query);
-                        log.info(query);
+                        log(query);
 
                         openDBConnection();
                         Statement stmt = db.createStatement();
                         ResultSet rs = stmt.executeQuery(query);
 
                         ArrayList results = new ArrayList();
-
-                        //errorRate, kappaStatistic, meanAbsoluteError,
-                        //rootMeanSquaredError, relativeAbsoluteError,
-                        //rootRelativeSquaredError
 
                         while (rs.next()) {
                             
@@ -901,7 +831,7 @@ public class Agent_DataManager extends PikaterAgent {
                     
                     if (a.getAction() instanceof ShutdownDatabase) {
                         String query = "SHUTDOWN";
-                        log.info(query);
+                        log(query);
                         openDBConnection();
                         
                         // Makes all changes made since the previous commit/rollback permanent
@@ -919,24 +849,20 @@ public class Agent_DataManager extends PikaterAgent {
                     
                 } catch (OntologyException e) {
                     e.printStackTrace();
-                    log.error("Problem extracting content: " + e.getMessage());
+                    logError("Problem extracting content: " + e.getMessage());
                 } catch (CodecException e) {
                     e.printStackTrace();
-                    log.error("Codec problem: " + e.getMessage());
+                    logError("Codec problem: " + e.getMessage());
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    log.error("SQL error: " + e.getMessage());
-                } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
+                    logError("SQL error: " + e.getMessage());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 ACLMessage failure = request.createReply();
                 failure.setPerformative(ACLMessage.FAILURE);
-                log.error("Failure responding to request: " + request.getContent());
+                logError("Failure responding to request: " + request.getContent());
                 return failure;
             }
         });
@@ -959,19 +885,20 @@ public class Agent_DataManager extends PikaterAgent {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            log.error("File not found: " + path + " -- " + e.getMessage());
+            logError("File not found: " + path + " -- " + e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("Error reading file: " + path + " -- " + e.getMessage());
+            logError("Error reading file: " + path + " -- " + e.getMessage());
         }
 
         String md5 = DigestUtils.md5Hex(sb.toString());
 
-        log.info("MD5 hash of file " + path + " is " + md5);
+        log("MD5 hash of file " + path + " is " + md5);
 
         return md5;
     }
 
+    //TODO: check if not used
 	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{		
 		String query = "";
 		
@@ -992,7 +919,7 @@ public class Agent_DataManager extends PikaterAgent {
 		}
 		openDBConnection();		
 		Statement stmt = db.createStatement();
-		log.info("Executing query: " + query);
+		log("Executing query: " + query);
 		stmt.executeUpdate(query);
 		stmt.close();
 		db.close();
@@ -1028,8 +955,8 @@ public class Agent_DataManager extends PikaterAgent {
 	    String query  = "SELECT COUNT(*) AS number FROM metadata WHERE internalFilename = \'" + internalFilename + "\'";
 	    String query1 = "SELECT COUNT(*) AS number FROM filemapping WHERE internalFilename = \'" + internalFilename + "\'";
 	    
-	    log.info("Executing query " + query);
-	    log.info("Executing query " + query1);
+	    log("Executing query " + query);
+	    log("Executing query " + query1);
 	    
 	    ResultSet rs = stmt.executeQuery(query);
 	    rs.next();
@@ -1040,7 +967,7 @@ public class Agent_DataManager extends PikaterAgent {
 	    int isInFileMapping = rs1.getInt("number");
 	
 	    if (isInMetadata == 0 && isInFileMapping == 1) {
-	        log.info("Executing query: " + query);
+	        log("Executing query: " + query);
 	        query = "INSERT into metadata (externalFilename, internalFilename, defaultTask, " +
 	        		"attributeType, numberOfInstances, numberOfAttributes, missingValues)" +
 	        		"VALUES (\'" + externalFilename + "\',\'" + internalFilename + "\', null, " +

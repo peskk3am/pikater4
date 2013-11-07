@@ -1,6 +1,7 @@
 package pikater.agents.recommenders;
 
 import pikater.DataManagerService;
+import pikater.logging.Verbosity;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.Metadata;
@@ -28,7 +29,7 @@ public class Agent_Basic extends Agent_Recommender {
 		// in data there are already metadata filled in 
 		// return agent with (partially/not at all) filled options
 		
-		println(distanceMatrix(), 2);
+		log(distanceMatrix(), Verbosity.DETAILED);
 
 		Metadata metadata = data.getMetadata();
 		
@@ -60,7 +61,7 @@ public class Agent_Basic extends Agent_Recommender {
 			}
 		}
 		
-		println("*********** files from the table: ", 2);
+        StringBuilder sb = new StringBuilder("Files: ");
 
 		double d_best = Integer.MAX_VALUE;
 		Metadata m_best = null;
@@ -76,10 +77,12 @@ public class Agent_Basic extends Agent_Recommender {
 					m_best = next_md;
 				}
 			}
-			println("    " + next_md.getExternal_name() + " d: " + d_new, 2);
+            sb.append("    " + next_md.getExternal_name() + " d: " + d_new + "\n");
 		}
 
-		println("Nearest file: " + m_best.getExternal_name(), 1);
+        log(sb.toString());
+		
+		log("Nearest file: " + m_best.getExternal_name(), Verbosity.MINIMAL);
 		String nearestInternalName = m_best.getInternal_name();
 
 		// 2. find the agent with the lowest error_rate
@@ -87,12 +90,12 @@ public class Agent_Basic extends Agent_Recommender {
 				.getTheBestAgent(this, nearestInternalName);
 		
 		if (agent != null){
-			println("Best agent type: "+ agent.getType() +
+			log("Best agent type: "+ agent.getType() +
 					", options: " + agent.optionsToString() + 
-					", error rate: " + agent.getGui_id(), 1);
+					", error rate: " + agent.getGui_id(), Verbosity.MINIMAL);
 		}
 		else{
-			println("No results in database for file " + m_best.getExternal_name(), 1);
+			log("No results in database for file " + m_best.getExternal_name());
 			return null;
 		}
 

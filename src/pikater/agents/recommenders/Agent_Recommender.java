@@ -23,6 +23,7 @@ import jade.util.leap.List;
 import pikater.DataManagerService;
 import pikater.agents.PikaterAgent;
 import pikater.agents.management.ManagerAgentCommunicator;
+import pikater.logging.Verbosity;
 import pikater.ontology.messages.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -80,14 +81,10 @@ public abstract class Agent_Recommender extends PikaterAgent {
 		// prefer to do this asynchronously using a behaviour.
 		try {
 			DFService.register(this, description);
-			System.out.println(getLocalName()
-					+ ": successfully registered with DF; service type: "
-					+ typeDesc);
+			log("Successfully registered with DF; service type: " + typeDesc);
 			return true;
 		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ ": error registering with DF, exiting:" + e);
-			// doDelete();
+			logError("Error registering with DF, exiting:" + e);
 			return false;
 
 		}
@@ -97,7 +94,7 @@ public abstract class Agent_Recommender extends PikaterAgent {
     @Override
     protected void setup() {
 
-    	println("Agent " + getLocalName() +  " (Agent_Recommender) is alive...", 1);
+    	log("Agent_Recommender is alive...", Verbosity.MINIMAL);
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);               
@@ -138,7 +135,7 @@ public abstract class Agent_Recommender extends PikaterAgent {
                     // merge options with .opt file options
                     myAgentOntology.setOptions(getParameters());
                     
-                    println("options: " + myAgentOntology.optionsToString(), 2);
+                    log("options: " + myAgentOntology.optionsToString(), 2);
                     Data data = rec.getData();
                     
                     // Get metadata:
@@ -154,23 +151,17 @@ public abstract class Agent_Recommender extends PikaterAgent {
 					}                            			
 
 					// else TODO - overit, jestli jsou metadata OK, pripadne vygenerovat
-					/* boolean hasMetadata = false;
-					if (metadata.getNumber_of_attributes() > -1
-							&& metadata.getNumber_of_instances() > -1) {
-						hasMetadata = true;
-						    					
-					} */    				
 					
                     pikater.ontology.messages.Agent recommended_agent = chooseBestAgent(rec.getData());
                     
                     // fill options
                 	recommended_agent.setOptions(mergeOptions(recommended_agent.getOptions(), getAgentOptions(recommended_agent.getType()) ));
 
-        			println("********** Agent "
+        			log("********** Agent "
         					+ recommended_agent.getType()
         					+ " recommended. Options: "
         					+ recommended_agent.toGuiString()
-        					+ "**********", 1);
+        					+ "**********", Verbosity.MINIMAL);
 
                 		// Prepare the content of inform message                       
         				Result result = new Result(a, recommended_agent);
@@ -209,7 +200,6 @@ public abstract class Agent_Recommender extends PikaterAgent {
 			while (o2itr.hasNext()) {
 				Option next_option = (Option) o2itr.next();
 				
-				// System.out.println("prvni: " + next_option.getName() + " hodnota: " + next_option.getValue());
 				next_option.setValue(next_option.getDefault_value());
 				
 				Iterator o1CAitr = o1_CA.iterator();
@@ -218,12 +208,11 @@ public abstract class Agent_Recommender extends PikaterAgent {
 
 					if (next_option.getName().equals(next_CA_option.getName())) {
 						// ostatni optiony zustanou puvodni (= ze souboru)			
-						// System.out.println("druha: " + next_CA_option.getName() + " hodnota: " + next_CA_option.getValue());
 
 						next_option.setUser_value(next_CA_option.getUser_value());
 
 						// copy the value
-                        if (next_CA_option.getValue() != null){  // TODO promyslet
+                        if (next_CA_option.getValue() != null){ 
                         	next_option.setValue(next_CA_option.getValue());
                         }
                                                
@@ -238,8 +227,6 @@ public abstract class Agent_Recommender extends PikaterAgent {
 					}
 				}
 				
-				// System.out.println("nova: " + next_option.getName() + " hodnota: " + next_option.getValue());
-				// System.out.println("-----");
 				if (next_option.getValue() != null){
 					new_options.add(next_option);
 				}

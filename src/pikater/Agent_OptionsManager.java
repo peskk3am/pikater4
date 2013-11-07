@@ -94,17 +94,17 @@ public class Agent_OptionsManager extends PikaterAgent {
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent "+refuse.getSender().getName()+" refused.", 1);
+            log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				println("Responder does not exist", 1);
+                log("Responder does not exist", 1);
 			}
 			else {
-				println("Agent "+failure.getSender().getName()+" failed", 1);
+                log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
 			// Immediate failure --> we will not receive a response from this agent
 			nResponders--;
@@ -113,7 +113,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 			if (responses.size() < nResponders) {
 				// Some responder didn't reply within the specified timeout
-				println("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2);
+                log("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2);
 			}
 			/* if (responses.size() == 0) {
 				// Some responder didn't reply within the specified timeout
@@ -145,8 +145,8 @@ public class Agent_OptionsManager extends PikaterAgent {
 			// Accept the proposal of the best proposer
 			if (accept != null) {
 				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				
-				println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2);
+
+                log("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2);
 								
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -178,8 +178,8 @@ public class Agent_OptionsManager extends PikaterAgent {
 			}			
 		}
 		
-		protected void handleInform(ACLMessage inform) {		
-			println("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2);
+		protected void handleInform(ACLMessage inform) {
+            log("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2);
 			// send result to the search agent:
 			
 			number_of_current_tasks--;
@@ -217,8 +217,8 @@ public class Agent_OptionsManager extends PikaterAgent {
 					
 					// set LR duration
 					Duration durationLR = DurationService.getDuration(myAgent, gd);
-					
-					println("durationLR: " + durationLR.getLR_duration() 
+
+                    log("durationLR: " + durationLR.getLR_duration()
 										+ " duration: "+ durationLR.getDuration(), 2);
 					
 					Eval eval = new Eval();
@@ -330,15 +330,15 @@ public class Agent_OptionsManager extends PikaterAgent {
 	private boolean ProcessNextQuery(){
 		
 		if (computing_agents != null){
-			
-			println("number_of_current_tasks: " + number_of_current_tasks 
+
+            log("number_of_current_tasks: " + number_of_current_tasks
 					+ " computing_agents.size(): " + computing_agents.size()
 					+ " query_queue.size(): " + query_queue.size() , 2);
 
 			if (number_of_current_tasks < computing_agents.size()
 					&& query_queue.size() > 0){
-				
-				println("added", 2);
+
+                log("added", 2);
 				
 				ACLMessage query = (ACLMessage)query_queue.get(0);
 				query_queue.remove(0);
@@ -560,12 +560,12 @@ public class Agent_OptionsManager extends PikaterAgent {
 		
 		public StartGettingParameters(Agent a, ACLMessage msg) {
 			super(a, msg);
-			println("StartGettingParameters behavior created.", 2);
+            log("StartGettingParameters behavior created.", 2);
 		}
 
 		
 		protected void handleInform(ACLMessage inform) {
-			println("Agent " + inform.getSender().getName() 
+            log("Agent " + inform.getSender().getName()
 					+ ": sending of Options have been finished.", 2);
 			
 			// throw away the rest of the queries
@@ -576,13 +576,13 @@ public class Agent_OptionsManager extends PikaterAgent {
 		}
 				
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent " + refuse.getSender().getName()
+            log("Agent " + refuse.getSender().getName()
 					+ " refused to perform the requested action.", 1);
 			// TODO preposlat zpravu managerovi
 		}
 
 		protected void handleFailure(ACLMessage failure) {
-			println("Agent "+ failure.getSender().getName()
+            log("Agent "+ failure.getSender().getName()
 					+ ": failure while performing the requested action", 1);
 			// TODO preposlat zpravu managerovi
 		}
@@ -628,7 +628,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 		// prefer to do this asynchronously using a behaviour.
 		try {
 			DFService.register(this, description);
-			println("successfully registered with DF; service type: "
+            log("successfully registered with DF; service type: "
 					+ typeDesc, 2);
 			return true;
 		} catch (FIPAException e) {
@@ -642,7 +642,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 
 	@Override
 	protected void setup() {
-		println("is alive...", 1);
+        log("is alive...", 1);
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
@@ -655,7 +655,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 		// (also processed after informs from CAs are received)
 		addBehaviour(new TickerBehaviour(this, 10000) {			
 			  protected void onTick() {
-				  println("tick="+getTickCount(), 2);
+                  log("tick="+getTickCount(), 2);
 				  ProcessNextQuery();
 			  } 			  
 			});	

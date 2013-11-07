@@ -6,6 +6,7 @@ package pikater.logging;
  * Time: 11:55
  */
 public interface Logger {
-    void println(String text);
-    void print(String text);
+    void log(String source, String text);
+    void logError(String source,String errorDescription);
+    void logError(String source,String errorDescription,Severity severity);
 }
