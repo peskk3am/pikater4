@@ -143,12 +143,14 @@ public class ManagerAgent extends PikaterAgent {
             int currentSuffix=nameSuffix+tryNr;
             String currentAgentName=namePrefix+ currentSuffix;
             try {
+                //TODO: write without exceptions
                 AgentController agentWithTheSameName= container.getAgent(currentAgentName);
-                if (agentWithTheSameName==null)
-                {
-                    nameSuffix=currentSuffix;
-                    break;
-                }
+            }
+            catch (ControllerException exc)
+            {
+                //agent with the same name does not exist, we are good
+                nameSuffix=currentSuffix;
+                break;
             }
             catch (Exception e)
             {
