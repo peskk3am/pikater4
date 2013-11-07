@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class Agent_Initiator extends PikaterAgent {
+public class InitiatorAgent extends PikaterAgent {
 	
 	private static final long serialVersionUID = -3908734088006529947L;
 
@@ -33,20 +33,11 @@ public class Agent_Initiator extends PikaterAgent {
             List<AgentConfiguration> agentConfigurations=configuration.getAgentConfigurations();
             for (AgentConfiguration agentConfiguration : agentConfigurations)
             {
-                this.CreateAgent(agentConfiguration.getAgentType(),agentConfiguration.getAgentName(),new Object[0]);
+                this.CreateAgent(agentConfiguration.getAgentType(),agentConfiguration.getAgentName(),agentConfiguration.getArguments().toArray());
             }
 
-		} catch (ArrayIndexOutOfBoundsException e) {
-			/*
-			 * If no file was passed on the command line, this exception is
-			 * generated. A message indicating how to the class should be called
-			 * is displayed
-			 */
-			System.out.println(getLocalName() + ": no init file specified.");
-			e.printStackTrace();
-
-		} catch (Exception e) {
-			// If another exception is generated, print a stack trace
+		}
+        catch (Exception e) {
 			e.printStackTrace();
 		}
 		

@@ -62,13 +62,13 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 Element eElement = (Element) nNode;
                 String name= eElement.getAttribute("name");
                 String type= eElement.getAttribute("type");
-                Map<String, String> arguments=getArguments(eElement);
+                List<Argument> arguments=getArguments(eElement);
                 return new AgentConfigurationImpl(name,type,arguments);
     }
 
-    private Map<String, String> getArguments(Element agentElement)
+    private List<Argument> getArguments(Element agentElement)
     {
-        Map<String, String> arguments=new HashMap<>();
+        List<Argument> arguments=new ArrayList<>();
         NodeList argumentsNodeList= agentElement.getElementsByTagName("argument");
         for (int argNr=0;argNr<argumentsNodeList.getLength();argNr++)
         {
@@ -78,7 +78,8 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 Element arg = (Element) argNode;
                 String key= arg.getAttribute("key");
                 String value=arg.getAttribute("value");
-                arguments.put(key,value);
+                Argument argument=new Argument(key,value);
+                arguments.add(argument);
             }
         }
         return arguments;

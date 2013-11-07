@@ -50,13 +50,14 @@ public class PropertiesConfigurationProvider implements ConfigurationProvider {
             return null;
         }
         String agentType=configuration.getProperty(agentTypeKey);
-        Map<String, String> arguments=new HashMap<>();
+        List<Argument> arguments=new ArrayList<>();
         int argNumber=1;
         String argKey=configuration.getProperty(getArgumentKeyKey(agentNumber,argNumber));
         while (argKey!=null)
         {
             String argValue=configuration.getProperty(getArgumentValueKey(agentNumber,argNumber));
-            arguments.put(argKey,argValue);
+            Argument argument=new Argument(agentKey,argValue);
+            arguments.add(argument);
             argNumber++;
             argKey=configuration.getProperty(getArgumentKeyKey(agentNumber,argNumber));
         }

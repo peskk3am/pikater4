@@ -6,9 +6,8 @@
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="configuration" class="pikater.configuration.XmlConfigurationProvider">
-        <constructor-arg name="filePath" value="configuration.xml"></constructor-arg>
+        <constructor-arg name="filePath" value="configuration.xml"/>
     </bean>
-    <bean id="logger" class="pikater.logging.ConsoleLogger">
-    </bean>
+    <bean id="logger" class="pikater.logging.ConsoleLogger"/>
 
 </beans>

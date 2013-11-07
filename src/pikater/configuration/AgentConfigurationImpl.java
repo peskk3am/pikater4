@@ -1,5 +1,6 @@
 package pikater.configuration;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,9 +13,9 @@ import java.util.Map;
 public class AgentConfigurationImpl implements AgentConfiguration {
     private String agentName;
     private String agentType;
-    private Map<String, String> arguments;
+    private List<Argument> arguments;
 
-    public AgentConfigurationImpl(String agentName,String agentType,Map<String, String> arguments)
+    public AgentConfigurationImpl(String agentName,String agentType,List<Argument> arguments)
     {
         this.agentName=agentName;
         this.agentType=agentType;
@@ -32,7 +33,7 @@ public class AgentConfigurationImpl implements AgentConfiguration {
     }
 
     @Override
-    public Map<String, String> getArguments() {
+    public List<Argument> getArguments() {
         return arguments;
     }
 }

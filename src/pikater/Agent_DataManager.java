@@ -7,7 +7,6 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.Agent;
 import jade.core.Profile;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
@@ -17,61 +16,26 @@ import jade.proto.AchieveREResponder;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import java.sql.Timestamp;
-import java.util.Arrays;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import pikater.agents.PikaterAgent;
+import pikater.ontology.messages.*;
+
+import java.io.*;
+import java.sql.*;
 import java.util.Calendar;
-import java.util.Date;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import pikater.ontology.messages.DeleteTempFiles;
-
-import pikater.ontology.messages.Eval;
-import pikater.ontology.messages.GetAllMetadata;
-import pikater.ontology.messages.GetFileInfo;
-import pikater.ontology.messages.GetFiles;
-import pikater.ontology.messages.GetMetadata;
-import pikater.ontology.messages.GetTheBestAgent;
-import pikater.ontology.messages.ImportFile;
-import pikater.ontology.messages.LoadResults;
-import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Metadata;
-import pikater.ontology.messages.Option;
-import pikater.ontology.messages.SaveMetadata;
-import pikater.ontology.messages.SaveResults;
-import pikater.ontology.messages.SavedResult;
-import pikater.ontology.messages.ShutdownDatabase;
-import pikater.ontology.messages.Task;
-import pikater.ontology.messages.TranslateFilename;
-import pikater.ontology.messages.UpdateMetadata;
-
-public class Agent_DataManager extends Agent {
+public class Agent_DataManager extends PikaterAgent {
 
     private static final long serialVersionUID = 1L;
+    private final String URL_ARG_NAME="url";
+    private final String USER_ARG_NAME="user";
+    private final String PASSWORD_ARG_NAME="password";
+
     Connection db;
     Logger log;
     Codec codec = new SLCodec();
@@ -98,44 +62,30 @@ public class Agent_DataManager extends Agent {
         	// TODO predelat -> vzdycky zkusti parametry rozparsovat
     		// je to proto, ze kdyz predavam parametry DataManagerovi
     		// ve scriptu, bere vsechno jako jeden parametr:
-    		
-    		List args = new ArrayList();
-    		
-    		Object[] arguments = getArguments();
-    		if (arguments != null){
-	    		for (Object arg : arguments) {
-	    	    	String[] split_arg = ((String)arg).split(" ");
-	    	    	for (String a : split_arg){
-	    	    		args.add(a);
-	    	    	}
-	    	    }    		
-    		}
+
+    		Object[] args = getArguments();
+    		ParseArguments(args);
     		
     		// System.out.println(args);
-    		if (args.size() > 0) {
+    		if (arguments.size() > 0) {
     			int i = 0;
     			
     			boolean db_specified = false;
-    			
-    			while (i < args.size()){
-    				System.out.println(args.get(i));
-    				if (args.get(i).equals("url")){
-    					db_url = (String)args.get(i+1);
-    					db_specified = true;
-    				}
-    				if (args.get(i).equals("user")){
-    					db_user = (String)args.get(i+1);
-    					db_specified = true;
-    				}
-    				if (args.get(i).equals("password")){
-    					db_password = (String)args.get(i+1);
-    					db_specified = true;
-    				}
-    				if (args.get(i).equals("no_log")){
-    					no_log = true;
-    				}
-    				i++;
-    			}
+                if (ContainsArgument(URL_ARG_NAME))
+                {
+                    db_url=GetArgumentValue(URL_ARG_NAME);
+                    db_specified = true;
+                }
+                if (ContainsArgument(USER_ARG_NAME))
+                {
+                    db_user=GetArgumentValue(USER_ARG_NAME);
+                    db_specified = true;
+                }
+                if (ContainsArgument(PASSWORD_ARG_NAME))
+                {
+                    db_password=GetArgumentValue(PASSWORD_ARG_NAME);
+                    db_specified = true;
+                }
     			if (db_specified){
 	    			if (db_user == null){
 						db_user = "";    					
@@ -162,14 +112,7 @@ public class Agent_DataManager extends Agent {
                     new FileAppender(new PatternLayout(
                     "%r [%t] %-5p %c - %m%n"), "log_" + hostAddress));
 
-            log = Logger.getLogger(Agent_DataManager.class);
-            
-            if (no_log){
-            	log.setLevel(Level.OFF);
-            }
-            else{
-            	log.setLevel(Level.TRACE);	
-            }            
+            //TODO:use common logging mechanism log = Logger.getLogger(Agent_DataManager.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
