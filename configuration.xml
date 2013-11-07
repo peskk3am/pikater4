@@ -9,9 +9,8 @@
         </agent>
         <agent type="pikater.Agent_DataManager" name="Manager_Jarka">
             <arguments>
-                <argument key="Jarka Name" value="Jarka"/>
-                <argument key="Jarka Surname" value="Metelka"/>
-                <argument key="Alignment" value="LG"/>
+                <argument key="url" value="jdbc:mysql://localhost/pikater"/>
+                <argument key="user" value="root"/>
             </arguments>
         </agent>
         <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
