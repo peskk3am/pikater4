@@ -28,21 +28,12 @@ import weka.core.Instances;
 import weka.core.Option;
 
 public class Agent_WekaCA extends Agent_ComputingAgent {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3594051562022044000L;
 	private Classifier cls = null;//TODO: constructors
 	private String agentType = null;
 	private String wekaClassName = null;
 	
 	private String DurationServiceRegression_output_prefix = "  --d-- ";
-
-	// 3 levels:
-	// 0 no output
-	// 1 minimal
-	// 2 normal
-	private int verbosity = 1;
 	
 	protected Classifier getModelObject(){
 		return cls;
@@ -86,9 +77,9 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		working = true;
 						
 		if (getLocalName().equals("DurationServiceRegression")){
-				print(DurationServiceRegression_output_prefix, 2, false);
+				log(DurationServiceRegression_output_prefix, 2);
 		}
-		println("Training...", 2, true);		
+		log("Training...", 2);
 				
 		cls=null;
 		createClassifierClass();//new cls
@@ -117,22 +108,19 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		evals.add(d);
 
 		if (getLocalName().equals("DurationServiceRegression")){
-			print(DurationServiceRegression_output_prefix, 2, false);
+			log(DurationServiceRegression_output_prefix, 2);
 		}
-		println("start: " + new Date(start) + " : duration: " + duration, 2, true);
+		log("start: " + new Date(start) + " : duration: " + duration, 2);
 		
 		state = states.TRAINED; // change agent state
 		OPTIONS = cls.getOptions();
 
 		// write out net parameters
 		if (getLocalName().equals("DurationServiceRegression")){
-			if (verbosity >= 2){
-				System.out.print(DurationServiceRegression_output_prefix);
-				System.out.println(getOptions());
-			}			
+                log(DurationServiceRegression_output_prefix+getOptions(),2);
 		}
 		else{
-			println(getOptions(), 1, true);
+			log(getOptions(), 1);
 		}
 		
 		working = false;
@@ -157,18 +145,18 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 	protected Evaluation test(EvaluationMethod evaluation_method) throws Exception{
 		working = true;
-		println("Testing...", 2, true);
+		log("Testing...", 2);
 
 		// evaluate classifier and print some statistics
 		Evaluation eval = null;				
 		eval = new Evaluation(train);
-		// if (train == null){ System.out.println("bacha, train je null"); }
-		// if (eval == null){ System.out.println("bacha, eval je null"); }
-		// if (cls == null){ System.out.println("bacha, cls je null"); }
-		// if (test == null){ System.out.println("bacha, test je null"); }
+		// if (train == null){ System.out.log("bacha, train je null"); }
+		// if (eval == null){ System.out.log("bacha, eval je null"); }
+		// if (cls == null){ System.out.log("bacha, cls je null"); }
+		// if (test == null){ System.out.log("bacha, test je null"); }
 		// doWait(10);
 		
-		println("Evaluation method: \t", 2, true);
+		log("Evaluation method: \t", 2);
 		
 		if (evaluation_method.getName().equals("CrossValidation") ){
 			int folds = -1; 
@@ -183,20 +171,20 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					folds = 5;
 				  // TODO read default value from file (if necessary)
 			}
-			println(folds + "-fold cross validation.", 2, false);						
+			log(folds + "-fold cross validation.", 2);
 			eval.crossValidateModel(
 					cls,
 					test,
 					folds, new Random(1));
 		}
 		else{ // name = Standard
-			println("Standard weka evaluation.", 2, false);
+			log("Standard weka evaluation.", 2);
 			eval.evaluateModel(cls, test);
 		}
 				
-		println("Error rate: " + eval.errorRate()+" ", 1, true);
-		println(eval.toSummaryString(getLocalName() + " agent: "
-				+ "\nResults\n=======\n", false), 2, true);
+		log("Error rate: " + eval.errorRate()+" ", 1);
+		log(eval.toSummaryString(getLocalName() + " agent: "
+				+ "\nResults\n=======\n", false), 2);
 
 		working = false;
 		return eval;
@@ -298,7 +286,6 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		return onto_test;
 	}
 
-
 	private pikater.ontology.messages.Option convertOption(
 			MyWekaOption _weka_opt) {
 		pikater.ontology.messages.Option opt = new pikater.ontology.messages.Option();
@@ -340,7 +327,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		//set the Agent type according to the arguments
 
 		if(OPTIONS_ARGS==null || OPTIONS_ARGS.length!=1 ){
-			System.err.println("Wrong arguments of WekaCA");
+			logError("Wrong arguments of WekaCA");
 			return;//TODO: error
 		}
 		setWekaClassName((String)OPTIONS_ARGS[0]);
@@ -348,7 +335,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		 
 		// fills the global Options vector
 
-		// System.out.println(getLocalName() + ": The options are: ");
+		// System.out.log(getLocalName() + ": The options are: ");
 
 		String optPath = System.getProperty("user.dir") + getOptFileName();
 
@@ -376,7 +363,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 
 			// Read through file one line at time. Print line # and line
 			while (line != null) {
-				// System.out.println("    " + count + ": " + line);
+				// System.out.log("    " + count + ": " + line);
 
 				// parse the line
 				String delims = "[ ]+";
@@ -400,7 +387,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 					}
 
 					String[] default_options = ((Classifier)getModelObject()).getOptions();					 
-					// System.out.println("Default options: "+Arrays.deepToString(default_options));
+					// System.out.log("Default options: "+Arrays.deepToString(default_options));
 										
 					Enumeration en = ((Classifier)getModelObject()).listOptions();
 					while (en.hasMoreElements()) {
@@ -468,51 +455,10 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 			 * generated. A message indicating how to the class should be called
 			 * is displayed
 			 */
-			System.err.println(getLocalName() + ": no file specified.");
+			logError("No file specified.");
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println(getLocalName()
-					+ ": Reading options from .opt file failed.");
+			logError("Reading options from .opt file failed.");
 		}
-		// Save the agent's options
-
-		/*
-		 * Enumeration en = cls.listOptions();
-		 * 
-		 * while(en.hasMoreElements()){ Option next =
-		 * (weka.core.Option)en.nextElement();
-		 * System.out.println("  "+next.description()+ ", " +next.name()+ ", "
-		 * +next.numArguments()+ ", " +next.synopsis() ); System.out.println();
-		 * }
-		 */
-
-		/*
-		 * System.out.println("MyWekaOptions: "); for (Enumeration e =
-		 * Options.elements() ; e.hasMoreElements() ;) { MyWekaOption next =
-		 * (MyWekaOption)e.nextElement(); System.out.print(next.name+" ");
-		 * System.out.print(next.lower+" "); System.out.print(next.upper+" ");
-		 * System.out.print(next.type+" ");
-		 * System.out.print(next.numArgsMin+" ");
-		 * System.out.print(next.numArgsMax+" "); System.out.println(next.set);
-		 * System.out.println("------------"); }
-		 */
 	} // end getParameters
-	
-	private void print(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.print(text);
-		}
-	}
-
-	private void println(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.println(text);
-		}
-	}
 }

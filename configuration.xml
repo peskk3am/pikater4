@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+        <agent type="pikater.Agent_ARFFReader" name="Reader_Cervenacek">
+            <arguments>
+                <argument key="arg1" value="value for arg1"/>
+                <argument key="arg2" value="value for arg2"/>
+            </arguments>
+        </agent>
+        <agent type="pikater.Agent_DataManager" name="Manager_Jarka">
+            <arguments>
+                <argument key="url" value="jdbc:mysql://localhost/pikater"/>
+                <argument key="user" value="root"/>
+            </arguments>
+        </agent>
+        <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
+        </agent>
+    </agents>
+</configuration>

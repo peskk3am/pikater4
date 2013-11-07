@@ -26,16 +26,14 @@ import jade.proto.ContractNetInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
-
+import pikater.agents.PikaterAgent;
+import pikater.agents.management.ManagerAgentCommunicator;
 import pikater.ontology.messages.BoolSItem;
-import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Duration;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
@@ -50,17 +48,13 @@ import pikater.ontology.messages.IntSItem;
 import pikater.ontology.messages.Options;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Results;
 import pikater.ontology.messages.SearchSolution;
 import pikater.ontology.messages.SetSItem;
 import pikater.ontology.messages.Task;
 
-public class Agent_OptionsManager extends Agent {
+public class Agent_OptionsManager extends PikaterAgent {
 
 	private static final long serialVersionUID = 7028866964341806289L;
-	
-	private Codec codec = new SLCodec();
-	private Ontology ontology = MessagesOntology.getInstance();
 	
 	private List results = new ArrayList();
 	
@@ -75,13 +69,6 @@ public class Agent_OptionsManager extends Agent {
 	private List computing_agents;  // list of AIDs
 	private Task received_task;
 	private ACLMessage received_request = null;
-	
-	// 3 levels:
-	// 0 no output
-	// 1 minimal
-	// 2 normal
-	private int verbosity = 1;
-	
 	
 	protected String getAgentType() {
 		return "Option Manager";
@@ -107,17 +94,17 @@ public class Agent_OptionsManager extends Agent {
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent "+refuse.getSender().getName()+" refused.", 1, true);
+            log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				println("Responder does not exist", 1, true);
+                log("Responder does not exist", 1);
 			}
 			else {
-				println("Agent "+failure.getSender().getName()+" failed", 1, true);
+                log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
 			// Immediate failure --> we will not receive a response from this agent
 			nResponders--;
@@ -126,7 +113,7 @@ public class Agent_OptionsManager extends Agent {
 		protected void handleAllResponses(Vector responses, Vector acceptances) {
 			if (responses.size() < nResponders) {
 				// Some responder didn't reply within the specified timeout
-				println("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2, true);
+                log("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2);
 			}
 			/* if (responses.size() == 0) {
 				// Some responder didn't reply within the specified timeout
@@ -158,8 +145,8 @@ public class Agent_OptionsManager extends Agent {
 			// Accept the proposal of the best proposer
 			if (accept != null) {
 				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-				
-				println("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2, true);
+
+                log("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2);
 								
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -191,8 +178,8 @@ public class Agent_OptionsManager extends Agent {
 			}			
 		}
 		
-		protected void handleInform(ACLMessage inform) {		
-			println("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2, true);
+		protected void handleInform(ACLMessage inform) {
+            log("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2);
 			// send result to the search agent:
 			
 			number_of_current_tasks--;
@@ -230,9 +217,9 @@ public class Agent_OptionsManager extends Agent {
 					
 					// set LR duration
 					Duration durationLR = DurationService.getDuration(myAgent, gd);
-					
-					println("durationLR: " + durationLR.getLR_duration() 
-										+ " duration: "+ durationLR.getDuration(), 2, true);
+
+                    log("durationLR: " + durationLR.getLR_duration()
+										+ " duration: "+ durationLR.getDuration(), 2);
 					
 					Eval eval = new Eval();
 					eval.setName("durationLR");
@@ -343,15 +330,15 @@ public class Agent_OptionsManager extends Agent {
 	private boolean ProcessNextQuery(){
 		
 		if (computing_agents != null){
-			
-			println("number_of_current_tasks: " + number_of_current_tasks 
+
+            log("number_of_current_tasks: " + number_of_current_tasks
 					+ " computing_agents.size(): " + computing_agents.size()
-					+ " query_queue.size(): " + query_queue.size() , 2, true);					
+					+ " query_queue.size(): " + query_queue.size() , 2);
 
 			if (number_of_current_tasks < computing_agents.size()
 					&& query_queue.size() > 0){
-				
-				println("added", 2, true);
+
+                log("added", 2);
 				
 				ACLMessage query = (ACLMessage)query_queue.get(0);
 				query_queue.remove(0);
@@ -372,6 +359,7 @@ public class Agent_OptionsManager extends Agent {
 	protected class RequestServer extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 1902726126096385876L;
+        private PikaterAgent agent;
 
 		private MessageTemplate CFPproposalMsgTemplate = MessageTemplate.and(
 				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
@@ -398,10 +386,11 @@ public class Agent_OptionsManager extends Agent {
 				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
 				MessageTemplate.MatchOntology(ontology.getName()))));
 		
-		public RequestServer(Agent agent) {			
+		public RequestServer(PikaterAgent agent) {
 			super(agent);
+            this.agent=agent;
 		}
-		
+
 		@Override 
 		public void action() {
 			
@@ -421,38 +410,16 @@ public class Agent_OptionsManager extends Agent {
 												
 						Execute execute = (Execute) (((Action) content).getAction());
 						received_task = execute.getTask();
-						Options = received_task.getAgent().getOptions(); 
+						Options = received_task.getAgent().getOptions();
 						
 						List mutableOptions = getMutableOptions(Options);
 						
 						if (mutableOptions.size() > 0){							
-							// create search agent												
-							ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-							msg_ca.addReceiver(new AID("agentManager", false));
-							msg_ca.setLanguage(codec.getName());
-							msg_ca.setOntology(ontology.getName());
-							CreateAgent ca = new CreateAgent();
-							ca.setType(execute.getMethod().getType());
-													
-							Action a = new Action();
-							a.setAction(ca);
-							a.setActor(myAgent.getAID());
-									
-							String search_agent_name = null;
-							try {
-								getContentManager().fillContent(msg_ca, a);	
-								ACLMessage msg_name = FIPAService.doFipaRequestClient(myAgent, msg_ca);
-								search_agent_name = msg_name.getContent();
-							} catch (FIPAException e) {
-								System.err.println(getLocalName() + ": " + "Exception while adding agent"
-										+execute.getMethod().getType()+": " + e);		
-							} catch (CodecException e) {
-								System.out.println(getLocalName() + ": "); 
-								e.printStackTrace();
-							} catch (OntologyException e) {
-								System.out.println(getLocalName() + ": ");
-								e.printStackTrace();
-							}
+							// create search agent
+                            ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
+                            String type= execute.getMethod().getType();
+                            AID aid=communicator.createAgent(agent,type,null,null);
+                            String search_agent_name=aid.getName();
 
 							// send request to the search agent							
 							ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -466,8 +433,8 @@ public class Agent_OptionsManager extends Agent {
 							gp.setSchema(schema);
 							//gp.setOptions(getMutableOptions(computation.getAgent().getOptions()));						
 							gp.setSearch_options(execute.getMethod().getOptions());
-							
-							a = new Action();
+
+                            Action a = new Action();
 							a.setAction(gp);
 							a.setActor(myAgent.getAID());
 									
@@ -593,13 +560,13 @@ public class Agent_OptionsManager extends Agent {
 		
 		public StartGettingParameters(Agent a, ACLMessage msg) {
 			super(a, msg);
-			println("StartGettingParameters behavior created.", 2, true);
+            log("StartGettingParameters behavior created.", 2);
 		}
 
 		
 		protected void handleInform(ACLMessage inform) {
-			println("Agent " + inform.getSender().getName() 
-					+ ": sending of Options have been finished.", 2, true);
+            log("Agent " + inform.getSender().getName()
+					+ ": sending of Options have been finished.", 2);
 			
 			// throw away the rest of the queries
 			query_queue = new ArrayList();
@@ -609,14 +576,14 @@ public class Agent_OptionsManager extends Agent {
 		}
 				
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent " + refuse.getSender().getName()
-					+ " refused to perform the requested action.", 1, true);
+            log("Agent " + refuse.getSender().getName()
+					+ " refused to perform the requested action.", 1);
 			// TODO preposlat zpravu managerovi
 		}
 
 		protected void handleFailure(ACLMessage failure) {
-			println("Agent "+ failure.getSender().getName()
-					+ ": failure while performing the requested action", 1, true);
+            log("Agent "+ failure.getSender().getName()
+					+ ": failure while performing the requested action", 1);
 			// TODO preposlat zpravu managerovi
 		}
 
@@ -661,8 +628,8 @@ public class Agent_OptionsManager extends Agent {
 		// prefer to do this asynchronously using a behaviour.
 		try {
 			DFService.register(this, description);
-			println("successfully registered with DF; service type: "
-					+ typeDesc, 2, true);
+            log("successfully registered with DF; service type: "
+					+ typeDesc, 2);
 			return true;
 		} catch (FIPAException e) {
 			System.err.println(getLocalName()
@@ -675,7 +642,7 @@ public class Agent_OptionsManager extends Agent {
 
 	@Override
 	protected void setup() {
-		println("is alive...", 1, true);
+        log("is alive...", 1);
 
 		getContentManager().registerLanguage(codec);
 		getContentManager().registerOntology(ontology);
@@ -688,7 +655,7 @@ public class Agent_OptionsManager extends Agent {
 		// (also processed after informs from CAs are received)
 		addBehaviour(new TickerBehaviour(this, 10000) {			
 			  protected void onTick() {
-				  println("tick="+getTickCount(), 2, true);
+                  log("tick="+getTickCount(), 2);
 				  ProcessNextQuery();
 			  } 			  
 			});	
@@ -839,24 +806,5 @@ public class Agent_OptionsManager extends Agent {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         Date date = new Date();
         return dateFormat.format(date);
-    }   
-    
-	private void print(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.print(text);
-		}
-	}
-
-	private void println(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.println(text);
-		}
-	}
-
+    }
 }

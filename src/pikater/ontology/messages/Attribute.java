@@ -33,7 +33,7 @@ public class Attribute implements Concept {
 	}
 
 	/**
-	 * @param dataFormat
+	 * @param dateFormat
 	 *            the date_format to set
 	 */
 	public void setDate_format(String dateFormat) {

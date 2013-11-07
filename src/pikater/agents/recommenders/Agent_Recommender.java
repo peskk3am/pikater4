@@ -1,64 +1,40 @@
 package pikater.agents.recommenders;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Enumeration;
-
-import pikater.DataManagerService;
-import pikater.gui.java.MyWekaOption;
-import pikater.ontology.messages.CreateAgent;
-import pikater.ontology.messages.Data;
-import pikater.ontology.messages.GetMetadata;
-import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Metadata;
-import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Recommend;
-import weka.classifiers.Classifier;
-import jade.content.ContentElement;
-import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.domain.FIPAService;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
+import pikater.DataManagerService;
+import pikater.agents.PikaterAgent;
+import pikater.agents.management.ManagerAgentCommunicator;
+import pikater.logging.Verbosity;
+import pikater.ontology.messages.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
-public abstract class Agent_Recommender extends Agent {
-
-	/**
-	 * 
-	 */
+public abstract class Agent_Recommender extends PikaterAgent {
 	private static final long serialVersionUID = 4413578066473667553L;
 	
 	protected abstract pikater.ontology.messages.Agent chooseBestAgent(Data data);
 	protected abstract String getAgentType();
-
-	Codec codec = new SLCodec();
-    Ontology ontology = MessagesOntology.getInstance();
-        
-    // 3 levels:
-	// 0 no output
-	// 1 minimal
-	// 2 normal
-	protected int verbosity = 2;    
     
 	private pikater.ontology.messages.Agent myAgentOntology = new pikater.ontology.messages.Agent();
 	
@@ -105,14 +81,10 @@ public abstract class Agent_Recommender extends Agent {
 		// prefer to do this asynchronously using a behaviour.
 		try {
 			DFService.register(this, description);
-			System.out.println(getLocalName()
-					+ ": successfully registered with DF; service type: "
-					+ typeDesc);
+			log("Successfully registered with DF; service type: " + typeDesc);
 			return true;
 		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ ": error registering with DF, exiting:" + e);
-			// doDelete();
+			logError("Error registering with DF, exiting:" + e);
 			return false;
 
 		}
@@ -122,7 +94,7 @@ public abstract class Agent_Recommender extends Agent {
     @Override
     protected void setup() {
 
-    	println("Agent " + getLocalName() +  " (Agent_Recommender) is alive...", 1, true);
+    	log("Agent_Recommender is alive...", Verbosity.MINIMAL);
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);               
@@ -162,8 +134,9 @@ public abstract class Agent_Recommender extends Agent {
                     
                     // merge options with .opt file options
                     myAgentOntology.setOptions(getParameters());
-                    
-                    println("options: " + myAgentOntology.optionsToString(), 2, true);
+
+                    log("options: " + myAgentOntology.optionsToString(), 2);
+
                     Data data = rec.getData();
                     
                     // Get metadata:
@@ -179,23 +152,17 @@ public abstract class Agent_Recommender extends Agent {
 					}                            			
 
 					// else TODO - overit, jestli jsou metadata OK, pripadne vygenerovat
-					/* boolean hasMetadata = false;
-					if (metadata.getNumber_of_attributes() > -1
-							&& metadata.getNumber_of_instances() > -1) {
-						hasMetadata = true;
-						    					
-					} */    				
 					
                     pikater.ontology.messages.Agent recommended_agent = chooseBestAgent(rec.getData());
                     
                     // fill options
                 	recommended_agent.setOptions(mergeOptions(recommended_agent.getOptions(), getAgentOptions(recommended_agent.getType()) ));
 
-        			println("********** Agent "
+        			log("********** Agent "
         					+ recommended_agent.getType()
         					+ " recommended. Options: "
         					+ recommended_agent.toGuiString()
-        					+ "**********", 1, true);            			
+        					+ "**********", Verbosity.MINIMAL);
 
                 		// Prepare the content of inform message                       
         				Result result = new Result(a, recommended_agent);
@@ -234,7 +201,6 @@ public abstract class Agent_Recommender extends Agent {
 			while (o2itr.hasNext()) {
 				Option next_option = (Option) o2itr.next();
 				
-				// System.out.println("prvni: " + next_option.getName() + " hodnota: " + next_option.getValue());
 				next_option.setValue(next_option.getDefault_value());
 				
 				Iterator o1CAitr = o1_CA.iterator();
@@ -243,12 +209,11 @@ public abstract class Agent_Recommender extends Agent {
 
 					if (next_option.getName().equals(next_CA_option.getName())) {
 						// ostatni optiony zustanou puvodni (= ze souboru)			
-						// System.out.println("druha: " + next_CA_option.getName() + " hodnota: " + next_CA_option.getValue());
 
 						next_option.setUser_value(next_CA_option.getUser_value());
 
 						// copy the value
-                        if (next_CA_option.getValue() != null){  // TODO promyslet
+                        if (next_CA_option.getValue() != null){ 
                         	next_option.setValue(next_CA_option.getValue());
                         }
                                                
@@ -263,8 +228,6 @@ public abstract class Agent_Recommender extends Agent {
 					}
 				}
 				
-				// System.out.println("nova: " + next_option.getName() + " hodnota: " + next_option.getValue());
-				// System.out.println("-----");
 				if (next_option.getValue() != null){
 					new_options.add(next_option);
 				}
@@ -347,43 +310,9 @@ public abstract class Agent_Recommender extends Agent {
 
 	
 	public AID createAgent(String type, String name, List options) {
-		
-		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-		msg_ca.addReceiver(new AID("agentManager", false));
-		msg_ca.setLanguage(codec.getName());
-		msg_ca.setOntology(ontology.getName());
-						
-		CreateAgent ca = new CreateAgent();
-		if (name != null){
-			ca.setName(name);
-		}
-		if (options != null){
-			ca.setArguments(options);
-		}
-		ca.setType(type);
-		
-		Action a = new Action();
-		a.setAction(ca);
-		a.setActor(this.getAID());
-				
-		AID aid = null; 
-		try {
-			getContentManager().fillContent(msg_ca, a);	
-			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-			
-			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName() + ": Exception while adding agent "
-					+ type + ": " + e);		
-		} catch (CodecException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		}
-		
-		return aid;		
+        ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
+        AID aid=communicator.createAgent(this,type,name,options);
+        return aid;
 	}
 	
 	protected List getParameters(){
@@ -497,22 +426,4 @@ public abstract class Agent_Recommender extends Agent {
 			
 			return Options;
 	} // end getParameters
-		
-	protected void print(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.print(text);
-		}
-	}
-
-	protected void println(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.println(text);
-		}
-	}
 }

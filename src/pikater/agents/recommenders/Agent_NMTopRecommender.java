@@ -108,7 +108,7 @@ public class Agent_NMTopRecommender extends Agent_Recommender {
 
         List agents = new LinkedList();
         for (int i = 0; i < M; i++) {
-            System.err.println("" + distances.get(i).m.getExternal_name() + ": " + distances.get(i).d);
+            log(distances.get(i).m.getExternal_name() + ": " + distances.get(i).d);
             List ag = DataManagerService.getTheBestAgents(this, distances.get(i).m.getInternal_name(), N);
             Iterator it = ag.iterator();
             while (it.hasNext()) {
@@ -132,14 +132,14 @@ public class Agent_NMTopRecommender extends Agent_Recommender {
         int maxCount = 0;
         String bestAgentType = null;
         for (String s : counts.keySet()) {
-            System.err.println(s + ": " + counts.get(s));
+            log(s + ": " + counts.get(s));
             if (counts.get(s) > maxCount) {
                 maxCount = counts.get(s);
                 bestAgentType = s;
             }
         }
 
-        System.err.println("Best agent: " + bestAgentType);
+        log("Best agent: " + bestAgentType);
 
         ArrayList<Agent> bestAgentOptions = new ArrayList<Agent>();
 

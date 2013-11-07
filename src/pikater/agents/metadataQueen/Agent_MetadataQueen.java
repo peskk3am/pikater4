@@ -1,18 +1,13 @@
 package pikater.agents.metadataQueen;
 
 import jade.content.ContentElement;
-import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.Profile;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPANames;
@@ -23,110 +18,45 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREInitiator;
 import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
-import jade.proto.SubscriptionResponder.Subscription;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import jade.wrapper.ControllerException;
-import jade.wrapper.PlatformController;
-import jade.wrapper.StaleProxyException;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
 import pikater.DataManagerService;
-import pikater.ontology.messages.DeleteTempFiles;
 
-import pikater.ontology.messages.CreateAgent;
+import pikater.agents.PikaterAgent;
+import pikater.agents.management.ManagerAgentCommunicator;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
-import pikater.ontology.messages.Duration;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.GetAllMetadata;
 import pikater.ontology.messages.GetData;
-import pikater.ontology.messages.GetDuration;
-import pikater.ontology.messages.GetFileInfo;
-import pikater.ontology.messages.GetFiles;
 import pikater.ontology.messages.GetMetadata;
-import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.Id;
-import pikater.ontology.messages.ImportFile;
-import pikater.ontology.messages.Instance;
-import pikater.ontology.messages.LoadResults;
-import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Metadata;
-import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Results;
-import pikater.ontology.messages.SaveMetadata;
-import pikater.ontology.messages.SaveResults;
-import pikater.ontology.messages.SavedResult;
-import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
-import pikater.ontology.messages.TranslateFilename;
-import pikater.ontology.messages.UpdateMetadata;
-import pikater.ontology.messages.Attribute;
-import weka.core.AttributeStats;
 
-public class Agent_MetadataQueen extends Agent {
+public class Agent_MetadataQueen extends PikaterAgent {
 
 	private static final long serialVersionUID = -1886699589066832983L;
-	
-	Codec codec = new SLCodec();
-    Ontology ontology = MessagesOntology.getInstance();
     
     int id = 0;
     int metadata_list_id = 0;
-    
-    // 3 levels:
-	// 0 no output
-	// 1 minimal
-	// 2 normal
-	private int verbosity = 1;
 	
 	ArrayList metadata_list = new ArrayList(); 
 	
     @Override
     protected void setup() {
-
-    	println("Agent " + getLocalName() +  " (MetadataQueen) is alive...", 1, true);
+    	log("Agent " + getLocalName() +  " (MetadataQueen) is alive...", 1);
     	
     	// get the agent's parameters
     	Object[] args = getArguments();
@@ -141,17 +71,17 @@ public class Agent_MetadataQueen extends Agent {
 			}
 		}		    	
 
-        getContentManager().registerLanguage(codec);
-        getContentManager().registerOntology(ontology);               
+        getContentManager().registerLanguage(getCodec());
+        getContentManager().registerOntology(getOntology());
         
         // receive request
-        MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchOntology(ontology.getName()), MessageTemplate.MatchPerformative(ACLMessage.REQUEST));        
+        MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchOntology(getOntology().getName()), MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
 		addBehaviour(new receiveRequest(this, mt));
 
     }  // end setup()
-    
-      
-	protected class receiveRequest extends AchieveREResponder {
+
+
+    protected class receiveRequest extends AchieveREResponder {
 
 		private static final long serialVersionUID = -1849883814703874922L;
 
@@ -239,11 +169,11 @@ public class Agent_MetadataQueen extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			// System.out.println(getLocalName() + ": Found the following ARFFReader agents:");
+			// log(getLocalName() + ": Found the following ARFFReader agents:");
 			ARFFReaders = new AID[result.length];
 			for (int i = 0; i < result.length; ++i) {
 				ARFFReaders[i] = result[i].getName();
-				// System.out.println("    " + ARFFReaders[i].getName());
+				// log("    " + ARFFReaders[i].getName());
 			}
 			
 			// randomly choose one of the readers
@@ -251,14 +181,14 @@ public class Agent_MetadataQueen extends Agent {
 		    int randomInt = randomGenerator.nextInt(result.length);
 		    reader = ARFFReaders[randomInt];
 
-		    println("Using " + reader + ", filename: " + fileName, 2, true);
+		    log("Using " + reader + ", filename: " + fileName, 2);
 			
 			// request
 			msgOut = new ACLMessage(ACLMessage.REQUEST);
 			msgOut.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 			// msgOut.setReplyByDate(new Date(System.currentTimeMillis() + 10000));
-			msgOut.setLanguage(codec.getName());
-			msgOut.setOntology(ontology.getName());
+			msgOut.setLanguage(getCodec().getName());
+			msgOut.setOntology(getOntology().getName());
 			msgOut.addReceiver(reader);
 			// content
 			GetData get_data = new GetData();
@@ -299,11 +229,11 @@ public class Agent_MetadataQueen extends Agent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			// System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
+			// log(getLocalName()+": Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				agent = result[i].getName();
-				// System.out.println(aid.getLocalName());
+				// log(aid.getLocalName());
 			}
 			
 			while (agent == null) {
@@ -324,51 +254,17 @@ public class Agent_MetadataQueen extends Agent {
 	} // end getAgentByType
 
 	public AID createAgent(String type, String name, List options) {
-		
-		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-		msg_ca.addReceiver(new AID("agentManager", false));
-		msg_ca.setLanguage(codec.getName());
-		msg_ca.setOntology(ontology.getName());
-						
-		CreateAgent ca = new CreateAgent();
-		if (name != null){
-			ca.setName(name);
-		}
-		if (options != null){
-			ca.setArguments(options);
-		}
-		ca.setType(type);
-		
-		Action a = new Action();
-		a.setAction(ca);
-		a.setActor(this.getAID());
-				
-		AID aid = null; 
-		try {
-			getContentManager().fillContent(msg_ca, a);	
-			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-			
-			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName() + ": Exception while adding agent "
-					+ type + ": " + e);		
-		} catch (CodecException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		}
-		
+        ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
+        AID aid=communicator.createAgent(this,type,name,options);
 		return aid;		
 	}
 	
 	private void computationDuration(String agent_type, String internal_filename, ACLMessage request, MetadataListItem mli){
         mli.to_compute.add(agent_type);
-		System.out.println("adding: " + agent_type);
+		log("adding: " + agent_type);
 		// get / create linear regression agent
 		AID aid = getAgentByType(agent_type);
-		System.out.println("aid: " + aid);
+		log("aid: " + aid);
 		addBehaviour(new ExecuteTask(this, createCFPmessage(aid, agent_type, internal_filename), request, mli));
 		// TODO first computation takes longer time ?	
 	}
@@ -377,8 +273,8 @@ public class Agent_MetadataQueen extends Agent {
 
 		// create CFP message for a Computing Agent							  		
 		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-		cfp.setLanguage(codec.getName());
-		cfp.setOntology(ontology.getName());
+		cfp.setLanguage(getCodec().getName());
+		cfp.setOntology(getOntology().getName());
 		cfp.addReceiver(aid);
 		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
@@ -446,28 +342,28 @@ public class Agent_MetadataQueen extends Agent {
 		
 		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage request, MetadataListItem mli) {
 			super(a, cfp);
-			System.out.println("konstruktor "+cfp);
+			log("konstruktor "+cfp);
 			this.cfp = cfp;
 			this.mli = mli;
 			this.request = request;
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+			// log(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent "+refuse.getSender().getName()+" refused.", 1, true);
+			log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				println("Responder " + failure.getSender().getName() + " does not exist", 1, true);
+				log("Responder " + failure.getSender().getName() + " does not exist", 1);
 			}
 			else {
-				println("Agent "+failure.getSender().getName()+" failed", 1, true);
+				log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
 		}
 		
@@ -493,7 +389,7 @@ public class Agent_MetadataQueen extends Agent {
 			}
 			// Accept the proposal of the best proposer
 			if (accept != null) {
-				// System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+				// log(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
 				
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -519,8 +415,8 @@ public class Agent_MetadataQueen extends Agent {
 		}
 				
 		protected void handleInform(ACLMessage inform) {
-			println("Agent "+inform.getSender().getName()
-					+ " successfully performed the requested action", 2, true);
+			log("Agent "+inform.getSender().getName()
+					+ " successfully performed the requested action", 2);
 																			
 			ContentElement content;
 			try {
@@ -547,7 +443,7 @@ public class Agent_MetadataQueen extends Agent {
 							// find the correct metadata's slot
 							
 							mli.to_compute.remove(agent_type);
-							System.out.println("removing: " +agent_type);
+							log("removing: " +agent_type);
 							
 							int duration = (int)eval.getValue();
 							if (agent_type.equals("LinearRegression")){
@@ -603,27 +499,7 @@ public class Agent_MetadataQueen extends Agent {
 		send(reply);
 	}
 	
-	
 	private void computeExternalMetadata(DataInstances data, String internal_filename, ACLMessage request, MetadataListItem mli){		
         computationDuration("LinearRegression", internal_filename, request, mli);
 	}
-	
-	
-	private void print(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.print(text);
-		}
-	}
-
-	private void println(String text, int level, boolean print_agent_name){
-		if (verbosity >= level){
-			if (print_agent_name){
-				System.out.print(getLocalName() + ": ");
-			}
-			System.out.println(text);
-		}
-	}    
 }

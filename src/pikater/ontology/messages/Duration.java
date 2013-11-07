@@ -1,7 +1,6 @@
 package pikater.ontology.messages;
 
 import java.util.Date;
-
 import jade.content.Concept;
 
 public class Duration implements Concept {
