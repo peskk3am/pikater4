@@ -62,6 +62,8 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		NEW, TRAINED
 	}
 
+    private final String CLASS_NAME="className";
+
 	/* common properties for all computing agents */
 	public String trainFileName;
 	public String testFileName;
@@ -86,7 +88,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 	protected String[] OPTIONS;
 	protected pikater.ontology.messages.Task current_task = null;
 	// protected String[] OPTIONS_;
-	protected String[] OPTIONS_ARGS;
+	protected String className;
 
 	protected Object[] args;
 
@@ -247,31 +249,15 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		}
 		newAgent = false;
 
-		args = getArguments();
-		// System.out.println("ARGS: " + args.toString());
-
-		if (args != null && args.length > 0) {
-			OPTIONS_ARGS = new String[args.length];
-
-			if (args[0].equals("load")) {
-				// loadAgent(getLocalName());
-				args = new String[0];
-			} else {
-
-				// parameters of the network
-				for (int i = 0; i < args.length; i++) {
-					OPTIONS_ARGS[i] = (String) args[i];
-				}
-
-				/*
-				// write out parameters
-				for (String s : OPTIONS_ARGS) {
-					System.out.print(s + " ");
-				}
-				*/
-
-			}
+		if (ContainsArgument(CLASS_NAME)) {		
+				className = GetArgumentValue(CLASS_NAME);
 		}
+			
+		if (isArgumentValueTrue("load")) {
+			// TODO loadAgent(getLocalName());
+			// args = new String[0]; // arguments are empty
+		}
+	
 		// some important initializations before registering
 		getParameters();
 
