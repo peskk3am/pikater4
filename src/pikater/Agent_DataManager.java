@@ -7,7 +7,6 @@ import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.Profile;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
 import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
@@ -17,16 +16,13 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import pikater.agents.PikaterAgent;
 import pikater.logging.Severity;
 import pikater.ontology.messages.*;
 
 import java.io.*;
 import java.sql.*;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -38,7 +34,6 @@ public class Agent_DataManager extends PikaterAgent {
     private final String PASSWORD_ARG_NAME="password";
 
     Connection db;
-    Logger log;
     Codec codec = new SLCodec();
     Ontology ontology = MessagesOntology.getInstance();
     String db_url;

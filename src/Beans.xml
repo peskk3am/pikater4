@@ -9,5 +9,5 @@
         <constructor-arg name="filePath" value="configuration.xml"/>
     </bean>
     <bean id="logger" class="pikater.logging.ConsoleLogger"/>
-
+    <bean id="agentTypesProvider" class="pikater.agents.management.AgentTypesFromFileProvider"/>
 </beans>

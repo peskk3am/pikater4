@@ -62,6 +62,7 @@ public class Agent_Basic extends Agent_Recommender {
 		}
 		
         StringBuilder sb = new StringBuilder("Files: ");
+		log("*********** files from the table: ", 2);
 
 		double d_best = Integer.MAX_VALUE;
 		Metadata m_best = null;
@@ -77,9 +78,8 @@ public class Agent_Basic extends Agent_Recommender {
 					m_best = next_md;
 				}
 			}
-            sb.append("    " + next_md.getExternal_name() + " d: " + d_new + "\n");
+			sb.append("    " + next_md.getExternal_name() + " d: " + d_new + "\n");
 		}
-
         log(sb.toString());
 		
 		log("Nearest file: " + m_best.getExternal_name(), Verbosity.MINIMAL);

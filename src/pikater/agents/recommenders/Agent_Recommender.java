@@ -134,8 +134,9 @@ public abstract class Agent_Recommender extends PikaterAgent {
                     
                     // merge options with .opt file options
                     myAgentOntology.setOptions(getParameters());
-                    
+
                     log("options: " + myAgentOntology.optionsToString(), 2);
+
                     Data data = rec.getData();
                     
                     // Get metadata:

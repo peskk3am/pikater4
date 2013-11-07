@@ -134,28 +134,28 @@ public abstract class PikaterAgent extends Agent {
         }
     }
 
-    protected void log(String text)
+    public void log(String text)
     {
         log(text,Verbosity.NORMAL);
     }
 
-    protected void log(String text,Verbosity level)
+    public void log(String text,Verbosity level)
     {
         log(text, level.ordinal());
     }
 
-    protected void log(String text, int level){
+    public void log(String text, int level){
         if (verbosity.ordinal() >= level){
             logger.log(getLocalName(),text);
         }
     }
 
-    protected void logError(String errorDescription)
+    public void logError(String errorDescription)
     {
         logger.logError(getLocalName(),errorDescription);
     }
 
-    protected void logError(String errorDescription,Severity severity)
+    public void logError(String errorDescription,Severity severity)
     {
         logger.logError(getLocalName(),errorDescription,severity);
     }
