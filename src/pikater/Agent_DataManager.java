@@ -34,8 +34,6 @@ public class Agent_DataManager extends PikaterAgent {
     private final String PASSWORD_ARG_NAME="password";
 
     Connection db;
-    Codec codec = new SLCodec();
-    Ontology ontology = MessagesOntology.getInstance();
     String db_url;
     String db_user;
     String db_password;
@@ -47,9 +45,7 @@ public class Agent_DataManager extends PikaterAgent {
     @Override
     protected void setup() {
     	try {
-    		Object[] args = getArguments();
-    		ParseArguments(args);
-
+    		initDefault();
     		if (arguments.size() > 0) {
     			
     			boolean db_specified = false;
@@ -89,11 +85,7 @@ public class Agent_DataManager extends PikaterAgent {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    	
-        getContentManager().registerLanguage(codec);
-        getContentManager().registerOntology(ontology);
 
-        
         LinkedList<String> tableNames = new LinkedList<>();
         LinkedList<String> triggerNames = new LinkedList<>();
         try {
