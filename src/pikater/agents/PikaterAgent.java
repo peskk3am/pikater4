@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pikater.configuration.Argument;
 import pikater.logging.Logger;
+import pikater.logging.Severity;
 import pikater.logging.Verbosity;
 import pikater.ontology.messages.MessagesOntology;
 
@@ -66,24 +67,29 @@ public abstract class PikaterAgent extends Agent {
         }
     }
 
-    protected void print(String text, Verbosity level){
-       print(text,level.ordinal());
-    }
-
-    protected void print(String text, int level){
-        if (verbosity.ordinal() >= level){
-             logger.print(getLocalName() + ": "+text);
-        }
-    }
-
-    protected void println(String text,Verbosity level)
+    protected void log(String text)
     {
-        println(text,level.ordinal());
+        log(text,Verbosity.NORMAL);
     }
 
-    protected void println(String text, int level){
+    protected void log(String text,Verbosity level)
+    {
+        log(text, level.ordinal());
+    }
+
+    protected void log(String text, int level){
         if (verbosity.ordinal() >= level){
-            logger.println(getLocalName() + ": "+text);
+            logger.log(getLocalName(),text);
         }
+    }
+
+    protected void logError(String errorDescription)
+    {
+        logger.logError(getLocalName(),errorDescription);
+    }
+
+    protected void logError(String errorDescription,Severity severity)
+    {
+        logger.logError(getLocalName(),errorDescription,severity);
     }
 }

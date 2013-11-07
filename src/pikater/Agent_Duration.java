@@ -236,17 +236,17 @@ public class Agent_Duration extends PikaterAgent {
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent "+refuse.getSender().getName()+" refused.", 1);
+			log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				println("Responder " + failure.getSender().getName() + " does not exist", 1);
+                log("Responder " + failure.getSender().getName() + " does not exist", 1);
 			}
 			else {
-				println("Agent "+failure.getSender().getName()+" failed", 1);
+                log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
 		}
 		
@@ -298,7 +298,7 @@ public class Agent_Duration extends PikaterAgent {
 		}
 				
 		protected void handleInform(ACLMessage inform) {
-			println("  --d-- " + myAgent.getLocalName()+": Agent "+inform.getSender().getName()
+            log("  --d-- " + myAgent.getLocalName()+": Agent "+inform.getSender().getName()
 					+ " successfully performed the requested action", 2);
 																			
 			ContentElement content;
