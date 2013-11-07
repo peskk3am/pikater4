@@ -7,18 +7,9 @@
           <parameter name="F" value="10" />        
         </evaluation>               
 
-        <dataset train="weather.arff" test="weather.arff" /> 		 		    
-		
-<!--
-		<recommender name="BasicRecommender">
-		</recommender>
--->
-
+        <dataset train="weather.arff" test="weather.arff" />
         <agent type="RBFNetwork">
-<!--        	<parameter name="B" value="?" />   -->
         </agent>
-
 </experiment>     
-
 <hasta_la_vista_baby shutdown_database="true" />
 </experiments>
