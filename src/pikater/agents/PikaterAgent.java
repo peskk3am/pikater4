@@ -112,6 +112,12 @@ public abstract class PikaterAgent extends Agent {
         return arguments.get(argName).getValue();
     }
 
+    public Boolean isArgumentValueTrue(String argName)
+    {
+        String argValue=GetArgumentValue(argName);
+        return argValue.equals("1") || argValue.equalsIgnoreCase("true");
+    }
+
     public Boolean ContainsArgument(String argName)
     {
         return arguments.containsKey(argName);

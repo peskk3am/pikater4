@@ -42,8 +42,8 @@ public class Entropy {
     public static double CountEntropyClassAttribute(List<Object> attributeValues,List<Object> classValues)
     {   
         double result=0;
-        Set<Object> targetValues=new HashSet();
-        Set<Object> sourceValues=new HashSet();
+        HashSet targetValues=new HashSet();
+        HashSet sourceValues=new HashSet();
         for (Object o:classValues)
         {
             if (!targetValues.contains(o))

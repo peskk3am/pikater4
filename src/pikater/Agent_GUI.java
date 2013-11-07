@@ -13,19 +13,17 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
+import jade.domain.FIPAService;
 import jade.domain.JADEAgentManagement.JADEManagementOntology;
 import jade.domain.JADEAgentManagement.ShutdownPlatform;
-import jade.gui.GuiAgent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
-import jade.proto.ContractNetInitiator;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
@@ -33,46 +31,19 @@ import jade.util.leap.List;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.ListIterator;
-import java.util.Random;
-import java.util.Vector;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import pikater.agents.PikaterAgent;
+import pikater.ontology.messages.*;
 
-import pikater.ontology.messages.CreateAgent;
-import pikater.ontology.messages.Data;
-import pikater.ontology.messages.Evaluation;
-import pikater.ontology.messages.EvaluationMethod;
-import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.ExecuteParameters;
-import pikater.ontology.messages.GetData;
-import pikater.ontology.messages.GetMetadata;
-import pikater.ontology.messages.GetOptions;
-import pikater.ontology.messages.Id;
-import pikater.ontology.messages.Interval;
-import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Metadata;
-import pikater.ontology.messages.Method;
-import pikater.ontology.messages.Option;
-import pikater.ontology.messages.Problem;
-import pikater.ontology.messages.Results;
-import pikater.ontology.messages.Solve;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public abstract class Agent_GUI extends GuiAgent {
+public abstract class Agent_GUI extends PikaterAgent {
 
 	/**
 	 * 

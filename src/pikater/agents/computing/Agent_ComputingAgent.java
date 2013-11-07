@@ -223,7 +223,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 
 		initDefault();
 				
-		List typeDescList = new java.util.ArrayList()<String>();
+		java.util.ArrayList<String> typeDescList = new java.util.ArrayList< String >();
 		typeDescList.add("ComputingAgent");
 		
 		String typeDesc;
@@ -276,7 +276,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		getParameters();
 
 		System.out.println(getLocalName() + " " + getAgentType()
-				+ " is alive...");
+                + " is alive...");
 
 		addBehaviour(send_options_behaviour = new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));

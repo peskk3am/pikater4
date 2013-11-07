@@ -1,9 +1,6 @@
 package pikater;
 
-import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
@@ -16,7 +13,6 @@ import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
 import pikater.agents.PikaterAgent;
 import pikater.logging.Severity;
 import pikater.ontology.messages.*;

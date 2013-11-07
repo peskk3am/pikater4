@@ -79,7 +79,7 @@ public class MetadataReader {
     
     private void readAttributesMetadata(DataInstances data, Metadata metadata)
     {
-        List<AttributeMetadata> attributeList=metadata.getAttributeMetadataList();
+        jade.util.leap.List attributeList=metadata.getAttribute_metadata_list();
         for (int i=0;i<metadata.getNumber_of_attributes();i++)
         {
             AttributeMetadata attMet=readAttributeMetadata(data, i);
