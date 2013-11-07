@@ -82,12 +82,8 @@ public class Agent_ARFFReader extends PikaterAgent {
 	
 	@Override
 	protected void setup() {
-		log("is alive...", 1);
-
 		initDefault();
-		
 		registerWithDF();
-		
 	} // end Setup
 
 	protected ACLMessage sendData(ACLMessage request) {
