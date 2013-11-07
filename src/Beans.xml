@@ -5,9 +5,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="configuration" class="pikater.configuration.XmlConfigurationProvider">
+    <bean id="configuration" class="pikater.configuration.XmlConfigurationProvider" scope="singleton">
         <constructor-arg name="filePath" value="configuration.xml"/>
     </bean>
-    <bean id="logger" class="pikater.logging.ConsoleLogger"/>
-    <bean id="agentTypesProvider" class="pikater.agents.management.AgentTypesFromFileProvider"/>
+    <bean id="logger" class="pikater.logging.ConsoleLogger" scope="singleton"/>
+    <bean id="agentTypesProvider" class="pikater.agents.management.AgentTypesFromFileProvider" scope="singleton"/>
 </beans>
