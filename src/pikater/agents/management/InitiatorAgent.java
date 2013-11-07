@@ -20,10 +20,9 @@ public class InitiatorAgent extends PikaterAgent {
 
 	@Override
 	protected void setup() {
-		//Register the SL content language
-		getContentManager().registerLanguage(new SLCodec(), FIPANames.ContentLanguage.FIPA_SL);
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
+		initDefault();
+		
+		registerWithDF();
 		
 		// read agents from configuration
 		try {

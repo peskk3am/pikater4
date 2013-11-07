@@ -41,54 +41,6 @@ public abstract class Agent_Recommender extends PikaterAgent {
 	protected String getOptFileName(){
 		return "/options/"+getAgentType() +".opt";
 	}
-	
-	protected boolean registerWithDF() {
-		// register with the DF
-
-		DFAgentDescription description = new DFAgentDescription();
-		// the description is the root description for each agent
-		// and how we prefer to communicate.
-
-		description.setName(getAID());
-		// the service description describes a particular service we
-		// provide.
-		ServiceDescription servicedesc = new ServiceDescription();
-		// the name of the service provided (we just re-use our agent name)
-		servicedesc.setName(getLocalName());
-
-		// The service type should be a unique string associated with
-		// the service.s
-		String typeDesc = getAgentType();
-
-		servicedesc.setType(typeDesc);
-
-		// the service has a list of supported languages, ontologies
-		// and protocols for this service.
-		// servicedesc.addLanguages(language.getName());
-		// servicedesc.addOntologies(ontology.getName());
-		// servicedesc.addProtocols(InteractionProtocol.FIPA_REQUEST);
-
-		description.addServices(servicedesc);
-
-		// add "Search agent service"
-		ServiceDescription servicedesc_g = new ServiceDescription();
-
-		servicedesc_g.setName(getLocalName());
-		servicedesc_g.setType("Recommender");
-		description.addServices(servicedesc_g);
-
-		// register synchronously registers us with the DF, we may
-		// prefer to do this asynchronously using a behaviour.
-		try {
-			DFService.register(this, description);
-			log("Successfully registered with DF; service type: " + typeDesc);
-			return true;
-		} catch (FIPAException e) {
-			logError("Error registering with DF, exiting:" + e);
-			return false;
-
-		}
-	} // end registerWithDF
 
 	
     @Override
@@ -96,8 +48,9 @@ public abstract class Agent_Recommender extends PikaterAgent {
 
     	log("Agent_Recommender is alive...", Verbosity.MINIMAL);
     	
-        getContentManager().registerLanguage(codec);
-        getContentManager().registerOntology(ontology);               
+        initDefault();
+        
+        registerWithDF("Recommender");
         
         // receive request
         MessageTemplate mt = MessageTemplate.and(MessageTemplate.MatchOntology(ontology.getName()), MessageTemplate.MatchPerformative(ACLMessage.REQUEST));        

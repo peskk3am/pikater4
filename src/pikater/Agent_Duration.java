@@ -57,21 +57,23 @@ public class Agent_Duration extends PikaterAgent {
     boolean log_LR_durations = false;
     
     @Override
+    protected String getAgentType(){
+    	return "Duration";
+    }
+    
+    @Override
     protected void setup() {
 
-    	// get the agent's parameters
-		Object[] args = getArguments();
-		ParseArguments(args);
+		initDefault();
+		
+		registerWithDF();
     	
-		if (arguments.size() > 0) {
-			if (GetArgumentValue(LOG_LR_DURATIONS_NAME) != null){
+		if (ContainsArgument(LOG_LR_DURATIONS_NAME)) {
+			if (isArgumentValueTrue(LOG_LR_DURATIONS_NAME)){
 				log_LR_durations = true;
 			}
 		}		    	
-    	
-        getContentManager().registerLanguage(codec);
-        getContentManager().registerOntology(ontology);
-        
+    	        
         // create linear regression agent
         // send message to AgentManager to create an agent
         ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");

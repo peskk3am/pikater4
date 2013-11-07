@@ -1382,35 +1382,14 @@ public abstract class Agent_GUI extends GuiAgent {
 		// wait for duration to compute a task
 		doWait(15000);
 		
+		initDefault();
+		
+		registerWithDF("UserInterface");
+		
 		myAgentName = this.getLocalName();
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
 
 		// Partial results handler
 		addBehaviour(new CompAgentResultsServer(this));
-
-		// register with DF
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType(getAgentType());
-		sd.setName(getName());
-		dfd.setName(getAID());
-		dfd.addServices(sd);
-
-		// Name of general GUI service:
-		sd = new ServiceDescription();
-		sd.setType("GUIAgent");
-		sd.setName(getName());
-		dfd.addServices(sd);
-
-		try {
-			DFService.register(this, dfd);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ " registration with DF unsucceeded. Reason: "
-					+ e.getMessage());
-			doDelete();
-		}
 
 		String incomingFilesPath = System.getProperty("user.dir")
 				+ System.getProperty("file.separator") + "incoming"

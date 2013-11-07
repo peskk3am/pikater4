@@ -221,9 +221,22 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 	@Override
 	protected void setup() {
 
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
-
+		initDefault();
+				
+		List typeDescList = new java.util.ArrayList()<String>();
+		typeDescList.add("ComputingAgent");
+		
+		String typeDesc;
+		if (state == states.TRAINED) { // add fileName to service description
+			typeDesc = getAgentType() + " trained on " + trainFileName;
+		} else {
+			typeDesc = getAgentType();
+		}
+		
+		registerWithDF(typeDescList);
+		
+		
+		
 		if (!newAgent) {
 			resurrected = true;
 			System.out.println(getLocalName() + " resurrected.");
@@ -264,8 +277,6 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 
 		System.out.println(getLocalName() + " " + getAgentType()
 				+ " is alive...");
-
-		registerWithDF();
 
 		addBehaviour(send_options_behaviour = new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));
@@ -355,12 +366,6 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		return baos.toByteArray();
 	}
 
-	public static Object toObject(byte[] data) throws Exception {
-
-		Object object = new java.io.ObjectInputStream(
-				new java.io.ByteArrayInputStream(data)).readObject();
-		return object;
-	}
 
 	/*
 	 * Send partial results to the GUI Agent(s) call it after training or during

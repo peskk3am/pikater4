@@ -115,6 +115,8 @@ public class Agent_Manager extends PikaterAgent {
 		
 	}
 	
+	private final String NO_XML_OUTPUT ="no_xml_output";
+	
 	private HashMap<String, String> agentTypes = new HashMap<String, String>();
 	private HashMap<String, Object[]> agentOptions = new HashMap<String, Object[]>();
 	
@@ -421,40 +423,18 @@ public class Agent_Manager extends PikaterAgent {
 	
 
 	protected void setup() {
+		log(" is alive and waiting...");
 		
-		Object[] args = getArguments();
-    	// System.out.println(args);
-		if (args != null && args.length > 0) {
-			int i = 0;					
-			while (i < args.length){
-				// System.out.println(args[i]);
-				if (args[i].equals("no_xml_output")){
-					no_xml_output = true;
-				}
-				i++;
+		initDefault();
+		
+		registerWithDF("UserInterface");
+		
+		if (ContainsArgument(NO_XML_OUTPUT)) {
+			if (isArgumentValueTrue(NO_XML_OUTPUT)){
+				no_xml_output = true;
 			}
-		}
+		}			
 		
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
-
-		// register with DF
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setType("Manager");
-		sd.setName(getName());
-		dfd.setName(getAID());
-		dfd.addServices(sd);
-		try {
-			DFService.register(this, dfd);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ " registration with DF unsucceeded. Reason: "
-					+ e.getMessage());
-			doDelete();
-		}
-		System.out.println(getLocalName() 
-				+ " is alive and waiting...");
 
 		SubscriptionManager subscriptionManager = new SubscriptionManager() {
 			public boolean register(Subscription s) {

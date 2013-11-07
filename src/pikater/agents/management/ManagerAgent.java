@@ -38,9 +38,9 @@ public class ManagerAgent extends PikaterAgent {
             }
         }
         
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
-
+        initDefault();
+        registerWithDF();
+        
 		getAgentTypesFromFile();
 		
 		MessageTemplate mt = MessageTemplate.and(MessageTemplate

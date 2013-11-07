@@ -468,9 +468,8 @@ public abstract class Agent_Search extends PikaterAgent {
 
 		System.out.println(getLocalName() + " is alive...");
 
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
-
+		initDefault();
+		
 		registerWithDF("Search");
 		
 		addBehaviour(new RequestServer(this));

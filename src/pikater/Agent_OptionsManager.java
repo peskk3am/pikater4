@@ -71,7 +71,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 	private ACLMessage received_request = null;
 	
 	protected String getAgentType() {
-		return "Option Manager";
+		return "OptionManager";
 	}
 	
 	protected class ExecuteTask extends ContractNetInitiator{
@@ -588,66 +588,15 @@ public class Agent_OptionsManager extends PikaterAgent {
 		}
 
 	};
-	
-	protected boolean registerWithDF() {
-		// register with the DF
-
-		DFAgentDescription description = new DFAgentDescription();
-		// the description is the root description for each agent
-		// and how we prefer to communicate.
-
-		description.setName(getAID());
-		// the service description describes a particular service we
-		// provide.
-		ServiceDescription servicedesc = new ServiceDescription();
-		// the name of the service provided (we just re-use our agent name)
-		servicedesc.setName(getLocalName());
-
-		// The service type should be a unique string associated with
-		// the service.s
-		String typeDesc = getAgentType();
-
-		servicedesc.setType(typeDesc);
-
-		// the service has a list of supported languages, ontologies
-		// and protocols for this service.
-		// servicedesc.addLanguages(language.getName());
-		// servicedesc.addOntologies(ontology.getName());
-		// servicedesc.addProtocols(InteractionProtocol.FIPA_REQUEST);
-
-		description.addServices(servicedesc);
-
-		// add "OptionsManager agent service"
-		ServiceDescription servicedesc_g = new ServiceDescription();
-
-		servicedesc_g.setName(getLocalName());
-		servicedesc_g.setType("OptionsManager");
-		description.addServices(servicedesc_g);
-
-		// register synchronously registers us with the DF, we may
-		// prefer to do this asynchronously using a behaviour.
-		try {
-			DFService.register(this, description);
-            log("successfully registered with DF; service type: "
-					+ typeDesc, 2);
-			return true;
-		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ ": error registering with DF, exiting:" + e);
-			// doDelete();
-			return false;
-
-		}
-	} // end registerWithDF
 
 	@Override
 	protected void setup() {
-        log("is alive...", 1);
-
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
-
+		log("is alive...", 1);
+		
+		initDefault();
+		
 		registerWithDF();
+
 				
 		addBehaviour(new RequestServer(this));
 

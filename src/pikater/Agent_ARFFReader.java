@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import pikater.agents.PikaterAgent;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.GetData;
 import pikater.ontology.messages.Instance;
@@ -33,7 +34,7 @@ import weka.core.Attribute;
 import weka.core.AttributeStats;
 import weka.core.Instances;
 
-public class Agent_ARFFReader extends Agent {
+public class Agent_ARFFReader extends PikaterAgent {
 	/**
 	 * 
 	 */
@@ -75,33 +76,18 @@ public class Agent_ARFFReader extends Agent {
 	}
 
 	@Override
+	protected String getAgentType(){
+		return "ARFFReader";
+	}
+	
+	@Override
 	protected void setup() {
-		getContentManager().registerLanguage(codec);
-		getContentManager().registerOntology(ontology);
+		log("is alive...", 1);
 
-		// register with DF
-		DFAgentDescription dfd = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-
-		sd.setType("ARFFReader");
-		sd.setName(getName());
-		dfd.setName(getAID());
-		dfd.addServices(sd);
-
-		try {
-			DFService.register(this, dfd);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName()
-					+ " registration with DF unsucceeded. Reason: "
-					+ e.getMessage());
-			doDelete();
-		}
-
-		MessageTemplate template = MessageTemplate
-				.MatchPerformative(ACLMessage.REQUEST);
-		addBehaviour(new GetDataResponder(this, template));
-		System.out.println(getLocalName() + ": "+ "Agent " + getLocalName() + " is ready!");
-
+		initDefault();
+		
+		registerWithDF();
+		
 	} // end Setup
 
 	protected ACLMessage sendData(ACLMessage request) {
