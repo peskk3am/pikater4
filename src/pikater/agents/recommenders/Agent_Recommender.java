@@ -97,7 +97,7 @@ public abstract class Agent_Recommender extends PikaterAgent {
     @Override
     protected void setup() {
 
-    	println("Agent " + getLocalName() +  " (Agent_Recommender) is alive...", 1);
+    	log("Agent " + getLocalName() +  " (Agent_Recommender) is alive...", 1);
     	
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);               
@@ -137,8 +137,8 @@ public abstract class Agent_Recommender extends PikaterAgent {
                     
                     // merge options with .opt file options
                     myAgentOntology.setOptions(getParameters());
-                    
-                    println("options: " + myAgentOntology.optionsToString(), 2);
+
+                    log("options: " + myAgentOntology.optionsToString(), 2);
                     Data data = rec.getData();
                     
                     // Get metadata:
@@ -166,7 +166,7 @@ public abstract class Agent_Recommender extends PikaterAgent {
                     // fill options
                 	recommended_agent.setOptions(mergeOptions(getAgentOptions(recommended_agent.getType()), recommended_agent.getOptions()));
 
-        			println("********** Agent "
+                    log("********** Agent "
         					+ recommended_agent.getType()
         					+ " recommended. Options: "
         					+ recommended_agent.toGuiString()

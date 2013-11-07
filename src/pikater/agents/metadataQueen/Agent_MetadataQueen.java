@@ -56,7 +56,7 @@ public class Agent_MetadataQueen extends PikaterAgent {
 	
     @Override
     protected void setup() {
-    	println("Agent " + getLocalName() +  " (MetadataQueen) is alive...", 1);
+    	log("Agent " + getLocalName() +  " (MetadataQueen) is alive...", 1);
     	
     	// get the agent's parameters
     	Object[] args = getArguments();
@@ -169,11 +169,11 @@ public class Agent_MetadataQueen extends PikaterAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			// System.out.println(getLocalName() + ": Found the following ARFFReader agents:");
+			// log(getLocalName() + ": Found the following ARFFReader agents:");
 			ARFFReaders = new AID[result.length];
 			for (int i = 0; i < result.length; ++i) {
 				ARFFReaders[i] = result[i].getName();
-				// System.out.println("    " + ARFFReaders[i].getName());
+				// log("    " + ARFFReaders[i].getName());
 			}
 			
 			// randomly choose one of the readers
@@ -181,7 +181,7 @@ public class Agent_MetadataQueen extends PikaterAgent {
 		    int randomInt = randomGenerator.nextInt(result.length);
 		    reader = ARFFReaders[randomInt];
 
-		    println("Using " + reader + ", filename: " + fileName, 2);
+		    log("Using " + reader + ", filename: " + fileName, 2);
 			
 			// request
 			msgOut = new ACLMessage(ACLMessage.REQUEST);
@@ -229,11 +229,11 @@ public class Agent_MetadataQueen extends PikaterAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			// System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
+			// log(getLocalName()+": Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				agent = result[i].getName();
-				// System.out.println(aid.getLocalName());
+				// log(aid.getLocalName());
 			}
 			
 			while (agent == null) {
@@ -261,10 +261,10 @@ public class Agent_MetadataQueen extends PikaterAgent {
 	
 	private void computationDuration(String agent_type, String internal_filename, ACLMessage request, MetadataListItem mli){
         mli.to_compute.add(agent_type);
-		System.out.println("adding: " + agent_type);
+		log("adding: " + agent_type);
 		// get / create linear regression agent
 		AID aid = getAgentByType(agent_type);
-		System.out.println("aid: " + aid);
+		log("aid: " + aid);
 		addBehaviour(new ExecuteTask(this, createCFPmessage(aid, agent_type, internal_filename), request, mli));
 		// TODO first computation takes longer time ?	
 	}
@@ -342,28 +342,28 @@ public class Agent_MetadataQueen extends PikaterAgent {
 		
 		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage request, MetadataListItem mli) {
 			super(a, cfp);
-			System.out.println("konstruktor "+cfp);
+			log("konstruktor "+cfp);
 			this.cfp = cfp;
 			this.mli = mli;
 			this.request = request;
 		}
 
 		protected void handlePropose(ACLMessage propose, Vector v) {
-			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
+			// log(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
 		}
 		
 		protected void handleRefuse(ACLMessage refuse) {
-			println("Agent "+refuse.getSender().getName()+" refused.", 1);
+			log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
 		
 		protected void handleFailure(ACLMessage failure) {
 			if (failure.getSender().equals(myAgent.getAMS())) {
 				// FAILURE notification from the JADE runtime: the receiver
 				// does not exist
-				println("Responder " + failure.getSender().getName() + " does not exist", 1);
+				log("Responder " + failure.getSender().getName() + " does not exist", 1);
 			}
 			else {
-				println("Agent "+failure.getSender().getName()+" failed", 1);
+				log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
 		}
 		
@@ -389,7 +389,7 @@ public class Agent_MetadataQueen extends PikaterAgent {
 			}
 			// Accept the proposal of the best proposer
 			if (accept != null) {
-				// System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
+				// log(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
 				
 				try {
 					ContentElement content = getContentManager().extractContent(cfp);
@@ -415,7 +415,7 @@ public class Agent_MetadataQueen extends PikaterAgent {
 		}
 				
 		protected void handleInform(ACLMessage inform) {
-			println("Agent "+inform.getSender().getName()
+			log("Agent "+inform.getSender().getName()
 					+ " successfully performed the requested action", 2);
 																			
 			ContentElement content;
@@ -443,7 +443,7 @@ public class Agent_MetadataQueen extends PikaterAgent {
 							// find the correct metadata's slot
 							
 							mli.to_compute.remove(agent_type);
-							System.out.println("removing: " +agent_type);
+							log("removing: " +agent_type);
 							
 							int duration = (int)eval.getValue();
 							if (agent_type.equals("LinearRegression")){
