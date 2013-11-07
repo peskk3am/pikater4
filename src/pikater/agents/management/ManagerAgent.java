@@ -131,13 +131,21 @@ public class ManagerAgent extends PikaterAgent {
 				name.charAt(name.length()-i-1) <= 57){
 			i++;			
 		}
+        PlatformController container = getContainerController();
         String namePrefix=name.substring(0, name.length()-i);
+        try {
+            AgentController agentWithTheSameName= container.getAgent(namePrefix);
+        }
+        catch (ControllerException exc)
+        {
+            //agent with the same name does not exist, we are good
+            return namePrefix;
+        }
         int nameSuffix=0;
         if (i != 0){
             // numbers Occurred
             nameSuffix = Integer.parseInt(name.substring(name.length()-i, name.length()))+1;
         }
-        PlatformController container = getContainerController();
         for (int tryNr=nameSuffix;tryNr<nameSuffix+1000;i++)
         {
             int currentSuffix=nameSuffix+tryNr;
@@ -151,10 +159,6 @@ public class ManagerAgent extends PikaterAgent {
                 //agent with the same name does not exist, we are good
                 nameSuffix=currentSuffix;
                 break;
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
             }
         }
         return namePrefix+ nameSuffix;
