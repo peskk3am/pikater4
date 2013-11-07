@@ -1,6 +1,6 @@
 package pikater.configuration;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,5 +12,5 @@ import java.util.Map;
 public interface AgentConfiguration {
     String getAgentName();
     String getAgentType();
-    Map<String,String> getArguments();
+    List<Argument> getArguments();
 }

@@ -6,9 +6,13 @@ import jade.content.onto.Ontology;
 import jade.core.Agent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import pikater.configuration.Argument;
 import pikater.logging.Logger;
 import pikater.logging.Verbosity;
 import pikater.ontology.messages.MessagesOntology;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: Kuba
@@ -22,6 +26,7 @@ public abstract class PikaterAgent extends Agent {
     protected ApplicationContext context =  new ClassPathXmlApplicationContext(initBeansName);
     protected Verbosity verbosity=Verbosity.NORMAL;
     private Logger logger=(Logger) context.getBean("logger");
+    protected Map<String,Argument> arguments;
 
     public Codec getCodec() {
         return codec;
@@ -29,6 +34,36 @@ public abstract class PikaterAgent extends Agent {
 
     public Ontology getOntology() {
         return ontology;
+    }
+
+    public String GetArgumentValue(String argName)
+    {
+        return arguments.get(argName).getValue();
+    }
+
+    public Boolean ContainsArgument(String argName)
+    {
+        return arguments.containsKey(argName);
+    }
+
+    public void ParseArguments(Object[] args)
+    {
+        if (args==null)
+        {
+            return;
+        }
+        arguments=new HashMap<>();
+        for (Object arg:args)
+        {
+               if (arg instanceof Argument)
+               {
+                      Argument argumentToAdd=(Argument)arg;
+                      arguments.put(argumentToAdd.getName(),argumentToAdd);
+               }
+            else {
+                   throw new IllegalArgumentException();
+               }
+        }
     }
 
     protected void print(String text, Verbosity level){
