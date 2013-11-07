@@ -45,8 +45,6 @@ public abstract class Agent_Recommender extends PikaterAgent {
 	
     @Override
     protected void setup() {
-
-    	log("Agent_Recommender is alive...", Verbosity.MINIMAL);
     	
         initDefault();
         

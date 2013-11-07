@@ -56,8 +56,11 @@ public class Agent_MetadataQueen extends PikaterAgent {
 	
     @Override
     protected void setup() {
-    	log("Agent " + getLocalName() +  " (MetadataQueen) is alive...", 1);
+
+    	initDefault();
+    	registerWithDF();
     	
+    	// TODO predelat do nove podoby
     	// get the agent's parameters
     	Object[] args = getArguments();
 		if (args != null && args.length > 0) {

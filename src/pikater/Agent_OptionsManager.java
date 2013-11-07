@@ -591,7 +591,6 @@ public class Agent_OptionsManager extends PikaterAgent {
 
 	@Override
 	protected void setup() {
-		log("is alive...", 1);
 		
 		initDefault();
 		

@@ -40,7 +40,7 @@
    
         <agent type="jade.tools.sniffer.Sniffer" name="sniffsniff">
             <arguments>
-                <argument key="sniffed" value="Freddie"/>
+                <argument key="sniffed" value="Freddie" sendOnlyValue="true"/>
             </arguments>
         </agent>
         

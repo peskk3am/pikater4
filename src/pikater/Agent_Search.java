@@ -466,8 +466,6 @@ public abstract class Agent_Search extends PikaterAgent {
 		
 	protected void setup() {
 
-		System.out.println(getLocalName() + " is alive...");
-
 		initDefault();
 		
 		registerWithDF("Search");

@@ -423,7 +423,6 @@ public class Agent_Manager extends PikaterAgent {
 	
 
 	protected void setup() {
-		log(" is alive and waiting...");
 		
 		initDefault();
 		

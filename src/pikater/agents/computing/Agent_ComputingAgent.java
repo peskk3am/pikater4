@@ -261,9 +261,6 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		// some important initializations before registering
 		getParameters();
 
-		System.out.println(getLocalName() + " " + getAgentType()
-                + " is alive...");
-
 		addBehaviour(send_options_behaviour = new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));
 

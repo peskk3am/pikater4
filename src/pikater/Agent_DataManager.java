@@ -42,6 +42,8 @@ public class Agent_DataManager extends PikaterAgent {
     protected void setup() {
     	try {
     		initDefault();
+    		registerWithDF();
+    		
     		if (arguments.size() > 0) {
     			
     			boolean db_specified = false;
