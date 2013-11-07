@@ -13,11 +13,13 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import pikater.agents.PikaterAgent;
+import pikater.configuration.Argument;
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.LoadAgent;
 import pikater.ontology.messages.SaveAgent;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,19 +90,23 @@ public class ManagerAgent extends PikaterAgent {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();				
 
-		Object[] args1 = new Object[0];
-		Object[] args2 = new Object[0];
+		Argument[] args1 = new Argument[0];
+        Argument[] args2 = new Argument[0];
 
 		if (agentTypes.get(type).getOptions() != null){
 			args1 = agentTypes.get(type).getOptions();
 		}
 		
 		if (args != null){
-			args2 = args.toArray();
+            args2=new Argument[args.size()];
+            for (int i=0;i<args.size();i++)
+            {
+                args2[i]=(Argument)args.get(i);
+            }
 		}
 		
 		int size = args1.length + args2.length;
-		Object[] Args = new Object[size];
+		Argument[] Args = new Argument[size];
         System.arraycopy(args1,0,Args,0,args1.length);
         System.arraycopy(args2,0,Args,args1.length,args2.length);
 		String nameToGenerate=name = generateName(name);

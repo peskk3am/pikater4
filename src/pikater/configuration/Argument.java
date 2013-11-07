@@ -6,6 +6,15 @@ package pikater.configuration;
  * Time: 12:29
  */
 public class Argument {
+    public Boolean getSendOnlyValue() {
+        return sendOnlyValue;
+    }
+
+    public void setSendOnlyValue(Boolean sendOnlyValue) {
+        this.sendOnlyValue = sendOnlyValue;
+    }
+
+    private Boolean sendOnlyValue=false;
     public Argument( String name,String value) {
         this.value = value;
         this.name = name;

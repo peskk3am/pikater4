@@ -1,5 +1,7 @@
 package pikater.agents.management;
 
+import pikater.configuration.Argument;
+
 /**
  * User: Kuba
  * Date: 7.11.13
@@ -8,7 +10,7 @@ package pikater.agents.management;
 public class AgentTypeDefinition {
     String name;
     String typeName;
-    Object[] options;
+    Argument[] options;
 
     public AgentTypeDefinition(String name, String typeName) {
         this.name = name;
@@ -31,11 +33,11 @@ public class AgentTypeDefinition {
         this.typeName = typeName;
     }
 
-    public Object[] getOptions() {
+    public Argument[] getOptions() {
         return options;
     }
 
-    public void setOptions(Object[] options) {
+    public void setOptions(Argument[] options) {
         this.options = options;
     }
 }

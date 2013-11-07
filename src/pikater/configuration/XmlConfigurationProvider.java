@@ -79,6 +79,10 @@ public class XmlConfigurationProvider implements ConfigurationProvider {
                 String key= arg.getAttribute("key");
                 String value=arg.getAttribute("value");
                 Argument argument=new Argument(key,value);
+                if (arg.hasAttribute("sendOnlyValue"))
+                {
+                      argument.setSendOnlyValue(true);
+                }
                 arguments.add(argument);
             }
         }

@@ -1,8 +1,12 @@
 package pikater.agents.management;
 
+import pikater.configuration.Argument;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +34,16 @@ public class AgentTypesFromFileProvider implements AgentTypesProvider {
                 if(agentClass.length>2){
                     Object[] opts = new Object[agentClass.length-2];
                     System.arraycopy(agentClass, 2, opts, 0, opts.length);
-                    typeDefinition.setOptions(opts);
+                    List<Argument> parsedArgs=new ArrayList<>();
+                    for (Object arg:opts)
+                    {
+                        String argument =(String)arg;
+                        String[] splittedArgument=argument.split("-");
+                        Argument currentArgument=new Argument(splittedArgument[0],splittedArgument[1]);
+                        parsedArgs.add(currentArgument);
+
+                    }
+                    typeDefinition.setOptions(parsedArgs.toArray(new Argument[parsedArgs.size()]));
                 }
                 toReturn.put(typeDefinition.getName(),typeDefinition);
                 line = bufRead.readLine();

@@ -120,6 +120,10 @@ public abstract class PikaterAgent extends Agent {
 
     public Boolean ContainsArgument(String argName)
     {
+        if (arguments==null)
+        {
+            return false;
+        }
         return arguments.containsKey(argName);
     }
 

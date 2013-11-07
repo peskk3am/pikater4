@@ -1,15 +1,15 @@
 package pikater.agents.management;
 
-import jade.content.lang.sl.SLCodec;
 import jade.core.behaviours.TickerBehaviour;
-import jade.domain.FIPANames;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.PlatformController;
 import pikater.agents.PikaterAgent;
 import pikater.configuration.AgentConfiguration;
+import pikater.configuration.Argument;
 import pikater.configuration.Configuration;
 import pikater.configuration.ConfigurationProvider;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -21,7 +21,6 @@ public class InitiatorAgent extends PikaterAgent {
 	@Override
 	protected void setup() {
 		initDefault();
-		
 		registerWithDF();
 		
 		// read agents from configuration
@@ -32,9 +31,14 @@ public class InitiatorAgent extends PikaterAgent {
             List<AgentConfiguration> agentConfigurations=configuration.getAgentConfigurations();
             for (AgentConfiguration agentConfiguration : agentConfigurations)
             {
-                this.CreateAgent(agentConfiguration.getAgentType(),agentConfiguration.getAgentName(),agentConfiguration.getArguments().toArray());
+                //Preimplemented ajde agents do not count with named arguments, convert to string if necessary
+                Object[] arguments=ProcessArgs(agentConfiguration.getArguments().toArray());
+                Boolean creationSuccessful=this.CreateAgent(agentConfiguration.getAgentType(),agentConfiguration.getAgentName(),arguments);
+                if (!creationSuccessful)
+                {
+                    logError("Creation of agent "+agentConfiguration.getAgentName()+" failed.");
+                }
             }
-
 		}
         catch (Exception e) {
 			e.printStackTrace();
@@ -51,7 +55,7 @@ public class InitiatorAgent extends PikaterAgent {
 		});
 	}
 
-	public int CreateAgent(String type, String name, Object[] args) {
+	public Boolean CreateAgent(String type, String name, Object[] args) {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 		try {
@@ -62,8 +66,26 @@ public class InitiatorAgent extends PikaterAgent {
 		} catch (ControllerException e) {
 			System.err.println("Exception while adding agent: " + e);
 			e.printStackTrace();
-			return 0;
+			return false;
 		}
-		return 1;
+		return true;
 	}
+
+    public  Object[] ProcessArgs(Object[] args)
+    {
+         Object[] toReturn=new Object[args.length];
+         for (int i=0;i<args.length;i++)
+         {
+               Argument arg=(Argument)args[i];
+              if (arg.getSendOnlyValue())
+              {
+                  toReturn[i]=arg.getValue();
+              }
+             else
+              {
+                  toReturn[i]=args[i];
+              }
+         }
+        return  toReturn;
+    }
 }
