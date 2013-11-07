@@ -326,11 +326,12 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 	protected void getParameters() {
 		//set the Agent type according to the arguments
 
-		if(OPTIONS_ARGS==null || OPTIONS_ARGS.length!=1 ){
+		if(className==null){
 			logError("Wrong arguments of WekaCA");
 			return;//TODO: error
 		}
-		setWekaClassName((String)OPTIONS_ARGS[0]);
+		setWekaClassName(className);
+		
 		createClassifierClass();//in order not to have cls==null
 		 
 		// fills the global Options vector

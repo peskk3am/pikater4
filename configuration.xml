@@ -1,19 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <agents>
+        
         <agent type="pikater.Agent_ARFFReader" name="Reader_Cervenacek">
+        </agent>
+        
+        <agent type="pikater.Agent_Manager" name="manager">
             <arguments>
-                <argument key="arg1" value="value for arg1"/>
-                <argument key="arg2" value="value for arg2"/>
+                <argument key="no_xml_output" value="true"/>
             </arguments>
         </agent>
+
         <agent type="pikater.Agent_DataManager" name="Manager_Jarka">
             <arguments>
                 <argument key="url" value="jdbc:mysql://localhost/pikater"/>
                 <argument key="user" value="root"/>
             </arguments>
         </agent>
+
+        <agent type="pikater.agents.metadataQueen.Agent_MetadataQueenr" name="Freddie">
+        </agent>
+        
         <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
         </agent>
+        
+        <agent type="pikater.Agent_Duration" name="duration">
+            <arguments>
+                <argument key="log_LR_durations" value="true"/>
+                <argument key="user" value="root"/>
+            </arguments>
+        </agent>
+        
+        <agent type="pikater.Agent_GUI_config_file" name="UI">
+            <arguments>
+                <argument key="config" value="test1.xml"/>
+                <argument key="user" value="root"/>
+            </arguments>
+        </agent>
+   
+        <agent type="jade.tools.sniffer.Sniffer" name="sniffsniff">
+            <arguments>
+                <argument key="sniffed" value="Freddie"/>
+            </arguments>
+        </agent>
+        
     </agents>
 </configuration>

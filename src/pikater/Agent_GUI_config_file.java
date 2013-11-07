@@ -38,6 +38,9 @@ public class Agent_GUI_config_file extends Agent_GUI {
 			+ System.getProperty("file.separator");
 	private String configFileName;
 
+    private final String CONFIG = "config";
+
+	
 	@Override
 	protected void displayResult(ACLMessage inform) {
 		ContentElement content;
@@ -323,7 +326,8 @@ public class Agent_GUI_config_file extends Agent_GUI {
 	}
 
 	private String getConfigFileName() {
-		return (String) getArguments()[0];
+		// return (String) getArguments()[0];
+		return GetArgumentValue(CONFIG);
 	}
 
     @Override
