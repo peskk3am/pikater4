@@ -31,7 +31,7 @@ public class InitiatorAgent extends PikaterAgent {
             List<AgentConfiguration> agentConfigurations=configuration.getAgentConfigurations();
             for (AgentConfiguration agentConfiguration : agentConfigurations)
             {
-                //Preimplemented ajde agents do not count with named arguments, convert to string if necessary
+                //Preimplemented jade agents do not count with named arguments, convert to string if necessary
                 Object[] arguments=ProcessArgs(agentConfiguration.getArguments().toArray());
                 Boolean creationSuccessful=this.CreateAgent(agentConfiguration.getAgentType(),agentConfiguration.getAgentName(),arguments);
                 if (!creationSuccessful)

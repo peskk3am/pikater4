@@ -162,6 +162,7 @@ public abstract class PikaterAgent extends Agent {
     {
         parseArguments(args);
         initLogging();
+        log("is alive...", 1);
         getContentManager().registerLanguage(codec);
         getContentManager().registerOntology(ontology);
     }
