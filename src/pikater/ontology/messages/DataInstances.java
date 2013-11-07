@@ -54,7 +54,7 @@ public class DataInstances implements Concept {
 	}
 
 	/**
-	 * @param instaces
+	 * @param instances
 	 *            the instaces to set
 	 */
 	public void setInstances(List instances) {

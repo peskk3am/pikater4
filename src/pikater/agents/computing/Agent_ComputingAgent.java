@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
 
+import pikater.agents.PikaterAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Eval;
@@ -49,7 +50,7 @@ import pikater.ontology.messages.PartialResults;
 import pikater.ontology.messages.Task;
 import weka.core.Instances;
 
-public abstract class Agent_ComputingAgent extends Agent {
+public abstract class Agent_ComputingAgent extends PikaterAgent {
 	/**
 	 * 
 	 */
@@ -627,7 +628,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 					}
 					cont = false;
 					if (!resurrected) {
-						state = states.NEW;
+						state = Agent_ComputingAgent.states.NEW;
 					}
 					// Set options
 					setOptions(execute_action.getTask());
@@ -808,7 +809,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						eval.setEvaluations(new ArrayList());
 						// Date start = new Date();
 						Date start = null;
-						if (state != states.TRAINED) {
+						if (state != Agent_ComputingAgent.states.TRAINED) {
 							start = train(eval);
 						} else if (!resurrected) {
 							if (!mode.equals("test_only")) {
@@ -821,7 +822,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 						
 						
 						List test_evals = new ArrayList();
-						if (state == states.TRAINED) {
+						if (state == Agent_ComputingAgent.states.TRAINED) {
 							EvaluationMethod evaluation_method = execute_action.getTask().getEvaluation_method();
 							
 							if (!mode.equals("train_only")) {
@@ -853,7 +854,7 @@ public abstract class Agent_ComputingAgent extends Agent {
 
 				@Override
 				public boolean done() {
-					return (state == states.TRAINED) || !success;
+					return (state == Agent_ComputingAgent.states.TRAINED) || !success;
 				}
 			}, TRAINTEST_STATE);
 

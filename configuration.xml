@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <agents>
+        <agent type="pikater.Agent_ARFFReader" name="Reader_Cervenacek">
+            <arguments>
+                <argument key="arg1" value="value for arg1"/>
+                <argument key="arg2" value="value for arg2"/>
+            </arguments>
+        </agent>
+        <agent type="pikater.Agent_DataManager" name="Manager_Jarka">
+            <arguments>
+                <argument key="Jarka Name" value="Jarka"/>
+                <argument key="Jarka Surname" value="Metelka"/>
+                <argument key="Alignment" value="LG"/>
+            </arguments>
+        </agent>
+        <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
+        </agent>
+    </agents>
+</configuration>

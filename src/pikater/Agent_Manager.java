@@ -53,6 +53,8 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import pikater.agents.PikaterAgent;
+import pikater.agents.management.ManagerAgentCommunicator;
 import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Eval;
@@ -71,7 +73,7 @@ import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Solve;
 import pikater.ontology.messages.Task;
 
-public class Agent_Manager extends Agent {
+public class Agent_Manager extends PikaterAgent {
 
 
 	public Agent_Manager() {
@@ -869,42 +871,8 @@ public class Agent_Manager extends Agent {
 	}
 
 	public AID createAgent(String type, String name, List options) {
-		
-		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
-		msg_ca.addReceiver(new AID("agentManager", false));
-		msg_ca.setLanguage(codec.getName());
-		msg_ca.setOntology(ontology.getName());
-						
-		CreateAgent ca = new CreateAgent();
-		if (name != null){
-			ca.setName(name);
-		}
-		if (options != null){
-			ca.setArguments(options);
-		}
-		ca.setType(type);
-		
-		Action a = new Action();
-		a.setAction(ca);
-		a.setActor(this.getAID());
-				
-		AID aid = null; 
-		try {
-			getContentManager().fillContent(msg_ca, a);	
-			ACLMessage msg_name = FIPAService.doFipaRequestClient(this, msg_ca);
-			
-			aid = new AID(msg_name.getContent(), AID.ISLOCALNAME);
-		} catch (FIPAException e) {
-			System.err.println(getLocalName() + ": Exception while adding agent "
-					+ type + ": " + e);		
-		} catch (CodecException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			System.err.print(getLocalName() + ": ");
-			e.printStackTrace();
-		}
-		
+        ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
+        AID aid=communicator.createAgent(this,type,name,options);
 		return aid;		
 	}
 
