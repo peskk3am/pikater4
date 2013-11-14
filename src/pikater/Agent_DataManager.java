@@ -14,6 +14,7 @@ import jade.util.leap.Iterator;
 import jade.util.leap.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import pikater.agents.PikaterAgent;
+import pikater.data.ConnectionProvider;
 import pikater.logging.Severity;
 import pikater.ontology.messages.*;
 
@@ -23,61 +24,30 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 public class Agent_DataManager extends PikaterAgent {
-
+    private final String DEFAULT_CONNECTION_PROVIDER="defaultConnection";
+    private static final String CONNECTION_ARG_NAME="connection";
+    private String connectionBean;
+    private ConnectionProvider connectionProvider;
     private static final long serialVersionUID = 1L;
-    private final String URL_ARG_NAME="url";
-    private final String USER_ARG_NAME="user";
-    private final String PASSWORD_ARG_NAME="password";
-
     Connection db;
-    String db_url;
-    String db_user;
-    String db_password;
-    
-    private void openDBConnection() throws SQLException{
-    	  db = DriverManager.getConnection(db_url, db_user, db_password);
-    }
-    
+
     @Override
     protected void setup() {
-    	try {
+        try {
     		initDefault();
     		registerWithDF();
-    		
-    		if (arguments.size() > 0) {
-    			
-    			boolean db_specified = false;
-                if (ContainsArgument(URL_ARG_NAME))
-                {
-                    db_url=GetArgumentValue(URL_ARG_NAME);
-                    db_specified = true;
-                }
-                if (ContainsArgument(USER_ARG_NAME))
-                {
-                    db_user=GetArgumentValue(USER_ARG_NAME);
-                    db_specified = true;
-                }
-                if (ContainsArgument(PASSWORD_ARG_NAME))
-                {
-                    db_password=GetArgumentValue(PASSWORD_ARG_NAME);
-                    db_specified = true;
-                }
-    			if (db_specified){
-	    			if (db_user == null){
-						db_user = "";    					
-					}
-	    			if (db_password == null){
-						db_password = "";    					
-					}	    			
-    			}
-    			else{
-        		    db_url = "jdbc:mysql://174.120.245.222/marp_pikater";
-        		    db_user = "marp_pikater";
-        		    db_password = "pikater";
-        		}        		    		
-    		}
+
+            if (containsArgument(CONNECTION_ARG_NAME))
+            {
+                connectionBean=getArgumentValue(CONNECTION_ARG_NAME);
+            }
+            else
+            {
+                connectionBean=DEFAULT_CONNECTION_PROVIDER;
+            }
+            connectionProvider=(ConnectionProvider)context.getBean(connectionBean);
         	
-    		log("Connecting to " + db_url + ".");
+    		log("Connecting to " + connectionProvider.getConnectionInfo() + ".");
     		openDBConnection();
 
         } catch (Exception e) {
@@ -88,8 +58,7 @@ public class Agent_DataManager extends PikaterAgent {
         LinkedList<String> triggerNames = new LinkedList<>();
         try {
             String[] types = {"TABLE", "VIEW"};
-            ResultSet tables = db.getMetaData().getTables(null, null, "%",
-                    types);
+            ResultSet tables = db.getMetaData().getTables(null, "dbo", "%" ,new String[] {"TABLE"});
             while (tables.next()) {
                 tableNames.add(tables.getString(3).toUpperCase());
             }
@@ -854,6 +823,10 @@ public class Agent_DataManager extends PikaterAgent {
 
     }
 
+    private void openDBConnection() throws SQLException, ClassNotFoundException {
+        db=connectionProvider.getConnection();
+    }
+
     private String md5(String path) {
 
         StringBuffer sb = null;
@@ -884,7 +857,7 @@ public class Agent_DataManager extends PikaterAgent {
     }
 
     //TODO: check if not used
-	private void loadMetadataFromFile(String fileName) throws IOException, SQLException{		
+	private void loadMetadataFromFile(String fileName) throws IOException, SQLException, ClassNotFoundException {
 		String query = "";
 		
 		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
@@ -933,7 +906,7 @@ public class Agent_DataManager extends PikaterAgent {
         out.close();
     }
     
-    private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException{ 
+    private void emptyMetadataToDB(String internalFilename, String externalFilename) throws SQLException, ClassNotFoundException {
     	openDBConnection();
 	    Statement stmt = db.createStatement();
 	    

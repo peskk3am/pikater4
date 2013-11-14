@@ -55,17 +55,13 @@ import org.jdom.output.XMLOutputter;
 
 import pikater.agents.PikaterAgent;
 import pikater.agents.management.ManagerAgentCommunicator;
-import pikater.ontology.messages.CreateAgent;
 import pikater.ontology.messages.Data;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAgents;
-import pikater.ontology.messages.GetAllMetadata;
-import pikater.ontology.messages.GetTheBestAgent;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Metadata;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Recommend;
@@ -428,7 +424,7 @@ public class Agent_Manager extends PikaterAgent {
 		
 		registerWithDF("UserInterface");
 		
-		if (ContainsArgument(NO_XML_OUTPUT)) {
+		if (containsArgument(NO_XML_OUTPUT)) {
 			if (isArgumentValueTrue(NO_XML_OUTPUT)){
 				no_xml_output = true;
 			}

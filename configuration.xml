@@ -11,14 +11,13 @@
             </arguments>
         </agent>
 
-        <agent type="pikater.Agent_DataManager" name="Manager_Jarka">
+        <agent type="pikater.Agent_DataManager" name="dataManager">
             <arguments>
-                <argument key="url" value="jdbc:mysql://localhost/pikater"/>
-                <argument key="user" value="root"/>
+                <argument key="connection" value="jakubMSSQLConnection"/>
             </arguments>
         </agent>
 
-        <agent type="pikater.agents.metadataQueen.Agent_MetadataQueenr" name="Freddie">
+        <agent type="pikater.agents.metadataQueen.Agent_MetadataQueen" name="Freddie">
         </agent>
         
         <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
@@ -33,16 +32,9 @@
         
         <agent type="pikater.Agent_GUI_config_file" name="UI">
             <arguments>
-                <argument key="config" value="test1.xml"/>
+                <argument key="config" value="test.xml"/>
                 <argument key="user" value="root"/>
             </arguments>
         </agent>
-   
-        <agent type="jade.tools.sniffer.Sniffer" name="sniffsniff">
-            <arguments>
-                <argument key="sniffed" value="Freddie" sendOnlyValue="true"/>
-            </arguments>
-        </agent>
-        
     </agents>
 </configuration>

@@ -4,12 +4,7 @@ import jade.content.ContentElement;
 import jade.content.lang.Codec.CodecException;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
-import jade.content.onto.basic.Action;
 import jade.content.onto.basic.Result;
-import jade.core.AID;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
@@ -18,13 +13,8 @@ import java.io.IOException;
 
 import org.jdom.JDOMException;
 
-import pikater.ontology.messages.Agent;
-import pikater.ontology.messages.Data;
-import pikater.ontology.messages.DataInstances;
 import pikater.ontology.messages.Eval;
 import pikater.ontology.messages.Evaluation;
-import pikater.ontology.messages.Execute;
-import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Results;
 import pikater.ontology.messages.Task;
 
@@ -327,7 +317,7 @@ public class Agent_GUI_config_file extends Agent_GUI {
 
 	private String getConfigFileName() {
 		// return (String) getArguments()[0];
-		return GetArgumentValue(CONFIG);
+		return getArgumentValue(CONFIG);
 	}
 
     @Override

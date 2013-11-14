@@ -10,4 +10,12 @@
     </bean>
     <bean id="logger" class="pikater.logging.ConsoleLogger" scope="singleton"/>
     <bean id="agentTypesProvider" class="pikater.agents.management.AgentTypesFromFileProvider" scope="singleton"/>
+    <bean id="defaultConnection" class="pikater.data.MySQLConnectionProvider" scope="singleton">
+        <constructor-arg name="url" value="jdbc:mysql://174.120.245.222/marp_pikater"/>
+        <constructor-arg name="userName" value="marp_pikater"/>
+        <constructor-arg name="password" value="pikater"/>
+    </bean>
+    <bean id="jakubMSSQLConnection" class="pikater.data.MSSQLConnectionProvider" scope="singleton">
+        <constructor-arg name="connectionUrl" value="jdbc:sqlserver://KUBA-NTB\SQLEXPRESS;databaseName=Autoskola;user=jakub;password=Diplomka-42;"/>
+    </bean>
 </beans>

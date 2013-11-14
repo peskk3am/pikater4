@@ -249,8 +249,8 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		}
 		newAgent = false;
 
-		if (ContainsArgument(CLASS_NAME)) {		
-				className = GetArgumentValue(CLASS_NAME);
+		if (containsArgument(CLASS_NAME)) {
+				className = getArgumentValue(CLASS_NAME);
 		}
 			
 		if (isArgumentValueTrue("load")) {

@@ -3,29 +3,18 @@ package pikater.agents.computing;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Random;
-import java.util.Vector;
-
 import pikater.gui.java.MyWekaOption;
-import pikater.ontology.messages.DataInstances;
-import pikater.ontology.messages.Eval;
-import pikater.ontology.messages.EvaluationMethod;
-import pikater.ontology.messages.Instance;
-import pikater.ontology.messages.Interval;
+import pikater.ontology.messages.*;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instances;
 import weka.core.Option;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Random;
 
 public class Agent_WekaCA extends Agent_ComputingAgent {
 	private static final long serialVersionUID = -3594051562022044000L;
@@ -44,7 +33,7 @@ public class Agent_WekaCA extends Agent_ComputingAgent {
 		agentType = null;
 		setWekaClassName(cls.getClass().getName());
 		return true;
-		
+
 	}
 	@Override
 	public String getAgentType() {

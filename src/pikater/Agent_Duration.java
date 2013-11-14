@@ -1,10 +1,7 @@
 package pikater;
 
 import jade.content.ContentElement;
-import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
@@ -25,10 +22,7 @@ import jade.util.leap.List;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import pikater.agents.PikaterAgent;
 import pikater.agents.management.ManagerAgentCommunicator;
 import pikater.ontology.messages.Data;
@@ -39,7 +33,6 @@ import pikater.ontology.messages.EvaluationMethod;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.Id;
-import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Task;
 
 public class Agent_Duration extends PikaterAgent {
@@ -68,7 +61,7 @@ public class Agent_Duration extends PikaterAgent {
 		
 		registerWithDF();
     	
-		if (ContainsArgument(LOG_LR_DURATIONS_NAME)) {
+		if (containsArgument(LOG_LR_DURATIONS_NAME)) {
 			if (isArgumentValueTrue(LOG_LR_DURATIONS_NAME)){
 				log_LR_durations = true;
 			}

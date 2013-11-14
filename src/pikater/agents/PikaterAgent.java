@@ -11,6 +11,7 @@ import jade.domain.FIPAException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pikater.configuration.Argument;
+import pikater.configuration.Arguments;
 import pikater.logging.Logger;
 import pikater.logging.Severity;
 import pikater.logging.Verbosity;
@@ -36,7 +37,7 @@ public abstract class PikaterAgent extends Agent {
     protected ApplicationContext context =  new ClassPathXmlApplicationContext(initBeansName);
     protected Verbosity verbosity=Verbosity.NORMAL;
     private Logger logger;
-    protected Map<String,Argument> arguments;
+    protected Arguments arguments;
 
     public Codec getCodec() {
         return codec;
@@ -107,41 +108,32 @@ public abstract class PikaterAgent extends Agent {
 	} // end registerWithDF
 
 	
-    public String GetArgumentValue(String argName)
+    public String getArgumentValue(String argName)
     {
-        return arguments.get(argName).getValue();
+        return arguments.getArgumentValue(argName);
     }
 
     public Boolean isArgumentValueTrue(String argName)
     {
-        if (!ContainsArgument(argName))
-        {
-            return  false;
-        }
-        String argValue=GetArgumentValue(argName);
-        return argValue.equals("1") || argValue.equalsIgnoreCase("true");
+       return arguments.isArgumentValueTrue(argName);
     }
 
-    public Boolean ContainsArgument(String argName)
+    public Boolean containsArgument(String argName)
     {
-        if (arguments==null)
-        {
-            return false;
-        }
-        return arguments.containsKey(argName);
+        return arguments.containsArgument(argName);
     }
 
     private void initLogging()
     {
         String loggerBean=DEFAULT_LOGGER_BEAN;
-        if (ContainsArgument(LOGGER_BEAN_ARG))
+        if (containsArgument(LOGGER_BEAN_ARG))
         {
-             loggerBean=GetArgumentValue(LOGGER_BEAN_ARG);
+             loggerBean= getArgumentValue(LOGGER_BEAN_ARG);
         }
         logger=(Logger)context.getBean(loggerBean);
-        if (ContainsArgument(VERBOSITY_ARG))
+        if (containsArgument(VERBOSITY_ARG))
         {
-            String verbosityValue=GetArgumentValue(VERBOSITY_ARG);
+            String verbosityValue= getArgumentValue(VERBOSITY_ARG);
             switch (verbosityValue)
             {
                 case "0":  verbosity = Verbosity.NO_OUTPUT;
@@ -173,17 +165,18 @@ public abstract class PikaterAgent extends Agent {
 
     private void parseArguments(Object[] args)
     {
+        Map<String, Argument> argumentsMap=new HashMap<>();
+        arguments=new Arguments(argumentsMap);
         if (args==null)
         {
             return;
         }
-        arguments=new HashMap<>();
         for (Object arg:args)
         {
                if (arg instanceof Argument)
                {
                       Argument argumentToAdd=(Argument)arg;
-                      arguments.put(argumentToAdd.getName(),argumentToAdd);
+                      argumentsMap.put(argumentToAdd.getName(), argumentToAdd);
                }
             else {
                    throw new IllegalArgumentException();
