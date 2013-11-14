@@ -233,8 +233,21 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 			typeDesc = getAgentType() + " trained on " + trainFileName;
 		} else {
 			typeDesc = getAgentType();
+            typeDescList.add(typeDesc);
 		}
-		
+
+        if (containsArgument(CLASS_NAME)) {
+            className = getArgumentValue(CLASS_NAME);
+        }
+
+        if (isArgumentValueTrue("load")) {
+            // TODO loadAgent(getLocalName());
+            // args = new String[0]; // arguments are empty
+        }
+
+        // some important initializations before registering
+        getParameters();
+
 		registerWithDF(typeDescList);
 		
 		
@@ -249,17 +262,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 		}
 		newAgent = false;
 
-		if (containsArgument(CLASS_NAME)) {
-				className = getArgumentValue(CLASS_NAME);
-		}
-			
-		if (isArgumentValueTrue("load")) {
-			// TODO loadAgent(getLocalName());
-			// args = new String[0]; // arguments are empty
-		}
-	
-		// some important initializations before registering
-		getParameters();
+
 
 		addBehaviour(send_options_behaviour = new RequestServer(this));
 		addBehaviour(execution_behaviour = new ProcessAction(this));

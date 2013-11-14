@@ -19,11 +19,11 @@ public class ConsoleLogger implements Logger {
     public void logError(String source, String errorDescription, Severity severity) {
         if (severity==Severity.Critical)
         {
-            System.out.println("Critical Error in "+source + ": " + errorDescription);
+            System.err.println("Critical Error in "+source + ": " + errorDescription);
         }
         else
         {
-            System.out.println("Error in "+source + ": " + errorDescription);
+            System.err.println("Error in "+source + ": " + errorDescription);
         }
     }
 }
