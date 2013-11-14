@@ -84,6 +84,9 @@ public class Agent_ARFFReader extends PikaterAgent {
 	protected void setup() {
 		initDefault();
 		registerWithDF();
+
+        MessageTemplate template = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+        addBehaviour(new GetDataResponder(this, template));
 	} // end Setup
 
 	protected ACLMessage sendData(ACLMessage request) {
