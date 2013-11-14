@@ -58,7 +58,7 @@ public class Agent_DataManager extends PikaterAgent {
         LinkedList<String> triggerNames = new LinkedList<>();
         try {
             String[] types = {"TABLE", "VIEW"};
-            ResultSet tables = db.getMetaData().getTables(null, "dbo", "%" ,new String[] {"TABLE"});
+            ResultSet tables = db.getMetaData().getTables(null, null, "%" ,types);
             while (tables.next()) {
                 tableNames.add(tables.getString(3).toUpperCase());
             }

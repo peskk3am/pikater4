@@ -224,11 +224,21 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 	protected void setup() {
 
 		initDefault();
-				
-		java.util.ArrayList<String> typeDescList = new java.util.ArrayList< String >();
+
+        if (containsArgument(CLASS_NAME)) {
+            className = getArgumentValue(CLASS_NAME);
+        }
+        if (isArgumentValueTrue("load")) {
+            // TODO loadAgent(getLocalName());
+            // args = new String[0]; // arguments are empty
+        }
+        // some important initializations before registering
+        getParameters();
+
+        java.util.ArrayList<String> typeDescList = new java.util.ArrayList< String >();
 		typeDescList.add("ComputingAgent");
-		
-		String typeDesc;
+
+        String typeDesc;
 		if (state == states.TRAINED) { // add fileName to service description
 			typeDesc = getAgentType() + " trained on " + trainFileName;
 		} else {
@@ -236,20 +246,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
             typeDescList.add(typeDesc);
 		}
 
-        if (containsArgument(CLASS_NAME)) {
-            className = getArgumentValue(CLASS_NAME);
-        }
-
-        if (isArgumentValueTrue("load")) {
-            // TODO loadAgent(getLocalName());
-            // args = new String[0]; // arguments are empty
-        }
-
-        // some important initializations before registering
-        getParameters();
-
 		registerWithDF(typeDescList);
-		
 		
 		
 		if (!newAgent) {

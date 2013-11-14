@@ -66,7 +66,7 @@ public class ManagerAgent extends PikaterAgent {
                         return responder.RespondToSaveAction(request);
 					}
 				 	else if (a.getAction() instanceof CreateAgent){
-                          responder.RespondToCreateAction(request);
+                        return responder.RespondToCreateAction(request);
 					}
 				} catch (OntologyException e) {
 					e.printStackTrace();
