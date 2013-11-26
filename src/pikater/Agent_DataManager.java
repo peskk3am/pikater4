@@ -811,33 +811,6 @@ public class Agent_DataManager extends PikaterAgent {
         return md5;
     }
 
-    //TODO: check if not used
-	private void loadMetadataFromFile(String fileName) throws IOException, SQLException, ClassNotFoundException {
-		String query = "";
-		
-		BufferedReader bufRdr  = new BufferedReader(new FileReader(fileName));
-
-		// read first line
-		String line = bufRdr.readLine();
-		String captions[] = line.split(";");
-				
-		while((line = bufRdr.readLine()) != null){
-			String values[] = line.split(";");
-			 query += "UPDATE metadata SET ";
-			 for (int i=0; i<captions.length-2; i++) {
-				 query += captions[i]+"='"+values[i]+"', ";
-			 }
-			 query += captions[captions.length-2]+"=\'"+values[captions.length-2]+"\' ";
-			 query += "WHERE externalFilename=\'"+values[captions.length-1]+"\'; ";			 
-		}
-		openDBConnection();		
-		Statement stmt = db.createStatement();
-		log("Executing query: " + query);
-		stmt.executeUpdate(query);
-		stmt.close();
-		db.close();
-	}
-    
     // Move file (src) to File/directory dest.
     public static synchronized void move(File src, File dest)
             throws FileNotFoundException, IOException {
