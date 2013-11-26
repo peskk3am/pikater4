@@ -1034,7 +1034,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 				// method.setOptions(new ArrayList());
 
 				next_problem.setRecommender(recommender);
-				
+
 				/*try {
 					method.setOptions(getOptions(name));
 				} catch (CodecException e) {
@@ -1288,19 +1288,18 @@ public abstract class Agent_GUI extends PikaterAgent {
 			e.printStackTrace();
 		}		
 	}
-	
+
 	protected Vector<String> offerAgentTypes() {
 		if (agentTypes == null) {
 			createAgentTypesHashMap();
 		}
-		
+
 		Vector<String> agents = new Vector<String>();
 		agents.addAll(agentTypes.keySet());
 		agents.add("?");
 		return agents;
 	}
 
-	
 	public AID createAgent(String type, String name, List options) {
 		
 		ACLMessage msg_ca = new ACLMessage(ACLMessage.REQUEST);
@@ -1340,23 +1339,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 		
 		return aid;		
 	}
-	
-	
-	protected AID createAgent_old(String type, String name, Object[] options) {
-		// get a container controller for creating new agents
-		PlatformController container = getContainerController();
 
-		try {
-			AgentController agent = container.createNewAgent(name, type,
-					options);
-			agent.start();
-			return new AID((String) name, AID.ISLOCALNAME);
-		} catch (ControllerException e) {
-			// System.err.println( "Exception while adding agent: " + e );
-			// e.printStackTrace();
-			return null;
-		}
-	}
 
 	protected AID getAgentByType(String agentType) {
 		AID[] Agents;
@@ -1392,8 +1375,8 @@ public abstract class Agent_GUI extends PikaterAgent {
 
 
     private void handleIncomingFiles(){
-        // check incoming directory for dataset files,
-        // get metadata from metadata queen Freddie
+        // checks incoming directory for dataset files,
+        // gets metadata from metadata queen Freddie
 
         String incomingFilesPath = path + "incoming" + System.getProperty("file.separator");
         File incomingFiles = new File(incomingFilesPath);
