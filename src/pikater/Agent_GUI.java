@@ -45,12 +45,9 @@ import java.util.*;
 
 public abstract class Agent_GUI extends PikaterAgent {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8991685806920963921L;
 
-	private String path = System.getProperty("user.dir")
+	protected String path = System.getProperty("user.dir")
 			+ System.getProperty("file.separator");
 
 	protected Codec codec = new SLCodec();
@@ -76,11 +73,10 @@ public abstract class Agent_GUI extends PikaterAgent {
 	private boolean default_save_results = true;
 	private String default_recommender = "BasicRecommender";
 	
-	private boolean end_pikater_when_finished = false;
+	protected boolean end_pikater_when_finished = false;
 	
-	private boolean shutdown_database = false;
+	protected boolean shutdown_database = false;
 	
-	private String myAgentName;
 	/*
 	 * should use the following methods: refreshOptions(ontology.messages.Agent
 	 * agent) should be called after user changes options of an agent
@@ -101,20 +97,23 @@ public abstract class Agent_GUI extends PikaterAgent {
 	 * automatically after receiving the message from a computing agent
 	 */
 
-	protected abstract void displayResult(ACLMessage inform);
+
+    protected abstract void displayResult(List tasks, String type);
 
 	/*
 	 * method should be used to display the result, it is called automatically
 	 * after receiving the message from a manager
 	 */
 
-	protected abstract void displayResurrectedResult(ACLMessage inform);
+    protected abstract void displayFailure(AID agent, String message);
 
-        protected abstract void displayFileImportProgress(int completed, int all);
+    protected abstract void displayPartialResult();
+
+    protected abstract void displayFileImportProgress(int completed, int all);
 	
 	protected abstract void mySetup();
 
-	/*
+	/* obsolete, but still informative
 	 * it should call ... int createNewProblem() - returns the _problem_id ...
 	 * addAgentToProblem(int _problem_id, String name, String type) - either
 	 * name or type is set, the other parameter should be null - throws
@@ -135,13 +134,6 @@ public abstract class Agent_GUI extends PikaterAgent {
 	protected abstract void allOptionsReceived(int problem_id);
 
 	/* automatically called after all replies from computing agents are received */
-
-	protected abstract void displayPartialResult(ACLMessage inform);
-	protected abstract void displayTaskResult(ACLMessage inform);
-	/*
-	 * Process the partial results received from computing agents maybe only the
-	 * content would be better as a parameter
-	 */
 
 	protected abstract void DisplayWrongOption(int problemGuiId,
 			String agentName, String optionName, String errorMessage);
@@ -332,8 +324,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 
 				refreshOptions(agent, refuse.getPerformative());
 				checkProblems();
-				displayResult(refuse);
-
+				displayFailure(refuse.getSender(), refuse.getContent());
 			}
 
 			protected void handleFailure(ACLMessage failure) {
@@ -360,7 +351,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 
 				// refreshOptions(agent, failure.getPerformative());
 				checkProblems();
-				displayResult(failure);
+				displayFailure(failure.getSender(), failure.getContent());
 				
 			}
 
@@ -369,6 +360,56 @@ public abstract class Agent_GUI extends PikaterAgent {
 		addBehaviour(behav);
 
 	} // end getAgentOptions
+
+
+    private List getResultsFromACLMessage(ACLMessage inform){
+        ContentElement content;
+
+        try {
+            content = getContentManager().extractContent(inform);
+            if (content instanceof Result) {
+                Result result = (Result) content;
+                if (result.getValue() instanceof Results) {
+                    List tasks = ((Results) result.getValue()).getResults();
+                    return tasks;
+                }
+            }
+        } catch (CodecException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (OntologyException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return null;
+    }
+
+
+    private List getTaskFromACLMessage(ACLMessage inform){
+
+        ContentElement content;
+
+        try {
+            content = getContentManager().extractContent(inform);
+            if (content instanceof Result) {
+
+                Result result = (Result) content;
+                if (result.getValue() instanceof Task) {
+                    Task task = ((Task) result.getValue());
+
+                    List list = new ArrayList();
+                    list.add(task);
+                    return list;
+                }
+            }
+        } catch (CodecException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (OntologyException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        return null;
+    }
+
 
 	protected class SendProblem extends AchieveREInitiator{
 
@@ -402,7 +443,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 			System.out.println(getLocalName() + ": Agent "
 					+ refuse.getSender().getName()
 					+ " refused to perform the requested action");
-			displayResult(refuse);
+            displayFailure(refuse.getSender(), refuse.getContent());
 			updateProblemStatus(gui_id, "refused");
 			allProblemsFinished();
 		}
@@ -416,7 +457,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 				System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 						+ " failed to perform the requested action");
 			}
-			displayResult(failure);
+            displayFailure(failure.getSender(), failure.getContent());
 			updateProblemStatus(gui_id, "failed");
 			allProblemsFinished();
 		}
@@ -499,7 +540,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 			protected void handleInform(ACLMessage inform) {
 				System.out.println(getLocalName() + ": Agent "
 						+ inform.getSender().getName() + " replied.");
-				displayResult(inform);
+				displayResult(getResultsFromACLMessage(inform), "all");
 
 			}
 
@@ -507,7 +548,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 				System.out.println(getLocalName() + ": Agent "
 						+ refuse.getSender().getName()
 						+ " refused to perform the requested action");
-				displayResult(refuse);
+                displayFailure(refuse.getSender(), refuse.getContent());
 			}
 
 			protected void handleFailure(ACLMessage failure) {
@@ -519,7 +560,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 					System.out.println(getLocalName() + ": Agent " + failure.getSender().getName()
 							+ " failed to perform the requested action");
 				}
-				displayResult(failure);
+                displayFailure(failure.getSender(), failure.getContent());
 			}
 
 		};
@@ -588,7 +629,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 		problem.setData(new ArrayList());
 		problem.setStatus("new");
 		problem.setGet_results(_get_results);
-		problem.setGui_agent(myAgentName);
+		problem.setGui_agent(this.getLocalName());
 		problem.setSave_results(_save_results);
 		problems.add(problem);
 
@@ -831,7 +872,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 		}
 	}
 	
-	private void addEvaluationMethodToProblem(int problem_id, String name) {
+	protected void addEvaluationMethodToProblem(int problem_id, String name) {
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
 			if (next_problem.getStatus().equals("new")) {
@@ -980,7 +1021,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 		}
 	}
 
-	private void addRecommenderToProblem(int problem_id, String name) {
+	protected void addRecommenderToProblem(int problem_id, String name) {
 		// get the problem
 	
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
@@ -1349,6 +1390,60 @@ public abstract class Agent_GUI extends PikaterAgent {
 		}
 	}
 
+
+    private void handleIncomingFiles(){
+        // check incoming directory for dataset files,
+        // get metadata from metadata queen Freddie
+
+        String incomingFilesPath = path + "incoming" + System.getProperty("file.separator");
+        File incomingFiles = new File(incomingFilesPath);
+
+        int incomingFilesNumber = incomingFiles.list().length;
+        int currenInFile = 0;
+        for (String fileName : incomingFiles.list()) {
+
+            displayFileImportProgress(currenInFile, incomingFilesNumber);
+            currenInFile++;
+            DataManagerService.importFile(this, 1, fileName, null);
+
+            String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
+            internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
+
+            try {
+
+                GetMetadata gm = new GetMetadata();
+                gm.setInternal_filename(internalFilename);
+                gm.setExternal_filename(fileName);
+
+                Action a = new Action();
+                a.setAction(gm);
+                a.setActor(this.getAID());
+
+                ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+                req.addReceiver(new AID("Freddie", false));
+                req.setLanguage(codec.getName());
+                req.setOntology(ontology.getName());
+                req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+                getContentManager().fillContent(req, a);
+
+                ACLMessage response = FIPAService.doFipaRequestClient(this, req);
+
+                if (response.getPerformative() != ACLMessage.INFORM) {
+                    System.err.println(getLocalName() + ": Error in getting metadata");
+                }
+
+            } catch (CodecException ce) {
+                ce.printStackTrace();
+            } catch (FIPAException fe) {
+                fe.printStackTrace();
+            } catch (OntologyException oe) {
+                oe.printStackTrace();
+            }
+        }
+        displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
+    }
+
 	protected void setup() {
 		// wait for duration to compute a task
 		doWait(15000);
@@ -1356,103 +1451,24 @@ public abstract class Agent_GUI extends PikaterAgent {
 		initDefault();
 		
 		registerWithDF("UserInterface");
-		
-		myAgentName = this.getLocalName();
 
-		// Partial results handler
+		// Incoming results handler
 		addBehaviour(new CompAgentResultsServer(this));
 
-		String incomingFilesPath = System.getProperty("user.dir")
-				+ System.getProperty("file.separator") + "incoming"
-				+ System.getProperty("file.separator");
-		File incomingFiles = new File(incomingFilesPath);
-
-                int incomingFilesNumber = incomingFiles.list().length;
-                int currenInFile = 0;
-               for (String fileName : incomingFiles.list()) {
-
-                displayFileImportProgress(currenInFile, incomingFilesNumber);
-                currenInFile++;
-                DataManagerService.importFile(this, 1, fileName, null);
-
-                String internalFilename = DataManagerService.translateFilename(this, 1, (String) fileName, null);
-                internalFilename = "data" + System.getProperty("file.separator") + "files" + System.getProperty("file.separator") + internalFilename;
-
-                try {
-
-                    GetMetadata gm = new GetMetadata();
-                    gm.setInternal_filename(internalFilename);
-                    gm.setExternal_filename(fileName);
-
-                    Action a = new Action();
-                    a.setAction(gm);
-                    a.setActor(this.getAID());
-
-                    ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-                    req.addReceiver(new AID("Freddie", false));
-                    req.setLanguage(codec.getName());
-                    req.setOntology(ontology.getName());
-                    req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-
-                    getContentManager().fillContent(req, a);
-
-                    ACLMessage response = FIPAService.doFipaRequestClient(this, req);
-
-                    if (response.getPerformative() != ACLMessage.INFORM) {
-                        System.err.println(getLocalName() + ": Error in getting metadata");
-                    }
-
-                } catch (CodecException ce) {
-                    ce.printStackTrace();
-                } catch (FIPAException fe) {
-                    fe.printStackTrace();
-                } catch (OntologyException oe) {
-                    oe.printStackTrace();
-                }
-
-
-            }
-               displayFileImportProgress(incomingFilesNumber, incomingFilesNumber);
-
-		System.out.println(getLocalName() + ": GUI agent " + getLocalName()
-				+ " is alive and waiting...");
+        // handleIncomingFiles();
 
 		mySetup();
-		
-		// test getOptions
-		/* 
-		try {
-			System.out.println("Test of getOptions:"+getOptions("RBFNetwork").toString());
-		} catch (CodecException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		
 
 	} // end setup
 
 	/* This behavior captures partial results from computating agents and results from ressurected agents */
 	protected class CompAgentResultsServer extends CyclicBehaviour {
-		/**
-		 * 
-		 */
-		
 		private static final long serialVersionUID = -8456018173216610239L;
 		private MessageTemplate partialMsgTemplate = MessageTemplate.and(
 				MessageTemplate.MatchPerformative(ACLMessage.INFORM),
 				MessageTemplate.MatchConversationId("partial-results"));
 
-		private MessageTemplate resurrectedMsgTemplate =
-				(MessageTemplate.MatchConversationId("resurrected-results"));
-
-		private MessageTemplate afterTaskMsgTemplate = 				
+		private MessageTemplate afterTaskMsgTemplate =
 				(MessageTemplate.MatchConversationId("result_after_task"));
 
 		public CompAgentResultsServer(Agent agent) {
@@ -1461,30 +1477,24 @@ public abstract class Agent_GUI extends PikaterAgent {
 
 		@Override
 		public void action() {
-			
-			ACLMessage res = receive(resurrectedMsgTemplate);					
 			ACLMessage par = receive(partialMsgTemplate);
 			ACLMessage aft = receive(afterTaskMsgTemplate);
 
-			if (res != null) {
-				displayResurrectedResult(res);
-				return;
-			}
-			else {
-				if (par != null) {
-					displayPartialResult(par);
-					return;
-				}
-				else{
-					if (aft != null) {
-						displayTaskResult(aft);
-						return;
-					}				
-					else{
-						block();
-					}
-				}				
-			}
+            if (par != null) {
+                // TODO:
+                // PartialResults pr = getPartialResultsFromACLMessage(par);
+                // displayPartialResult(pr.getTask_id(), pr.getTask(), pr.getResults());
+                return;
+            }
+            else{
+                if (aft != null) {
+                    displayResult(getTaskFromACLMessage(aft), "result_after_task");
+                    return;
+                }
+                else{
+                    block();
+                }
+            }
 		}
 	}
 
@@ -1525,7 +1535,7 @@ public abstract class Agent_GUI extends PikaterAgent {
 	}
 		
 	private void terminatePikater(){
-		System.out.println(getLocalName() + ": Shutting down Pikater...");
+		log("Shutting down Pikater...");
 		// if running on local database send message to data manager to shuttdown the database
 		if (shutdown_database){
 			System.out.println(getLocalName() + ": Shutting down database...");
@@ -1546,7 +1556,6 @@ public abstract class Agent_GUI extends PikaterAgent {
 		request.setSender(getAID());
      	request.setOntology(JADEManagementOntology.getInstance().getName());
 		request.setLanguage(codec.getName());
-		//  request.setLanguage(FIPANames.ContentLanguage.FIPA_SL0);
 		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
 		ShutdownPlatform sp = new ShutdownPlatform();		
@@ -1569,156 +1578,8 @@ public abstract class Agent_GUI extends PikaterAgent {
 			e.printStackTrace();
 		}
 	}
-	
-	protected void getProblemsFromXMLFile(String fileName)
-			throws JDOMException, IOException {
-		SAXBuilder builder = new SAXBuilder();
-		System.out.println(getLocalName() + ": GetProblemsFromXMLFile: "+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
-		// tohle fungje na linuxu: - funguje vsude
-		Document doc = builder.build("file:"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
-		// tohle mi funguje na win:
-		//Document doc = builder.build("file:\\"+System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
-		// a tohle snad vsude: NE Document doc = builder.build("file:"+System.getProperty("file.separator")+ System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
-				
-		// System.out.println("file:\\" + System.getProperty("user.dir")+ System.getProperty("file.separator") + fileName);
-		Element root_element = doc.getRootElement();
-
-		java.util.List _end_pikater_when_finished = root_element.getChildren("hasta_la_vista_baby");
-		if (_end_pikater_when_finished.size() > 0){
-			end_pikater_when_finished = true;
-			// take into consideration only the first one
-			if ( ((Element)_end_pikater_when_finished.get(0)).getAttributeValue("shutdown_database").equals("true")){
-				shutdown_database = true;
-			}
-		}
-				
-		// return all children by name
-		java.util.List _problems = root_element.getChildren("experiment"); 
-		java.util.Iterator p_itr = _problems.iterator();
-		while (p_itr.hasNext()) {
-			Element next_problem = (Element) p_itr.next();
-
-			int p_id = createNewProblem(next_problem.getAttributeValue("timeout"),
-					next_problem.getAttributeValue("get_results"),
-					next_problem.getAttributeValue("save_results"),
-					next_problem.getAttributeValue("name"));
-
-			java.util.List evaluation_method = next_problem.getChildren("evaluation");
-			if (evaluation_method.size() == 0){
-				throw new JDOMException("evaluation tag missing.");
-			}
-			if (evaluation_method.size() > 1) {
-				throw new JDOMException("more than one evaluation tags found.");
-			}
-
-			java.util.Iterator em_itr = evaluation_method.iterator();
-			Element next_evaluation_method = (Element) em_itr.next();
-			addEvaluationMethodToProblem(p_id, next_evaluation_method.getAttributeValue("name"));
-			
-			java.util.List _evaluation_method_options = next_evaluation_method.getChildren("parameter");
-			java.util.Iterator emo_itr = _evaluation_method_options.iterator();
-			while (emo_itr.hasNext()) {
-				Element next_option = (Element) emo_itr.next();
-				addEvaluationMethodOption(p_id, next_option.getAttributeValue("name"),
-						next_option.getAttributeValue("value"));
-			}
-			
-			java.util.List method = next_problem.getChildren("method");
-			java.util.Iterator m_itr = method.iterator();
-			if (method.size() == 0) {
-				throw new JDOMException("method tag missing.");
-			}
-			if (method.size() > 1) {
-				throw new JDOMException("more than one method tags found.");
-			}
-			Element next_method = (Element) m_itr.next();
-			addMethodToProblem(p_id, next_method.getAttributeValue("name"));
-
-			java.util.List _search_options = next_method.getChildren("parameter");
-			java.util.Iterator so_itr = _search_options.iterator();
-			while (so_itr.hasNext()) {
-				Element next_option = (Element) so_itr.next();
-				addSearchOption(p_id, next_option.getAttributeValue("name"),
-						next_option.getAttributeValue("value"));
-			}
-			
-			java.util.List dataset = next_problem.getChildren("dataset");
-			java.util.Iterator ds_itr = dataset.iterator();
-			while (ds_itr.hasNext()) {
-				Element next_dataset = (Element) ds_itr.next();
-				int d_id = addDatasetToProblem(p_id, 
-						next_dataset.getAttributeValue("train"),
-						next_dataset.getAttributeValue("test"),
-						next_dataset.getAttributeValue("label"),
-						next_dataset.getAttributeValue("output"),
-						next_dataset.getAttributeValue("mode"));
-
-				java.util.List metadata = next_dataset.getChildren("metadata");
-				if (metadata.size() > 0) {
-					java.util.Iterator md_itr = metadata.iterator();
-					Element next_metadata = (Element) md_itr.next();
-
-					addMetadataToDataset(d_id, 
-							next_dataset.getAttributeValue("train"),
-							next_metadata.getAttributeValue("missing_values"), 
-							next_metadata.getAttributeValue("number_of_attributes"),
-							next_metadata.getAttributeValue("number_of_instances"),
-							next_metadata.getAttributeValue("attribute_type"),
-							next_metadata.getAttributeValue("default_task"));
-				}
-			}
-
-			java.util.List recommender = next_problem.getChildren("recommender");
-			java.util.Iterator r_itr = recommender.iterator();
-
-			if (recommender.size() != 0) {
-				while (r_itr.hasNext()) {					
-					Element next_recommender = (Element) r_itr.next();				
-					addRecommenderToProblem(p_id, next_recommender.getAttributeValue("name"));					
-				}
-				/* java.util.List _recommender_options = next_method.getChildren("parameter");
-				java.util.Iterator ro_itr = _recommender_options.iterator();
-				while (ro_itr.hasNext()) {
-					Element next_option = (Element) ro_itr.next();
-					addRecommenderOption(p_id, next_option.getAttributeValue("name"),
-							next_option.getAttributeValue("value"));
-				}
-				*/
-			}
-
-			java.util.List _agents = next_problem.getChildren("agent");
-			java.util.Iterator a_itr = _agents.iterator();
-			while (a_itr.hasNext()) {
-				Element next_agent = (Element) a_itr.next();
-
-				String agent_name = next_agent.getAttributeValue("name");
-				String agent_type = next_agent.getAttributeValue("type");
-				int a_id = -1;
-				try {
-					a_id = addAgentToProblem(p_id, agent_name, agent_type, null);
-				} catch (FailureException e) {
-					System.err.println(getLocalName() + ": " + e.getLocalizedMessage());
-					// e.printStackTrace();
-				}
-
-				java.util.List _options = next_agent.getChildren("parameter");
-				java.util.Iterator o_itr = _options.iterator();
-				while (o_itr.hasNext()) {
-					Element next_option = (Element) o_itr.next();
-					addOptionToAgent(p_id, a_id, 
-							next_option.getAttributeValue("name"),
-							next_option.getAttributeValue("value"),
-							next_option.getAttributeValue("lower"),
-							next_option.getAttributeValue("upper"),
-							next_option.getAttributeValue("number_of_values_to_try"),
-							next_option.getAttributeValue("set"));
-				}
-			}			
-		}
-	} // end _test_getProblemsFromXMLFile
 
 	private void updateProblemId(String guiId, int id) {
-
 		// find problem with gui_id
 		for (Enumeration pe = problems.elements(); pe.hasMoreElements();) {
 			Problem next_problem = (Problem) pe.nextElement();
@@ -1727,18 +1588,15 @@ public abstract class Agent_GUI extends PikaterAgent {
 			}
 		}
 	}
-		
+
+
 	protected void loadAgent(String _filename, Execute action, byte [] object) throws FIPAException {
-		// protected void loadAgent(String _name, int _userID, String _timestamp) {
 		pikater.ontology.messages.LoadAgent _loadAgent = new pikater.ontology.messages.LoadAgent();
 		
 		_loadAgent.setFilename(_filename);
 		_loadAgent.setFirst_action(action);
 		_loadAgent.setObject(object);
-		// _loadAgent.setName(_name);
-		// _loadAgent.setUserID(_userID);
-		// _loadAgent.setTimestamp(_timestamp);
-		
+
 		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
 		request.addReceiver(new AID("agentManager", false));
 		request.setOntology(MessagesOntology.getInstance().getName());
@@ -1762,65 +1620,11 @@ public abstract class Agent_GUI extends PikaterAgent {
 
 		FIPAService.doFipaRequestClient(this, request);
 	}
-	
-/*
-	protected List getSavedAgents(int userID) {
-		pikater.ontology.messages.GetSavedAgents gsa = new pikater.ontology.messages.GetSavedAgents();
-		
-		gsa.setUserID(1);
-		
-		ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-		request.addReceiver(new AID("agentManager", false));
-		request.setOntology(MessagesOntology.getInstance().getName());
-		request.setLanguage(codec.getName());
-		request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
 
-		Action a = new Action();
-		a.setActor(this.getAID());
-		a.setAction(gsa);
-		
-		try {
-			getContentManager().fillContent(request, a);
-			
-		} catch (CodecException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		List listOfResults = null; 
-		try {
-			ACLMessage result = FIPAService.doFipaRequestClient(this, request);			
-			
-			ContentElement content = getContentManager().extractContent(result);			
-			if (content instanceof Result) {				
-				Result _result = (Result) content;
-				listOfResults = (List) _result.getValue();				
-			}
-		}catch (FIPAException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UngroundedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CodecException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (OntologyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return listOfResults;
-	}
-	*/
-	
     private String getDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
         Date date = new Date();
         return dateFormat.format(date);
     }
-    
+
 }
