@@ -15,6 +15,7 @@ import jade.util.leap.List;
 import org.apache.commons.codec.digest.DigestUtils;
 import pikater.agents.PikaterAgent;
 import pikater.data.ConnectionProvider;
+import pikater.data.schema.SqlQueryFactory;
 import pikater.logging.Severity;
 import pikater.ontology.messages.*;
 
@@ -25,13 +26,36 @@ import java.util.regex.Pattern;
 
 public class Agent_DataManager extends PikaterAgent {
     private final String DEFAULT_CONNECTION_PROVIDER="defaultConnection";
+    private final String QUERY_FACTORY_BEAN="queryFactory";
     private static final String CONNECTION_ARG_NAME="connection";
-    private static final String SCHEMA_ARG_NAME="schema";
     private String connectionBean;
     private ConnectionProvider connectionProvider;
-    private String databaseSchema;
+    private SqlQueryFactory sqlQueryFactory;
     private static final long serialVersionUID = 1L;
     Connection db;
+
+    protected void CreateTablesIfNotInDB(java.util.List<String> tableNames)
+    {
+        LinkedList<String> tableNamesInDB = new LinkedList<>();
+        String[] types = {"TABLE", "VIEW"};
+        ResultSet tables;
+        try {
+            tables = db.getMetaData().getTables(null, connectionProvider.getSchema(), "%" ,types);
+            while (tables.next()) {
+                tableNamesInDB.add(tables.getString(3).toUpperCase());
+            }
+        } catch (SQLException e) {
+            logError(e.getMessage());
+        }
+        for (String tableName:tableNames)
+        {
+               if (!tableNamesInDB.contains(tableName.toUpperCase()))
+               {
+                   log("Creating table "+tableName);
+               }
+            sqlQueryFactory.getCreateQuery(tableName);
+        }
+    }
 
     @Override
     protected void setup() {
@@ -48,9 +72,12 @@ public class Agent_DataManager extends PikaterAgent {
                 connectionBean=DEFAULT_CONNECTION_PROVIDER;
             }
             connectionProvider=(ConnectionProvider)context.getBean(connectionBean);
+            sqlQueryFactory=(SqlQueryFactory)context.getBean(QUERY_FACTORY_BEAN);
         	
     		log("Connecting to " + connectionProvider.getConnectionInfo() + ".");
     		openDBConnection();
+            java.util.List<String> tableNames=sqlQueryFactory.getTableNames();
+            CreateTablesIfNotInDB(tableNames);
 
         } catch (Exception e) {
             e.printStackTrace();
