@@ -23,4 +23,7 @@
     <bean id="jakubMSSQLConnection" class="pikater.data.MSSQLConnectionProvider" scope="singleton">
         <constructor-arg name="connectionUrl" value="jdbc:sqlserver://KUBA-NTB\SQLEXPRESS;databaseName=Autoskola;user=jakub;password=Diplomka-42;"/>
     </bean>
+    <bean id="queryFactory" class="pikater.data.schema.SqlQueryFromFileFactory" scope="singleton">
+        <constructor-arg name="queryDirectoryPath" value="databaseSchema"/>
+    </bean>
 </beans>
