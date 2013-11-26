@@ -11,4 +11,5 @@ import java.sql.SQLException;
 public interface ConnectionProvider {
     public Connection getConnection() throws ClassNotFoundException, SQLException;
     public String getConnectionInfo();
+    public String getSchema();
 }

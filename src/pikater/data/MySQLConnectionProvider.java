@@ -30,4 +30,9 @@ public class MySQLConnectionProvider implements ConnectionProvider {
     public String getConnectionInfo() {
         return url;
     }
+
+    @Override
+    public String getSchema() {
+        return null;
+    }
 }

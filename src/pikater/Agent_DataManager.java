@@ -26,8 +26,10 @@ import java.util.regex.Pattern;
 public class Agent_DataManager extends PikaterAgent {
     private final String DEFAULT_CONNECTION_PROVIDER="defaultConnection";
     private static final String CONNECTION_ARG_NAME="connection";
+    private static final String SCHEMA_ARG_NAME="schema";
     private String connectionBean;
     private ConnectionProvider connectionProvider;
+    private String databaseSchema;
     private static final long serialVersionUID = 1L;
     Connection db;
 
@@ -58,7 +60,7 @@ public class Agent_DataManager extends PikaterAgent {
         LinkedList<String> triggerNames = new LinkedList<>();
         try {
             String[] types = {"TABLE", "VIEW"};
-            ResultSet tables = db.getMetaData().getTables(null, null, "%" ,types);
+            ResultSet tables = db.getMetaData().getTables(null, connectionProvider.getSchema(), "%" ,types);
             while (tables.next()) {
                 tableNames.add(tables.getString(3).toUpperCase());
             }

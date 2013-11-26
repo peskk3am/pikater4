@@ -27,4 +27,9 @@ public class MSSQLConnectionProvider implements ConnectionProvider {
     public String getConnectionInfo() {
         return connectionUrl;
     }
+
+    @Override
+    public String getSchema() {
+        return "dbo";
+    }
 }
