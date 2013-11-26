@@ -44,16 +44,17 @@ public class Agent_DataManager extends PikaterAgent {
             while (tables.next()) {
                 tableNamesInDB.add(tables.getString(3).toUpperCase());
             }
+            for (String tableName:tableNames)
+            {
+                if (!tableNamesInDB.contains(tableName.toUpperCase()))
+                {
+                    log("Creating table "+tableName);
+                    String createQuery=sqlQueryFactory.getCreateQuery(tableName);
+                    db.createStatement().executeUpdate(createQuery);
+                }
+            }
         } catch (SQLException e) {
-            logError(e.getMessage());
-        }
-        for (String tableName:tableNames)
-        {
-               if (!tableNamesInDB.contains(tableName.toUpperCase()))
-               {
-                   log("Creating table "+tableName);
-               }
-            sqlQueryFactory.getCreateQuery(tableName);
+            logError("Error creating tables " + e.getMessage(),Severity.Critical);
         }
     }
 
@@ -123,81 +124,6 @@ public class Agent_DataManager extends PikaterAgent {
             } else {
                 logError("Error creating directory data/files");
             }
-        }
-
-        try {
-            if (!tableNames.contains("FILEMAPPING")) {
-                log("Creating table FILEMAPPING");
-                db.createStatement().executeUpdate(
-                        "CREATE TABLE filemapping (userID INTEGER NOT NULL, externalFilename VARCHAR(256) NOT NULL, internalFilename CHAR(32) NOT NULL, PRIMARY KEY (userID, externalFilename))");
-            }
-        } catch (SQLException e) {
-            logError("Error creating table FILEMAPPING: " + e.getMessage(), Severity.Critical);
-            e.printStackTrace();
-        }
-
-        try {
-            if (!tableNames.contains("METADATA")) {
-                log("Creating table METADATA");
-                db.createStatement().executeUpdate(
-                        "CREATE TABLE metadata (" + "externalFilename VARCHAR(256) NOT NULL, " + "internalFilename CHAR(32) NOT NULL, " + "defaultTask VARCHAR(256), " + "attributeType VARCHAR(256), " + "numberOfInstances INTEGER, " + "numberOfAttributes INTEGER, " + "missingValues BOOLEAN, " + "PRIMARY KEY (internalFilename))");
-            }
-        } catch (SQLException e) {
-            logError("Error creating table METADATA: " + e.getMessage(),Severity.Critical);
-            e.printStackTrace();
-        }
-    
-        try {
-            if (!tableNames.contains("RESULTS")) {
-                log("Creating table RESULTS");
-                db.createStatement().executeUpdate(
-						"CREATE TABLE results ("
-								+ "userID INTEGER NOT NULL, "
-								+ "agentName VARCHAR (256), "
-								+ "agentType VARCHAR (256), "
-                                                                + "options VARCHAR (256), "
-                                                                + "dataFile VARCHAR (50), "
-                                                                + "testFile VARCHAR (50), "
-                                                                + "errorRate DOUBLE, "
-                                                                + "kappaStatistic DOUBLE, "
-                                                                + "meanAbsoluteError DOUBLE, "
-                                                                + "rootMeanSquaredError DOUBLE, "
-                                                                + "relativeAbsoluteError DOUBLE," 
-								+ "rootRelativeSquaredError DOUBLE, "
-								
-								+ "objectFilename VARCHAR(256), "
-								
-								+ "start TIMESTAMP, "
-								+ "finish TIMESTAMP, " 
-								+ "duration INTEGER, "
-								+ "durationLR DOUBLE, "
-								+ "experimentID VARCHAR (256), "
-								+ "experimentName VARCHAR (256), "
-								+ "note VARCHAR (256) "
-								+ ")");
-            }
-        } catch (SQLException e) {
-            logError("Error creating table RESULTS: " + e.getMessage(),Severity.Critical);
-        }
-
-        try {
-            if (!tableNames.contains("FILEMETADATA")) {
-                log("Creating view FILEMETADATA");
-                db.createStatement().executeUpdate(
-                        "CREATE VIEW filemetadata AS " + "SELECT userid, filemapping.internalfilename, filemapping.externalfilename, " + "defaulttask, attributetype, numberofattributes, numberofinstances, missingvalues " + "FROM filemapping JOIN metadata " + "ON filemapping.internalfilename = metadata.internalfilename");
-            }
-        } catch (SQLException e) {
-            logError("Error creating table FILEMETADATA: " + e.getMessage(),Severity.Critical);
-        }
-
-        try {
-            if (!tableNames.contains("RESULTSEXTERNAL")) {
-                log("Creating view RESULTSEXTERNAL");
-                db.createStatement().executeUpdate("CREATE VIEW RESULTSEXTERNAL AS SELECT results.*,filemapping.externalFilename AS trainFileExt, filemapping2.externalFilename AS testFileExt FROM results JOIN filemapping ON results.userID = filemapping.userID AND results.dataFile = filemapping.internalFilename JOIN filemapping AS filemapping2 ON results.userID = filemapping2.userID AND results.testFile = filemapping2.internalFilename");
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
         }
         
         try {
