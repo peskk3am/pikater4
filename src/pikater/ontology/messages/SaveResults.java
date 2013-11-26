@@ -1,7 +1,6 @@
 package pikater.ontology.messages;
 
 import jade.content.AgentAction;
-import jade.content.onto.basic.Action;
 
 public class SaveResults implements AgentAction {
 
