@@ -1,6 +1,7 @@
 package pikater.data.schema;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,20 +39,14 @@ public class SqlQueryFromFileFactory implements SqlQueryFactory {
 
     @Override
     public List<String> getTableNames() {
-        File folder = new File(queryDirectoryPath);
-        File[] listOfFiles = folder.listFiles();
-        LinkedList<String> toReturn=new LinkedList<>();
-        for (int i = 0; i < listOfFiles.length; i++)
-        {
-            if (listOfFiles[i].isFile())
-            {
-                String fileName = listOfFiles[i].getName();
-                if (fileName.endsWith(".sql"))
-                {
-                    toReturn.add(fileName.substring(0,fileName.length()-4));
-                }
-            }
-        }
-        return  toReturn;
+        return new LinkedList<>(Arrays.asList(
+                "users",
+                "global_metadata",
+                "datasets",
+                "attribute_metadata",
+                "attribute_numerical_metadata",
+                "attribute_categorical_metadata",
+                "datasets_atrributes_mapping"
+        ));
     }
 }
