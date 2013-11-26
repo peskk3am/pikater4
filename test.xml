@@ -11,5 +11,5 @@
         <agent type="RBFNetwork">
         </agent>
 </experiment>     
-<hasta_la_vista_baby shutdown_database="true" />
+<!-- <hasta_la_vista_baby shutdown_database="true" /> -->
 </experiments>

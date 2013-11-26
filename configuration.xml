@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <agents>
-        <!--
-         <agent type="pikater.agents.computing.Agent_WekaCA" name="LR">
-             <arguments>
-                 <argument key="className" value="LinearRegression"/>
-             </arguments>
-         </agent>
-         -->
+       <!--
+        <agent type="pikater.agents.computing.Agent_WekaCA" name="LR">
+            <arguments>
+                <argument key="className" value="LinearRegression"/>
+            </arguments>
+        </agent>
+        -->
         <agent type="pikater.Agent_ARFFReader" name="Reader_Cervenacek">
         </agent>
-
+        
         <agent type="pikater.Agent_Manager" name="manager">
             <arguments>
                 <argument key="no_xml_output" value="true"/>
@@ -19,27 +19,35 @@
 
         <agent type="pikater.Agent_DataManager" name="dataManager">
             <arguments>
-                <argument key="connection" value="xamppSql"/>
+                <argument key="connection" value="klara_local"/>
             </arguments>
         </agent>
 
         <agent type="pikater.agents.metadataQueen.Agent_MetadataQueen" name="Freddie">
         </agent>
+        
         <agent type="pikater.agents.management.ManagerAgent" name="agentManager">
         </agent>
-
+        
         <agent type="pikater.Agent_Duration" name="duration">
             <arguments>
                 <argument key="log_LR_durations" value="true"/>
                 <argument key="user" value="root"/>
             </arguments>
         </agent>
-
+        
         <agent type="pikater.Agent_GUI_config_file" name="UI">
             <arguments>
                 <argument key="config" value="test.xml"/>
                 <argument key="user" value="root"/>
             </arguments>
         </agent>
+
+        <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
+            <arguments>
+                <argument key="sniffed" value="Reader_Cervenacek" sendOnlyValue="true" />
+            </arguments>
+        </agent>
+
     </agents>
 </configuration>

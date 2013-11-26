@@ -11,21 +11,16 @@
     <bean id="logger" class="pikater.logging.ConsoleLogger" scope="singleton"/>
     <bean id="agentTypesProvider" class="pikater.agents.management.AgentTypesFromFileProvider" scope="singleton"/>
     <bean id="defaultConnection" class="pikater.data.MySQLConnectionProvider" scope="singleton">
-        <constructor-arg name="url" value="jdbc:mysql://192.232.216.110/marp_pikater"/>
+        <constructor-arg name="url" value="jdbc:mysql://174.120.245.222/marp_pikater"/>
         <constructor-arg name="userName" value="marp_pikater"/>
         <constructor-arg name="password" value="pikater"/>
     </bean>
-    <bean id="local" class="pikater.data.MySQLConnectionProvider" scope="singleton">
-        <constructor-arg name="url" value="jdbc:hsqldb:file:data/db/pikaterdb6"/>
-        <constructor-arg name="userName" value=""/>
-        <constructor-arg name="password" value=""/>
-    </bean>
-    <bean id="xamppSql" class="pikater.data.MySQLConnectionProvider" scope="singleton">
+    <bean id="klara_local" class="pikater.data.MySQLConnectionProvider" scope="singleton">
         <constructor-arg name="url" value="jdbc:mysql://localhost/pikater"/>
         <constructor-arg name="userName" value="root"/>
         <constructor-arg name="password" value=""/>
     </bean>
     <bean id="jakubMSSQLConnection" class="pikater.data.MSSQLConnectionProvider" scope="singleton">
-        <constructor-arg name="connectionUrl" value="jdbc:sqlserver://KUBA-NTB\SQLEXPRESS;databaseName=Pikater4;user=jakub;password=Diplomka-42;"/>
+        <constructor-arg name="connectionUrl" value="jdbc:sqlserver://KUBA-NTB\SQLEXPRESS;databaseName=Autoskola;user=jakub;password=Diplomka-42;"/>
     </bean>
 </beans>
