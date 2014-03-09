@@ -1435,10 +1435,11 @@ public abstract class Agent_GUI extends PikaterAgent {
 		
 		registerWithDF("UserInterface");
 
+        // TODO: obsolette method -> move this to another agent:
+        handleIncomingFiles();
+
 		// Incoming results handler
 		addBehaviour(new CompAgentResultsServer(this));
-
-        // handleIncomingFiles();
 
 		mySetup();
 
