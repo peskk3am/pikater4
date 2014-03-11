@@ -45,7 +45,7 @@
 
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>
-                <argument key="sniffed" value="Reader_Cervenacek" sendOnlyValue="true" />
+                <argument key="sniffed" value="manager" sendOnlyValue="true" />
             </arguments>
         </agent>
 

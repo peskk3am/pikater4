@@ -88,7 +88,7 @@ public class ManagerAgent extends PikaterAgent {
     
 	public String createAgent(String type, String name, List args){
 		// get a container controller for creating new agents
-		PlatformController container = getContainerController();				
+		PlatformController container = getContainerController();
 
 		Argument[] args1 = new Argument[0];
         Argument[] args2 = new Argument[0];
@@ -104,7 +104,7 @@ public class ManagerAgent extends PikaterAgent {
                 args2[i]=(Argument)args.get(i);
             }
 		}
-		
+
 		int size = args1.length + args2.length;
 		Argument[] Args = new Argument[size];
         System.arraycopy(args1,0,Args,0,args1.length);
@@ -126,42 +126,31 @@ public class ManagerAgent extends PikaterAgent {
 	}
 
 	private String generateName(String name) {
-		int i = 0;
-		while (name.charAt(name.length()-i-1) >= 48 &&
-				name.charAt(name.length()-i-1) <= 57){
-			i++;			
-		}
         PlatformController container = getContainerController();
-        String namePrefix=name.substring(0, name.length()-i);
         try {
-            AgentController agentWithTheSameName= container.getAgent(namePrefix);
+            AgentController agentWithTheSameName= container.getAgent(name);
         }
         catch (ControllerException exc)
         {
             //agent with the same name does not exist, we are good
-            return namePrefix;
+            return name;
         }
-        int nameSuffix=0;
-        if (i != 0){
-            // numbers Occurred
-            nameSuffix = Integer.parseInt(name.substring(name.length()-i, name.length()))+1;
-        }
-        for (int tryNr=nameSuffix;tryNr<nameSuffix+1000;i++)
+
+        for (Integer i=0; i<10000; i++)
         {
-            int currentSuffix=nameSuffix+tryNr;
-            String currentAgentName=namePrefix+ currentSuffix;
+            String currentName = name+i.toString();
             try {
                 //TODO: write without exceptions
-                AgentController agentWithTheSameName= container.getAgent(currentAgentName);
+                AgentController agentWithTheSameName= container.getAgent(currentName);
             }
             catch (ControllerException exc)
             {
                 //agent with the same name does not exist, we are good
-                nameSuffix=currentSuffix;
+                name = currentName;
                 break;
             }
         }
-        return namePrefix+ nameSuffix;
+        return name;
 	}
 	
 	private void getAgentTypesFromFile(){

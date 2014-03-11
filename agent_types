@@ -16,9 +16,9 @@ Perceptron:pikater.agents.computing.Agent_Perceptron
 ChooseXValues:pikater.Agent_ChooseXValues
 GASearch:pikater.Agent_GASearch
 EASearch:pikater.Agent_EASearch
-GridSearch:pikater.Agent_GridSearch                 
+GridSearch:pikater.Agent_GridSearch
 SimulatedAnnealing:pikater.Agent_SimulatedAnnealing
-RandomSearch:pikater.Agent_RandomSearch     		
-OptionsManager:pikater.Agent_OptionsManager    		
+RandomSearch:pikater.Agent_RandomSearch
+OptionsManager:pikater.Agent_OptionsManager
 BasicRecommender:pikater.agents.recommenders.Agent_Basic
 NMTopRecommender:pikater.agents.recommenders.Agent_NMTopRecommender

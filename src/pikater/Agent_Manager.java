@@ -86,7 +86,7 @@ public class Agent_Manager extends PikaterAgent {
 
 			// Read through file one line at time
 			while (line != null) {
-				String[] agentClass = line.split(":");
+				String[] agentClass = line.trim().split(":");
 				agentTypes.put(agentClass[0], agentClass[1]);
 				if(agentClass.length>2){
 					Object[] opts = new Object[agentClass.length-2];
@@ -104,11 +104,6 @@ public class Agent_Manager extends PikaterAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		agentTypes.put("SimulatedAnnealing", "pikater.Agent_SimulatedAnnealing");
-                agentTypes.put("ChooseXValues", "pikater.Agent_ChooseXValues");
-		agentTypes.put("RandomSearch", "pikater.RandomSearch");
-		
 	}
 	
 	private final String NO_XML_OUTPUT ="no_xml_output";
@@ -522,8 +517,8 @@ public class Agent_Manager extends PikaterAgent {
 						// find and/or create required number of agents;
 						// maximum being 10
 						List agents = new ArrayList();
-						
-						GetAgents ga = (GetAgents) (((Action) content).getAction());
+
+                        GetAgents ga = (GetAgents) (((Action) content).getAction());
 											
 						String agentType = ga.getAgent().getType();
 						int n = ga.getNumber();
@@ -758,11 +753,11 @@ public class Agent_Manager extends PikaterAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			// System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
+			System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				AID aid = result[i].getName();
-				// System.out.println(aid.getLocalName());
+				System.out.println(aid.getLocalName());
 				if (!isBusy(aid) && Agents.size() < n){
 					Agents.add(aid);
 					if (assign){
@@ -773,15 +768,14 @@ public class Agent_Manager extends PikaterAgent {
 			
 			while (Agents.size() < n) {
 				// create agent
-				// doWait(300);
-				
+				// doWait(300)
 				// String agentName = generateName(agentType);
 				// AID aid = createAgent(agentTypes.get(agentType), agentOptions.get(agentType));
 				AID aid = createAgent(agentType, null, null);
 				Agents.add(aid);
-				if (assign){
-					busyAgents.add(new BusyAgent(aid, task_id));
-				}
+				// if (assign){
+				//	busyAgents.add(new BusyAgent(aid, task_id));
+				// }
 			}
 		} catch (FIPAException fe) {
 			fe.printStackTrace();

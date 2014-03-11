@@ -419,7 +419,7 @@ public class Agent_OptionsManager extends PikaterAgent {
                             ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
                             String type= execute.getMethod().getType();
                             AID aid=communicator.createAgent(agent,type,null,null);
-                            String search_agent_name=aid.getName();
+                            String search_agent_name=aid.getLocalName();
 
 							// send request to the search agent							
 							ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
