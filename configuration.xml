@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <agents>
-       <!--
-        <agent type="pikater.agents.computing.Agent_WekaCA" name="LR">
+        <agent type="pikater.planner.Agent_Planner" name="planner">
+        </agent>
+
+        <agent type="pikater.agents.computing.Agent_WekaCA" name="RBF1">
             <arguments>
-                <argument key="className" value="LinearRegression"/>
+                <argument key="className" value="weka.classifiers.functions.RBFNetwork"/>
             </arguments>
         </agent>
-        -->
+        <agent type="pikater.agents.computing.Agent_WekaCA" name="RBF2">
+            <arguments>
+                <argument key="className" value="weka.classifiers.functions.RBFNetwork"/>
+            </arguments>
+        </agent>
         <agent type="pikater.Agent_ARFFReader" name="Reader_Cervenacek">
         </agent>
         
@@ -45,7 +51,7 @@
 
         <agent type="jade.tools.sniffer.Sniffer" name="sniffrik">
             <arguments>
-                <argument key="sniffed" value="manager" sendOnlyValue="true" />
+                <argument key="sniffed" value="OptionsManager" sendOnlyValue="true" />
             </arguments>
         </agent>
 

@@ -391,10 +391,10 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 
 	protected class RequestServer extends CyclicBehaviour {
 		/**
-			 * 
-			 */		
+			 *
+			 */
 		private static final long serialVersionUID = 1074564968341084444L;
-		
+
 		private MessageTemplate CFPproposalMsgTemplate = MessageTemplate.and(
 			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
 			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
@@ -406,7 +406,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
 			MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
 			MessageTemplate.MatchOntology(ontology.getName()))));
-		
+
 		private MessageTemplate reqMsgTemplate = MessageTemplate.and(
 			MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
 			MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
@@ -452,7 +452,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 						
 				ContentElement content;
 				try {				
-                                ACLMessage req = receive(reqMsgTemplate);
+                    ACLMessage req = receive(reqMsgTemplate);
 					if (req != null) {
 						content = getContentManager().extractContent(req);					
 						if (((Action) content).getAction() instanceof GetOptions) {						
@@ -467,9 +467,9 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 						return;
 					}
                                 
-                                ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
+                    ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);
 					if (CFPproposal != null){
-						content = getContentManager().extractContent(CFPproposal);
+                        content = getContentManager().extractContent(CFPproposal);
 						if (((Action) content).getAction() instanceof Execute) {						
 							ACLMessage propose = CFPproposal.createReply();
 							propose.setPerformative(ACLMessage.PROPOSE);
@@ -482,16 +482,14 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 						}
 					}
 					
-                                ACLMessage CFPreq = receive(CFPreqMsgTemplate);
+                    ACLMessage CFPreq = receive(CFPreqMsgTemplate);
 					if (CFPreq != null){					
 						engaged = false;
 						content = getContentManager().extractContent(CFPreq);
 						if (((Action) content).getAction() instanceof Execute) {												
 							send(processExecute(CFPreq));
 						}
-						
-						// TODO create search agent here						
-						return;					
+						return;
 					}
 				} catch (CodecException ce) {
 					ce.printStackTrace();
@@ -911,7 +909,7 @@ public abstract class Agent_ComputingAgent extends PikaterAgent {
 						List results = new ArrayList();
 						results.add(current_task);
 						Result result = new Result((Action) content, results);
-						getContentManager().fillContent(result_msg, result);												
+						getContentManager().fillContent(result_msg, result);
 						
 					} catch (UngroundedException e) {
 						// TODO Auto-generated catch block

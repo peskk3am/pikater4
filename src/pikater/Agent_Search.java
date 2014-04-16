@@ -11,6 +11,7 @@ import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.GetOptions;
 import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
+import pikater.ontology.messages.Evaluation;
 import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
@@ -385,7 +386,7 @@ public abstract class Agent_Search extends PikaterAgent {
 								Result res;
 								try {
 									res = (Result)getContentManager().extractContent(response);
-									List named_evals = (List)res.getValue();
+									List named_evals = ((Evaluation)res.getValue()).getEvaluations();
 									evaluations[id]=namedEvalsToFitness(named_evals);
 								} catch (UngroundedException e) {
 									// TODO Auto-generated catch block

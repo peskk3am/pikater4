@@ -1,10 +1,7 @@
 package pikater;
 
 import jade.content.ContentElement;
-import jade.content.lang.Codec;
 import jade.content.lang.Codec.CodecException;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.OntologyException;
 import jade.content.onto.UngroundedException;
 import jade.content.onto.basic.Action;
@@ -12,45 +9,33 @@ import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
-import jade.domain.FIPAService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREInitiator;
-import jade.proto.ContractNetInitiator;
 import jade.util.leap.ArrayList;
 import jade.util.leap.Iterator;
 import jade.util.leap.List;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import pikater.agents.PikaterAgent;
 import pikater.agents.management.ManagerAgentCommunicator;
 import pikater.ontology.messages.BoolSItem;
-import pikater.ontology.messages.Duration;
-import pikater.ontology.messages.Eval;
-import pikater.ontology.messages.Evaluation;
 import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.ExecuteParameters;
 import pikater.ontology.messages.FloatSItem;
-import pikater.ontology.messages.GetAgents;
-import pikater.ontology.messages.GetDuration;
 import pikater.ontology.messages.GetParameters;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.IntSItem;
 import pikater.ontology.messages.Options;
-import pikater.ontology.messages.MessagesOntology;
 import pikater.ontology.messages.Option;
 import pikater.ontology.messages.SearchSolution;
 import pikater.ontology.messages.SetSItem;
 import pikater.ontology.messages.Task;
+
+import java.util.Random;
 
 public class Agent_OptionsManager extends PikaterAgent {
 
@@ -63,10 +48,6 @@ public class Agent_OptionsManager extends PikaterAgent {
 	protected pikater.ontology.messages.Agent Agent;
 
 	private int task_number = 0;
-	private int max_number_of_tasks;
-	private List query_queue = new ArrayList();
-	private int number_of_current_tasks = 0;
-	private List computing_agents;  // list of AIDs
 	private Task received_task;
 	private ACLMessage received_request = null;
 	
@@ -74,25 +55,16 @@ public class Agent_OptionsManager extends PikaterAgent {
 		return "OptionManager";
 	}
 	
-	protected class ExecuteTask extends ContractNetInitiator{
+	protected class ExecuteTask extends AchieveREInitiator{
 
-		private static final long serialVersionUID = -2044738642107219180L;
+        private ACLMessage query; // original query sent by search agent;
+                                  // to be able to generate reply
 
-		int nResponders;
-		ACLMessage query;
-		ACLMessage cfp;
-		
-		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage _query) {
-			super(a, cfp);
-			nResponders = computing_agents.size();
-			query = _query;
-			this.cfp = cfp;
+		public ExecuteTask(jade.core.Agent a, ACLMessage msg, ACLMessage query) {
+			super(a, msg);
+            this.query = query;
 		}
 
-		protected void handlePropose(ACLMessage propose, Vector v) {
-			// System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
-		}
-		
 		protected void handleRefuse(ACLMessage refuse) {
             log("Agent "+refuse.getSender().getName()+" refused.", 1);
 		}
@@ -106,129 +78,22 @@ public class Agent_OptionsManager extends PikaterAgent {
 			else {
                 log("Agent "+failure.getSender().getName()+" failed", 1);
 			}
-			// Immediate failure --> we will not receive a response from this agent
-			nResponders--;
 		}
-		
-		protected void handleAllResponses(Vector responses, Vector acceptances) {
-			if (responses.size() < nResponders) {
-				// Some responder didn't reply within the specified timeout
-                log("Timeout expired: missing "+(nResponders - responses.size())+" responses", 2);
-			}
-			/* if (responses.size() == 0) {
-				// Some responder didn't reply within the specified timeout
-				println("Timeout expired: all responses missing", 1, true);
-			}
-			*/
-			// Evaluate proposals.
-			int bestProposal = Integer.MAX_VALUE;
-			AID bestProposer = null;
-			ACLMessage accept = null;
-			List replies = new ArrayList();
-			
-			Enumeration e = responses.elements();
-			while (e.hasMoreElements()) {
-				ACLMessage msg = (ACLMessage) e.nextElement();
-				if (msg.getPerformative() == ACLMessage.PROPOSE) {
-					ACLMessage reply = msg.createReply();
-					reply.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);					
-					int proposal = Integer.parseInt(msg.getContent());
-					if (proposal < bestProposal) {
-						bestProposal = proposal;
-						bestProposer = msg.getSender();
-						accept = reply;
-					}
-					acceptances.addElement(reply);
-				}
-			}
-			// Accept the proposal of the best proposer
-			if (accept != null) {
-				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
 
-                log("Accepting proposal "+bestProposal+" from responder "+bestProposer.getName(), 2);
-								
-				try {
-					ContentElement content = getContentManager().extractContent(cfp);
-					
-					Execute execute = (Execute) (((Action) content).getAction());
-
-					Action a = new Action();
-					a.setAction(execute);
-					a.setActor(myAgent.getAID());
-												
-					getContentManager().fillContent(accept, a);
-				} catch (UngroundedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CodecException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (OntologyException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-																
-				// acceptances.addElement(accept); // TODO sends the accept twice		
-				
-			} else{
-				// if there is no (best) proposer, return options to the queue
-				number_of_current_tasks--;
-				query_queue.add(query);
-			}			
-		}
-		
 		protected void handleInform(ACLMessage inform) {
             log("Agent "+inform.getSender().getName()+" successfully performed the requested action", 2);
 			// send result to the search agent:
 			
-			number_of_current_tasks--;
-
 			// extract evaluation from the task in the inform message
-			ContentElement content;
-			try {
-				content = getContentManager().extractContent(inform);
-				ContentElement query_content = getContentManager().extractContent(query);
-				if (content instanceof Result) {
-					Result result = (Result) content;					
-					// get the original task from the query
-					List tasks = (List)result.getValue();
-					Task t = (Task) tasks.get(0);
-					t.setFinish(getDateTime());
-					Evaluation ev = t.getResult();
-					List ev_evaluations = ev.getEvaluations();
-					
-					// get start and end
-					int duration = 0;
-					
-					Iterator itr = ev_evaluations.iterator();
-					while (itr.hasNext()) {
-						Eval eval = (Eval) itr.next();
-						if (eval.getName().equals("duration")){
-							duration = (int) eval.getValue();
-						}
-					}
-		
-					GetDuration gd = new GetDuration();
-					Duration d = new Duration();
-					d.setStart(ev.getStart());
-					d.setDuration(duration);
-					gd.setDuration(d);
-					
-					// set LR duration
-					Duration durationLR = DurationService.getDuration(myAgent, gd);
+            try{
+                ContentElement content = getContentManager().extractContent(inform);
+                ContentElement query_content = getContentManager().extractContent(query);
+                if (content instanceof Result) {
+                    Result result = (Result) content;
+                    // get the original task from the query
+                    List tasks = (List)result.getValue();
+                    Task t = (Task) tasks.get(0);
 
-                    log("durationLR: " + durationLR.getLR_duration()
-										+ " duration: "+ durationLR.getDuration(), 2);
-					
-					Eval eval = new Eval();
-					eval.setName("durationLR");
-					eval.setValue(durationLR.getLR_duration());
-					
-					ev_evaluations.add(eval);
-					ev.setEvaluations(ev_evaluations);					
-					t.setResult(ev);
-					
 					// save results to the database
 					if (t.getSave_results()){						
 						DataManagerService.saveResult(myAgent, t);
@@ -238,40 +103,60 @@ public class Agent_OptionsManager extends PikaterAgent {
 					
 					// send evaluation to search agent
 					ACLMessage reply = query.createReply();
-					//Ondrej: musi byt INFORM, ale co kdyz selze vypocet!???
 					reply.setPerformative(ACLMessage.INFORM);
 					
-					Result reply_result = new Result((Action) query_content, ev.getEvaluations());
+					Result reply_result = new Result((Action) query_content, t.getResult());
 					getContentManager().fillContent(reply, reply_result);
 					
 					send(reply);													
 				}			
 			} catch (UngroundedException e) {
-				// TODO Auto-generated catch block
-				System.err.print(getLocalName() + " ");
+				logError(getLocalName() + " ");
 				e.printStackTrace();
 			} catch (CodecException e) {
-				// TODO Auto-generated catch block
-				System.err.print(getLocalName() + " ");
+                logError(getLocalName() + " ");
 				e.printStackTrace();
 			} catch (OntologyException e) {
-				// TODO Auto-generated catch block
-				System.err.print(getLocalName() + " ");
+                logError(getLocalName() + " ");
 				e.printStackTrace();
 			}			
-			
-			// send new CFP:
-			ProcessNextQuery();
 		}
-	} // end of call for proposal bahavior
-	
+	} // end of ExecuteTask ("send request to planner agent") bahavior
 
-	protected ACLMessage createCFPmsg(ACLMessage query) {
-		ACLMessage cfp = null;
-		
-		ContentElement content;
+
+    private AID getPlannerAgent(){
+        AID planner = null;
+
+        DFAgentDescription template = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Planner");
+        template.addServices(sd);
+        try {
+            DFAgentDescription[] result = DFService.search(this, template);
+            AID[] Planners = new AID[result.length];
+            for (int i = 0; i < result.length; ++i) {
+                Planners[i] = result[i].getName();
+            }
+            if (result.length == 0){
+                logError("No planner found!");
+            }
+            // randomly choose one of the planners (should be just one)
+            Random randomGenerator = new Random();
+            int randomInt = randomGenerator.nextInt(result.length);
+            planner = Planners[randomInt];
+        } catch (FIPAException e) {
+            e.printStackTrace();
+        }
+
+        return planner;
+    }
+
+
+	protected ACLMessage createRequest(ACLMessage query) {
+        ACLMessage request = null;
+
 		try {
-			content = getContentManager().extractContent(query);
+			ContentElement content = getContentManager().extractContent(query);
 							
 			ExecuteParameters ep = (ExecuteParameters) (((Action) content).getAction());
 			
@@ -279,26 +164,20 @@ public class Agent_OptionsManager extends PikaterAgent {
 			Options opt = fillOptionsWithSolution(Options, (SearchSolution)(ep.getSolutions().get(0)));
 		
 			// create CFP message					  		
-			cfp = new ACLMessage(ACLMessage.CFP);
-			cfp.setLanguage(codec.getName());
-			cfp.setOntology(ontology.getName());
+			request = new ACLMessage(ACLMessage.REQUEST);
+            request.setLanguage(codec.getName());
+            request.setOntology(ontology.getName());
+            request.addReceiver(getPlannerAgent());
 
-			for (int i = 0; i < computing_agents.size(); ++i) {
-				cfp.addReceiver((AID)computing_agents.get(i));
-			}
-			
-			cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-			// We want to receive a reply in 10 secs
-			cfp.setReplyByDate(new Date(System.currentTimeMillis() + 5000));
+			request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
 			Execute ex = new Execute();
-			
 			// add task id
 			Id id = new Id(Integer.toString(task_number));
 			Id rtid = received_task.getId();
 			rtid.setSubid(id);
 			received_task.setId(rtid);
 			
-			received_task.setStart(getDateTime());
 			received_task.setNote(Integer.toString(task_number));
 			task_number++;
 			
@@ -312,7 +191,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 			a.setAction(ex);
 			a.setActor(this.getAID());
 										
-			getContentManager().fillContent(cfp, a);
+			getContentManager().fillContent(request, a);
 		} catch (UngroundedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -323,69 +202,39 @@ public class Agent_OptionsManager extends PikaterAgent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
-		return cfp;
+		return request;
 	}
-	
-	
-	private boolean ProcessNextQuery(){
-		
-		if (computing_agents != null){
 
-            log("number_of_current_tasks: " + number_of_current_tasks
-					+ " computing_agents.size(): " + computing_agents.size()
-					+ " query_queue.size(): " + query_queue.size() , 2);
 
-			if (number_of_current_tasks < computing_agents.size()
-					&& query_queue.size() > 0){
-
-                log("added", 2);
-				
-				ACLMessage query = (ACLMessage)query_queue.get(0);
-				query_queue.remove(0);
-	
-				ACLMessage cfp = createCFPmsg(query);																			
-
-				number_of_current_tasks++;
-				
-				// create new contract net protocol
-				addBehaviour(new ExecuteTask(this, cfp, query));
-				return true;
-			}
-		}
-		return false;
-	
+	private void ProcessNextQuery(ACLMessage query){
+        ACLMessage req = createRequest(query);
+        addBehaviour(new ExecuteTask(this, req, query));
 	} // end ProcessNextQuery
-	
+
+
 	protected class RequestServer extends CyclicBehaviour {
 
 		private static final long serialVersionUID = 1902726126096385876L;
         private PikaterAgent agent;
 
-		private MessageTemplate CFPproposalMsgTemplate = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-				MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.CFP),
-				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
-				MessageTemplate.MatchOntology(ontology.getName()))));
+        private MessageTemplate reqMsgTemplate = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.REQUEST),
+                        MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+                                MessageTemplate.MatchOntology(ontology.getName()))));
 
-		private MessageTemplate CFPreqMsgTemplate = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET),
-				MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
-				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
-				MessageTemplate.MatchOntology(ontology.getName()))));
-		
 		private MessageTemplate queryMsgTemplate = MessageTemplate
 				.and(MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_QUERY),
 						MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.QUERY_REF),
 								MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
 										MessageTemplate.MatchOntology(ontology.getName()))));
 
-		private MessageTemplate agreeMsgTemplate = MessageTemplate.and(
-				MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
-				MessageTemplate.and(
-						MessageTemplate.MatchPerformative(ACLMessage.AGREE),
-				MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
-				MessageTemplate.MatchOntology(ontology.getName()))));
-		
+        private MessageTemplate informMsgTemplate = MessageTemplate.and(
+                MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST),
+                MessageTemplate.and(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                        MessageTemplate.and(MessageTemplate.MatchLanguage(codec.getName()),
+                                MessageTemplate.MatchOntology(ontology.getName()))));
+
 		public RequestServer(PikaterAgent agent) {
 			super(agent);
             this.agent=agent;
@@ -394,23 +243,24 @@ public class Agent_OptionsManager extends PikaterAgent {
 		@Override 
 		public void action() {
 			
-			ACLMessage CFPreq = receive(CFPreqMsgTemplate);
-			ACLMessage CFPproposal = receive(CFPproposalMsgTemplate);			
+			ACLMessage req = receive(reqMsgTemplate); // Execute (from Manager)
 			ACLMessage query = receive(queryMsgTemplate);
-			ACLMessage agree = receive(agreeMsgTemplate);
-			boolean msg_received = false;			
+            ACLMessage inform = receive(informMsgTemplate); // results (no ?)
+
+            boolean msg_received = false;
 
 			ContentElement content;
 			try {				
-				if (CFPreq != null){
+				if (req != null){
 					msg_received = true;
-					content = getContentManager().extractContent(CFPreq);				
+					content = getContentManager().extractContent(req);
 					if (((Action) content).getAction() instanceof Execute) {
-						received_request = CFPreq;
+						received_request = req;
 												
 						Execute execute = (Execute) (((Action) content).getAction());
 						received_task = execute.getTask();
-						Options = received_task.getAgent().getOptions();
+
+                        Options = received_task.getAgent().getOptions();
 						
 						List mutableOptions = getMutableOptions(Options);
 						
@@ -443,95 +293,54 @@ public class Agent_OptionsManager extends PikaterAgent {
 							addBehaviour(new StartGettingParameters(myAgent, msg));
 						}
 						else{
-							// TODO - no ? in options - this shouldn't happen;
-							// options without ? should be sent directly to 
-							// computing agents by manager
-							/* use_search_agent = false;
-							Options options = new Options();
-							options.setList(task.getAgent().getOptions());
-							List l = new ArrayList();
-							l.add(options);
-							executeTasks(l);
-							*/							
+                            // create CFP message
+                            ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+                            request.setLanguage(codec.getName());
+                            request.setOntology(ontology.getName());
+                            request.addReceiver(getPlannerAgent());
+
+                            request.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
+                            Action a = new Action();
+                            a.setAction(execute);
+                            a.setActor(myAgent.getAID());
+
+                            getContentManager().fillContent(request, a);
+                            send(request);
 						}
 						return;
 					}
 				}
-				
-				if (CFPproposal != null){
-					msg_received = true;
-					content = getContentManager().extractContent(CFPproposal);
-					if (((Action) content).getAction() instanceof Execute) {
-						msg_received = true;
-						
-						ACLMessage propose = CFPproposal.createReply();
-						propose.setPerformative(ACLMessage.PROPOSE);
-						propose.setContent(Integer.toString(0)); // TODO
-						send(propose);						
-						return;
-					}
-				}
-				
+
 				if (query != null) {
 					msg_received = true;
 					// check whether the query is correct
 					content = getContentManager().extractContent(query);					
 					if (((Action) content).getAction() instanceof ExecuteParameters) {					
-						// options manager received options to execute					
-						
-						query_queue.add(query);
-						ProcessNextQuery();												
-					}
-				}
+						// options manager received options to execute
+						ProcessNextQuery(query);
+				    }
+                }
 
-				if (agree != null) {
-					msg_received = true;
-					// get max number of tasks					
-					max_number_of_tasks = Integer.parseInt(agree.getContent());						
-					
-					// if the agent name is not filled in
-					// TODO task.agent - it can be a list
-					if (received_task.getAgent().getName() == null){
-						// ask agent manager for computing agents
-						ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-						req.setLanguage(codec.getName());
-						req.setOntology(ontology.getName());
-						req.addReceiver(received_request.getSender());
-						req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-						
-						pikater.ontology.messages.Agent ag = new pikater.ontology.messages.Agent();
-					    ag.setType(received_task.getAgent().getType());
-					    
-						GetAgents ga = new GetAgents();					    					    
-					    ga.setAgent(ag);
-					    ga.setNumber(max_number_of_tasks);
-					    ga.setTask_id(received_task.getId());
-					    
-						Action a = new Action();
-						a.setAction(ga);
-						a.setActor(myAgent.getAID());
-			
-						try {
-							getContentManager().fillContent(req, a);
-							ACLMessage reply = FIPAService.doFipaRequestClient(myAgent, req);
-							
-							ContentElement content1 = getContentManager().extractContent(reply);
-							if (content1 instanceof Result) {
-								Result result = (Result) content1;
-								// get computing agents list
-								computing_agents = (List)result.getValue();	// list of AIDs							
-							}
+                if (inform != null){
+                    msg_received = true;
+                    content = getContentManager().extractContent(inform);
+                    if (content instanceof Result) {
+                        Result result = (Result) content;
+                        // get the original task
+                        List tasks = (List)result.getValue();
+                        Task t = (Task) tasks.get(0);
+                        results.add(t);
 
-							// start processing the queries
-							ProcessNextQuery();
-							
-						} catch (FIPAException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}																									
-				}
-			} catch (CodecException ce) {
+                        // save results to the database
+                        if (t.getSave_results()){
+                            DataManagerService.saveResult(myAgent, t);
+                        }
+
+                        sendResultsToManager();
+                    }
+                }
+            } catch (CodecException ce) {
 				ce.printStackTrace();
 			} catch (OntologyException oe) {
 				oe.printStackTrace();
@@ -553,11 +362,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 	
 
 	private class StartGettingParameters extends AchieveREInitiator {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -2796507853769993352L;
-		
+
 		public StartGettingParameters(Agent a, ACLMessage msg) {
 			super(a, msg);
             log("StartGettingParameters behavior created.", 2);
@@ -567,10 +372,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 		protected void handleInform(ACLMessage inform) {
             log("Agent " + inform.getSender().getName()
 					+ ": sending of Options have been finished.", 2);
-			
-			// throw away the rest of the queries
-			query_queue = new ArrayList();
-			
+
 			// sending of Options have been finished -> send message to Manager
 			sendResultsToManager();			
 		}
@@ -596,17 +398,7 @@ public class Agent_OptionsManager extends PikaterAgent {
 		
 		registerWithDF();
 
-				
 		addBehaviour(new RequestServer(this));
-
-		// if there are still some queries left in the queue, process them
-		// (also processed after informs from CAs are received)
-		addBehaviour(new TickerBehaviour(this, 10000) {			
-			  protected void onTick() {
-                  log("tick="+getTickCount(), 2);
-				  ProcessNextQuery();
-			  } 			  
-			});	
 
 	} // end setup
 	
@@ -749,10 +541,4 @@ public class Agent_OptionsManager extends PikaterAgent {
 			}
 		}
 	}
-
-    private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
 }

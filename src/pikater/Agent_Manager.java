@@ -20,7 +20,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.ContractNetInitiator;
+import jade.proto.AchieveREInitiator;
 import jade.proto.SubscriptionResponder;
 import jade.proto.SubscriptionResponder.Subscription;
 import jade.proto.SubscriptionResponder.SubscriptionManager;
@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -62,7 +61,6 @@ import pikater.ontology.messages.Execute;
 import pikater.ontology.messages.GetAgents;
 import pikater.ontology.messages.Id;
 import pikater.ontology.messages.MessagesOntology;
-import pikater.ontology.messages.Option;
 import pikater.ontology.messages.Problem;
 import pikater.ontology.messages.Recommend;
 import pikater.ontology.messages.Results;
@@ -127,8 +125,6 @@ public class Agent_Manager extends PikaterAgent {
 	private Set subscriptions = new HashSet();
 	// private Subscription subscription;
 
-	List busyAgents = new ArrayList(); // by this manager; list of vectors <AID, String task_id> 
-	
 	private int max_number_of_CAs = 10;
 	
 	Map<String, Integer> receivedProblemsID = new HashMap<String, Integer>();			
@@ -136,36 +132,23 @@ public class Agent_Manager extends PikaterAgent {
 	
 	private boolean print_distance_matrix = true;
 	
-	protected class ExecuteTask extends ContractNetInitiator{
+	protected class ExecuteTask extends AchieveREInitiator {
 
 		private static final long serialVersionUID = -2044738642107219180L;
 
-		List responders;
-		int nResponders = 0;
 		int nTasks;
 		ACLMessage request;
 		String problemID;
-		ACLMessage cfp;
-		
-		public ExecuteTask(jade.core.Agent a, ACLMessage cfp, ACLMessage _request,
+
+		public ExecuteTask(jade.core.Agent a, ACLMessage req, ACLMessage _request,
 				int _nTasks, String _problemID) {
-			super(a, cfp);
+			super(a, req);
 			
-			Iterator itr = cfp.getAllReceiver(); 
-			while (itr.hasNext()) {
-				AID aid = (AID) itr.next();
-				nResponders++;
-			}
-			this.cfp = cfp;
 			request = _request;
 			nTasks = _nTasks;
 			problemID = _problemID;			
 		}
 
-		protected void handlePropose(ACLMessage propose, Vector v) {
-			System.out.println(myAgent.getLocalName()+": Agent "+propose.getSender().getName()+" proposed "+propose.getContent());
-		}
-		
 		protected void handleRefuse(ACLMessage refuse) {
 			System.out.println(myAgent.getLocalName()+": Agent "+refuse.getSender().getName()+" refused");
 		}
@@ -179,61 +162,8 @@ public class Agent_Manager extends PikaterAgent {
 			else {
 				System.out.println(myAgent.getLocalName()+": Agent "+failure.getSender().getName()+" failed");
 			}
-			// Immediate failure --> we will not receive a response from this agent
-			nResponders--;
 		}
-		
-		protected void handleAllResponses(Vector responses, Vector acceptances) {
-			if (responses.size() < nResponders) {
-				// Some responder didn't reply within the specified timeout
-				System.out.println(myAgent.getLocalName()+": Timeout expired: missing "+(nResponders - responses.size())+" responses");
-			}
-			// Evaluate proposals.
-			int bestProposal = Integer.MAX_VALUE;
-			AID bestProposer = null;
-			ACLMessage accept = null;
-			Enumeration e = responses.elements();
-			while (e.hasMoreElements()) {
-				ACLMessage msg = (ACLMessage) e.nextElement();
-				if (msg.getPerformative() == ACLMessage.PROPOSE) {
-					ACLMessage reply = msg.createReply();
-					reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
-					acceptances.addElement(reply);
-					int proposal = Integer.parseInt(msg.getContent());
-					if (proposal < bestProposal) {
-						bestProposal = proposal;
-						bestProposer = msg.getSender();
-						accept = reply;
-					}
-				}
-			}
-			// Accept the proposal of the best proposer
-			if (accept != null) {
-				System.out.println(myAgent.getLocalName()+": Accepting proposal "+bestProposal+" from responder "+bestProposer.getName());
-				
-				try {
-					ContentElement content = getContentManager().extractContent(cfp);
-					Execute execute = (Execute) (((Action) content).getAction());
-					
-					Action a = new Action();
-					a.setAction(execute);
-					a.setActor(myAgent.getAID());
-												
-					getContentManager().fillContent(accept, a);
 
-				} catch (CodecException exception) {
-					// TODO Auto-generated catch block
-					exception.printStackTrace();
-				} catch (OntologyException exception) {
-					// TODO Auto-generated catch block
-					exception.printStackTrace();
-				}
-				
-				accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);				
-			}						
-			// TODO - if there is no proposer...
-		}
-		
 		private boolean lastTask(){			
 			if (receivedProblemsID.get(problemID) == nTasks){
 				return true;
@@ -275,27 +205,11 @@ public class Agent_Manager extends PikaterAgent {
 				if (content instanceof Result) {
 					Result result = (Result) content;					
 					List tasks = (List)result.getValue();
-					Task t = (Task) tasks.get(0);						
+					Task t = (Task) tasks.get(0);
 					// it would be enough to get id from one of the task
 					task_id = t.getId().getIdentificator();
-					
-					// if sender was computational agent, write results into the database
-					if (!inform.getSender().getLocalName().contains("OptionsManager")){
-							t.setFinish(getDateTime());
-							if (t.getSave_results()){						
-								DataManagerService.saveResult(myAgent, t);
-							}
-					}
 				}
 				
-				// remove dedicated agents from busyAgents list							
-				Iterator ba_itr = busyAgents.iterator();
-				while (ba_itr.hasNext()) {
-					BusyAgent ba = (BusyAgent) ba_itr.next();
-					if (ba.getTask_id().equals(task_id)){
-						ba_itr.remove();
-					}
-				}
 			} catch (UngroundedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -384,7 +298,6 @@ public class Agent_Manager extends PikaterAgent {
 			try {
 				String name = ((Task) results.getResults().iterator().next())
 						.getAgent().getName();
-				busyAgents.remove(new AID(name, AID.ISLOCALNAME));
 			} catch (Exception e) {
 				// do nothing (we don't need to remove an agent, if there wasn't
 				// any)
@@ -535,9 +448,7 @@ public class Agent_Manager extends PikaterAgent {
 						
 						
 						agents = getAgentsByType(agentType, n, task_id, true);
-						
-						// printBusyAgents();
-						
+
 						ACLMessage reply = request.createReply();
 						
 						if (agents.size() == 0) {
@@ -691,9 +602,8 @@ public class Agent_Manager extends PikaterAgent {
 							Execute ex = new Execute();
 							ex.setTask(task);
 							ex.setMethod(problem.getMethod());
-							
-							
-							msgList.add(createCFPmessage(ex, problemId, findCFPmessageReceivers(ex, problemId)));
+
+							msgList.add(createRequestMessage(ex, getOptionsManager(ex)));
 						}
 					} // end while (iteration over files)
 
@@ -721,28 +631,9 @@ public class Agent_Manager extends PikaterAgent {
 	
 	} // end prepareTaskMessages
 
-	private boolean isBusy(AID aid) {		
-		Iterator itr = busyAgents.iterator();
-		while (itr.hasNext()) {
-			BusyAgent ba = (BusyAgent) itr.next();
-			if (ba.getAid().equals(aid)){				
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	private void printBusyAgents(){
-		Iterator itr = busyAgents.iterator();
-		System.out.println("Busy agents: ");
-		while (itr.hasNext()){
-			BusyAgent ba = (BusyAgent)itr.next();
-			System.out.println("name: " + ba.getAid().getLocalName() + " task id: "+ ba.getTask_id());
-		}		
-	}
-	
+
 	public List getAgentsByType(String agentType, int n, String task_id, boolean assign) {
-		// returns list of AIDs (n agents that are not busy)
+		// returns list of AIDs
 		
 		List Agents = new ArrayList(); // List of AIDs
 		
@@ -753,29 +644,19 @@ public class Agent_Manager extends PikaterAgent {
 		template.addServices(sd);
 		try {
 			DFAgentDescription[] result = DFService.search(this, template);
-			System.out.println(getLocalName()+": Found the following " + agentType + " agents:");
+			log("Found the following " + agentType + " agents:");
 			
 			for (int i = 0; i < result.length; ++i) {
 				AID aid = result[i].getName();
-				System.out.println(aid.getLocalName());
-				if (!isBusy(aid) && Agents.size() < n){
+				if (Agents.size() < n){
 					Agents.add(aid);
-					if (assign){
-						busyAgents.add(new BusyAgent(aid, task_id));
-					}
 				}
 			}
 			
 			while (Agents.size() < n) {
 				// create agent
-				// doWait(300)
-				// String agentName = generateName(agentType);
-				// AID aid = createAgent(agentTypes.get(agentType), agentOptions.get(agentType));
 				AID aid = createAgent(agentType, null, null);
 				Agents.add(aid);
-				// if (assign){
-				//	busyAgents.add(new BusyAgent(aid, task_id));
-				// }
 			}
 		} catch (FIPAException fe) {
 			fe.printStackTrace();
@@ -792,113 +673,40 @@ public class Agent_Manager extends PikaterAgent {
 	} // end offerAgentTypes
 
 
-	public String generateName(String agentType) {
-		// don't use this function, 
-		// leave the generating of the name on 
-		// agent Agent Manager
-		
-		int number = 0;
-		String name = agentType + number;
-		boolean success = false;
-		while (!success) {
-			// try to find an agent with "name"
-			DFAgentDescription template = new DFAgentDescription();
-			ServiceDescription sd = new ServiceDescription();
-			sd.setName(name);
-			template.addServices(sd);
-			try {
-				DFAgentDescription[] result = DFService.search(this, template);
-				// if the agent with this name already exists, increase number
-				if (result.length > 0) {
-					number++;
-					name = agentType + number;
-				} else {
-					success = true;
-					return name;
-				}
-			} catch (FIPAException fe) {
-				fe.printStackTrace();
-			}
-		}
-		return null;
-	}
-
-	public boolean exists(String name) {
-		DFAgentDescription template = new DFAgentDescription();
-		ServiceDescription sd = new ServiceDescription();
-		sd.setName(name);
-		template.addServices(sd);
-		try {
-			DFAgentDescription[] result = DFService.search(this, template);
-			if (result.length > 0) {
-				return true;
-			}
-		} catch (FIPAException fe) {
-			fe.printStackTrace();
-		}
-		return false;
-	}
-
 	public AID createAgent(String type, String name, List options) {
         ManagerAgentCommunicator communicator=new ManagerAgentCommunicator("agentManager");
         AID aid=communicator.createAgent(this,type,name,options);
 		return aid;		
 	}
 
-
 	
-	protected List findCFPmessageReceivers(Execute ex, String problemID) {
-		// creates an Option Manager or finds/creates a computing agent
-		// and creates a cfp message
-		// TODO !!! so far only ONE agent is selected
-		List receivers = new ArrayList(); 
+	protected AID getOptionsManager(Execute ex) {
+		// creates / or (TODO) finds
+		// an Option Manager
 							
-		List mutable = new ArrayList();
-		Iterator itr = ex.getTask().getAgent().getOptions().iterator();
-		while (itr.hasNext()) {
-			Option o = (Option) itr.next();
-			if (o.getMutable()){				
-				mutable.add(o);
-			}
-		}
-		
-		if (mutable.size() == 0){
-			// find or create an computing agent 
-			String agentType = ex.getTask().getAgent().getType();
-			List agents = getAgentsByType(agentType, 1, ex.getTask().getId().getIdentificator(), true);
-			receivers.add( ((AID)agents.get(0)).getLocalName() );
-			// write results into the database instead of optionsManager
-			// TODO nemel by to delat vzdycky manager? aby to bylo pokazdy stejny?
-		}
-		else{
-			// create an Option Manager agent
-			AID aid = createAgent("OptionsManager", null, null);			
-			receivers.add( aid.getLocalName() );
-		}
-		return receivers;
+        // create an Option Manager agent
+        AID aid = createAgent("OptionsManager", null, null);
+
+		return aid;
 	}
 
-	protected ACLMessage createCFPmessage(Execute ex, String problemID, List receivers) {
+	protected ACLMessage createRequestMessage(Execute ex, AID receiver) {
+		// create request message for the Option Manager
+		ACLMessage req = null;
 
-		// create CFP message for the Option Manager or Computing Agent							  		
-		ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-		// cfp.setConversationId(problemID);
-		cfp.setLanguage(codec.getName());
-		cfp.setOntology(ontology.getName());
-
-		for (int i = 0; i < receivers.size(); ++i) {
-			cfp.addReceiver(new AID((String) receivers.get(i), AID.ISLOCALNAME));
-		}
-		cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-		// We want to receive a reply in 10 secs
-		cfp.setReplyByDate(new Date(System.currentTimeMillis() + 60000));
-											
 		try {
+            req = new ACLMessage(ACLMessage.REQUEST);
+            req.setLanguage(codec.getName());
+            req.setOntology(ontology.getName());
+            req.addReceiver(receiver);
+
+            req.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+
 			Action a = new Action();
 			a.setAction(ex);
 			a.setActor(this.getAID());
 										
-			getContentManager().fillContent(cfp, a);
+			getContentManager().fillContent(req, a);
 
 		} catch (CodecException e) {
 			// TODO Auto-generated catch block
@@ -908,9 +716,9 @@ public class Agent_Manager extends PikaterAgent {
 			e.printStackTrace();
 		}
 				
-		return cfp;
+		return req;
 
-	} // end createCFPmessage()
+	} // end createRequestMessage()
 
 	protected Results prepareTaskResults(ACLMessage resultmsg, String problemID) {
 		Results results = new Results();

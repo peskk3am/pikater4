@@ -59,6 +59,7 @@ public class InitiatorAgent extends PikaterAgent {
 		// get a container controller for creating new agents
 		PlatformController container = getContainerController();
 		try {
+            if (args.length > 0) System.out.println(type + " " + name + " " + args[0]);
 			AgentController agent = container.createNewAgent(name, type, args);
 			agent.start();
 			// provide agent time to register with DF etc.

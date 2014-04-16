@@ -21,6 +21,9 @@ import pikater.ontology.messages.*;
 
 import java.io.*;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
 
@@ -455,7 +458,10 @@ public class Agent_DataManager extends PikaterAgent {
                     durationLR = (float)next_eval.getValue();
                 }
             }
-
+            String start = getDateTime();
+            String finish = getDateTime();
+            if (res.getStart() != null){ start = res.getStart(); }
+            if (res.getFinish() != null){ finish = res.getFinish(); }
             query += Error_rate + ",";
             query += Kappa_statistic + ",";
             query += Mean_absolute_error + ",";
@@ -464,8 +470,8 @@ public class Agent_DataManager extends PikaterAgent {
             query += Root_relative_squared_error;
 
             query += ",";
-            query += "\'" + Timestamp.valueOf(res.getStart()) + "\',";
-            query += "\'" + Timestamp.valueOf(res.getFinish()) + "\',";
+            query += "\'" + Timestamp.valueOf(start) + "\',";
+            query += "\'" + Timestamp.valueOf(finish) + "\',";
 
             query += "\'" + duration + "\',";
             query += "\'" + durationLR + "\',";
@@ -832,6 +838,12 @@ public class Agent_DataManager extends PikaterAgent {
 
         db.close();
         return reply;
+    }
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     private ACLMessage ReplyToUpdateMetadata(ACLMessage request, Action a) throws SQLException, ClassNotFoundException {
