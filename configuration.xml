@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <agents>
-        <agent type="pikater.planner.Agent_Planner" name="planner">
+        <agent type="pikater.agents.planner.Agent_Planner" name="planner">
         </agent>
 
         <agent type="pikater.agents.computing.Agent_WekaCA" name="RBF1">

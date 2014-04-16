@@ -22,4 +22,4 @@ RandomSearch:pikater.Agent_RandomSearch
 OptionsManager:pikater.Agent_OptionsManager
 BasicRecommender:pikater.agents.recommenders.Agent_Basic
 NMTopRecommender:pikater.agents.recommenders.Agent_NMTopRecommender
-Planner:pikater.planner.Agent_Planner
+Planner:pikater.agents.planner.Agent_Planner
